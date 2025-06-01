@@ -146,6 +146,19 @@ const Navbar = () => {
             </button>
           </div>
 
+
+          {/* Favorite - Change The Icon*/}
+          {user && (
+            <button aria-label="Favorite" onClick={() => router.push("/favorites")} className="relative">
+              <CartIcon className="w-4 h-4 text-gray-700" />
+              {/* {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] rounded-full px-1 font-bold">
+                  {cartCount}
+                </span>
+              )} */}
+            </button>
+          )}
+
           {/* Cart */}
           {user && (
             <button aria-label="Cart" onClick={() => router.push("/cart")} className="relative">
@@ -233,6 +246,9 @@ const Navbar = () => {
           </Link>
           <Link href="/my-orders" onClick={() => setMobileMenuOpen(false)} className="hover:bg-[#EBEDED] rounded px-2 py-1">
             My Orders
+          </Link>
+          <Link href="/favorites" onClick={() => setMobileMenuOpen(false)} className="hover:bg-[#EBEDED] rounded px-2 py-1">
+            My Favorites
           </Link>
 
           {user && (

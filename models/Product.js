@@ -11,7 +11,9 @@ const productSchema = new mongoose.Schema(
         category : { type : String, required : true },
         brand : { type : String, required : true },
         color: { type : String },
-        date: { type: Date, required: true, default: Date.now }
+        date: { type: Date, required: true, default: Date.now },
+        stock: { type: Number, required: true, default: 0 },
+        visible: { type: Boolean, default: true },
     }
 )
 

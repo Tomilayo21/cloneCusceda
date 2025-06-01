@@ -9,10 +9,9 @@ const Footer = () => {
         <div className="w-4/5">
           <Image className="w-28 md:w-32" src="/Maw.png" width={100} height={100} alt="logo" />
           <p className="mt-6 text-sm">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
+            Cusceda is your go-to online shop for the latest electronics, fashion, and home essentials. 
+            We offer great prices, fast shipping, and a simple, secure shopping experience. 
+            Shop with us for quality products and exclusive deals delivered right to your door.
           </p>
         </div>
 

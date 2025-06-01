@@ -101,6 +101,26 @@ export default function ProductPage() {
               <span className="text-2xl font-semibold">₦{productData.offerPrice}</span>
               <span className="line-through text-gray-500 ml-2">₦{productData.price}</span>
             </div>
+            <div className="overflow-x-auto mt-4">
+                <table className="table-auto border-collapse w-full max-w-72">
+                    <tbody>
+                        <tr>
+                            <td className="text-gray-600 font-medium">Brand</td>
+                            <td className="text-gray-800/50 ">{productData.brand}</td>
+                        </tr>
+                        <tr>
+                            <td className="text-gray-600 font-medium">Color</td>
+                            <td className="text-gray-800/50 ">{productData.color}</td>
+                        </tr>
+                        <tr>
+                            <td className="text-gray-600 font-medium">Category</td>
+                            <td className="text-gray-800/50">
+                                {productData.category}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div className="mt-6 flex gap-4">
               <button onClick={handleAddToCart} className="px-6 py-2 bg-indigo-600 text-white rounded">
                 Add to Cart

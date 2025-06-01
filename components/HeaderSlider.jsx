@@ -4,30 +4,30 @@ import Image from "next/image";
 
 const HeaderSlider = () => {
   const sliderData = [
-    {
-      id: 1,
-      title: "Experience Pure Sound - Your Perfect Headphones Awaits!",
-      offer: "Limited Time Offer 30% Off",
-      buttonText1: "",
-      buttonText2: "Find more",
-      imgSrc: assets.header_headphone_image,
-    },
-    {
-      id: 2,
-      title: "Next-Level Gaming Starts Here - Discover PlayStation 5 Today!",
-      offer: "Hurry up only few lefts!",
-      buttonText1: "Shop Now",
-      buttonText2: "Explore Deals",
-      imgSrc: assets.header_playstation_image,
-    },
-    {
-      id: 3,
-      title: "Power Meets Elegance - Apple MacBook Pro is Here for you!",
-      offer: "Exclusive Deal 40% Off",
-      buttonText1: "Order Now",
-      buttonText2: "Learn More",
-      imgSrc: assets.header_macbook_image,
-    },
+  {
+    id: 1,
+    title: "Turn Up the Volume – Headphones That Redefine Sound!",
+    offer: "Limited Time: Enjoy 30% Off!",
+    buttonText1: "Shop Now",
+    buttonText2: "Browse More",
+    imgSrc: assets.header_headphone_image,
+  },
+  {
+    id: 2,
+    title: "Own the Game – Snag Your PlayStation 5 Today!",
+    offer: "Hurry! Only a Few Left in Stock!",
+    buttonText1: "Shop Now",
+    buttonText2: "View Deals",
+    imgSrc: assets.header_playstation_image,
+  },
+  {
+    id: 3,
+    title: "Work Hard. Create More. Dominate with MacBook Pro!",
+    offer: "Special Offer: Save 40% Today!",
+    buttonText1: "Order Now",
+    buttonText2: "Discover More",
+    imgSrc: assets.header_macbook_image,
+  },
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
