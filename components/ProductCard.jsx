@@ -109,15 +109,28 @@ const ProductCard = ({ product }) => {
           {currency}
           {product.offerPrice}
         </p>
-        <button
+        {/* <button
           onClick={handleAddToCart}
           className="px-3 py-1 text-xs text-gray-500 border border-gray-300 rounded-full hover:bg-slate-50 transition"
         >
           Add to Cart
-        </button>
+        </button> */}
+        {/* <p className={product.stock > 0 ? "text-green-600" : "text-red-600"}>
+        {product.stock > 0 ? `${product.stock} in stock` : "Sold Out"}
+      </p> */}
+      <button 
+        onClick={handleAddToCart} 
+        disabled={product.stock === 0}
+        className="px-3 py-1 text-xs text-gray-500 border border-gray-300 rounded-full hover:bg-slate-50 transition"
+      >
+        {product.stock === 0 ? "Sold Out" : "Add to Cart"}
+      </button>
       </div>
     </div>
   );
 };
 
 export default ProductCard;
+
+
+

@@ -125,16 +125,31 @@ import connectDB from '@/config/db';
 import Product from '@/models/Product';
 import authSeller from '@/lib/authSeller';
 
-export async function GET(req, { params }) {
+// export async function GET(req, { params }) {
+//   await connectDB();
+//   const { id } = params;
+
+//   try {
+//     const product = await Product.findById(id);
+//     if (!product) {
+//       return NextResponse.json({ success: false, message: 'Product not found' }, { status: 404 });
+//     }
+//     return NextResponse.json({ success: true, product });
+//   } catch (err) {
+//     return NextResponse.json({ success: false, message: err.message }, { status: 500 });
+//   }
+// }
+
+export async function GET(req) {
   await connectDB();
-  const { id } = params;
 
   try {
-    const product = await Product.findById(id);
-    if (!product) {
-      return NextResponse.json({ success: false, message: 'Product not found' }, { status: 404 });
-    }
-    return NextResponse.json({ success: true, product });
+    const products = await Product.find({
+      stock: { $gt: 0 },
+      visible: true,
+    });
+
+    return NextResponse.json({ success: true, products });
   } catch (err) {
     return NextResponse.json({ success: false, message: err.message }, { status: 500 });
   }

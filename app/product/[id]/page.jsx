@@ -122,12 +122,21 @@ export default function ProductPage() {
                 </table>
             </div>
             <div className="mt-6 flex gap-4">
-              <button onClick={handleAddToCart} className="px-6 py-2 bg-indigo-600 text-white rounded">
-                Add to Cart
-              </button>
-              <button onClick={()=>router.push('/cart')} className="px-6 py-2 border border-indigo-600 rounded">
-                Go to Cart
-              </button>
+              <button 
+              onClick={handleAddToCart} 
+              disabled={productData.stock === 0}
+              className="px-3 py-1 text-lg bg-indigo-600 text-white border border-gray-300 rounded hover:bg-slate-50 hover:text-indigo-600 cursor-pointer transition"
+            >
+              {productData.stock === 0 ? "Sold Out" : "Add to Cart"}
+            </button>
+              {productData.stock > 0 && (
+                <button 
+                  onClick={() => router.push('/cart')} 
+                  className="px-6 py-2 border border-indigo-600 rounded text-indigo-600 hover:bg-indigo-50"
+                >
+                  Go to Cart
+                </button>
+              )}
             </div>
 
             {/* Submit Review */}
