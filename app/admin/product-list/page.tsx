@@ -148,20 +148,20 @@ const ProductList = () => {
                     <td className="px-4 py-3">${product.offerPrice}</td>
                     <td className="px-4 py-3">
                       <input
-  type="number"
-  value={stockInputs[product._id] ?? product.stock}
-  min={0}
-  onChange={(e) => {
-    const value = parseInt(e.target.value);
-    setStockInputs((prev) => ({ ...prev, [product._id]: value }));
-  }}
-  onKeyDown={(e) => {
-    if (e.key === "Enter") {
-      handleStockUpdate(product._id, stockInputs[product._id]);
-    }
-  }}
-  className="w-20 px-2 py-1 border rounded"
-/>
+                      type="number"
+                      value={stockInputs[product._id] ?? product.stock}
+                      min={0}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value);
+                        setStockInputs((prev) => ({ ...prev, [product._id]: value }));
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleStockUpdate(product._id, stockInputs[product._id]);
+                        }
+                      }}
+                      className="w-20 px-2 py-1 border rounded"
+                    />
 
                     </td>
                     <td className="px-4 py-3 max-sm:hidden">
