@@ -7,15 +7,7 @@ const PrivacyPolicy = () => {
   return (
     <>
       <Navbar />
-            {/* <div className="p-4 flex flex-col items-center pt-14 bg-white text-black dark:bg-black dark:text-white min-h-screen items-start px-6 md:px-16 lg:px-32 pt-20">
-        <div className="flex flex-col items-center mt-8 mb-4">
-          <p className="text-3xl font-medium">
-            Privacy <span className="text-orange-600">Policy</span>
-          </p>
-          <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
-        </div> */}
-
-      <div className="max-w-4xl mx-auto p-6 text-gray-800 p-4 flex flex-col  pt-14 bg-white text-black dark:bg-black dark:text-white min-h-screen items-start px-6 md:px-16 lg:px-32 pt-20">
+      <div className="max-w-4xl mx-auto p-6 text-gray-800 p-4 flex flex-col  pt-14 bg-white text-black dark:bg-black dark:text-white min-h-screen items-start px-6 md:px-16 lg:px-32 pt-12">
         <div className="flex flex-col items-center mt-8 mb-8">
           <p className="text-3xl font-medium">
             Privacy <span className="text-orange-600">Policy</span>
@@ -99,7 +91,7 @@ const PrivacyPolicy = () => {
         <p className="mb-8">
           If you have any questions about this Privacy Policy, contact us at:
           <br />
-          <strong>Email:</strong> support@cusceda.com
+          <strong>email:</strong> cusceda@yahoo.com
         </p>
 
         {/* FAQ Section */}
