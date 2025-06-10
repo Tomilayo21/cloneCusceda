@@ -104,7 +104,7 @@ export default function About() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-start px-6 md:px-16 lg:px-32 pt-20">
+      <div className="flex flex-col items-start px-6 md:px-16 lg:px-32 pt-8">
         <Head>
           <title>About Cusceda</title>
         </Head>
