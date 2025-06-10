@@ -77,7 +77,7 @@ const Navbar = () => {
   };
 
   // Determine logo src based on theme
-  const logoSrc = theme === "dark" ? "/cusceda_.png" : "/cusceda.png";
+  const logoSrc = theme === "dark" ? "/cusceda___.png" : "/cusceda__.png";
 
   return (
     <nav
