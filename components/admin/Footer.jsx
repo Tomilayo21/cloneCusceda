@@ -8,7 +8,7 @@ const Footer = () => {
   const { theme } = useTheme();
 
   // Select logo based on theme
-  const logoSrc = theme === "dark" ? "/cusceda_.png" : "/cusceda.png";
+  const logoSrc = theme === "dark" ? "/cusceda___.png" : "/cusceda__.png";
 
   return (
     <div className="flex md:flex-row flex-col-reverse items-center justify-between text-left w-full px-10">
