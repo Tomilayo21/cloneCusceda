@@ -8,7 +8,6 @@ import FeaturedProduct from "@/components/FeaturedProduct";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Loading from "@/components/Loading";
-import ScrollButton from "@/components/ScrollButton";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -119,6 +118,5 @@ const Home = () => {
 };
 
 export default Home;
-
 
 
