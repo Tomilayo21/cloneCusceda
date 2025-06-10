@@ -1,50 +1,51 @@
 import React from 'react';
 import Link from 'next/link';
-import { assets } from '../../assets/assets';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import {
+  PlusSquare,
+  ListOrdered,
+  ShoppingCart,
+  Users,
+  Star,
+  Bell,
+  CreditCard,
+} from 'lucide-react';
 
 const SideBar = () => {
-    const pathname = usePathname()
-    const menuItems = [
-        { name: 'Add Product', path: '/admin', icon: assets.add_icon },
-        { name: 'Product List', path: '/admin/product-list', icon: assets.product_list_icon },
-        { name: 'Orders', path: '/admin/orders', icon: assets.order_icon },
-        { name: 'Users', path: '/admin/users', icon: assets.user_icon },
-        { name: 'Reviews', path: '/admin/reviews', icon: assets.user_icon },
-        { name: 'Notifications', path: '/admin/notifications', icon: assets.user_icon },
-       
+  const pathname = usePathname();
 
-    ];
+  const menuItems = [
+    { name: 'Add Product', path: '/admin', icon: <PlusSquare className="w-6 h-6" /> },
+    { name: 'Product List', path: '/admin/product-list', icon: <ListOrdered className="w-6 h-6" /> },
+    { name: 'Orders', path: '/admin/orders', icon: <ShoppingCart className="w-6 h-6" /> },
+    { name: 'Users', path: '/admin/users', icon: <Users className="w-6 h-6" /> },
+    { name: 'Reviews', path: '/admin/reviews', icon: <Star className="w-6 h-6" /> },
+    { name: 'Notifications', path: '/admin/notifications', icon: <Bell className="w-6 h-6" /> },
+    { name: 'Transactions', path: '/admin/payments', icon: <CreditCard className="w-6 h-6" /> },
+  ];
 
-    return (
-        <div className='md:w-64 w-16 border-r min-h-screen text-base border-gray-300 py-2 flex flex-col'>
-            {menuItems.map((item) => {
+  return (
+    <div className='md:w-64 w-16 border-r min-h-screen text-base border-gray-300 py-2 flex flex-col'>
+      {menuItems.map((item) => {
+        const isActive = pathname === item.path;
 
-                const isActive = pathname === item.path;
-
-                return (
-                    <Link href={item.path} key={item.name} passHref>
-                        <div
-                            className={
-                                `flex items-center py-3 px-4 gap-3 ${isActive
-                                    ? "border-r-4 md:border-r-[6px] bg-orange-600/10 border-orange-500/90"
-                                    : "hover:bg-gray-100/90 border-white"
-                                }`
-                            }
-                        >
-                            <Image
-                                src={item.icon}
-                                alt={`${item.name.toLowerCase()}_icon`}
-                                className="w-7 h-7"
-                            />
-                            <p className='md:block hidden text-center'>{item.name}</p>
-                        </div>
-                    </Link>
-                );
-            })}
-        </div>
-    );
+        return (
+          <Link href={item.path} key={item.name} passHref>
+            <div
+              className={`flex items-center py-3 px-4 gap-3 ${
+                isActive
+                  ? "border-r-4 md:border-r-[6px] bg-orange-600/10 border-orange-500/90"
+                  : "hover:bg-gray-100/90 border-white"
+              }`}
+            >
+              {item.icon}
+              <p className='md:block hidden text-center'>{item.name}</p>
+            </div>
+          </Link>
+        );
+      })}
+    </div>
+  );
 };
 
 export default SideBar;
