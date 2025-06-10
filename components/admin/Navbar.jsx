@@ -19,7 +19,7 @@ const Navbar = () => {
     <div className="max-w-7xl mx-auto px-4">
       <div className='flex items-center px-4 md:px-8 py-3 justify-between border-b'>
         <img
-          src="/cusceda.png"
+          src="/cusceda__.png"
           alt="logo"
           width={100}
           height={100}
