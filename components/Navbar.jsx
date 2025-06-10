@@ -297,7 +297,7 @@ const Navbar = () => {
             </button>
           )}
 
-          {/* <button
+          <button
             onClick={toggleTheme}
             className="flex items-center gap-2 text-gray-700 dark:text-white hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
           >
@@ -312,7 +312,7 @@ const Navbar = () => {
                 Dark Mode
               </>
             )}
-          </button> */}
+          </button>
         </div>
       )}
     </nav>
