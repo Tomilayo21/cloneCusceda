@@ -4,6 +4,8 @@
 
 * {
     scroll-behavior: smooth;
+    list-style-type: none;
+
 }
 
 @layer base {
