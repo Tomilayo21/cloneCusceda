@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState, useEffect } from "react";
 import HeaderSlider from "@/components/HeaderSlider";
 import HomeProducts from "@/components/HomeProducts";
@@ -17,26 +16,20 @@ const Home = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    // Theme sync
+    // Sync theme
     const savedMode = localStorage.getItem("theme");
     if (savedMode === "dark") {
       setIsDarkMode(true);
       document.documentElement.classList.add("dark");
     }
 
-    // Load Elfsight script and initialize
+    // Elfsight Script Injection
     const script = document.createElement("script");
     script.src = "https://static.elfsight.com/platform/platform.js";
     script.async = true;
-    script.onload = () => {
-      console.log("Elfsight script loaded");
-      if (window.elfsight) {
-        window.elfsight.load();
-      }
-    };
     document.body.appendChild(script);
 
-    // Simulated data fetch
+    // Simulated fetch
     const fetchData = async () => {
       try {
         await new Promise((resolve, reject) => {
@@ -56,7 +49,6 @@ const Home = () => {
 
     fetchData();
 
-    // Cleanup
     return () => {
       document.body.removeChild(script);
     };
@@ -127,3 +119,6 @@ const Home = () => {
 };
 
 export default Home;
+
+
+
