@@ -1,34 +1,46 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { assets, BagIcon, CartIcon } from "@/assets/assets";
+import { assets, CartIcon } from "@/assets/assets";
 import Link from "next/link";
 import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
 import { useClerk, UserButton } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Heart } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
+import { Moon, Sun } from "lucide-react";
 
 const Navbar = () => {
   const { isAdmin, user, getCartCount } = useAppContext();
   const { openSignIn } = useClerk();
   const router = useRouter();
-
   const [searchExpanded, setSearchExpanded] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const searchRef = useRef(null);
   const searchButtonRef = useRef(null);
-  const [inputValue, setInputValue] = useState("");
-
   const cartCount = getCartCount();
+  const { theme, toggleTheme } = useTheme();
 
+  // Detect screen size
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Focus input when expanded
   useEffect(() => {
     if (searchExpanded && searchRef.current) {
       searchRef.current.focus();
     }
   }, [searchExpanded]);
 
+  // Collapse search when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -43,75 +55,64 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Sticky scroll detection
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && inputValue.trim()) {
+  // Search submission
+  const handleSearch = () => {
+    if (inputValue.trim()) {
       router.push(`/all-products?search=${encodeURIComponent(inputValue.trim())}`);
       setSearchExpanded(false);
+    } else {
+      setSearchExpanded((prev) => !prev);
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") handleSearch();
+  };
+
+  // Determine logo src based on theme
+  const logoSrc = theme === "dark" ? "/cusceda_.png" : "/cusceda.png";
+
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-300 shadow-sm text-gray-700">
-      {/* Main flex container for all items on one line */}
-      <div className="flex items-center justify-between px-4 py-3 md:px-16 lg:px-32 w-full">
-        {/* Left: Logo */}
-        <Image
-          className="cursor-pointer w-24 md:w-32"
-          onClick={() => router.push("/")}
-          src={assets.logo}
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        isScrolled
+          ? theme === "dark"
+            ? "border-b border-gray-700 shadow-md bg-black"
+            : "border-b border-transparent shadow-md bg-white"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="flex items-center justify-between px-4 py-3 md:px-16 lg:px-32">
+        {/* Logo */}
+        <img
+          src={logoSrc}
           alt="logo"
           width={100}
           height={100}
+          onClick={() => router.push("/")}
+          className="cursor-pointer w-24 md:w-32"
         />
 
-        {/* Center: Desktop Nav Links */}
+        {/* Desktop Nav */}
         <div className="hidden md:flex items-center justify-center gap-8 flex-1 px-8">
-          <Link
-            href="/"
-            className="hover:text-gray-900 transition bg-transparent hover:bg-[#EBEDED] rounded p-2"
-          >
-            Home
-          </Link>
-          <Link
-            href="/all-products"
-            className="hover:text-gray-900 transition bg-transparent hover:bg-[#EBEDED] rounded p-2"
-          >
-            Products
-          </Link>
-          <Link
-            href="/about"
-            className="hover:text-gray-900 transition bg-transparent hover:bg-[#EBEDED] rounded p-2"
-          >
-            About Us
-          </Link>
-          <Link
-            href="/contact"
-            className="hover:text-gray-900 transition bg-transparent hover:bg-[#EBEDED] rounded p-2"
-          >
-            Contact
-          </Link>
-          <Link
-            href="/my-orders"
-            className="hover:text-gray-900 transition bg-transparent hover:bg-[#EBEDED] rounded p-2"
-          >
-            My Orders
-          </Link>
+          <Link href="/" className="hover:bg-[#EBEDED] p-2 rounded">Home</Link>
+          <Link href="/all-products" className="hover:bg-[#EBEDED] p-2 rounded">Products</Link>
+          {/* <Link href="/about" className="hover:bg-[#EBEDED] p-2 rounded">About Us</Link>
+          <Link href="/contact" className="hover:bg-[#EBEDED] p-2 rounded">Contact</Link> */}
+          {user && <Link href="/my-orders" className="hover:bg-[#EBEDED] p-2 rounded">My Orders</Link>}
         </div>
 
-        {/* Right: Desktop Only - Admin + Search + Cart + Account */}
+        {/* Right side (Desktop) */}
         <div className="hidden md:flex items-center gap-4">
           {isAdmin && (
-            <button
-              onClick={() => router.push("/admin")}
-              className="text-xs border px-4 py-1.5 rounded-full"
-            >
+            <button onClick={() => router.push("/admin")} className="text-xs border px-4 py-1.5 rounded-full">
               Admin Dashboard
             </button>
           )}
@@ -122,46 +123,34 @@ const Navbar = () => {
               ref={searchRef}
               type="text"
               placeholder="Search..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
               onFocus={() => setSearchExpanded(true)}
               onKeyDown={handleKeyDown}
-              onChange={(e) => setInputValue(e.target.value)}
-              className={`transition-all duration-300 ease-in-out bg-white border border-gray-300 rounded-full px-4 py-1 text-sm text-gray-700 ${
+              className={`transition-all duration-300 bg-white border border-gray-300 rounded-full px-4 py-1 text-sm text-gray-700 ${
                 searchExpanded ? "opacity-100 w-48" : "opacity-0 w-0 px-0"
               }`}
             />
             <button
               ref={searchButtonRef}
-              onClick={() => {
-                if (inputValue.trim()) {
-                  router.push(`/all-products?search=${encodeURIComponent(inputValue.trim())}`);
-                  setSearchExpanded(false);
-                } else {
-                  setSearchExpanded((prev) => !prev);
-                }
-              }}
+              onClick={handleSearch}
               className="ml-1"
               aria-label="Search"
             >
-              <Image className="w-4 h-4" src={assets.search_icon} alt="search icon" />
+              <Image src={assets.search_icon} alt="search" className="w-4 h-4" />
             </button>
           </div>
 
-
-          {/* Favorite - Change The Icon*/}
+          {/* Favorites */}
           {user && (
-            <button aria-label="Favorite" onClick={() => router.push("/favorites")} className="relative">
-              <CartIcon className="w-4 h-4 text-gray-700" />
-              {/* {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] rounded-full px-1 font-bold">
-                  {cartCount}
-                </span>
-              )} */}
+            <button onClick={() => router.push("/favorites")} className="relative">
+              <Heart className="w-4 h-4 text-gray-700" />
             </button>
           )}
 
           {/* Cart */}
           {user && (
-            <button aria-label="Cart" onClick={() => router.push("/cart")} className="relative">
+            <button onClick={() => router.push("/cart")} className="relative">
               <CartIcon className="w-4 h-4 text-gray-700" />
               {cartCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] rounded-full px-1 font-bold">
@@ -171,45 +160,50 @@ const Navbar = () => {
             </button>
           )}
 
-          {/* Account */}
+          {/* Auth */}
           {user ? (
-            <UserButton appearance={{ elements: { avatarBox: "w-5 h-5" } }} />
+            <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "w-5 h-5" } }} />
           ) : (
-            <button onClick={openSignIn} className="flex items-center gap-2 transition">
-              <Image className="w-4 h-4" src={assets.user_icon} alt="user icon" />
+            <button onClick={openSignIn} className="flex items-center gap-2">
+              <Image src={assets.user_icon} alt="user" className="w-4 h-4" />
             </button>
           )}
         </div>
+        
+        {/* <button
+          onClick={toggleTheme}
+          className="hidden md:block p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+        >
+          {theme === "dark" ? (
+            <Sun className="w-4 h-4 text-yellow-400" />
+          ) : (
+            <Moon className="w-4 h-4 text-gray-700" />
+          )}
+        </button> */}
 
-        {/* Mobile Only - Search, Admin, Menu */}
-        <div className="flex items-center gap-2 md:hidden">
-          {/* Mobile search, admin, menu */}
+        {/* Mobile Right Side */}
+        <div className="flex md:hidden items-center gap-2">
+          {/* Search */}
           <div className="relative flex items-center">
             <input
               ref={searchRef}
               type="text"
               placeholder="Search..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
               onFocus={() => setSearchExpanded(true)}
               onKeyDown={handleKeyDown}
-              onChange={(e) => setInputValue(e.target.value)}
-              className={`transition-all duration-300 ease-in-out bg-white border border-gray-300 rounded-full px-4 py-1 text-sm text-gray-700 ${
+              className={`transition-all duration-300 bg-white border border-gray-300 rounded-full px-4 py-1 text-sm text-gray-700 ${
                 searchExpanded ? "opacity-100 w-40" : "opacity-0 w-0 px-0"
               }`}
             />
             <button
               ref={searchButtonRef}
-              onClick={() => {
-                if (inputValue.trim()) {
-                  router.push(`/all-products?search=${encodeURIComponent(inputValue.trim())}`);
-                  setSearchExpanded(false);
-                } else {
-                  setSearchExpanded((prev) => !prev);
-                }
-              }}
+              onClick={handleSearch}
               className="ml-1"
               aria-label="Search"
             >
-              <Image className="w-4 h-4" src={assets.search_icon} alt="search icon" />
+              <Image src={assets.search_icon} alt="search" className="w-4 h-4" />
             </button>
           </div>
 
@@ -219,65 +213,106 @@ const Navbar = () => {
             </button>
           )}
 
-          <button
-            onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="text-gray-700"
-            aria-label="Toggle menu"
-          >
+          <button onClick={() => setMobileMenuOpen((prev) => !prev)} aria-label="Toggle Menu">
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && isMobile && (
-        <div className="flex flex-col gap-4 px-6 pb-4 md:hidden">
-          <Link href="/" onClick={() => setMobileMenuOpen(false)} className="hover:bg-[#EBEDED] rounded px-2 py-1">
+        <div className="flex flex-col gap-4 px-6 pb-4 md:hidden bg-white dark:bg-black">
+          <Link
+            href="/"
+            onClick={() => setMobileMenuOpen(false)}
+            className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1 mt-4"
+          >
             Home
           </Link>
-          <Link href="/all-products" onClick={() => setMobileMenuOpen(false)} className="hover:bg-[#EBEDED] rounded px-2 py-1">
+          <Link
+            href="/all-products"
+            onClick={() => setMobileMenuOpen(false)}
+            className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+          >
             Products
           </Link>
-          <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="hover:bg-[#EBEDED] rounded px-2 py-1">
+          {/* <Link
+            href="/about"
+            onClick={() => setMobileMenuOpen(false)}
+            className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+          >
             About Us
           </Link>
-          <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="hover:bg-[#EBEDED] rounded px-2 py-1">
+          <Link
+            href="/contact"
+            onClick={() => setMobileMenuOpen(false)}
+            className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+          >
             Contact
-          </Link>
-          <Link href="/my-orders" onClick={() => setMobileMenuOpen(false)} className="hover:bg-[#EBEDED] rounded px-2 py-1">
-            My Orders
-          </Link>
-          <Link href="/favorites" onClick={() => setMobileMenuOpen(false)} className="hover:bg-[#EBEDED] rounded px-2 py-1">
-            My Favorites
-          </Link>
+          </Link> */}
 
           {user && (
-            <button
-              onClick={() => {
-                router.push("/cart");
-                setMobileMenuOpen(false);
-              }}
-              className="flex items-center gap-2 hover:bg-[#EBEDED] rounded px-2 py-1"
-            >
-              <CartIcon className="w-4 h-4 text-gray-700" />
-              Cart ({cartCount})
-            </button>
+            <>
+              <Link
+                href="/my-orders"
+                onClick={() => setMobileMenuOpen(false)}
+                className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+              >
+                My Orders
+              </Link>
+              <Link
+                href="/favorites"
+                onClick={() => setMobileMenuOpen(false)}
+                className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+              >
+                Favorites
+              </Link>
+              <button
+                onClick={() => {
+                  router.push("/cart");
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center gap-2 hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1 text-gray-700 dark:text-white"
+              >
+                <CartIcon className="w-4 h-4" />
+                Cart ({cartCount})
+              </button>
+            </>
           )}
 
           {user ? (
-            <UserButton appearance={{ elements: { avatarBox: "w-5 h-5" } }} afterSignOutUrl="/" About/> 
+            <UserButton
+              afterSignOutUrl="/"
+              appearance={{ elements: { avatarBox: "w-5 h-5" } }}
+            />
           ) : (
             <button
               onClick={() => {
                 openSignIn();
                 setMobileMenuOpen(false);
               }}
-              className="flex items-center gap-2 text-gray-700 hover:bg-[#EBEDED] rounded px-2 py-1"
-            > 
-              <Image className="w-4 h-4" src={assets.user_icon} alt="user icon" />
+              className="flex items-center gap-2 text-gray-700 dark:text-white hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+            >
+              <Image src={assets.user_icon} alt="user" className="w-4 h-4" />
               Sign In
             </button>
           )}
+
+          {/* <button
+            onClick={toggleTheme}
+            className="flex items-center gap-2 text-gray-700 dark:text-white hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+          >
+            {theme === "dark" ? (
+              <>
+                <Sun className="w-4 h-4 text-yellow-400" />
+                Light Mode
+              </>
+            ) : (
+              <>
+                <Moon className="w-4 h-4 text-gray-700" />
+                Dark Mode
+              </>
+            )}
+          </button> */}
         </div>
       )}
     </nav>
