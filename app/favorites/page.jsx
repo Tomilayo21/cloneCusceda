@@ -56,62 +56,69 @@ const FavoritesPage = () => {
   };
 
   return (
-    <div className="p-4 flex flex-col items-center pt-14">
+    <>
       <Navbar />
-      <div className="flex flex-col items-center mt-8 mb-4">
-        <p className="text-3xl font-medium">
-          My <span className="text-orange-600">Favorites</span>
-        </p>
-        <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
-      </div>
-      {favorites.length === 0 ? (
-        <p>No favorites yet.</p>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {favorites.map(({ _id, productId }) => {
-            const pid = productId._id?.toString();
-            const rating = ratingsMap[pid] || { avg: 0, count: 0 };
-
-            return (
-              <div key={_id} className="border p-3 rounded shadow-sm">
-                <Image
-                  src={productId.image[0]}
-                  alt={productId.name}
-                  width={300}
-                  height={200}
-                  className="w-full h-40 object-cover rounded"
-                />
-                <h2 className="mt-2 font-medium text-lg">{productId.name}</h2>
-                <p className="text-sm text-gray-600 truncate">{productId.description}</p>
-                <p className="text-sm mt-1 font-semibold">
-                  {currency}
-                  {productId.offerPrice}
-                </p>
-                <div className="mt-2 text-sm text-gray-700">
-                  <p>Average Rating: {rating.avg?.toFixed(1)} ⭐</p>
-                  <p>{rating.count} Reviews</p>
-                </div>
-                <div className="flex justify-between mt-2 text-sm">
-                  <button
-                    className="px-2 py-1 border rounded hover:bg-gray-100"
-                    onClick={() => handleAddToCart(productId)}
-                  >
-                    Add to Cart
-                  </button>
-                  <button
-                    className="px-2 py-1 text-red-500 hover:underline"
-                    onClick={() => removeFavorite(productId._id)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+      <div className="p-4 flex flex-col items-center pt-14 bg-white text-black dark:bg-black dark:text-white min-h-screen">
+        <div className="flex flex-col items-center mt-8 mb-4">
+          <p className="text-3xl font-medium">
+            My <span className="text-orange-600">Favorites</span>
+          </p>
+          <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
         </div>
-      )}
+        {favorites.length === 0 ? (
+          <p className="text-gray-600 dark:text-gray-400">No favorites yet.</p>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-7xl">
+            {favorites.map(({ _id, productId }) => {
+              const pid = productId._id?.toString();
+              const rating = ratingsMap[pid] || { avg: 0, count: 0 };
+
+              return (
+                <div
+                  key={_id}
+                  className="border border-gray-300 mt-8 mb-14 dark:border-gray-700 p-3 rounded shadow-sm bg-gray-50 dark:bg-neutral-900"
+                >
+                  <Image
+                    src={productId.image[0]}
+                    alt={productId.name}
+                    width={300}
+                    height={200}
+                    className="w-full h-40 object-cover rounded"
+                  />
+                  <h2 className="mt-2 font-medium text-lg">{productId.name}</h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                    {productId.description}
+                  </p>
+                  <p className="text-sm mt-1 font-semibold">
+                    {currency}
+                    {productId.offerPrice}
+                  </p>
+                  <div className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <p>Average Rating: {rating.avg?.toFixed(1)} ⭐</p>
+                    <p>{rating.count} Reviews</p>
+                  </div>
+                  <div className="flex justify-between mt-2 text-sm">
+                    <button
+                      className="px-2 py-1 border rounded hover:bg-gray-100 dark:hover:bg-neutral-800 dark:border-gray-600"
+                      onClick={() => handleAddToCart(productId)}
+                    >
+                      Add to Cart
+                    </button>
+                    <button
+                      className="px-2 py-1 text-red-500 dark:text-red-400 hover:underline"
+                      onClick={() => removeFavorite(productId._id)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
       <Footer />
-    </div>
+    </>
   );
 };
 
