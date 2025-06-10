@@ -4,19 +4,53 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 import Loading from '@/components/Loading';
 import { toast } from 'react-hot-toast';
+import { saveAs } from 'file-saver';
 
 const AdminReviewsPage = () => {
   const { user, isLoaded } = useUser();
   const [reviews, setReviews] = useState([]);
+  const [filteredReviews, setFilteredReviews] = useState([]);
+  const [search, setSearch] = useState('');
+  const [sortField, setSortField] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState('desc');
+  const [page, setPage] = useState(1);
+  const [ratingFilter, setRatingFilter] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Check admin role (implement your own logic)
+  const reviewsPerPage = 10;
   const isAdmin = user?.publicMetadata?.role === 'admin';
 
   useEffect(() => {
     if (!isLoaded || !isAdmin) return;
     fetchReviews();
   }, [isLoaded, isAdmin]);
+
+  useEffect(() => {
+    let updated = [...reviews];
+
+    if (search) {
+      updated = updated.filter(r =>
+        r.userName.toLowerCase().includes(search.toLowerCase()) ||
+        r.productId.toLowerCase().includes(search.toLowerCase()) ||
+        r.comment.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    if (ratingFilter) {
+      updated = updated.filter(r => r.rating === parseInt(ratingFilter));
+    }
+
+    updated.sort((a, b) => {
+      const aVal = a[sortField];
+      const bVal = b[sortField];
+      if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    setFilteredReviews(updated);
+    setPage(1);
+  }, [search, reviews, sortField, sortOrder, ratingFilter]);
 
   async function fetchReviews() {
     setLoading(true);
@@ -67,57 +101,163 @@ const AdminReviewsPage = () => {
     }
   }
 
-  if (!isLoaded) return <Loading />;
-
-  if (!isAdmin) {
-    return <p className="p-8 text-center text-red-500">Access denied. You are not an admin.</p>;
+  function exportToCSV() {
+    const headers = ['User', 'Product ID', 'Rating', 'Comment', 'Approved', 'Date'];
+    const rows = filteredReviews.map(r => [
+      r.userName,
+      r.productId,
+      r.rating,
+      r.comment,
+      r.approved ? 'Yes' : 'No',
+      new Date(r.createdAt).toLocaleString()
+    ]);
+    const csvContent = [headers, ...rows].map(e => e.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, 'reviews.csv');
   }
 
+  async function approveAll() {
+    const unapprovedIds = filteredReviews.filter(r => !r.approved).map(r => r._id);
+    for (const id of unapprovedIds) {
+      await toggleApproval(id, true);
+    }
+    toast.success('All reviews approved');
+  }
+
+  if (!isLoaded) return <Loading />;
+  if (!isAdmin) return <p className="p-8 text-center text-red-500">Access denied. You are not an admin.</p>;
   if (loading) return <Loading />;
 
+  const paginatedReviews = filteredReviews.slice((page - 1) * reviewsPerPage, page * reviewsPerPage);
+  const totalPages = Math.ceil(filteredReviews.length / reviewsPerPage);
+
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8">Manage Reviews</h1>
-      {reviews.length === 0 ? (
+    <div className="p-4 max-w-6xl mx-auto mt-8">
+      <h1 className="text-3xl font-bold mb-4">Manage Reviews</h1>
+
+      <div className="flex flex-wrap gap-4 mb-6">
+        <input
+          type="text"
+          placeholder="Search by user, product, or comment"
+          className="border p-2 rounded flex-grow min-w-[180px]"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+        <select value={ratingFilter} onChange={e => setRatingFilter(e.target.value)} className="border p-2 rounded">
+          <option value="">All Ratings</option>
+          {[1, 2, 3, 4, 5].map(r => <option key={r} value={r}>{r} Stars</option>)}
+        </select>
+        <select value={sortField} onChange={e => setSortField(e.target.value)} className="border p-2 rounded">
+          <option value="createdAt">Date</option>
+          <option value="userName">User</option>
+          <option value="productId">Product ID</option>
+        </select>
+        <select value={sortOrder} onChange={e => setSortOrder(e.target.value)} className="border p-2 rounded">
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+        <button onClick={exportToCSV} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 whitespace-nowrap">
+          Export CSV
+        </button>
+        <button onClick={approveAll} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 whitespace-nowrap">
+          Approve All
+        </button>
+      </div>
+
+      {filteredReviews.length === 0 ? (
         <p>No reviews found.</p>
       ) : (
-        <table className="w-full border-collapse border border-gray-300">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="border border-gray-300 px-4 py-2">User</th>
-              <th className="border border-gray-300 px-4 py-2">Product ID</th>
-              <th className="border border-gray-300 px-4 py-2">Rating</th>
-              <th className="border border-gray-300 px-4 py-2">Comment</th>
-              <th className="border border-gray-300 px-4 py-2">Approved</th>
-              <th className="border border-gray-300 px-4 py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reviews.map((rev) => (
-              <tr key={rev._id}>
-                <td className="border border-gray-300 px-4 py-2">{rev.userName}</td>
-                <td className="border border-gray-300 px-4 py-2">{rev.productId}</td>
-                <td className="border border-gray-300 px-4 py-2">{rev.rating}</td>
-                <td className="border border-gray-300 px-4 py-2">{rev.comment}</td>
-                <td className="border border-gray-300 px-4 py-2">
+        <>
+          {/* Desktop Table */}
+          <div className="hidden md:block">
+            <table className="w-full border-collapse border border-gray-300 text-sm">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="border border-gray-300 px-4 py-2">User</th>
+                  <th className="border border-gray-300 px-4 py-2">Product ID</th>
+                  <th className="border border-gray-300 px-4 py-2">Rating</th>
+                  <th className="border border-gray-300 px-4 py-2">Comment</th>
+                  <th className="border border-gray-300 px-4 py-2">Approved</th>
+                  <th className="border border-gray-300 px-4 py-2">Date</th>
+                  <th className="border border-gray-300 px-4 py-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedReviews.map(rev => (
+                  <tr key={rev._id}>
+                    <td className="border border-gray-300 px-4 py-2">{rev.userName}</td>
+                    <td className="border border-gray-300 px-4 py-2">{rev.productId}</td>
+                    <td className="border border-gray-300 px-4 py-2">{rev.rating}</td>
+                    <td className="border border-gray-300 px-4 py-2">{rev.comment}</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">
+                      <input
+                        type="checkbox"
+                        checked={rev.approved}
+                        onChange={() => toggleApproval(rev._id, !rev.approved)}
+                        className="w-5 h-5 cursor-pointer"
+                      />
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">{new Date(rev.createdAt).toLocaleString()}</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">
+                      <button onClick={() => deleteReview(rev._id)} className="text-red-600 hover:underline">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="md:hidden space-y-4">
+            {paginatedReviews.map(rev => (
+              <div key={rev._id} className="border border-gray-300 rounded p-4 shadow-sm bg-white">
+                <div className="mb-2"><strong>User:</strong> {rev.userName}</div>
+                <div className="mb-2"><strong>Product ID:</strong> {rev.productId}</div>
+                <div className="mb-2"><strong>Rating:</strong> {rev.rating} ⭐</div>
+                <div className="mb-2"><strong>Comment:</strong> {rev.comment}</div>
+                <div className="mb-2 flex items-center">
+                  <strong className="mr-2">Approved:</strong>
                   <input
                     type="checkbox"
                     checked={rev.approved}
                     onChange={() => toggleApproval(rev._id, !rev.approved)}
+                    className="w-6 h-6 cursor-pointer"
                   />
-                </td>
-                <td className="border border-gray-300 px-4 py-2 space-x-2">
-                  <button
-                    onClick={() => deleteReview(rev._id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
+                </div>
+                <div className="mb-2"><strong>Date:</strong> {new Date(rev.createdAt).toLocaleString()}</div>
+                <button
+                  onClick={() => deleteReview(rev._id)}
+                  className="text-red-600 hover:underline mt-2 block"
+                >
+                  Delete
+                </button>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="mt-4 flex justify-between items-center">
+            <p>Page {page} of {totalPages}</p>
+            <div className="space-x-2">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage(p => p - 1)}
+                className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+              >
+                Prev
+              </button>
+              <button
+                disabled={page === totalPages}
+                onClick={() => setPage(p => p + 1)}
+                className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
