@@ -14,8 +14,14 @@ const FeaturedProduct = () => {
 
   const fetchProductData = async () => {
     const product = products.find((product) => product._id === id);
+
+    if (!product || !product.visible) {
+      router.push("/not-found"); // Redirect if product is not visible
+      return;
+    }
+
     setProductData(product);
-    if (product && product.image?.length > 0) {
+    if (product.image?.length > 0) {
       setMainImage(product.image[0]);
     }
   };
@@ -32,9 +38,15 @@ const FeaturedProduct = () => {
       {productData && (
         <div
           className="w-full max-w-4xl mt-10"
-          style={{ backgroundColor: "rgba(230, 233, 242, 0.6)", padding: "1.5rem", borderRadius: "0.375rem" }} // p-6 and rounded-md
+          style={{
+            backgroundColor: "rgba(230, 233, 242, 0.6)",
+            padding: "1.5rem",
+            borderRadius: "0.375rem"
+          }}
         >
-          <h1 className="text-2xl font-semibold mb-4">{productData.name}</h1>
+          <h1 className="text-2xl font-semibold mb-4 text-white dark:text-black">
+            {productData.name}
+          </h1>
           {mainImage && (
             <img
               src={mainImage}
@@ -42,7 +54,9 @@ const FeaturedProduct = () => {
               className="w-full h-auto rounded"
             />
           )}
-          <p className="mt-4 text-gray-600">{productData.description}</p>
+          <p className="mt-4 text-white dark:text-black">
+            {productData.description}
+          </p>
           <p className="mt-2 text-lg font-semibold text-orange-600">
             ${productData.price}
           </p>
@@ -66,7 +80,8 @@ const FeaturedProduct = () => {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mt-12 px-4">
           {products
-            .filter((product) => product._id !== id)
+            .filter((product) => product.visible) // Only show visible products
+            .filter((product) => product._id !== id) // Exclude current product
             .slice(0, 5)
             .map((product) => (
               <div
@@ -79,8 +94,10 @@ const FeaturedProduct = () => {
                   className="w-full h-auto object-cover group-hover:brightness-75 transition duration-300 rounded"
                 />
                 <div className="group-hover:-translate-y-4 transition duration-300 absolute bottom-8 left-4 text-green space-y-2">
-                  <p className="font-medium text-xl lg:text-2xl">{product.name}</p>
-                  <p className="text-sm lg:text-base leading-5 max-w-60 line-clamp-2">
+                  <p className="font-medium text-xl lg:text-2xl text-white dark:text-black">
+                    {product.name}
+                  </p>
+                  <p className="text-sm lg:text-base leading-5 max-w-60 line-clamp-2 text-white dark:text-black">
                     {product.description}
                   </p>
                   <button
@@ -88,12 +105,6 @@ const FeaturedProduct = () => {
                     className="flex items-center gap-1.5 bg-orange-600 px-4 py-2 rounded text-white"
                   >
                     Add to Cart
-                    <img
-                      alt="Redirect Icon"
-                      width={12}
-                      height={12}
-                      className="h-3 w-3"
-                    />
                   </button>
                 </div>
               </div>
