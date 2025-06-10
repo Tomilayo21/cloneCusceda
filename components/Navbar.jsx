@@ -170,7 +170,7 @@ const Navbar = () => {
           )}
         </div>
         
-        {/* <button
+        <button
           onClick={toggleTheme}
           className="hidden md:block p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
         >
@@ -179,7 +179,7 @@ const Navbar = () => {
           ) : (
             <Moon className="w-4 h-4 text-gray-700" />
           )}
-        </button> */}
+        </button>
 
         {/* Mobile Right Side */}
         <div className="flex md:hidden items-center gap-2">
