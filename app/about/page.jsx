@@ -32,7 +32,7 @@ export default function About() {
           </section>
 
           <section>
-            <h2>🚀 Who We Are</h2>
+            <h2>🧑‍🤝‍🧑 Who We Are</h2>
             <p>
               Founded by a passionate team of tech lovers, logistics experts, and customer service professionals, 
               Cusceda was born out of a simple but powerful idea:
