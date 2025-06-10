@@ -170,7 +170,7 @@ const Navbar = () => {
           )}
         </div>
         
-        <button
+        {/* <button
           onClick={toggleTheme}
           className="hidden md:block p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
         >
@@ -179,7 +179,7 @@ const Navbar = () => {
           ) : (
             <Moon className="w-4 h-4 text-gray-700" />
           )}
-        </button>
+        </button> */}
 
         {/* Mobile Right Side */}
         <div className="flex md:hidden items-center gap-2">
@@ -297,7 +297,7 @@ const Navbar = () => {
             </button>
           )}
 
-          <button
+          {/* <button
             onClick={toggleTheme}
             className="flex items-center gap-2 text-gray-700 dark:text-white hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
           >
@@ -312,7 +312,7 @@ const Navbar = () => {
                 Dark Mode
               </>
             )}
-          </button>
+          </button> */}
         </div>
       )}
     </nav>
