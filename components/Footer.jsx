@@ -9,7 +9,7 @@ const Footer = () => {
   const { theme } = useTheme();
 
   // Select logo based on theme
-  const logoSrc = theme === "dark" ? "/cusceda_.png" : "/cusceda.png";
+  const logoSrc = theme === "dark" ? "/cusceda___.png" : "/cusceda__.png";
 
   return (
     <footer className="bg-white dark:bg-black border-t border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-400">
