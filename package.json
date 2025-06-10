@@ -12,6 +12,7 @@
     "@clerk/nextjs": "^6.18.0",
     "axios": "^1.9.0",
     "cloudinary": "^2.6.0",
+    "file-saver": "^2.0.5",
     "inngest": "^3.35.1",
     "lucide-react": "^0.511.0",
     "mongoose": "^8.14.0",
