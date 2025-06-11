@@ -144,7 +144,7 @@ export default function UserList() {
   if (error) return <p className="p-4 text-red-600">Error: {error}</p>;
 
   return (
-    <div className="p-2 max-w-4xl flex-1 overflow-scroll flex flex-col mx-8 mt-4">
+    <div className="p-2 max-w-4xl flex-1 overflow-scroll flex flex-col mx-4 mt-4">
       <Toaster position="top-right" />
       <h2 className="text-xl md:text-2xl font-bold mb-4">Registered Users</h2>
 
@@ -263,7 +263,7 @@ export default function UserList() {
       </div>
 
 
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-6">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-6 mb-8">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
