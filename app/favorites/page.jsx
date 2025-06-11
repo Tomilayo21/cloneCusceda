@@ -59,7 +59,7 @@ const FavoritesPage = () => {
     <>
       <Navbar />
       <div className="p-4 flex flex-col items-center pt-14 bg-white text-black dark:bg-black dark:text-white min-h-screen items-start px-6 md:px-16 lg:px-32 pt-20">
-        <div className="flex flex-col items-center mt-8 mb-4">
+        <div className="flex flex-col items-center mb-4">
           <p className="text-3xl font-medium">
             My <span className="text-orange-600">Favorites</span>
           </p>
