@@ -27,7 +27,7 @@ export async function POST(req) {
     });
 
     await transporter.sendMail({
-      from: `"WellCrafted Interiors" <${process.env.EMAIL_USER}>`,
+      from: `"${name}" <${process.env.EMAIL_USER}>`,
       to: process.env.ADMIN_EMAIL,
       replyTo: email,
       subject: `Customer Inquiry: ${subject}`,
