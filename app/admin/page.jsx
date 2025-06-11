@@ -109,6 +109,8 @@ const AddProduct = () => {
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">
       <form onSubmit={handleSubmit} className="md:p-10 p-4 space-y-5 max-w-lg">
+        <h1 className="text-xl md:text-2xl font-bold mb-4">Add Products</h1>
+        
         {/* Image Upload */}
         <div>
           <p className="text-base font-medium">Product Image</p>
