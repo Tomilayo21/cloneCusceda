@@ -161,7 +161,7 @@ export default function UserList() {
         />
         <button
           onClick={exportToCSV}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
+          className="bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-black transition"
         >
           Export to CSV
         </button>
@@ -281,7 +281,7 @@ export default function UserList() {
             Next
           </button>
         </div>
-        <Link href="/activity-log" className="text-blue-600 hover:underline text-sm">
+        <Link href="/activity-log" className="text-orange hover:underline text-sm">
           View Activity Log
         </Link>
       </div>
