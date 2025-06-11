@@ -23,7 +23,13 @@ const ProductList = () => {
   const [sortOption, setSortOption] = useState("none");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const parsedStart = startDate ? new Date(startDate) : null;
+  const parsedEnd = endDate ? new Date(endDate) : null;
 
+  // Set end of day for the end date so the filter includes the whole day
+  if (parsedEnd) {
+    parsedEnd.setHours(23, 59, 59, 999);
+  }
 
   const fetchAdminProduct = async () => {
     try {
@@ -57,12 +63,13 @@ const ProductList = () => {
   }
 
   // Date range filtering
-  if (startDate) {
-    temp = temp.filter((p) => new Date(p.createdAt) >= new Date(startDate));
-  }
-  if (endDate) {
-    temp = temp.filter((p) => new Date(p.createdAt) <= new Date(endDate));
-  }
+  temp = temp.filter((p) => {
+  const created = new Date(p.date); // use the correct date field from your schema
+  return (
+    (!parsedStart || created >= parsedStart) &&
+    (!parsedEnd || created <= parsedEnd)
+  );
+});
 
   // Sorting
   if (sortOption === "price-asc") {
@@ -208,12 +215,11 @@ const handleExportCSV = () => {
 
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between bg-gray-50">
-      {loading ? (
+      {/* {loading ? (
         <Loading />
-      ) : (
-        <div className="w-full md:p-10 p-4 max-w-7xl mx-auto">
+      ) : ()} */}
+      <div className="w-full md:p-10 p-4 max-w-7xl mx-auto">
           <h2 className="pb-4 text-xl font-semibold">All Products</h2>
-
           {/* Filters Section */}
           <div className="mb-6 flex flex-wrap gap-4 items-center">
             {/* Search */}
@@ -335,7 +341,8 @@ const handleExportCSV = () => {
                     </td>
                     <td className="px-4 py-3">
                       {product.stock > 0 ? (
-                        <span className="text-green-600 font-semibold">In Stock</span>
+                        <span className="text-green-600 font-semibold">
+                        In Stock</span>
                       ) : (
                         <span className="text-red-600 font-semibold">Sold Out</span>
                       )}
@@ -389,7 +396,24 @@ const handleExportCSV = () => {
                   <p className="text-sm text-gray-800 font-medium">${product.offerPrice}</p>
                   <p className="text-sm">
                     {product.stock > 0 ? (
-                      <span className="text-green-600">In Stock</span>
+                      <div>
+                        <input
+                        type="number"
+                        value={stockInputs[product._id] ?? product.stock}
+                        min={0}
+                        onChange={(e) =>
+                          setStockInputs((prev) => ({
+                            ...prev,
+                            [product._id]: parseInt(e.target.value, 10),
+                          }))
+                        }
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleStockUpdate(product._id, stockInputs[product._id]);
+                          }
+                        }}
+                        className="w-12 px-2 py-1 border rounded"
+                      /><span className="text-green-600 ml-2">In Stock</span></div>
                     ) : (
                       <span className="text-red-600">Sold Out</span>
                     )}
@@ -442,7 +466,6 @@ const handleExportCSV = () => {
             </div>
           )}
         </div>
-      )}
 
       <Footer />
     </div>
