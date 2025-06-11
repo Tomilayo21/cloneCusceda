@@ -219,6 +219,7 @@ const AddProduct = () => {
   return (
 
     <div className="flex-1 min-h-screen flex flex-col justify-between">
+      <h2 className="pb-4 text-xl font-semibold">Add Product</h2>
 
       <form onSubmit={handleSubmit} className="md:p-10 p-4 space-y-5 max-w-lg">
 
