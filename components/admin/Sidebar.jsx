@@ -9,7 +9,8 @@ import {
   Star,
   Bell,
   CreditCard,
-  Mail
+  Mail,
+  Contact
 } from 'lucide-react';
 
 const SideBar = () => {
@@ -17,13 +18,14 @@ const SideBar = () => {
 
   const menuItems = [
     { name: 'Add Products', path: '/admin', icon: <PlusSquare className="w-6 h-6" /> },
-    { name: 'Products List', path: '/admin/product-list', icon: <ListOrdered className="w-6 h-6" /> },
-    { name: 'Orders', path: '/admin/orders', icon: <ShoppingCart className="w-6 h-6" /> },
-    { name: 'Users', path: '/admin/users', icon: <Users className="w-6 h-6" /> },
-    { name: 'Reviews', path: '/admin/reviews', icon: <Star className="w-6 h-6" /> },
     { name: 'Messages', path: '/admin/messages', icon: <Mail className="w-6 h-6" /> },
     { name: 'Notifications', path: '/admin/notifications', icon: <Bell className="w-6 h-6" /> },
+    { name: 'Orders', path: '/admin/orders', icon: <ShoppingCart className="w-6 h-6" /> },
+    { name: 'Products List', path: '/admin/product-list', icon: <ListOrdered className="w-6 h-6" /> },
+    { name: 'Reviews', path: '/admin/reviews', icon: <Star className="w-6 h-6" /> },
+    { name: 'Subscribers', path: '/admin/subscribers', icon: <Contact className="w-6 h-6" /> },
     { name: 'Transactions', path: '/admin/payments', icon: <CreditCard className="w-6 h-6" /> },
+    { name: 'Users', path: '/admin/users', icon: <Users className="w-6 h-6" /> },
   ];
 
   return (
