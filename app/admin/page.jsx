@@ -1,63 +1,33 @@
 'use client';
-
-
-
 import React, { useState, useEffect } from "react";
-
 import { assets } from "@/assets/assets";
-
 import Image from "next/image";
-
 import { useAppContext } from "@/context/AppContext";
-
 import axios from "axios";
-
 import toast from "react-hot-toast";
-
 import { useRouter } from "next/navigation";
-
 import { ImagePlus } from "lucide-react";
 
 
 
 const AddProduct = () => {
-
   const { getToken, isAdmin, user } = useAppContext();
-
   const router = useRouter();
-
-
-
   const [files, setFiles] = useState([]);
-
   const [name, setName] = useState('');
-
   const [description, setDescription] = useState('');
-
   const [category, setCategory] = useState('Earphone');
-
   const [price, setPrice] = useState('');
-
   const [offerPrice, setOfferPrice] = useState('');
-
   const [uploading, setUploading] = useState(false);
-
   const [uploadDone, setUploadDone] = useState(false);
-
   const [color, setColor] = useState('');
-
   const [brand, setBrand] = useState('');
-
   const [stock, setStock] = useState('');
 
-
-
   useEffect(() => {
-
     if (!user || !isAdmin) {
-
       router.replace("/");
-
     }
 
   }, [user, isAdmin, router]);
