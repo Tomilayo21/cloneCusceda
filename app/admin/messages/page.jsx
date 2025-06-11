@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Footer from "@/components/admin/Footer";
 
 dayjs.extend(relativeTime);
 
@@ -153,7 +154,6 @@ const AdminMessagesDashboard = () => {
   return (
     <div className="p-4 sm:p-6">
       <h1 className="text-xl md:text-2xl font-bold mb-4">Messages Dashboard</h1>
-
       {/* View Buttons */}
       <div className="flex flex-wrap gap-2 sm:gap-4 mb-6">
         {["inbox", "unread", "archived", "deleted"].map((v) => (
@@ -399,6 +399,10 @@ const AdminMessagesDashboard = () => {
           </div>
         </div>
       )}
+
+      <div className="mt-12">
+        <Footer />
+      </div>
     </div>
   );
 };
