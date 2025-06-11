@@ -176,7 +176,7 @@ const OrderSummary = () => {
       <button
         onClick={createOrder}
         disabled={processing}
-        className={`w-full py-3 mt-5 text-white ${processing ? 'bg-black-400 cursor-not-allowed' : 'bg-black hover:bg-orange-700'}`}
+        className={`w-full py-3 mt-5 text-white ${processing ? 'bg-black cursor-not-allowed' : 'bg-black hover:bg-orange-700'}`}
       >
         {processing ? "Please wait while we process your order..." : "Place Order"}
       </button>
