@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import Footer from "@/components/admin/Footer";
-import Loading from "@/components/Loading";
+// import Loading from "@/components/Loading";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Pencil, Trash2 } from "lucide-react";
