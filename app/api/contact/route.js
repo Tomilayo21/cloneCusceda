@@ -1,27 +1,49 @@
-// app/api/contact/route.js
-import connectDB from "@/config/db";
+import nodemailer from "nodemailer";
 import Contact from "@/models/Contact";
+import connectDB from "@/config/db";
 
 export async function POST(req) {
   try {
-    await connectDB();
-
-    const { name, email, subject, message } = await req.json();
+    const body = await req.json();
+    const { name, email, subject, message } = body;
 
     if (!name || !email || !subject || !message) {
-      return new Response(JSON.stringify({ error: "All fields are required." }), {
-        status: 400,
-      });
+      return new Response(JSON.stringify({ error: "All fields are required" }), { status: 400 });
     }
 
-    const saved = await Contact.create({ name, email, subject, message });
+    // 1. Save to MongoDB
+    await connectDB();
+    await Contact.create({ name, email, subject, message, archived: false });
 
-    return new Response(JSON.stringify({ success: true, saved }), {
-      status: 201,
+    // 2. Send Email
+    const transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: Number(process.env.EMAIL_PORT),
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
     });
+
+    await transporter.sendMail({
+      from: `"${name}" <${process.env.EMAIL_USER}>`,
+      to: process.env.ADMIN_EMAIL,
+      replyTo: email,
+      subject: `Customer Inquiry: ${subject}`,
+      html: `
+        <h2>You've Received a New Inquiry</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Subject:</strong> ${subject}</p>
+        <p><strong>Message:</strong><br/>${message}</p>
+      `,
+    });
+
+
+    return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (error) {
-    return new Response(JSON.stringify({ error: "Something went wrong." }), {
-      status: 500,
-    });
+    console.error("Submit error:", error);
+    return new Response(JSON.stringify({ error: "Failed to submit message" }), { status: 500 });
   }
 }
