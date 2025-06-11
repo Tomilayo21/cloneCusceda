@@ -59,7 +59,7 @@ export default function FavoritesPage() {
     <>
       <Navbar />
 
-      <div className="p-4 flex flex-col items-center pt-14 bg-white text-black dark:bg-black dark:text-white min-h-screen px-6 md:px-16 lg:px-32">
+      <div className="p-4 flex flex-col items-center pt-14 mt-8 bg-white text-black dark:bg-black dark:text-white min-h-screen px-6 md:px-16 lg:px-32">
         <div className="flex flex-col items-center mb-4">
           <p className="text-3xl font-medium">
             My <span className="text-orange-600">Favorites</span>
