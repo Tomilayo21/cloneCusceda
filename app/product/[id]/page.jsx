@@ -60,6 +60,7 @@ export default function ProductPage() {
   const totalPages = Math.ceil(reviews.length / reviewsPerPage);
   const start = (page - 1) * reviewsPerPage;
   const current = reviews.slice(start, start + reviewsPerPage);
+  const relatedProducts = products.filter(p => p.category === productData.category && p._id !== id).slice(0, 4);
 
   const renderStars = (rating) => {
     return (
@@ -74,155 +75,157 @@ export default function ProductPage() {
   return (
     <>
       <Navbar />
-      <div className="px-6 md:px-16 lg:px-32 mt-24 space-y-10">
-        {/* Product Info */}
-        <div className="grid md:grid-cols-2 gap-16">
-          <div>
-            <div className="rounded-lg overflow-hidden bg-gray-100 mb-4">
-              <Image
-                src={mainImage || productData.image[0]}
-                alt={productData.name}
-                width={1280} height={720}
-                className="w-full object-cover"
-              />
+      <div className="p-4 flex flex-col items-center pt-8 mb-8 bg-white text-black dark:bg-black dark:text-white min-h-screen">
+        <div className="px-6 md:px-16 lg:px-32 mt-24 space-y-10">
+          {/* Product Info */}
+          <div className="grid md:grid-cols-2 gap-16">
+            <div>
+              <div className="rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 mb-4">
+                <Image
+                  src={mainImage || productData.image[0]}
+                  alt={productData.name}
+                  width={1280} height={720}
+                  className="w-full object-cover"
+                />
+              </div>
+              <div className="grid grid-cols-4 gap-2">
+                {productData.image.map((img,i) => (
+                  <div key={i} className="cursor-pointer" onClick={()=>setMainImage(img)}>
+                    <Image src={img} alt="" width={200} height={200} className="w-full h-auto object-cover" />
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-4 gap-2">
-              {productData.image.map((img,i) => (
-                <div key={i} className="cursor-pointer" onClick={()=>setMainImage(img)}>
-                  <Image src={img} alt="" width={200} height={200} className="w-full h-auto object-cover" />
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="flex flex-col">
-            <h1 className="text-3xl font-bold">{productData.name}</h1>
-            <p className="mt-2 text-gray-700">{productData.description}</p>
-            <div className="mt-4">
-              <span className="text-2xl font-semibold">₦{productData.offerPrice}</span>
-              <span className="line-through text-gray-500 ml-2">₦{productData.price}</span>
-            </div>
-            <div className="overflow-x-auto mt-4">
-                <table className="table-auto border-collapse w-full max-w-72">
-                    <tbody>
-                        <tr>
-                            <td className="text-gray-600 font-medium">Brand</td>
-                            <td className="text-gray-800/50 ">{productData.brand}</td>
-                        </tr>
-                        <tr>
-                            <td className="text-gray-600 font-medium">Color</td>
-                            <td className="text-gray-800/50 ">{productData.color}</td>
-                        </tr>
-                        <tr>
-                            <td className="text-gray-600 font-medium">Category</td>
-                            <td className="text-gray-800/50">
-                                {productData.category}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div className="mt-6 flex gap-4">
-              <button 
-              onClick={handleAddToCart} 
-              disabled={productData.stock === 0}
-              className="px-3 py-1 text-lg bg-indigo-600 text-white border border-gray-300 rounded hover:bg-slate-50 hover:text-indigo-600 cursor-pointer transition"
-            >
-              {productData.stock === 0 ? "Sold Out" : "Add to Cart"}
-            </button>
-              {productData.stock > 0 && (
+            <div className="flex flex-col">
+              <h1 className="text-3xl font-bold text-black dark:text-white">{productData.name}</h1>
+              <p className="mt-2 text-black dark:text-white">{productData.description}</p>
+              <div className="mt-4">
+                <span className="text-2xl font-semibold text-black dark:text-white">₦{productData.offerPrice}</span>
+                <span className="line-through text-gray-500 dark:text-gray-400 ml-2">₦{productData.price}</span>
+              </div>
+              <div className="overflow-x-auto mt-4">
+                  <table className="table-auto border-collapse w-full max-w-72 text-black dark:text-white">
+                      <tbody>
+                          <tr>
+                              <td className="font-medium">Brand</td>
+                              <td>{productData.brand}</td>
+                          </tr>
+                          <tr>
+                              <td className="font-medium">Color</td>
+                              <td>{productData.color}</td>
+                          </tr>
+                          <tr>
+                              <td className="font-medium">Category</td>
+                              <td>{productData.category}</td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+              <div className="mt-6 flex gap-4">
                 <button 
-                  onClick={() => router.push('/cart')} 
-                  className="px-6 py-2 border border-indigo-600 rounded text-indigo-600 hover:bg-indigo-50"
-                >
-                  Go to Cart
-                </button>
-              )}
-            </div>
-
-            {/* Submit Review */}
-            <div className="mt-8">
-              {user ? (
-                <>
-                  <h2 className="font-semibold mb-2">Leave a Review</h2>
-                  <label className="flex items-center gap-2 mb-2">
-                    Rating:
-                    <select
-                      value={rating}
-                      onChange={e => setRating(+e.target.value)}
-                      className="border rounded p-1"
-                    >
-                      {[1,2,3,4,5].map(n => (
-                        <option key={n} value={n}>{n}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={comment}
-                    onChange={e => setComment(e.target.value)}
-                    className="w-full border rounded p-2 mb-2"
-                    placeholder="Your comment..."
-                  />
-                  <button
-                    onClick={handleSubmitReview}
-                    className="px-4 py-2 bg-indigo-600 text-white rounded"
+                onClick={handleAddToCart} 
+                disabled={productData.stock === 0}
+                className="px-3 py-1 text-lg bg-indigo-600 text-white border border-gray-300 rounded hover:bg-slate-50 hover:text-indigo-600 cursor-pointer transition"
+              >
+                {productData.stock === 0 ? "Sold Out" : "Add to Cart"}
+              </button>
+                {productData.stock > 0 && (
+                  <button 
+                    onClick={() => router.push('/cart')} 
+                    className="px-6 py-2 border border-indigo-600 rounded text-indigo-600 hover:bg-indigo-50"
                   >
-                    Submit Review
+                    Go to Cart
                   </button>
-                </>
-              ) : (
-                <p className="text-red-600">Please sign in to leave a review.</p>
-              )}
+                )}
+              </div>
+
+              {/* Submit Review */}
+              <div className="mt-8">
+                {user ? (
+                  <>
+                    <h2 className="font-semibold mb-2 text-black dark:text-white">Leave a Review</h2>
+                    <label className="flex items-center gap-2 mb-2 text-black dark:text-white" htmlFor="rating-select">
+                      Rating:
+                      <select
+                        id="rating-select"
+                        value={rating}
+                        onChange={e => setRating(+e.target.value)}
+                        className="border rounded p-1 text-black dark:text-white bg-white dark:bg-gray-900"
+                      >
+                        {[1,2,3,4,5].map(n => (
+                          <option key={n} value={n}>{n}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={comment}
+                      onChange={e => setComment(e.target.value)}
+                      className="w-full border rounded p-2 mb-2 text-black dark:text-white bg-white dark:bg-gray-900"
+                      placeholder="Your comment..."
+                    />
+                    <button
+                      onClick={handleSubmitReview}
+                      className="px-4 py-2 bg-indigo-600 text-white rounded"
+                    >
+                      Submit Review
+                    </button>
+                  </>
+                ) : (
+                  <p className="text-red-600">Please sign in to leave a review.</p>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Reviews List with Pagination */}
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Reviews</h2>
-          {current.length === 0 ? (
-            <p>No reviews yet.</p>
-          ) : current.map(r => (
-            <div key={r._id} className="border-b pb-2">
-              <p className="font-semibold">{r.userName}</p>
-              {renderStars(r.rating)}
-              <p className="text-gray-700">{r.comment}</p>
-            </div>
-          ))}
+          {/* Reviews List with Pagination */}
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold text-black dark:text-white">Reviews</h2>
+            {current.length === 0 ? (
+              <p className="text-black dark:text-white">No reviews yet.</p>
+            ) : current.map(r => (
+              <div key={r._id} className="border-b pb-2">
+                <p className="font-semibold text-black dark:text-white">{r.userName}</p>
+                {renderStars(r.rating)}
+                <p className="text-black dark:text-white">{r.comment}</p>
+              </div>
+            ))}
 
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-4 mt-4">
-              <button
-                onClick={() => setPage(p => Math.max(p - 1, 1))}
-                disabled={page === 1}
-                className="px-3 py-1 border rounded disabled:opacity-50"
-              >
-                Prev
-              </button>
-              <span>Page {page} of {totalPages}</span>
-              <button
-                onClick={() => setPage(p => Math.min(p + 1, totalPages))}
-                disabled={page === totalPages}
-                className="px-3 py-1 border rounded disabled:opacity-50"
-              >
-                Next
-              </button>
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-4 mt-4">
+                <button
+                  onClick={() => setPage(p => Math.max(p - 1, 1))}
+                  disabled={page === 1}
+                  className="px-3 py-1 border rounded disabled:opacity-50 text-black dark:text-white"
+                >
+                  Prev
+                </button>
+                <span className="text-black dark:text-white">Page {page} of {totalPages}</span>
+                <button
+                  onClick={() => setPage(p => Math.min(p + 1, totalPages))}
+                  disabled={page === totalPages}
+                  className="px-3 py-1 border rounded disabled:opacity-50 text-black dark:text-white"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Related Products */}
+          {relatedProducts.length > 0 && (
+            <div>
+              <h2 className="text-2xl font-semibold mb-4 text-black dark:text-white">Related Products</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {relatedProducts.map(p => <ProductCard key={p._id} product={p} />)}
+              </div>
             </div>
           )}
-        </div>
 
-        {/* Related Products */}
-        <div>
-          <h2 className="text-2xl font-semibold mb-4">Related Products</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {products
-              .filter(p => p.category === productData.category && p._id !== id)
-              .slice(0,4)
-              .map(p => <ProductCard key={p._id} product={p} />)}
-          </div>
         </div>
       </div>
       <Footer />
+
     </>
   );
 }
