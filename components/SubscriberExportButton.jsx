@@ -35,9 +35,9 @@ const SubscriberExportButton = () => {
     <div className="p-4">
       <button
         onClick={exportToCSV}
-        className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+        className="bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-black transition"
       >
-        Export Subscribers to CSV
+        Export to CSV
       </button>
     </div>
   );
