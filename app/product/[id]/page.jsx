@@ -14,7 +14,7 @@ import { FaStar, FaRegStar } from 'react-icons/fa';
 export default function ProductPage() {
   const { id } = useParams();
   const router = useRouter();
-  const { products, addToCart } = useAppContext();
+  const { products, addToCart, currency } = useAppContext();
   const { user } = useUser();
 
   const [productData, setProductData] = useState(null);
@@ -75,7 +75,7 @@ export default function ProductPage() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center mt-8 mb-8 bg-white text-black dark:bg-black dark:text-white min-h-screen">
+      <div className=" flex flex-col items-center mt-8 mb-8 bg-white text-black dark:bg-black dark:text-white min-h-screen">
         <div className="px-6 md:px-16 lg:px-32 mt-16 space-y-10">
           {/* Product Info */}
           <div className="grid md:grid-cols-2 gap-16">
@@ -100,8 +100,8 @@ export default function ProductPage() {
               <h1 className="text-3xl font-bold text-black dark:text-white">{productData.name}</h1>
               <p className="mt-2 text-black dark:text-white">{productData.description}</p>
               <div className="mt-4">
-                <span className="text-2xl font-semibold text-black dark:text-white">₦{productData.offerPrice}</span>
-                <span className="line-through text-gray-500 dark:text-gray-400 ml-2">₦{productData.price}</span>
+                <span className="text-2xl font-semibold text-black dark:text-white">{currency}{productData.offerPrice}</span>
+                <span className="line-through text-gray-500 dark:text-gray-400 ml-2">{currency}{productData.price}</span>
               </div>
               <div className="overflow-x-auto mt-4">
                   <table className="table-auto border-collapse w-full max-w-72 text-black dark:text-white">
