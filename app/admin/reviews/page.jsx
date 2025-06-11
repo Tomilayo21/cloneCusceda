@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
-import Loading from '@/components/Loading';
+// import Loading from '@/components/Loading';
 import { toast } from 'react-hot-toast';
 import { saveAs } from 'file-saver';
 
@@ -124,16 +124,17 @@ const AdminReviewsPage = () => {
     toast.success('All reviews approved');
   }
 
-  if (!isLoaded) return <Loading />;
+  // if (!isLoaded) return <Loading />;
   if (!isAdmin) return <p className="p-8 text-center text-red-500">Access denied. You are not an admin.</p>;
-  if (loading) return <Loading />;
+  // if (loading) return <Loading />;
 
   const paginatedReviews = filteredReviews.slice((page - 1) * reviewsPerPage, page * reviewsPerPage);
   const totalPages = Math.ceil(filteredReviews.length / reviewsPerPage);
 
   return (
-    <div className="p-4 max-w-6xl mx-auto mt-8">
-      <h1 className="text-3xl font-bold mb-4">Manage Reviews</h1>
+    <div className="p-2 max-w-4xl flex-1 overflow-scroll flex flex-col mx-8 mt-4">
+      {/* flex-1 overflow-scroll h-screen text-sm flex flex-col justify-between */}
+      <h1 className="text-xl md:text-2xl font-bold mb-4">Manage Reviews</h1>
 
       <div className="flex flex-wrap gap-4 mb-6">
         <input
