@@ -16,8 +16,8 @@ const SideBar = () => {
   const pathname = usePathname();
 
   const menuItems = [
-    { name: 'Add Product', path: '/admin', icon: <PlusSquare className="w-6 h-6" /> },
-    { name: 'Product List', path: '/admin/product-list', icon: <ListOrdered className="w-6 h-6" /> },
+    { name: 'Add Products', path: '/admin', icon: <PlusSquare className="w-6 h-6" /> },
+    { name: 'Products List', path: '/admin/product-list', icon: <ListOrdered className="w-6 h-6" /> },
     { name: 'Orders', path: '/admin/orders', icon: <ShoppingCart className="w-6 h-6" /> },
     { name: 'Users', path: '/admin/users', icon: <Users className="w-6 h-6" /> },
     { name: 'Reviews', path: '/admin/reviews', icon: <Star className="w-6 h-6" /> },
