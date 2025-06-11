@@ -152,7 +152,7 @@ const AdminMessagesDashboard = () => {
 
   return (
     <div className="p-4 sm:p-6">
-      <h1 className="text-2xl font-bold mb-4 sm:mb-6">Admin Messages Dashboard</h1>
+      <h1 className="text-xl md:text-2xl font-bold mb-4">Messages Dashboard</h1>
 
       {/* View Buttons */}
       <div className="flex flex-wrap gap-2 sm:gap-4 mb-6">
