@@ -5,6 +5,7 @@ import { useUser } from '@clerk/nextjs';
 // import Loading from '@/components/Loading';
 import { toast } from 'react-hot-toast';
 import { saveAs } from 'file-saver';
+import Footer from '@/components/admin/Footer';
 
 const AdminReviewsPage = () => {
   const { user, isLoaded } = useUser();
@@ -132,7 +133,7 @@ const AdminReviewsPage = () => {
   const totalPages = Math.ceil(filteredReviews.length / reviewsPerPage);
 
   return (
-    <div className="p-2 max-w-4xl flex-1 overflow-scroll flex flex-col mx-8 mt-4">
+    <div className="p-2 max-w-4xl flex-1 overflow-scroll flex flex-col mx-6 mt-4">
       {/* flex-1 overflow-scroll h-screen text-sm flex flex-col justify-between */}
       <h1 className="text-xl md:text-2xl font-bold mb-4">Manage Reviews</h1>
 
@@ -211,7 +212,7 @@ const AdminReviewsPage = () => {
           </div>
 
           {/* Mobile Cards */}
-          <div className="md:hidden space-y-4">
+          <div className="md:hidden space-y-4 mx-4">
             {paginatedReviews.map(rev => (
               <div key={rev._id} className="border border-gray-300 rounded p-4 shadow-sm bg-white">
                 <div className="mb-2"><strong>User:</strong> {rev.userName}</div>
@@ -260,6 +261,9 @@ const AdminReviewsPage = () => {
           </div>
         </>
       )}
+      <div className='mt-12'>
+        <Footer />
+      </div>
     </div>
   );
 };
