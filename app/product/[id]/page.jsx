@@ -75,7 +75,7 @@ export default function ProductPage() {
   return (
     <>
       <Navbar />
-      <div className="p-4 flex flex-col items-center pt-8 mb-8 bg-white text-black dark:bg-black dark:text-white min-h-screen">
+      <div className="flex flex-col items-center mt-8 mb-8 bg-white text-black dark:bg-black dark:text-white min-h-screen">
         <div className="px-6 md:px-16 lg:px-32 mt-24 space-y-10">
           {/* Product Info */}
           <div className="grid md:grid-cols-2 gap-16">
