@@ -24,9 +24,8 @@ const SubscribersPage = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
-      <h1 className="text-2xl font-semibold mb-6">Subscribers</h1>
-
+    <div className="p-2 max-w-4xl flex-1 overflow-scroll flex flex-col mx-6 mt-4">
+      <h1 className="text-xl md:text-2xl font-bold mb-4">Subscribers</h1>
       <SubscriberExportButton />
 
       {loading ? (
