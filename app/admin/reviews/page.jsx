@@ -133,7 +133,7 @@ const AdminReviewsPage = () => {
   const totalPages = Math.ceil(filteredReviews.length / reviewsPerPage);
 
   return (
-    <div className="p-2 max-w-4xl flex-1 overflow-scroll flex flex-col mx-6 mt-4">
+    <div className="p-2 max-w-4xl flex-1 overflow-scroll flex flex-col mx-4 mt-4">
       {/* flex-1 overflow-scroll h-screen text-sm flex flex-col justify-between */}
       <h1 className="text-xl md:text-2xl font-bold mb-4">Manage Reviews</h1>
 
