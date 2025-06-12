@@ -25,6 +25,14 @@ const ProductList = () => {
   const [endDate, setEndDate] = useState("");
   const parsedStart = startDate ? new Date(startDate) : null;
   const parsedEnd = endDate ? new Date(endDate) : null;
+  const [openProduct, setOpenProduct] = useState(null);
+  const [editableProduct, setEditableProduct] = useState(null);
+
+  useEffect(() => {
+    if (openProduct) {
+      setEditableProduct({ ...openProduct });
+    }
+  }, [openProduct]);
 
   // Set end of day for the end date so the filter includes the whole day
   if (parsedEnd) {
@@ -110,7 +118,6 @@ const handleExportCSV = () => {
   link.click();
   document.body.removeChild(link);
 };
-
 
   useEffect(() => {
     if (user) fetchAdminProduct();
@@ -204,13 +211,40 @@ const handleExportCSV = () => {
     }
   };
 
+  //Update Product
+  const handleProductUpdate = async (updatedProduct) => {
+    try {
+      const res = await fetch(`/api/product/${updatedProduct._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedProduct),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update product");
+      }
+
+      const updated = await res.json();
+
+      // Optionally update local state or re-fetch data
+      toast.success("Product updated successfully");
+      setOpenProduct(null);
+      // Optional: re-fetch product list
+      router.refresh?.(); // If using Next.js 13+ app router
+    } catch (error) {
+      console.error(error);
+      toast.error("Error updating product");
+    }
+  };
+
   // Pagination logic
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
   const paginatedProducts = filteredProducts.slice(
     (currentPage - 1) * PRODUCTS_PER_PAGE,
     currentPage * PRODUCTS_PER_PAGE
   );
-
   const categories = ["All", ...new Set(products.map((p) => p.category))];
 
   return (
@@ -358,9 +392,13 @@ const handleExportCSV = () => {
                       </button>
                     </td>
                     <td className="px-4 py-3 flex flex-col gap-2">
-                      <button
+                      {/* <button
                         onClick={() => router.push(`/admin/product/edit/${product._id}`)}
                         className="px-3 py-2 bg-blue-600 text-white rounded-md text-sm flex items-center gap-1 justify-center"
+                      > */}
+                      <button
+                        onClick={() => setOpenProduct(product)}
+                        className="text-blue-600 hover:underline flex items-center gap-1"
                       >
                         <Pencil className="w-4 h-4" />
                         Edit
@@ -419,9 +457,13 @@ const handleExportCSV = () => {
                     )}
                   </p>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    <button
+                    {/* <button
                       onClick={() => router.push(`/admin/product/edit/${product._id}`)}
                       className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md flex items-center gap-1"
+                    > */}
+                    <button
+                      onClick={() => setOpenProduct(product)}
+                      className="text-blue-600 hover:underline flex items-center gap-1"
                     >
                       <Pencil className="w-4 h-4" />
                       Edit
@@ -465,6 +507,291 @@ const handleExportCSV = () => {
               ))}
             </div>
           )}
+
+          {/* Modal Pop-Up */}
+          {/* {openProduct && editableProduct && (
+            <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
+              <div className="bg-white rounded-lg p-4 max-w-md w-full relative shadow-xl space-y-2 text-sm max-h-[90vh] overflow-y-auto">
+                <button
+                  onClick={() => setOpenProduct(null)}
+                  className="absolute top-2 right-2 text-gray-500 hover:text-black"
+                >
+                  ✖
+                </button>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Name</label>
+                  <input
+                    type="text"
+                    value={editableProduct.name}
+                    onChange={(e) =>
+                      setEditableProduct({ ...editableProduct, name: e.target.value })
+                    }
+                    className="w-full px-3 py-1.5 border rounded"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Category</label>
+                  <input
+                    type="text"
+                    value={editableProduct.category}
+                    onChange={(e) =>
+                      setEditableProduct({ ...editableProduct, category: e.target.value })
+                    }
+                    className="w-full px-3 py-1.5 border rounded"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Offer Price ($)</label>
+                  <input
+                    type="number"
+                    value={editableProduct.offerPrice}
+                    onChange={(e) =>
+                      setEditableProduct({
+                        ...editableProduct,
+                        offerPrice: Number(e.target.value),
+                      })
+                    }
+                    className="w-full px-3 py-1.5 border rounded"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Stock</label>
+                  <input
+                    type="number"
+                    value={editableProduct.stock}
+                    onChange={(e) =>
+                      setEditableProduct({
+                        ...editableProduct,
+                        stock: Number(e.target.value),
+                      })
+                    }
+                    className="w-full px-3 py-1.5 border rounded"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Description</label>
+                  <textarea
+                    rows={3}
+                    value={editableProduct.description}
+                    onChange={(e) =>
+                      setEditableProduct({ ...editableProduct, description: e.target.value })
+                    }
+                    className="w-full px-3 py-1.5 border rounded resize-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Visibility</label>
+                  <select
+                    value={editableProduct.visible ? 'visible' : 'hidden'}
+                    onChange={(e) =>
+                      setEditableProduct({
+                        ...editableProduct,
+                        visible: e.target.value === 'visible',
+                      })
+                    }
+                    className="w-full px-3 py-1.5 border rounded"
+                  >
+                    <option value="visible">Visible</option>
+                    <option value="hidden">Hidden</option>
+                  </select>
+                </div>
+
+                <div className="text-xs text-gray-400">
+                  Created {new Date(openProduct.createdAt).toLocaleString()}
+                </div>
+
+                <div>
+                  <Image
+                    src={editableProduct.image?.[0] || "/placeholder.jpg"}
+                    alt={editableProduct.name}
+                    width={100}
+                    height={100}
+                    className="rounded-md object-cover"
+                  />
+                </div>
+
+                <button
+                  className="mt-4 w-full bg-blue-600 text-white py-2 rounded"
+                  onClick={() => handleProductUpdate(editableProduct)}
+                >
+                  Update Product
+                </button>
+              </div>
+            </div>
+          )} */}
+          {openProduct && editableProduct && (
+            <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
+              <div className="bg-white rounded-lg p-4 max-w-md w-full relative shadow-xl space-y-2 text-sm max-h-[90vh] overflow-y-auto">
+                <button
+                  onClick={() => setOpenProduct(null)}
+                  className="absolute top-2 right-2 text-gray-500 hover:text-black"
+                >
+                  ✖
+                </button>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Name</label>
+                  <input
+                    type="text"
+                    value={editableProduct.name}
+                    onChange={(e) =>
+                      setEditableProduct({ ...editableProduct, name: e.target.value })
+                    }
+                    className="w-full px-3 py-1.5 border rounded"
+                  />
+                </div>
+
+                {/* Category dropdown */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Category</label>
+                  <select
+                    value={editableProduct.category}
+                    onChange={(e) =>
+                      setEditableProduct({ ...editableProduct, category: e.target.value })
+                    }
+                    className="w-full px-3 py-1.5 border rounded"
+                  >
+                    <option value="Earphone">Earphone</option>
+                    <option value="Headphone">Headphone</option>
+                    <option value="Watch">Watch</option>
+                    <option value="Smartphone">Smartphone</option>
+                    <option value="Laptop">Laptop</option>
+                    <option value="Camera">Camera</option>
+                    <option value="Accessories">Accessories</option>
+                  </select>
+                </div>
+
+                {/* Brand dropdown */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Brand</label>
+                  <select
+                    value={editableProduct.brand}
+                    onChange={(e) =>
+                      setEditableProduct({ ...editableProduct, brand: e.target.value })
+                    }
+                    className="w-full px-3 py-1.5 border rounded"
+                  >
+                    <option value="Apple">Apple</option>
+                    <option value="Samsung">Samsung</option>
+                    <option value="Sony">Sony</option>
+                    <option value="Huawei">Huawei</option>
+                    <option value="Bose">Bose</option>
+                    <option value="Infinix">Infinix</option>
+                    <option value="Xiaomi">Xiaomi</option>
+                    <option value="Tecno">Tecno</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                {/* Color dropdown */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Color</label>
+                  <select
+                    value={editableProduct.color}
+                    onChange={(e) =>
+                      setEditableProduct({ ...editableProduct, color: e.target.value })
+                    }
+                    className="w-full px-3 py-1.5 border rounded"
+                  >
+                    <option value="Black">Black</option>
+                    <option value="White">White</option>
+                    <option value="Silver">Silver</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Red">Red</option>
+                    <option value="Gold">Gold</option>
+                    <option value="Green">Green</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Offer Price ($)</label>
+                  <input
+                    type="number"
+                    value={editableProduct.offerPrice}
+                    onChange={(e) =>
+                      setEditableProduct({
+                        ...editableProduct,
+                        offerPrice: Number(e.target.value),
+                      })
+                    }
+                    className="w-full px-3 py-1.5 border rounded"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Stock</label>
+                  <input
+                    type="number"
+                    value={editableProduct.stock}
+                    onChange={(e) =>
+                      setEditableProduct({
+                        ...editableProduct,
+                        stock: Number(e.target.value),
+                      })
+                    }
+                    className="w-full px-3 py-1.5 border rounded"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Description</label>
+                  <textarea
+                    rows={3}
+                    value={editableProduct.description}
+                    onChange={(e) =>
+                      setEditableProduct({ ...editableProduct, description: e.target.value })
+                    }
+                    className="w-full px-3 py-1.5 border rounded resize-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Visibility</label>
+                  <select
+                    value={editableProduct.visible ? "visible" : "hidden"}
+                    onChange={(e) =>
+                      setEditableProduct({
+                        ...editableProduct,
+                        visible: e.target.value === "visible",
+                      })
+                    }
+                    className="w-full px-3 py-1.5 border rounded"
+                  >
+                    <option value="visible">Visible</option>
+                    <option value="hidden">Hidden</option>
+                  </select>
+                </div>
+
+                <div className="text-xs text-gray-400">
+                  Created {new Date(openProduct.createdAt).toLocaleString()}
+                </div>
+
+                <div>
+                  <Image
+                    src={editableProduct.image?.[0] || "/placeholder.jpg"}
+                    alt={editableProduct.name}
+                    width={100}
+                    height={100}
+                    className="rounded-md object-cover"
+                  />
+                </div>
+
+                <button
+                  className="mt-4 w-full bg-blue-600 text-white py-2 rounded"
+                  onClick={() => handleProductUpdate(editableProduct)}
+                >
+                  Update Product
+                </button>
+              </div>
+            </div>
+          )}
+
         </div>
 
       <Footer />
