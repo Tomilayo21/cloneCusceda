@@ -154,244 +154,125 @@ const AddProduct = () => {
           <label className="text-base font-medium" htmlFor="product-name">Product Name</label>
           <input
             id="product-name"
-
             type="text"
-
             placeholder="Type here"
-
             className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-
             onChange={(e) => setName(e.target.value)}
-
             value={name}
-
             required
-
           />
-
         </div>
-
-
 
         {/* Description */}
-
         <div className="flex flex-col gap-1 max-w-md">
-
           <label className="text-base font-medium" htmlFor="product-description">Product Description</label>
-
           <textarea
-
             id="product-description"
-
             rows={4}
-
             className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40 resize-none"
-
             placeholder="Type here"
-
             onChange={(e) => setDescription(e.target.value)}
-
             value={description}
-
             required
-
           />
-
         </div>
-
 
 
         {/* Options */}
-
         <div className="flex items-center gap-5 flex-wrap">
-
           <div className="flex flex-col gap-1 w-32">
-
             <label className="text-base font-medium" htmlFor="category">Category</label>
-
             <select
-
               id="category"
-
               className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-
               onChange={(e) => setCategory(e.target.value)}
-
               value={category}
-
             >
-
               <option value="Earphone">Earphone</option>
-
               <option value="Headphone">Headphone</option>
-
               <option value="Watch">Watch</option>
-
               <option value="Smartphone">Smartphone</option>
-
               <option value="Laptop">Laptop</option>
-
               <option value="Camera">Camera</option>
-
               <option value="Accessories">Accessories</option>
-
             </select>
-
           </div>
 
-
-
           <div className="flex flex-col gap-1 w-32">
-
             <label className="text-base font-medium" htmlFor="color">Color</label>
-
             <select
-
               id="color"
-
               className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-
               onChange={(e) => setColor(e.target.value)}
-
               value={color}
-
             >
-
               <option value="">Select</option>
-
               <option value="Red">Red</option>
-
               <option value="Black">Black</option>
-
               <option value="Blue">Blue</option>
-
               <option value="White">White</option>
-
               <option value="Gray">Gray</option>
-
               <option value="Green">Green</option>
-
               <option value="Yellow">Yellow</option>
-
               <option value="Purple">Purple</option>
-
               <option value="Pink">Pink</option>
-
               <option value="Gold">Gold</option>
-
               <option value="Silver">Silver</option>
-
             </select>
-
           </div>
 
-
-
           <div className="flex flex-col gap-1 w-32">
-
             <label className="text-base font-medium" htmlFor="brand">Brand</label>
-
             <input
-
               id="brand"
-
               type="text"
-
               placeholder="Brand"
-
               className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-
               onChange={(e) => setBrand(e.target.value)}
-
               value={brand}
-
               required
-
             />
-
           </div>
 
-
-
           <div className="flex flex-col gap-1 w-32">
-
             <label className="text-base font-medium" htmlFor="product-price">Original Price</label>
-
             <input
-
               id="product-price"
-
               type="number"
-
               placeholder="0"
-
               className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-
               onChange={(e) => setPrice(e.target.value)}
-
               value={price}
-
               required
-
             />
-
           </div>
 
-
-
           <div className="flex flex-col gap-1 w-32">
-
             <label className="text-base font-medium" htmlFor="offer-price">Discount Price</label>
-
             <input
-
               id="offer-price"
-
               type="number"
-
               placeholder="0"
-
               className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-
               onChange={(e) => setOfferPrice(e.target.value)}
-
               value={offerPrice}
-
               required
-
             />
-
           </div>
-
-
 
           <div className="flex flex-col gap-1 w-32">
-
             <label className="text-base font-medium" htmlFor="stock">Stock</label>
-
             <input
-
               id="stock"
-
               type="number"
-
               placeholder="0"
-
               className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-
               onChange={(e) => setStock(e.target.value)}
-
               value={stock}
-
               required
-
             />
-
           </div>
-
         </div>
-
-
 
         <button
           type="submit"
