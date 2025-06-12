@@ -222,15 +222,23 @@ const AddProduct = () => {
 
           <div className="flex flex-col gap-1 w-32">
             <label className="text-base font-medium" htmlFor="brand">Brand</label>
-            <input
+            <select
               id="brand"
-              type="text"
-              placeholder="Brand"
               className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
               onChange={(e) => setBrand(e.target.value)}
               value={brand}
               required
-            />
+            >
+              <option value="Apple">Apple</option>
+              <option value="Samsung">Samsung</option>
+              <option value="Sony">Sony</option>
+              <option value="Huawei">Huawei</option>
+              <option value="Bose">Bose</option>
+              <option value="Infinix">Infinix</option>
+              <option value="Xiaomi">Xiaomi</option>
+              <option value="Tecno">Tecno</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
 
           <div className="flex flex-col gap-1 w-32">
