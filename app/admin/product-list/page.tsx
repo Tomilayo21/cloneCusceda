@@ -311,7 +311,7 @@ const handleExportCSV = () => {
             {/* Export Button */}
             <button
               onClick={handleExportCSV}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center gap-2 text-sm"
+              className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md flex items-center gap-2 text-sm"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -375,17 +375,17 @@ const handleExportCSV = () => {
                     </td>
                     <td className="px-4 py-3">
                       {product.stock > 0 ? (
-                        <span className="text-green-600 font-semibold">
+                        <span className="text-black-400 font-semibold">
                         In Stock</span>
                       ) : (
-                        <span className="text-red-600 font-semibold">Sold Out</span>
+                        <span className="text-orange-600 font-semibold">Sold Out</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
                       <button
                         onClick={() => toggleVisibility(product._id)}
                         className={`px-3 py-1 rounded-md text-white text-sm ${
-                          product.visible ? "bg-green-600" : "bg-gray-400"
+                          product.visible ? "bg-orange-600" : "bg-gray-400"
                         }`}
                       >
                         {product.visible ? "Visible" : "Hidden"}
@@ -398,7 +398,7 @@ const handleExportCSV = () => {
                       > */}
                       <button
                         onClick={() => setOpenProduct(product)}
-                        className="text-blue-600 hover:underline flex items-center gap-1"
+                        className="text-black bg-orange rounded-md hover:text-white px-3 py-2 hover:bg-black flex items-center gap-1"
                       >
                         <Pencil className="w-4 h-4" />
                         Edit
@@ -451,9 +451,9 @@ const handleExportCSV = () => {
                           }
                         }}
                         className="w-12 px-2 py-1 border rounded"
-                      /><span className="text-green-600 ml-2">In Stock</span></div>
+                      /><span className="text-black-400 ml-2">In Stock</span></div>
                     ) : (
-                      <span className="text-red-600">Sold Out</span>
+                      <span className="text-orange-600">Sold Out</span>
                     )}
                   </p>
                   <div className="mt-2 flex flex-wrap gap-2">
@@ -463,7 +463,7 @@ const handleExportCSV = () => {
                     > */}
                     <button
                       onClick={() => setOpenProduct(product)}
-                      className="text-blue-600 hover:underline flex items-center gap-1"
+                      className="text-black bg-orange rounded-md hover:text-white px-3 py-2 hover:bg-black flex items-center gap-1"
                     >
                       <Pencil className="w-4 h-4" />
                       Edit
@@ -478,7 +478,7 @@ const handleExportCSV = () => {
                     <button
                       onClick={() => toggleVisibility(product._id)}
                       className={`px-3 py-1 text-sm rounded-md text-white ${
-                        product.visible ? "bg-green-600" : "bg-gray-500"
+                        product.visible ? "bg-orange-600" : "bg-gray-500"
                       }`}
                     >
                       {product.visible ? "Visible" : "Hidden"}
@@ -509,122 +509,6 @@ const handleExportCSV = () => {
           )}
 
           {/* Modal Pop-Up */}
-          {/* {openProduct && editableProduct && (
-            <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
-              <div className="bg-white rounded-lg p-4 max-w-md w-full relative shadow-xl space-y-2 text-sm max-h-[90vh] overflow-y-auto">
-                <button
-                  onClick={() => setOpenProduct(null)}
-                  className="absolute top-2 right-2 text-gray-500 hover:text-black"
-                >
-                  ✖
-                </button>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold">Name</label>
-                  <input
-                    type="text"
-                    value={editableProduct.name}
-                    onChange={(e) =>
-                      setEditableProduct({ ...editableProduct, name: e.target.value })
-                    }
-                    className="w-full px-3 py-1.5 border rounded"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold">Category</label>
-                  <input
-                    type="text"
-                    value={editableProduct.category}
-                    onChange={(e) =>
-                      setEditableProduct({ ...editableProduct, category: e.target.value })
-                    }
-                    className="w-full px-3 py-1.5 border rounded"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold">Offer Price ($)</label>
-                  <input
-                    type="number"
-                    value={editableProduct.offerPrice}
-                    onChange={(e) =>
-                      setEditableProduct({
-                        ...editableProduct,
-                        offerPrice: Number(e.target.value),
-                      })
-                    }
-                    className="w-full px-3 py-1.5 border rounded"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold">Stock</label>
-                  <input
-                    type="number"
-                    value={editableProduct.stock}
-                    onChange={(e) =>
-                      setEditableProduct({
-                        ...editableProduct,
-                        stock: Number(e.target.value),
-                      })
-                    }
-                    className="w-full px-3 py-1.5 border rounded"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold">Description</label>
-                  <textarea
-                    rows={3}
-                    value={editableProduct.description}
-                    onChange={(e) =>
-                      setEditableProduct({ ...editableProduct, description: e.target.value })
-                    }
-                    className="w-full px-3 py-1.5 border rounded resize-none"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold">Visibility</label>
-                  <select
-                    value={editableProduct.visible ? 'visible' : 'hidden'}
-                    onChange={(e) =>
-                      setEditableProduct({
-                        ...editableProduct,
-                        visible: e.target.value === 'visible',
-                      })
-                    }
-                    className="w-full px-3 py-1.5 border rounded"
-                  >
-                    <option value="visible">Visible</option>
-                    <option value="hidden">Hidden</option>
-                  </select>
-                </div>
-
-                <div className="text-xs text-gray-400">
-                  Created {new Date(openProduct.createdAt).toLocaleString()}
-                </div>
-
-                <div>
-                  <Image
-                    src={editableProduct.image?.[0] || "/placeholder.jpg"}
-                    alt={editableProduct.name}
-                    width={100}
-                    height={100}
-                    className="rounded-md object-cover"
-                  />
-                </div>
-
-                <button
-                  className="mt-4 w-full bg-blue-600 text-white py-2 rounded"
-                  onClick={() => handleProductUpdate(editableProduct)}
-                >
-                  Update Product
-                </button>
-              </div>
-            </div>
-          )} */}
           {openProduct && editableProduct && (
             <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
               <div className="bg-white rounded-lg p-4 max-w-md w-full relative shadow-xl space-y-2 text-sm max-h-[90vh] overflow-y-auto">
