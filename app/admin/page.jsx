@@ -1,5 +1,6 @@
 'use client';
-import React, { useState, useEffect } from "react"
+
+import React, { useState, useEffect } from "react";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
@@ -7,10 +8,12 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { ImagePlus } from "lucide-react";
+import Footer from "@/components/admin/Footer";
 
 const AddProduct = () => {
   const { getToken, isAdmin, user } = useAppContext();
   const router = useRouter();
+
   const [files, setFiles] = useState([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -25,7 +28,7 @@ const AddProduct = () => {
 
   useEffect(() => {
     if (!user || !isAdmin) {
-     router.replace("/");
+      router.replace("/");
     }
   }, [user, isAdmin, router]);
 
@@ -36,14 +39,13 @@ const AddProduct = () => {
     }
   }, [uploadDone]);
 
-
   if (!user || !isAdmin) {
     return <p>Redirecting...</p>;
   }
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setUploading(true);
     setUploadDone(false);
 
@@ -57,17 +59,19 @@ const AddProduct = () => {
     formData.append('brand', brand);
     formData.append('stock', stock);
 
-
     for (let i = 0; i < files.length; i++) {
       if (files[i]) formData.append('images', files[i]);
     }
 
     try {
       const token = await getToken();
+
       await axios.post('/api/product/add', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
       toast.success("Product added successfully!");
+
       setFiles([]);
       setName('');
       setDescription('');
@@ -78,8 +82,6 @@ const AddProduct = () => {
       setOfferPrice('');
       setStock('');
       setUploadDone(true);
-
-
 
       // Redirect to Stripe checkout for payment (optional)
       const res = await axios.post('/api/stripe/checkout', {
@@ -94,10 +96,10 @@ const AddProduct = () => {
         ]
       });
 
-
       if (res.data.url) {
         window.location.href = res.data.url;
       }
+
     } catch (error) {
       toast.error(error.response?.data?.message || error.message || "Upload failed");
     } finally {
@@ -105,11 +107,11 @@ const AddProduct = () => {
     }
   };
 
-
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">
-      <h2 className="pb-4 text-xl font-semibold">Add Product</h2>
       <form onSubmit={handleSubmit} className="md:p-10 p-4 space-y-5 max-w-lg">
+        <h1 className="text-xl md:text-2xl font-bold mb-4">Add Products</h1>
+        
         {/* Image Upload */}
         <div>
           <p className="text-base font-medium">Product Image</p>
@@ -131,7 +133,6 @@ const AddProduct = () => {
                 hidden
               />
 
-
               {files[index] ? (
                 <Image
                   src={URL.createObjectURL(files[index])}
@@ -147,7 +148,6 @@ const AddProduct = () => {
             ))}
           </div>
         </div>
-
 
         {/* Name */}
         <div className="flex flex-col gap-1 max-w-md">
@@ -176,7 +176,6 @@ const AddProduct = () => {
             required
           />
         </div>
-
 
         {/* Options */}
         <div className="flex items-center gap-5 flex-wrap">
@@ -281,11 +280,15 @@ const AddProduct = () => {
         >
           ADD
         </button>
+
         {uploading && <p className="mt-3 text-gray-700 font-medium">Please wait while upload is going on...</p>}
         {uploadDone && !uploading && (
           <p className="mt-3 text-green-600 font-semibold">Product uploaded successfully!</p>
         )}
       </form>
+      <div className='mt-12'>
+        <Footer />
+      </div>
     </div>
   );
 };
