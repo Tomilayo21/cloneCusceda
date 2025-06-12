@@ -8,11 +8,13 @@ import Footer from "@/components/admin/Footer";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Pencil, Trash2 } from "lucide-react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
-const PRODUCTS_PER_PAGE = 10;
+const PRODUCTS_PER_PAGE = 15;
 
 const ProductList = () => {
-  const { router, getToken, user } = useAppContext();
+  const { router, getToken, user, currency } = useAppContext();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,6 +29,10 @@ const ProductList = () => {
   const parsedEnd = endDate ? new Date(endDate) : null;
   const [openProduct, setOpenProduct] = useState(null);
   const [editableProduct, setEditableProduct] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  
+
+  dayjs.extend(relativeTime);
 
   useEffect(() => {
     if (openProduct) {
@@ -212,32 +218,66 @@ const handleExportCSV = () => {
   };
 
   //Update Product
+  // const handleProductUpdate = async (updatedProduct) => {
+  //   try {
+  //     const res = await fetch(`/api/product/${updatedProduct._id}`, {
+  //       method: "PUT",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(updatedProduct),
+  //     });
+
+  //     if (!res.ok) {
+  //       throw new Error("Failed to update product");
+  //     }
+
+  //     const updated = await res.json();
+
+  //     // ✅ Update the product in local state
+  //     setProducts((prevProducts) =>
+  //       prevProducts.map((product) =>
+  //         product._id === updated._id ? updated : product
+  //       )
+  //     );
+
+  //     toast.success("Product updated successfully");
+  //     setOpenProduct(null);
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error("Error updating product");
+  //   }
+  // };
   const handleProductUpdate = async (updatedProduct) => {
-    try {
-      const res = await fetch(`/api/product/${updatedProduct._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedProduct),
-      });
+  try {
+    setIsUpdating(true); // Start loading
 
-      if (!res.ok) {
-        throw new Error("Failed to update product");
-      }
+    const res = await fetch(`/api/product/${updatedProduct._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedProduct),
+    });
 
-      const updated = await res.json();
-
-      // Optionally update local state or re-fetch data
-      toast.success("Product updated successfully");
-      setOpenProduct(null);
-      // Optional: re-fetch product list
-      router.refresh?.(); // If using Next.js 13+ app router
-    } catch (error) {
-      console.error(error);
-      toast.error("Error updating product");
+    if (!res.ok) {
+      throw new Error("Failed to update product");
     }
-  };
+
+    const updated = await res.json();
+
+    toast.success("Product updated successfully");
+    setOpenProduct(null);
+    router.refresh?.(); // If using App Router
+  } catch (error) {
+    console.error(error);
+    toast.error("Error updating product");
+  } finally {
+    setIsUpdating(false); // Stop loading
+  }
+};
+
+
 
   // Pagination logic
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
@@ -594,7 +634,22 @@ const handleExportCSV = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold">Offer Price ($)</label>
+                  <label className="block text-sm font-semibold">Original Price ({currency})</label>
+                  <input
+                    type="number"
+                    value={editableProduct.price}
+                    onChange={(e) =>
+                      setEditableProduct({
+                        ...editableProduct,
+                        price: Number(e.target.value),
+                      })
+                    }
+                    className="w-full px-3 py-1.5 border rounded"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Offer Price ({currency})</label>
                   <input
                     type="number"
                     value={editableProduct.offerPrice}
@@ -652,9 +707,14 @@ const handleExportCSV = () => {
                   </select>
                 </div>
 
-                <div className="text-xs text-gray-400">
-                  Created {new Date(openProduct.createdAt).toLocaleString()}
-                </div>
+                {openProduct.date ? (
+                  <div className="text-xs text-gray-500">
+                    Created {new Date(openProduct.date).toLocaleString()} ({dayjs(openProduct.date).fromNow()})
+                  </div>
+                ) : (
+                  <div className="text-xs text-gray-400">Created date not available</div>
+                )}
+
 
                 <div>
                   <Image
@@ -666,12 +726,20 @@ const handleExportCSV = () => {
                   />
                 </div>
 
-                <button
-                  className="mt-4 w-full bg-blue-600 text-white py-2 rounded"
+                {/* <button
+                  className="mt-4 w-full bg-orange-600 text-white py-2 rounded"
                   onClick={() => handleProductUpdate(editableProduct)}
                 >
                   Update Product
+                </button> */}
+                <button
+                  className="mt-4 w-full bg-orange-600 text-white py-2 rounded disabled:opacity-50"
+                  onClick={() => handleProductUpdate(editableProduct)}
+                  disabled={isUpdating}
+                >
+                  {isUpdating ? "Updating..." : "Update Product"}
                 </button>
+
               </div>
             </div>
           )}
