@@ -1,310 +1,158 @@
-
-
 'use client';
-
-
-
-import React, { useState, useEffect } from "react";
-
+import React, { useState, useEffect } from "react"
 import { assets } from "@/assets/assets";
-
 import Image from "next/image";
-
 import { useAppContext } from "@/context/AppContext";
-
 import axios from "axios";
-
 import toast from "react-hot-toast";
-
 import { useRouter } from "next/navigation";
-
 import { ImagePlus } from "lucide-react";
 
-
-
 const AddProduct = () => {
-
   const { getToken, isAdmin, user } = useAppContext();
-
   const router = useRouter();
-
-
-
   const [files, setFiles] = useState([]);
-
   const [name, setName] = useState('');
-
   const [description, setDescription] = useState('');
-
   const [category, setCategory] = useState('Earphone');
-
   const [price, setPrice] = useState('');
-
   const [offerPrice, setOfferPrice] = useState('');
-
   const [uploading, setUploading] = useState(false);
-
   const [uploadDone, setUploadDone] = useState(false);
-
   const [color, setColor] = useState('');
-
   const [brand, setBrand] = useState('');
-
   const [stock, setStock] = useState('');
 
-
-
   useEffect(() => {
-
     if (!user || !isAdmin) {
-
-      router.replace("/");
-
+     router.replace("/");
     }
-
   }, [user, isAdmin, router]);
 
-
-
   useEffect(() => {
-
     if (uploadDone) {
-
       const timer = setTimeout(() => setUploadDone(false), 5000);
-
       return () => clearTimeout(timer);
-
     }
-
   }, [uploadDone]);
 
 
-
   if (!user || !isAdmin) {
-
     return <p>Redirecting...</p>;
-
   }
 
 
-
   const handleSubmit = async (e) => {
-
     e.preventDefault();
-
-
-
     setUploading(true);
-
     setUploadDone(false);
 
-
-
     const formData = new FormData();
-
     formData.append('name', name);
-
     formData.append('description', description);
-
     formData.append('category', category);
-
     formData.append('price', price);
-
     formData.append('offerPrice', offerPrice);
-
     formData.append('color', color);
-
     formData.append('brand', brand);
-
     formData.append('stock', stock);
 
 
-
     for (let i = 0; i < files.length; i++) {
-
       if (files[i]) formData.append('images', files[i]);
-
     }
 
-
-
     try {
-
       const token = await getToken();
-
-
-
       await axios.post('/api/product/add', formData, {
-
         headers: { Authorization: `Bearer ${token}` }
-
       });
-
-
-
       toast.success("Product added successfully!");
-
-
-
       setFiles([]);
-
       setName('');
-
       setDescription('');
-
       setCategory('Earphone');
-
       setColor('');
-
       setBrand('');
-
       setPrice('');
-
       setOfferPrice('');
-
       setStock('');
-
       setUploadDone(true);
 
 
 
       // Redirect to Stripe checkout for payment (optional)
-
       const res = await axios.post('/api/stripe/checkout', {
-
         items: [
-
           {
-
             name: name,
-
             description: description,
-
             image: "", // optional: you can pass one of the uploaded image URLs here
-
             price: parseFloat(price),
-
             quantity: 1,
-
           }
-
         ]
-
       });
 
 
-
       if (res.data.url) {
-
         window.location.href = res.data.url;
-
       }
-
-
-
     } catch (error) {
-
       toast.error(error.response?.data?.message || error.message || "Upload failed");
-
     } finally {
-
       setUploading(false);
-
     }
-
   };
 
 
-
   return (
-
     <div className="flex-1 min-h-screen flex flex-col justify-between">
       <h2 className="pb-4 text-xl font-semibold">Add Product</h2>
-
       <form onSubmit={handleSubmit} className="md:p-10 p-4 space-y-5 max-w-lg">
-
         {/* Image Upload */}
-
         <div>
-
           <p className="text-base font-medium">Product Image</p>
-
           <div className="flex flex-wrap items-center gap-3 mt-2">
-
             {[...Array(4)].map((_, index) => (
-
               <label
-
               key={index}
-
               htmlFor={`image${index}`}
-
               className="relative w-24 h-24 border border-gray-300 rounded cursor-pointer flex items-center justify-center overflow-hidden"
-
             >
-
               <input
-
                 onChange={(e) => {
-
                   const updatedFiles = [...files];
-
                   updatedFiles[index] = e.target.files[0];
-
                   setFiles(updatedFiles);
-
                 }}
-
                 type="file"
-
                 id={`image${index}`}
-
                 hidden
-
               />
 
 
-
               {files[index] ? (
-
                 <Image
-
                   src={URL.createObjectURL(files[index])}
-
                   alt={`preview-${index}`}
-
                   width={96}
-
                   height={96}
-
                   className="object-cover w-full h-full"
-
                 />
-
               ) : (
-
                 <ImagePlus className="w-6 h-6 text-gray-500" />
-
               )}
-
             </label>
-
             ))}
-
           </div>
-
         </div>
 
 
-
         {/* Name */}
-
         <div className="flex flex-col gap-1 max-w-md">
-
           <label className="text-base font-medium" htmlFor="product-name">Product Name</label>
-
           <input
-
             id="product-name"
 
             type="text"
