@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import { useClerk } from "@clerk/nextjs";
 import useSWR from "swr";
 import toast from "react-hot-toast";
-import { Heart} from "lucide-react"; // <-- import Heart icon
+import { Heart} from "lucide-react"; 
+import Modal from "@/components/Modal"; 
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -18,8 +19,24 @@ const ProductCard = ({ product }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [likes, setLikes] = useState(product.likes || []);
   const [loading, setLoading] = useState(false);
-
   const liked = user && likes.includes(user.id);
+
+  const [showModal, setShowModal] = useState(false);
+
+  const pressTimer = useRef(null);
+
+  const handleLongPressStart = () => {
+    pressTimer.current = setTimeout(() => {
+      setShowModal(true);
+    }, 500); // 500ms for long press
+  };
+
+  const handleLongPressEnd = () => {
+    clearTimeout(pressTimer.current);
+    setShowModal(false);
+  };
+
+
 
   const toggleLike = async () => {
     if (!user) return;
@@ -107,8 +124,13 @@ const ProductCard = ({ product }) => {
 
   return (
     <div
-      onClick={handleCardClick}
-      className="flex flex-col items-start gap-0.5 max-w-[200px] w-full cursor-pointer mb-16"
+     onClick={handleCardClick}
+        onMouseDown={handleLongPressStart}
+        onTouchStart={handleLongPressStart}
+        onMouseUp={handleLongPressEnd}
+        onMouseLeave={handleLongPressEnd}
+        onTouchEnd={handleLongPressEnd}
+        className="flex flex-col items-start gap-0.5 max-w-[200px] w-full cursor-pointer mb-16"
     >
       <div className="relative bg-gray-100 dark:bg-gray-800 rounded-lg w-full h-52 flex items-center justify-center overflow-hidden group">
         <Image
@@ -148,19 +170,7 @@ const ProductCard = ({ product }) => {
           <p>{likes.length} {likes.length === 1 ? 'like' : 'likes'}</p>
         </div>
       </div>
-
-
-      {/* {user && (
-        <button onClick={toggleLike} disabled={loading} aria-label="Toggle Like">
-        <Heart
-          className={`w-5 h-5 transition ${
-            liked ? 'text-red-500 fill-red-500' : 'text-gray-500'
-          }`}
-        />
-      </button>
-      )} */}
-
-      
+  
 
       <div className="flex items-end justify-between w-full mt-1">
         <p className="text-base font-medium text-black dark:text-white">
@@ -175,6 +185,46 @@ const ProductCard = ({ product }) => {
           {product.stock === 0 ? "Sold Out" : "Add to Cart"}
         </button>
       </div>
+
+      {/* Modal shown on long press */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
+          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 max-w-sm w-full relative shadow-xl overflow-y-auto max-h-[90vh]">
+            <h2 className="text-xl font-semibold mb-2 text-black dark:text-white">
+              {product.name}
+            </h2>
+
+            <Image
+              src={product.image[0]}
+              alt={product.name}
+              width={400}
+              height={400}
+              className="object-cover rounded mb-4 w-full h-auto"
+            />
+
+            <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+              {product.description}
+            </p>
+
+            <p className="text-sm text-gray-800 dark:text-gray-200 mb-1">
+              <strong>Price:</strong> {currency}{product.offerPrice}
+            </p>
+
+            {/* <p className="text-sm text-gray-800 dark:text-gray-200 mb-1">
+              <strong>Stock:</strong> {product.stock}
+            </p> */}
+
+            <p className="text-sm text-gray-800 dark:text-gray-200 mb-1">
+              <strong>Likes:</strong> {likes.length}
+            </p>
+
+            <p className="text-sm text-gray-800 dark:text-gray-200">
+              <strong>Average Rating:</strong> {avgRating.toFixed(1)} ⭐
+            </p>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
