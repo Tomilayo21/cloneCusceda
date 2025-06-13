@@ -71,6 +71,7 @@ export default function FavoritesPage() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-7xl">
             {favorites.map(({ _id, productId }) => {
+              if (productId.visible === false) return null; 
               const pid = productId._id?.toString();
               const rating = ratingsMap[pid] || { avg: 0, count: 0 };
 
