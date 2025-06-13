@@ -25,6 +25,7 @@ export default function ProductPage() {
   const [page, setPage] = useState(1);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [likeUsers, setLikeUsers] = useState([]);
 
   const reviewsPerPage = 5;
 
@@ -40,6 +41,19 @@ export default function ProductPage() {
     }
   }
 }, [id, products, user]);
+
+
+useEffect(() => {
+  if (productData?.likes?.length > 0) {
+    fetch('/api/likes/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userIds: productData.likes }),
+    })
+    .then(res => res.json())
+    .then(data => setLikeUsers(data.users || []));
+  }
+}, [productData]);
 
 
   const toggleLike = async () => {
@@ -61,38 +75,47 @@ export default function ProductPage() {
   }
 };
 
-
-
-
-  useEffect(() => {
-    setProductData(products.find(p => p._id === id) || null);
-  }, [id, products]);
-
-  useEffect(() => {
-    if (!id) return;
-    fetch(`/api/reviews?productId=${id}`)
-      .then(res => res.json())
-      .then(data => setReviews(data));
-  }, [id]);
-
-  const handleAddToCart = () => {
-    if (!user) return router.push('/login');
-    addToCart(productData);
-  };
-
-  const handleSubmitReview = async () => {
-    if (!user) return alert('Please log in to submit a review.');
-    await fetch('/api/reviews', {
+useEffect(() => {
+  if (productData?.likes?.length > 0) {
+    fetch('/api/likes/users', {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ productId: id, rating, comment, userName: user.fullName || 'Anonymous' })
-    });
-    setRating(5);
-    setComment('');
-    setPage(1);
-    const refreshed = await fetch(`/api/reviews?productId=${id}`).then(r => r.json());
-    setReviews(refreshed);
-  };
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userIds: productData.likes }),
+    })
+    .then(res => res.json())
+    .then(data => setLikeUsers(data.users || []));
+  }
+}, [productData]);
+
+useEffect(() => {
+  setProductData(products.find(p => p._id === id) || null);
+}, [id, products]);
+
+useEffect(() => {
+  if (!id) return;
+  fetch(`/api/reviews?productId=${id}`)
+    .then(res => res.json())
+    .then(data => setReviews(data));
+}, [id]);
+
+const handleAddToCart = () => {
+  if (!user) return router.push('/login');
+  addToCart(productData);
+};
+
+const handleSubmitReview = async () => {
+  if (!user) return alert('Please log in to submit a review.');
+  await fetch('/api/reviews', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ productId: id, rating, comment, userName: user.fullName || 'Anonymous' })
+  });
+  setRating(5);
+  setComment('');
+  setPage(1);
+  const refreshed = await fetch(`/api/reviews?productId=${id}`).then(r => r.json());
+  setReviews(refreshed);
+};
 
   if (!productData) return <Loading />;
 
@@ -170,6 +193,15 @@ export default function ProductPage() {
                   {liked ? '♥ Liked' : '♡ Like'}
                 </button>
                 <span className="text-black dark:text-white text-sm">{likeCount} like{likeCount !== 1 && 's'}</span>
+                 {likeUsers.length > 0 && (
+                  <div className="text-xs text-gray-500 mt-1">
+                    {likeUsers.length === 1 ? (
+                      <>Liked by {likeUsers[0].fullName || 'Anonymous'}</>
+                    ) : (
+                      <>Liked by {likeUsers[0].fullName || 'Anonymous'} and {likeUsers.length - 1} other{likeUsers.length - 1 > 1 ? 's' : ''}</>
+                    )}
+                  </div>
+                )}
               </div>
               
               <div className="mt-6 flex gap-4">
