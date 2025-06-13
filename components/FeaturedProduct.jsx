@@ -97,9 +97,9 @@ const FeaturedProduct = () => {
                   <p className="font-medium text-xl lg:text-2xl text-white dark:text-black">
                     {product.name}
                   </p>
-                  <p className="text-sm lg:text-base leading-5 max-w-60 line-clamp-2 text-white dark:text-black">
+                  {/* <p className="text-sm lg:text-base leading-5 max-w-60 line-clamp-2 text-white dark:text-black">
                     {product.description}
-                  </p>
+                  </p> */}
                   <button
                     onClick={() => router.push(`/product/${product._id}`)}
                     className="flex items-center gap-1.5 bg-orange-600 px-4 py-2 rounded text-white"
