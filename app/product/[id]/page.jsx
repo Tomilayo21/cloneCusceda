@@ -122,7 +122,16 @@ const handleSubmitReview = async () => {
   const totalPages = Math.ceil(reviews.length / reviewsPerPage);
   const start = (page - 1) * reviewsPerPage;
   const current = reviews.slice(start, start + reviewsPerPage);
-  const relatedProducts = products.filter(p => p.category === productData.category && p._id !== id).slice(0, 4);
+  const relatedProducts = products
+    .filter(
+      (p) =>
+        p.category === productData.category &&
+        p._id !== id &&
+        p.visible !== false // Filter out hidden products here
+    )
+  .slice(0, 4);
+
+
 
   const renderStars = (rating) => {
     return (
@@ -297,14 +306,19 @@ const handleSubmitReview = async () => {
 
           {/* Related Products */}
           {relatedProducts.length > 0 && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4 text-black dark:text-white">Related Products</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {relatedProducts.map(p => <ProductCard key={p._id} product={p} />)}
+            <div className="mt-10">
+              <h2 className="text-lg font-semibold mb-4">Related Products</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                {relatedProducts.map((product) => (
+                  <div key={product._id} className="border p-4 rounded shadow">
+                    <img src={product.image[0]} alt={product.name} className="w-full h-40 object-cover mb-2" />
+                    <h3 className="text-md font-medium">{product.name}</h3>
+                    <p className="text-sm text-gray-600">{currency}{product.offerPrice}</p>
+                  </div>
+                ))}
               </div>
             </div>
           )}
-
         </div>
       </div>
       <Footer />
