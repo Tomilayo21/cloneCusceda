@@ -2,6 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import SubscriberExportButton from "@/components/SubscriberExportButton";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 const SubscribersPage = () => {
   const [subscribers, setSubscribers] = useState([]);
@@ -47,7 +50,7 @@ const SubscribersPage = () => {
                   <tr key={index} className="hover:bg-gray-50">
                     <td className="border p-2">{sub.email}</td>
                     <td className="border p-2">
-                      {new Date(sub.subscribedAt).toLocaleString()}
+                      {new Date(sub.subscribedAt).toLocaleString()} • {dayjs(sub.subscribedAt).fromNow()}
                     </td>
                   </tr>
                 ))}
