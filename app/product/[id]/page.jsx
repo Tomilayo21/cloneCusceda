@@ -10,6 +10,7 @@ import Loading from '@/components/Loading';
 import { useAppContext } from '@/context/AppContext';
 import { useUser } from '@clerk/nextjs';
 import { FaStar, FaRegStar } from 'react-icons/fa';
+import { ThumbsUp } from 'lucide-react';
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -117,6 +118,30 @@ const handleSubmitReview = async () => {
   setReviews(refreshed);
 };
 
+const handleHelpfulClick = async (reviewId) => {
+    try {
+      const res = await fetch('/api/reviews/helpful', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ reviewId }),
+      });
+
+      if (!res.ok) throw new Error('Failed to mark helpful');
+
+      const data = await res.json();
+
+      // update helpful count in local state
+      setReviews(prev =>
+        prev.map(r =>
+          r._id === reviewId ? { ...r, helpful: data.helpful } : r
+        )
+      );
+    } catch (err) {
+      toast.error('Something went wrong');
+    }
+  };
   if (!productData) return <Loading />;
 
   const totalPages = Math.ceil(reviews.length / reviewsPerPage);
@@ -264,16 +289,34 @@ const handleSubmitReview = async () => {
 
           {/* Reviews List with Pagination */}
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-black dark:text-white">Reviews</h2>
-            {current.length === 0 ? (
-              <p className="text-black dark:text-white">No reviews yet.</p>
-            ) : current.map(r => (
-              <div key={r._id} className="border-b pb-2">
-                <p className="font-semibold text-black dark:text-white">{r.userName}</p>
-                {renderStars(r.rating)}
-                <p className="text-black dark:text-white">{r.comment}</p>
-              </div>
-            ))}
+            {current.map(r => {
+              const foundHelpful = r.helpful?.includes(user?.id);
+
+              return (
+                <div key={r._id} className="pb-2">
+                  <p className="font-semibold text-black dark:text-white">{r.userName}</p>
+                  {renderStars(r.rating)}
+                  <p className="text-black dark:text-white">{r.comment}</p>
+
+                  <div className="flex items-center gap-2 mt-2">                    
+                    <button
+                      onClick={() => handleHelpfulClick(r._id)}
+                      className={`text-sm px-2 py-1 border rounded flex items-center gap-1 ${
+                        foundHelpful ? 'bg-orange-500 text-white' : 'bg-gray-200 text-black'
+                      }`}
+                    >
+                      <ThumbsUp size={16} />
+                      {/* {foundHelpful ? 'Helpful' : 'Helpful'} */}
+                      {/* <span>({r.helpful?.length || 0})</span> */}
+                    </button>
+                    <span className="text-sm text-gray-600">
+                      {r.helpful?.length || 0} found this helpful
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+
 
             {totalPages > 1 && (
               <div className="flex justify-center items-center gap-4 mt-4">
@@ -297,14 +340,6 @@ const handleSubmitReview = async () => {
           </div>
 
           {/* Related Products */}
-          {/* {relatedProducts.length > 0 && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4 text-black dark:text-white">Related Products</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {relatedProducts.map(p => <ProductCard key={p._id} product={p} />)}
-              </div>
-            </div>
-          )} */}
           {visibleRelatedProducts.length > 0 && (
             <div>
               <h2 className="text-2xl font-semibold mb-4 text-black dark:text-white">Related Products</h2>
