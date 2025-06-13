@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 interface ClerkUser {
   id: string;
@@ -25,6 +27,7 @@ export default function UserList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 5;
+  dayjs.extend(relativeTime);
 
   const logActivity = async (action: string, detail: string) => {
     await fetch("/api/activity-log", {
@@ -195,8 +198,8 @@ export default function UserList() {
                   <td className="px-2 py-2 border text-xs">{user.email_addresses[0]?.email_address}</td>
                   <td className="px-2 py-2 border">{signupMethod}</td>
                   <td className="px-2 py-2 border text-xs">{user.primary_phone_number ?? "N/A"}</td>
-                  <td className="px-2 py-2 border text-xs">{new Date(user.created_at * 1000).toLocaleDateString()}</td>
-                  <td className="px-2 py-2 border text-xs">{new Date(user.updated_at * 1000).toLocaleDateString()}</td>
+                  <td className="px-2 py-2 border text-xs">{dayjs(user.created_at).fromNow()}</td>
+                  <td className="px-2 py-2 border text-xs">{dayjs(user.updated_at).fromNow()}</td>
                   <td className="px-2 py-2 border">
                     <select
                       value={role}
@@ -239,8 +242,14 @@ export default function UserList() {
               </div>
               <p className="text-xs"><span className="font-medium">Phone:</span> {user.primary_phone_number ?? "N/A"}</p>
               <p className="text-xs"><span className="font-medium">Signed Up With:</span> {signupMethod}</p>
-              <p className="text-xs"><span className="font-medium">Created:</span> {new Date(user.created_at * 1000).toLocaleDateString()}</p>
-              <p className="text-xs"><span className="font-medium">Updated:</span> {new Date(user.updated_at * 1000).toLocaleDateString()}</p>
+              <p className="text-xs">
+                <span className="font-medium">Created:</span>{' '}
+                {dayjs(user.created_at).fromNow()}
+              </p>
+              <p className="text-xs">
+                <span className="font-medium">Updated:</span>{' '}
+                {dayjs(user.updated_at).fromNow()}
+              </p>
               <div className="flex items-center justify-between mt-3">
                 <select
                   value={role}
