@@ -33,12 +33,13 @@ const SubscribersPage = () => {
 
       {loading ? (
         <p className="text-gray-500 mt-4">Loading subscribers...</p>
+      ) : subscribers.length === 0 ? (
+        <p className="text-gray-500 mt-6">No subscribers found.</p>
       ) : (
         <div className="mt-6">
-          {subscribers.length === 0 ? (
-            <p className="text-gray-500">No subscribers found.</p>
-          ) : (
-            <table className="w-full border-collapse border border-gray-300 mt-4 text-sm">
+          {/* Table for md+ screens */}
+          <div className="hidden md:block">
+            <table className="w-full border-collapse border border-gray-300 text-sm">
               <thead>
                 <tr className="bg-gray-100">
                   <th className="border p-2 text-left">Email</th>
@@ -50,13 +51,32 @@ const SubscribersPage = () => {
                   <tr key={index} className="hover:bg-gray-50">
                     <td className="border p-2">{sub.email}</td>
                     <td className="border p-2">
-                      {new Date(sub.subscribedAt).toLocaleString()} • {dayjs(sub.subscribedAt).fromNow()}
+                      {new Date(sub.subscribedAt).toLocaleString()} •{" "}
+                      {dayjs(sub.subscribedAt).fromNow()}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          )}
+          </div>
+
+          {/* Cards for small screens */}
+          <div className="md:hidden flex flex-col gap-4">
+            {subscribers.map((sub, index) => (
+              <div
+                key={index}
+                className="border border-gray-300 p-4 rounded shadow-sm bg-white dark:bg-neutral-900"
+              >
+                <p className="font-medium break-words text-sm text-black dark:text-white">
+                  📧 {sub.email}
+                </p>
+                <p className="text-gray-600 dark:text-gray-400 text-xs mt-1">
+                  {new Date(sub.subscribedAt).toLocaleString()} •{" "}
+                  {dayjs(sub.subscribedAt).fromNow()}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
