@@ -310,8 +310,11 @@ const handleHelpfulClick = async (reviewId) => {
                       {/* <span>({r.helpful?.length || 0})</span> */}
                     </button>
                     <span className="text-sm text-gray-600">
-                      {r.helpful?.length || 0} found this helpful
+                      {r.helpful?.length === 1
+                        ? '1 person found this helpful'
+                        : `${r.helpful?.length || 0} people found this helpful`}
                     </span>
+
                   </div>
                 </div>
               );
