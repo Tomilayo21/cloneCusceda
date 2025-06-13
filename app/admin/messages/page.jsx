@@ -193,7 +193,8 @@ const AdminMessagesDashboard = () => {
         />
         <button
           onClick={handleSelectAll}
-          className="px-4 py-2 bg-indigo-600 text-white rounded text-sm"
+          className="px-4 py-2 bg-white text-black border border-black rounded text-sm disabled:opacity-50
+"
         >
           {paginatedMessages.every((msg) => selectedIds.includes(msg._id))
             ? "Unselect All"
@@ -212,7 +213,8 @@ const AdminMessagesDashboard = () => {
         <button
           onClick={() => bulkAction("read")}
           disabled={!selectedIds.length}
-          className="px-4 py-2 bg-green-600 text-white rounded text-sm disabled:opacity-50"
+          className="px-4 py-2 bg-white text-black border border-black rounded text-sm disabled:opacity-50
+"
         >
           Mark as Read
         </button>
@@ -226,14 +228,15 @@ const AdminMessagesDashboard = () => {
         <button
           onClick={() => bulkAction("archive")}
           disabled={!selectedIds.length}
-          className="px-4 py-2 bg-blue-600 text-white rounded text-sm disabled:opacity-50"
+          className="px-4 py-2 bg-white text-orange border border-orange-600 rounded text-sm disabled:opacity-50
+"
         >
           Archive Selected
         </button>
         <button
           onClick={() => bulkAction("delete")}
           disabled={!selectedIds.length}
-          className="px-4 py-2 bg-red-600 text-white rounded text-sm disabled:opacity-50"
+          className="px-4 py-2 bg-orange-600 text-white rounded text-sm disabled:opacity-50"
         >
           Delete Selected
         </button>
@@ -252,7 +255,7 @@ const AdminMessagesDashboard = () => {
                 handleMarkAsRead(msg);
               }}
               className={`p-4 border rounded shadow flex flex-col sm:flex-row justify-between gap-4 cursor-pointer ${
-                !msg.read ? "bg-yellow-50" : ""
+                !msg.read ? "bg-orange-50" : ""
               }`}
             >
               <div className="w-full max-w-md mx-auto bg-white p-4 rounded-md shadow space-y-1 text-sm sm:text-base">
@@ -263,7 +266,7 @@ const AdminMessagesDashboard = () => {
                     e.stopPropagation();
                     toggleSelect(msg._id);
                   }}
-                  className="mt-1"
+                  className="mt-1 accent-orange-600"
                 />
                 <div className="space-y-1 text-sm sm:text-base">
                   <p>
@@ -296,7 +299,7 @@ const AdminMessagesDashboard = () => {
                       );
                       fetchMessages();
                     }}
-                    className="text-sm text-blue-600 hover:underline"
+                    className="text-sm text-black hover:underline"
                   >
                     {msg.archived ? "Unarchive" : "Archive"}
                   </button>
