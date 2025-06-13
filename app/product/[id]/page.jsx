@@ -23,7 +23,46 @@ export default function ProductPage() {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
   const [page, setPage] = useState(1);
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+
   const reviewsPerPage = 5;
+
+
+  useEffect(() => {
+  if (!id || !products.length) return;
+  const product = products.find(p => p._id === id);
+  if (product) {
+    setProductData(product);
+    setLikeCount(product.likes?.length || 0);
+    if (user) {
+      setLiked(product.likes?.includes(user.id));
+    }
+  }
+}, [id, products, user]);
+
+
+  const toggleLike = async () => {
+  if (!user) return router.push('/login');
+
+  const res = await fetch('/api/likes', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ productId: id, userId: user.id }),
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    setLiked(data.liked);
+    setLikeCount(prev => data.liked ? prev + 1 : prev - 1);
+  } else {
+    alert(data.message || 'Failed to update like');
+  }
+};
+
+
+
 
   useEffect(() => {
     setProductData(products.find(p => p._id === id) || null);
@@ -121,6 +160,18 @@ export default function ProductPage() {
                       </tbody>
                   </table>
               </div>
+              <div className="mt-4 flex items-center gap-2">
+                <button
+                  onClick={toggleLike}
+                  className={`px-3 py-1 border rounded text-sm ${
+                    liked ? 'bg-red-500 text-white' : 'bg-gray-200 text-black'
+                  }`}
+                >
+                  {liked ? '♥ Liked' : '♡ Like'}
+                </button>
+                <span className="text-black dark:text-white text-sm">{likeCount} like{likeCount !== 1 && 's'}</span>
+              </div>
+              
               <div className="mt-6 flex gap-4">
                 <button 
                 onClick={handleAddToCart} 
