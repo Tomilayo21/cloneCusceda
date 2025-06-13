@@ -14,6 +14,7 @@ const productSchema = new mongoose.Schema(
         date: { type: Date, required: true, default: Date.now },
         stock: { type: Number, required: true, default: 0 },
         visible: { type: Boolean, default: true },
+        likes: [{ type: String }]
     }
 )
 
