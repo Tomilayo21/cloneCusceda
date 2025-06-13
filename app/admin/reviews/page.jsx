@@ -158,10 +158,10 @@ const AdminReviewsPage = () => {
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
-        <button onClick={exportToCSV} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 whitespace-nowrap">
+        <button onClick={exportToCSV} className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-blue-700 whitespace-nowrap">
           Export CSV
         </button>
-        <button onClick={approveAll} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 whitespace-nowrap">
+        <button onClick={approveAll} className="bg-black text-white px-4 py-2 rounded hover:bg-green-700 whitespace-nowrap">
           Approve All
         </button>
       </div>
@@ -196,7 +196,7 @@ const AdminReviewsPage = () => {
                         type="checkbox"
                         checked={rev.approved}
                         onChange={() => toggleApproval(rev._id, !rev.approved)}
-                        className="w-5 h-5 cursor-pointer"
+                        className="w-5 h-5 cursor-pointer accent-orange-600"
                       />
                     </td>
                     <td className="border border-gray-300 px-4 py-2">{new Date(rev.createdAt).toLocaleString()}</td>
@@ -225,7 +225,7 @@ const AdminReviewsPage = () => {
                     type="checkbox"
                     checked={rev.approved}
                     onChange={() => toggleApproval(rev._id, !rev.approved)}
-                    className="w-6 h-6 cursor-pointer"
+                    className="w-6 h-6 cursor-pointer accent-orange-600"
                   />
                 </div>
                 <div className="mb-2"><strong>Date:</strong> {new Date(rev.createdAt).toLocaleString()}</div>
