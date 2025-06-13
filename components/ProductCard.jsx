@@ -6,7 +6,7 @@ import { useAppContext } from "@/context/AppContext";
 import { useClerk } from "@clerk/nextjs";
 import useSWR from "swr";
 import toast from "react-hot-toast";
-import { Heart } from "lucide-react"; // <-- import Heart icon
+import { Heart} from "lucide-react"; // <-- import Heart icon
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -16,6 +16,34 @@ const ProductCard = ({ product }) => {
   const { currency, router, addToCart, user } = useAppContext();
   const { openSignIn } = useClerk();
   const [isFavorite, setIsFavorite] = useState(false);
+  const [likes, setLikes] = useState(product.likes || []);
+  const [loading, setLoading] = useState(false);
+
+  const liked = user && likes.includes(user.id);
+
+  const toggleLike = async () => {
+    if (!user) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch('/api/likes', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId: product._id, userId: user.id }),
+      });
+      const data = await res.json();
+
+      if (data.liked) {
+        setLikes(prev => [...prev, user.id]);
+      } else {
+        setLikes(prev => prev.filter(id => id !== user.id));
+      }
+    } catch (error) {
+      console.error('Like error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const checkFavorite = async () => {
@@ -110,10 +138,29 @@ const ProductCard = ({ product }) => {
         {product.description}
       </p>
 
-      <div className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-        <p>Average Rating: {avgRating.toFixed(1)} ⭐</p>
-        <p>{reviews.length} Reviews</p>
+      <div className="mt-2 flex items-center justify-between text-sm text-gray-700 dark:text-gray-300">
+        <div>
+          <p className="mb-2">Average Rating: {avgRating.toFixed(1)} ⭐</p>
+          <p>{reviews.length} {reviews.length === 1 ? 'Review' : 'Reviews'}</p>
+        </div>
+
+        <div className="ml-4 mt-5 text-sm text-gray-600 dark:text-gray-400">
+          <p>{likes.length} {likes.length === 1 ? 'like' : 'likes'}</p>
+        </div>
       </div>
+
+
+      {/* {user && (
+        <button onClick={toggleLike} disabled={loading} aria-label="Toggle Like">
+        <Heart
+          className={`w-5 h-5 transition ${
+            liked ? 'text-red-500 fill-red-500' : 'text-gray-500'
+          }`}
+        />
+      </button>
+      )} */}
+
+      
 
       <div className="flex items-end justify-between w-full mt-1">
         <p className="text-base font-medium text-black dark:text-white">
