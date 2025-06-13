@@ -164,7 +164,7 @@ export default function ProductPage() {
                 <button
                   onClick={toggleLike}
                   className={`px-3 py-1 border rounded text-sm ${
-                    liked ? 'bg-red-500 text-white' : 'bg-gray-200 text-black'
+                    liked ? 'bg-black text-white' : 'bg-gray-200 text-black'
                   }`}
                 >
                   {liked ? '♥ Liked' : '♡ Like'}
