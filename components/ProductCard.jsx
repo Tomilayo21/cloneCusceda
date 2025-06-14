@@ -7,7 +7,6 @@ import { useClerk } from "@clerk/nextjs";
 import useSWR from "swr";
 import toast from "react-hot-toast";
 import { Heart} from "lucide-react"; 
-import Modal from "@/components/Modal"; 
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -156,9 +155,18 @@ const ProductCard = ({ product }) => {
       <p className="text-base font-medium pt-2 w-full truncate text-black dark:text-white">
         {product.name}
       </p>
-      <p className="text-xs text-gray-500 dark:text-gray-400 w-full truncate max-sm:hidden">
+      {/* <div
+        className="text-base font-medium pt-2 w-full truncate text-black dark:text-white"
+        dangerouslySetInnerHTML={{ __html: product.name }}
+      /> */}
+
+      {/* <p className="text-xs text-gray-500 dark:text-gray-400 w-full truncate max-sm:hidden">
         {product.description}
-      </p>
+      </p> */}
+      <div
+        className="text-xs text-gray-500 dark:text-gray-400 w-full truncate max-sm:hidden line-clamp-1"
+        dangerouslySetInnerHTML={{ __html: product.description }}
+      />
 
       <div className="mt-2 flex items-center justify-between text-sm text-gray-700 dark:text-gray-300">
         <div>
@@ -202,9 +210,13 @@ const ProductCard = ({ product }) => {
               className="object-cover rounded mb-4 w-full h-auto"
             />
 
-            <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+            {/* <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
               {product.description}
-            </p>
+            </p> */}
+            <div
+              className="text-sm text-gray-700 dark:text-gray-300 mb-2"
+              dangerouslySetInnerHTML={{ __html: product.description }}
+            />
 
             <p className="text-sm text-gray-800 dark:text-gray-200 mb-1">
               <strong>Price:</strong> {currency}{product.offerPrice}
