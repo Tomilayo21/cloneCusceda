@@ -152,7 +152,7 @@ const AdminReviewsPage = () => {
         <select value={sortField} onChange={e => setSortField(e.target.value)} className="border p-2 rounded">
           <option value="createdAt">Date</option>
           <option value="userName">User</option>
-          <option value="productId">Product ID</option>
+          <option value="productId">Product Name</option>
         </select>
         <select value={sortOrder} onChange={e => setSortOrder(e.target.value)} className="border p-2 rounded">
           <option value="asc">Ascending</option>
@@ -188,7 +188,7 @@ const AdminReviewsPage = () => {
                 {paginatedReviews.map(rev => (
                   <tr key={rev._id}>
                     <td className="border border-gray-300 px-4 py-2">{rev.userName}</td>
-                    <td className="border border-gray-300 px-4 py-2">{rev.productId}</td>
+                    <td className="border border-gray-300 px-4 py-2">{rev.productId?.name || 'N/A'}</td>
                     <td className="border border-gray-300 px-4 py-2">{rev.rating}</td>
                     <td className="border border-gray-300 px-4 py-2">{rev.comment}</td>
                     <td className="border border-gray-300 px-4 py-2 text-center">
@@ -216,7 +216,7 @@ const AdminReviewsPage = () => {
             {paginatedReviews.map(rev => (
               <div key={rev._id} className="border border-gray-300 rounded p-4 shadow-sm bg-white">
                 <div className="mb-2"><strong>User:</strong> {rev.userName}</div>
-                <div className="mb-2"><strong>Product ID:</strong> {rev.productId}</div>
+                <div className="mb-2"><strong>Product Name:</strong> {rev.productId?.name || 'N/A'}</div>
                 <div className="mb-2"><strong>Rating:</strong> {rev.rating} ⭐</div>
                 <div className="mb-2"><strong>Comment:</strong> {rev.comment}</div>
                 <div className="mb-2 flex items-center">
