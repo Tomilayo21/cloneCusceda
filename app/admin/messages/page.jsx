@@ -393,6 +393,17 @@ const AdminMessagesDashboard = () => {
             <p className="text-sm text-gray-500 mb-1">
               From: {openMessage.name} ({openMessage.email})
             </p>
+            {/* New: Device and Location Info */}
+            {openMessage.device && (
+              <p className="text-xs text-gray-500 mb-1">
+                Sent from: {openMessage.device}
+              </p>
+            )}
+            {openMessage.location && (
+              <p className="text-xs text-gray-500 mb-1">
+                Location: {openMessage.location}
+              </p>
+            )}
             <p className="text-xs text-gray-400 mb-4">
               Sent {dayjs(openMessage.createdAt).fromNow()}
             </p>
