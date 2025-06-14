@@ -15,7 +15,7 @@ export async function GET(request) {
 
     if (productId) {
       // Public: only approved reviews
-      const reviews = await Review.find({ productId, approved: true }).sort({ createdAt: -1 });
+      const reviews = await Review.find({ productId, approved: true }).populate('productId', 'name').sort({ createdAt: -1 });
       return NextResponse.json(reviews, { status: 200 });
     }
 
@@ -24,7 +24,8 @@ export async function GET(request) {
       return NextResponse.json({ message: 'Not authorized' }, { status: 403 });
     }
 
-    const reviews = await Review.find().sort({ createdAt: -1 });
+    const reviews = await Review.find().populate('productId', 'name').sort({ createdAt: -1 });
+
     return NextResponse.json({ success: true, reviews }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
