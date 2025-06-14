@@ -50,31 +50,45 @@ const AdminMessagesDashboard = () => {
     );
   };
 
-  const bulkAction = async (type) => {
-    try {
-      for (const id of selectedIds) {
-        let body = {};
-        if (type === "archive") body = { archived: true };
-        else if (type === "unarchive") body = { archived: false };
-        else if (type === "read") body = { read: true };
-        else if (type === "unread") body = { read: false };
-        else if (type === "delete") body = { deleted: true };
-        else continue;
+  const bulkAction = async (action) => {
+  try {
+    for (const id of selectedIds) {
+      let update = {};
 
+      if (action === "read") update.read = true;
+      else if (action === "unread") update.read = false;
+      else if (action === "archive") update.archived = true;
+      else if (action === "delete") update.deleted = true;
+      else if (action === "restore") {
+        update.archived = false;
+        update.deleted = false;
+      }
+      else if (action === "permanentDelete") {
+        await fetch(`/api/contact/messages/${id}?force=true`, {
+          method: "DELETE",
+        });
+        continue;
+      }
+
+      // PATCH request
+      if (Object.keys(update).length > 0) {
         await fetch(`/api/contact/messages/${id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
+          body: JSON.stringify(update),
         });
       }
-      toast.success(`Selected messages ${type}d.`);
-    } catch {
-      toast.error("Bulk action failed.");
-    } finally {
-      setSelectedIds([]);
-      fetchMessages();
     }
-  };
+
+    toast.success("Bulk action successful");
+    setSelectedIds([]);
+    fetchMessages(); // Refresh UI
+  } catch (err) {
+    console.error("Bulk action failed:", err);
+    toast.error("Bulk action failed");
+  }
+};
+
 
   const handleMarkAsRead = async (msg) => {
     if (!msg.read) {
@@ -155,6 +169,12 @@ const AdminMessagesDashboard = () => {
     <div className="p-4 sm:p-6">
       <h1 className="text-xl md:text-2xl font-bold mb-4">Messages Dashboard</h1>
       {/* View Buttons */}
+      {["inbox", "deleted"].includes(view) && selectedIds.length > 0 && (
+        <p className="text-sm text-gray-600 mb-2">
+          {selectedIds.length} message{selectedIds.length > 1 ? "s" : ""} selected
+        </p>
+      )}
+
       <div className="flex flex-wrap gap-2 sm:gap-4 mb-6">
         {["inbox", "unread", "archived", "deleted"].map((v) => (
           <button
@@ -193,8 +213,7 @@ const AdminMessagesDashboard = () => {
         />
         <button
           onClick={handleSelectAll}
-          className="px-4 py-2 bg-white text-black border border-black rounded text-sm disabled:opacity-50
-"
+          className="px-4 py-2 bg-white text-black border border-black rounded text-sm disabled:opacity-50"
         >
           {paginatedMessages.every((msg) => selectedIds.includes(msg._id))
             ? "Unselect All"
@@ -209,12 +228,11 @@ const AdminMessagesDashboard = () => {
       </div>
 
       {/* Bulk Actions */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      {/* <div className="flex flex-wrap gap-2 mb-4">
         <button
           onClick={() => bulkAction("read")}
           disabled={!selectedIds.length}
-          className="px-4 py-2 bg-white text-black border border-black rounded text-sm disabled:opacity-50
-"
+          className="px-4 py-2 bg-white text-black border border-black rounded text-sm disabled:opacity-50"
         >
           Mark as Read
         </button>
@@ -228,8 +246,7 @@ const AdminMessagesDashboard = () => {
         <button
           onClick={() => bulkAction("archive")}
           disabled={!selectedIds.length}
-          className="px-4 py-2 bg-white text-orange border border-orange-600 rounded text-sm disabled:opacity-50
-"
+          className="px-4 py-2 bg-white text-orange border border-orange-600 rounded text-sm disabled:opacity-50"
         >
           Archive Selected
         </button>
@@ -240,7 +257,120 @@ const AdminMessagesDashboard = () => {
         >
           Delete Selected
         </button>
-      </div>
+      </div> */}
+      {/* {view === "inbox" && selectedIds.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          <button
+            onClick={() => bulkAction("read")}
+            className="px-4 py-2 bg-white text-black border border-black rounded text-sm"
+          >
+            Mark as Read
+          </button>
+          <button
+            onClick={() => bulkAction("unread")}
+            className="px-4 py-2 bg-yellow-600 text-white rounded text-sm"
+          >
+            Mark as Unread
+          </button>
+          <button
+            onClick={() => bulkAction("archive")}
+            className="px-4 py-2 bg-white text-orange border border-orange-600 rounded text-sm"
+          >
+            Archive Selected
+          </button>
+          <button
+            onClick={() => bulkAction("delete")}
+            className="px-4 py-2 bg-orange-600 text-white rounded text-sm"
+          >
+            Delete Selected
+          </button>
+        </div>
+      )} */}
+      {view === "inbox" && selectedIds.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          <button
+            onClick={() => bulkAction("read")}
+            className="px-4 py-2 bg-white text-black border border-black rounded text-sm"
+          >
+            Mark as Read
+          </button>
+          <button
+            onClick={() => bulkAction("unread")}
+            className="px-4 py-2 bg-yellow-600 text-white rounded text-sm"
+          >
+            Mark as Unread
+          </button>
+          <button
+            onClick={() => bulkAction("archive")}
+            className="px-4 py-2 bg-orange-500 text-white rounded text-sm"
+          >
+            Archive Selected
+          </button>
+          <button
+            onClick={() => bulkAction("delete")}
+            className="px-4 py-2 bg-orange-600 text-white rounded text-sm"
+          >
+            Delete Selected
+          </button>
+        </div>
+      )}
+
+      {view === "deleted" && selectedIds.length > 0 && (
+        <>
+          <button
+            onClick={() => bulkAction("restore")}
+            className="px-4 py-2 mr-3 bg-green-600 text-white rounded text-sm disabled:opacity-50 mb-3"
+          >
+            Restore Selected
+          </button>
+          <button
+            onClick={() => bulkAction("permanentDelete")}
+            className="px-4 py-2 bg-red-700 text-white rounded text-sm disabled:opacity-50"
+          >
+            Delete Permanently
+          </button>
+        </>
+      )}
+      {view === "archived" && selectedIds.length > 0 && (
+        <>
+          <button
+            onClick={() => bulkAction("restore")}
+            className="px-4 py-2 bg-white text-black border border-black rounded text-sm"
+          >
+            Restore to Inbox
+          </button>
+          <button
+            onClick={() => bulkAction("delete")}
+            className="px-4 py-2 bg-orange-600 text-white rounded text-sm"
+          >
+            Move to Deleted
+          </button>
+        </>
+      )}
+      {view === "unread" && selectedIds.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          <button
+            onClick={() => bulkAction("read")}
+            className="px-4 py-2 bg-white text-black border border-black rounded text-sm"
+          >
+            Mark as Read
+          </button>
+          <button
+            onClick={() => bulkAction("archive")}
+            className="px-4 py-2 bg-orange-500 text-white rounded text-sm"
+          >
+            Archive Selected
+          </button>
+          <button
+            onClick={() => bulkAction("delete")}
+            className="px-4 py-2 bg-orange-600 text-white rounded text-sm"
+          >
+            Delete Selected
+          </button>
+        </div>
+      )}
+
+
 
       {/* Message List */}
       {loading ? (
@@ -263,7 +393,7 @@ const AdminMessagesDashboard = () => {
                   type="checkbox"
                   checked={selectedIds.includes(msg._id)}
                   onChange={(e) => {
-                    e.stopPropagation();
+                    e.stopPropagation(); // Prevent opening the modal
                     toggleSelect(msg._id);
                   }}
                   className="mt-1 accent-orange-600"
@@ -359,6 +489,17 @@ const AdminMessagesDashboard = () => {
       ) : (
         <p className="text-gray-500">No messages found.</p>
       )}
+      {paginatedMessages.length > 0 && (
+        <button
+          onClick={handleSelectAll}
+          className="px-4 py-2 bg-white text-black border border-black rounded text-sm disabled:opacity-50"
+        >
+          {paginatedMessages.every((msg) => selectedIds.includes(msg._id))
+            ? "Unselect All"
+            : "Select All"}
+        </button>
+      )}
+
 
       {/* Pagination */}
       {totalPages > 1 && (
