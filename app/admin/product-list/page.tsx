@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { Pencil, Trash2 } from "lucide-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import TiptapEditor from "@/components/TiptapEditor";
 
 const PRODUCTS_PER_PAGE = 15;
 
@@ -31,7 +32,6 @@ const ProductList = () => {
   const [editableProduct, setEditableProduct] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   
-
   dayjs.extend(relativeTime);
 
   useEffect(() => {
@@ -678,7 +678,7 @@ const handleExportCSV = () => {
                   />
                 </div>
 
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <label className="block text-sm font-semibold">Description</label>
                   <textarea
                     rows={3}
@@ -688,7 +688,22 @@ const handleExportCSV = () => {
                     }
                     className="w-full px-3 py-1.5 border rounded resize-none"
                   />
+                </div> */}
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold">Description</label>
+                  <TiptapEditor
+                    description={editableProduct.description}
+                    setDescription={(value) =>
+                      setEditableProduct({ ...editableProduct, description: value })
+                    }
+                  />
+                  <p className="text-xs text-gray-500 italic">
+                    To insert a space, press the spacebar twice — no need to press it three times.
+                  </p>
+
                 </div>
+
 
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold">Visibility</label>
