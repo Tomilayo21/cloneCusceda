@@ -86,64 +86,6 @@ export const AppContextProvider = (props) => {
         }
     };
 
-    // const updateCartQuantity = async (itemId, quantity) => {
-    //     let cartData = structuredClone(cartItems);
-
-    //     if (quantity === 0) {
-    //         delete cartData[itemId];
-    //     } else {
-    //         cartData[itemId] = quantity;
-    //     }
-
-    //     setCartItems(cartData);
-
-    //     if (user) {
-    //         try {
-    //             const token = await getToken();
-    //             await axios.post('/api/cart/update', { cartData }, {
-    //                 headers: { Authorization: `Bearer ${token}` }
-    //             });
-    //             toast.success("Cart updated");
-    //         } catch (error) {
-    //             toast.error(error.message);
-    //         }
-    //     }
-    // };
-
-
-    // const updateCartQuantity = async (itemId, quantity) => {
-    //     let cartData = structuredClone(cartItems);
-
-    //     if (quantity === 0) {
-    //         delete cartData[itemId];
-    //     } else {
-    //         cartData[itemId] = quantity;
-    //     }
-
-    //     setCartItems(cartData);
-
-    //     // Convert cartItems object into array of { productId, quantity }
-    //     const formattedCartData = Object.entries(cartData).map(([productId, quantity]) => ({
-    //         productId,
-    //         quantity,
-    //     }));
-
-    //     if (user && formattedCartData.length > 0) {
-    //         try {
-    //         await axios.post('/api/cart/update', { cartData: formattedCartData });
-    //         toast.success("Cart updated");
-    //         } catch (error) {
-    //         console.error(error);
-    //         toast.error(error.response?.data?.message || "Failed to update cart");
-    //         }
-    //     }
-    // };
-
-    // const getCartCount = () => {
-    //     // ✅ Ensure it returns 0 when cart is empty
-    //     return Object.values(cartItems || {}).reduce((acc, curr) => acc + curr, 0);
-    // };
-
     // Load cartItems from localStorage on mount
     useEffect(() => {
         const savedCart = localStorage.getItem('cartItems');
@@ -169,8 +111,17 @@ export const AppContextProvider = (props) => {
     });
   };
 
-  const getCartCount = () =>
-    Object.values(cartItems).reduce((acc, qty) => acc + qty, 0);
+//   const getCartCount = () =>
+//     Object.values(cartItems).reduce((acc, qty) => acc + qty, 0);
+    const getCartCount = () => {
+        let totalCount = 0;
+        for (const items in cartItems) {
+            if (cartItems[items] > 0) {
+                totalCount += cartItems[items];
+            }
+        }
+        return totalCount;
+    }
 
     const getCartAmount = () => {
         let totalAmount = 0;
