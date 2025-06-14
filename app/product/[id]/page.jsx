@@ -231,8 +231,16 @@ const handleHelpfulClick = async (reviewId) => {
             </div>
           </div>
           <div className="flex flex-col">
+            {/* <div
+              className="text-3xl font-bold text-black dark:text-white"
+              dangerouslySetInnerHTML={{ __html: productData.name }}
+            /> */}
             <h1 className="text-3xl font-bold text-black dark:text-white">{productData.name}</h1>
-            <p className="mt-2 text-black dark:text-white">{productData.description}</p>
+            <div
+              className="mt-2 text-black dark:text-white"
+              dangerouslySetInnerHTML={{ __html: productData.description }}
+            />
+
             <div className="mt-4">
               <span className="text-2xl font-semibold text-black dark:text-white">{currency}{productData.offerPrice}</span>
               <span className="line-through text-gray-500 dark:text-gray-400 ml-2">{currency}{productData.price}</span>
