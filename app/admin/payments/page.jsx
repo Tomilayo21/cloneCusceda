@@ -5,6 +5,9 @@ import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Footer from "@/components/admin/Footer";
+import toast from "react-hot-toast";
+import { useAppContext } from "@/context/AppContext";
+
 
 dayjs.extend(relativeTime);
 
@@ -16,6 +19,7 @@ export default function AdminTransactions() {
   const [pageSize] = useState(10);
   const [loading, setLoading] = useState(false);
   const [enlargedImg, setEnlargedImg] = useState(null);
+  const { getToken } = useAppContext()
 
   useEffect(() => {
     fetchTransactions();
@@ -39,6 +43,37 @@ export default function AdminTransactions() {
     txn.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
     txn.paymentMethod?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+const updatePaymentStatus = async (orderId, status) => {
+  try {
+    const token = await getToken(); // from your AppContext
+    const res = await axios.post(
+      "/api/admin/order/payment-status",
+      { orderId, status },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // this must be valid
+        },
+      }
+    );
+
+    if (res.data.success) {
+      toast.success("Updated payment status");
+      setTransactions((prev) =>
+        prev.map((txn) =>
+          txn._id === orderId ? { ...txn, paymentStatus: status } : txn
+        )
+      );
+    } else {
+      toast.error(res.data.message || "Failed to update");
+    }
+  } catch (err) {
+    console.error("AXIOS ERROR:", err.response?.data || err.message);
+    toast.error(err.response?.data?.message || "Failed to update payment status");
+  }
+};
+
+
 
   return (
     <div className="container mx-auto p-4">
@@ -84,7 +119,18 @@ export default function AdminTransactions() {
                       <td className="border p-2 text-sm">{txn.userId}</td>
                       <td className="border p-2 text-sm">${txn.amount?.toFixed(2)}</td>
                       <td className="border p-2 text-sm">{txn.paymentMethod}</td>
-                      <td className="border p-2 text-sm">{txn.status}</td>
+                      <td className="border p-2 text-sm">
+                        <select
+                        value={txn.paymentStatus}
+                        onChange={(e) => updatePaymentStatus(txn._id, e.target.value)}
+                        className="border px-2 py-1 rounded"
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="Successful">Successful</option>
+                        <option value="Refunded">Refunded</option>
+                        <option value="Failed">Failed</option>
+                      </select>
+                      </td>
                       <td className="border p-2 text-center">
                         {txn.proofOfPaymentUrl ? (
                           <img
