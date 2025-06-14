@@ -9,6 +9,9 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { ImagePlus } from "lucide-react";
 import Footer from "@/components/admin/Footer";
+import TiptapEditor from "@/components/TiptapEditor";
+
+
 
 const AddProduct = () => {
   const { getToken, isAdmin, user } = useAppContext();
@@ -25,6 +28,7 @@ const AddProduct = () => {
   const [color, setColor] = useState('');
   const [brand, setBrand] = useState('');
   const [stock, setStock] = useState('');
+
 
   useEffect(() => {
     if (!user || !isAdmin) {
@@ -162,9 +166,14 @@ const AddProduct = () => {
             required
           />
         </div>
+        {/* <div className="flex flex-col gap-1 max-w-md">
+          <label className="text-base font-medium">Product Name</label>
+          <TiptapEditor description={name} setDescription={setName} />
+        </div> */}
+
 
         {/* Description */}
-        <div className="flex flex-col gap-1 max-w-md">
+        {/* <div className="flex flex-col gap-1 max-w-md">
           <label className="text-base font-medium" htmlFor="product-description">Product Description</label>
           <textarea
             id="product-description"
@@ -175,6 +184,10 @@ const AddProduct = () => {
             value={description}
             required
           />
+        </div> */}
+        <div className="flex flex-col gap-1 max-w-md">
+          <label className="text-base font-medium">Product Description</label>
+          <TiptapEditor description={description} setDescription={setDescription} />
         </div>
 
         {/* Options */}
