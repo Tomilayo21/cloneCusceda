@@ -2,6 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import Footer from "@/components/admin/Footer";
+
+dayjs.extend(relativeTime);
+
 
 export default function AdminTransactions() {
   const [transactions, setTransactions] = useState([]);
@@ -50,33 +56,35 @@ export default function AdminTransactions() {
         <p>Loading transactions...</p>
       ) : (
         <>
-          <table className="min-w-full border-collapse border border-gray-300">
-            <thead>
-              <tr>
-                <th className="border p-2">Order ID</th>
-                <th className="border p-2">User ID</th>
-                <th className="border p-2">Amount</th>
-                <th className="border p-2">Payment Method</th>
-                <th className="border p-2">Status</th>
-                <th className="border p-2">Proof of Payment</th>
-                <th className="border p-2">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredTransactions.length === 0 ? (
+          {/* Table view for larger screens */}
+          <div className="hidden sm:block">
+            <table className="min-w-full border-collapse border border-gray-300">
+              <thead>
                 <tr>
-                  <td colSpan="7" className="text-center p-4">
-                    No transactions found.
-                  </td>
+                  <th className="border p-2">Order ID</th>
+                  <th className="border p-2">User ID</th>
+                  <th className="border p-2">Amount</th>
+                  <th className="border p-2">Payment Method</th>
+                  <th className="border p-2">Status</th>
+                  <th className="border p-2">Proof of Payment</th>
+                  <th className="border p-2">Date</th>
                 </tr>
-              ) : (
-                filteredTransactions.map((txn) => (
-                  <tr key={txn._id} className="hover:bg-gray-100">
-                    <td className="border p-2 text-sm">{txn.orderId}</td>
-                    <td className="border p-2 text-sm">{txn.userId}</td>
-                    <td className="border p-2 text-sm">${txn.amount?.toFixed(2)}</td>
-                    <td className="border p-2 text-sm">{txn.paymentMethod}</td>
-                    <td className="border p-2 text-sm">{txn.status}</td>
+              </thead>
+              <tbody>
+                {filteredTransactions.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" className="text-center p-4">
+                      No transactions found.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredTransactions.map((txn) => (
+                    <tr key={txn._id} className="hover:bg-gray-100">
+                      <td className="border p-2 text-sm">{txn.orderId}</td>
+                      <td className="border p-2 text-sm">{txn.userId}</td>
+                      <td className="border p-2 text-sm">${txn.amount?.toFixed(2)}</td>
+                      <td className="border p-2 text-sm">{txn.paymentMethod}</td>
+                      <td className="border p-2 text-sm">{txn.status}</td>
                       <td className="border p-2 text-center">
                         {txn.proofOfPaymentUrl ? (
                           <img
@@ -90,12 +98,55 @@ export default function AdminTransactions() {
                           <span className="text-gray-500">-</span>
                         )}
                       </td>
-                    <td className="border p-2 text-sm">{new Date(txn.date).toLocaleString()}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                      <td className="border p-2 text-sm">{new Date(txn.date).toLocaleString()}{" "}
+                        <span className="text-gray-500 text-xs">
+                          ({dayjs(txn.date).fromNow()})
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Card view for mobile screens */}
+          <div className="sm:hidden space-y-4">
+            {filteredTransactions.length === 0 ? (
+              <p className="text-center text-gray-500">No transactions found.</p>
+            ) : (
+              filteredTransactions.map((txn) => (
+                <div key={txn._id} className="border rounded p-4 shadow">
+                  <p><span className="font-semibold">Order ID:</span> {txn.orderId}</p>
+                  <p><span className="font-semibold">User ID:</span> {txn.userId}</p>
+                  <p><span className="font-semibold">Amount:</span> ${txn.amount?.toFixed(2)}</p>
+                  <p><span className="font-semibold">Payment Method:</span> {txn.paymentMethod}</p>
+                  <p><span className="font-semibold">Status:</span> {txn.status}</p>
+                  <p className="mt-2">
+                    <span className="font-semibold">Proof of Payment:</span><br />
+                    {txn.proofOfPaymentUrl ? (
+                      <img
+                        src={txn.proofOfPaymentUrl}
+                        alt="Proof of Payment"
+                        className="w-24 h-24 object-cover rounded border mt-1"
+                        onClick={() => setEnlargedImg(txn.proofOfPaymentUrl)}
+                      />
+                    ) : (
+                      <span className="text-gray-500">-</span>
+                    )}
+                  </p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    {new Date(txn.date).toLocaleString()}{" "}
+                    <span className="text-xs text-gray-400">
+                      ({dayjs(txn.date).fromNow()})
+                    </span>
+                  </p>
+
+                </div>
+              ))
+            )}
+          </div>
+
 
           {/* Pagination */}
           <div className="flex justify-center mt-4 space-x-4">
@@ -130,6 +181,9 @@ export default function AdminTransactions() {
           />
         </div>
       )}
+      <div className="mt-12">
+        <Footer />
+      </div>
     </div>
   );
 }
