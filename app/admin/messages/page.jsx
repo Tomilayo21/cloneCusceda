@@ -319,7 +319,7 @@ const AdminMessagesDashboard = () => {
         <>
           <button
             onClick={() => bulkAction("restore")}
-            className="px-4 py-2 mr-3 bg-green-600 text-white rounded text-sm disabled:opacity-50 mb-3"
+            className="px-4 py-2 mr-3 mb-3 bg-green-600 text-white rounded text-sm disabled:opacity-50 "
           >
             Restore Selected
           </button>
@@ -335,7 +335,7 @@ const AdminMessagesDashboard = () => {
         <>
           <button
             onClick={() => bulkAction("restore")}
-            className="px-4 py-2 bg-white text-black border border-black rounded text-sm"
+            className="px-4 py-2 bg-white text-black border mr-3 mb-3 border-black rounded text-sm"
           >
             Restore to Inbox
           </button>
