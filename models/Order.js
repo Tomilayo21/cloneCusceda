@@ -1,22 +1,47 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const orderSchema = new mongoose.Schema(
-  {
-    userId: { type: String, required: true, ref: "user" },
-    items: [
-      {
-        product: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "product" },
-        quantity: { type: Number, required: true },
-      },
-    ],
-    amount: { type: Number, required: true },
-    address: { type: mongoose.Schema.Types.ObjectId, ref: "address", required: true },
-    status: { type: String, required: true, default: "Order Placed" },
-    date: { type: Number, required: true },
+function generateOrderId() {
+  const prefix = "ORD-";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const randomString = [...Array(12)]
+    .map(() => chars.charAt(Math.floor(Math.random() * chars.length)))
+    .join("");
+  return prefix + randomString;
+}
+
+const orderSchema = new mongoose.Schema({
+  orderId: {
+    type: String,
+    unique: true,
+    default: generateOrderId,
   },
-  { timestamps: true }
-);
+  userId: { type: String, required: true, ref: 'user' },
+  items: [
+    {
+      product: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'product' },
+      quantity: { type: Number, required: true, min: 1 },
+    },
+  ],
+  amount: { type: Number, required: true, min: 0 },
+  address: { type: mongoose.Schema.Types.ObjectId, ref: 'address', required: true },
+  date: { type: Date, required: true, default: Date.now },
+  paymentMethod: {
+    type: String,
+    required: true,
+    enum: ['stripe', 'paypal', 'apple', 'google', 'amazon', 'bank-transfer', 'crypto', 'mpesa', 'paytm', 'cash-on-delivery'],
+  },
+  status: {
+    type: String,
+    enum: ['Pending', 'Delivered', 'Cancelled'],
+    default: 'Pending',
+  },
+  proofOfPaymentUrl: { type: String },
+  paymentStatus: {
+    type: String,
+    enum: ['Pending', 'Successful', 'Failed', 'Refunded'],
+    default: 'Pending'
+  }
+}, { timestamps: true });
 
-const Order = mongoose.models.order || mongoose.model("order", orderSchema);
-
+const Order = mongoose.models.Order || mongoose.model('Order', orderSchema);
 export default Order;
