@@ -129,9 +129,9 @@ const ProductCard = ({ product }) => {
         onMouseUp={handleLongPressEnd}
         onMouseLeave={handleLongPressEnd}
         onTouchEnd={handleLongPressEnd}
-        className="flex flex-col items-start gap-0.5 max-w-[200px] w-full cursor-pointer mb-16"
+        className="flex flex-col items-start gap-0.5 max-w-[200px] w-full cursor-pointer mb-16 overflow-hidden"
     >
-      <div className="relative bg-gray-100 dark:bg-gray-800 rounded-lg w-full h-52 flex items-center justify-center overflow-hidden group">
+      <div className="relative bg-gray-100 dark:bg-gray-800 rounded-lg w-full h-44 flex items-center justify-center overflow-hidden group">
         <Image
           src={product.image[0]}
           alt={product.name}
@@ -152,7 +152,7 @@ const ProductCard = ({ product }) => {
         </button>
       </div>
 
-      <p className="text-base font-medium pt-2 w-full truncate text-black dark:text-white">
+      <p className="text-sm font-medium pt-1 w-full text-black dark:text-white line-clamp-2 leading-tight">
         {product.name}
       </p>
       {/* <div
@@ -164,7 +164,7 @@ const ProductCard = ({ product }) => {
         {product.description}
       </p> */}
       <div
-        className="text-xs text-gray-500 dark:text-gray-400 w-full truncate max-sm:hidden line-clamp-1"
+        className="text-xs text-gray-500 dark:text-gray-400 w-full line-clamp-1"
         dangerouslySetInnerHTML={{ __html: product.description }}
       />
 
