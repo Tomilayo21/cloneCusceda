@@ -2,10 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* globals.css */
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+}
+
+/* Apply background and text */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s, color 0.3s;
+}
+
 * {
     scroll-behavior: smooth;
     list-style-type: none;
-
 }
 
 @layer base {
@@ -18,4 +35,12 @@
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+.ProseMirror {
+  line-height: 1.5; /* default */
+}
+
+.ProseMirror p {
+  margin-bottom: 1em; /* paragraph spacing */
 }
