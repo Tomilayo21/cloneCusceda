@@ -105,47 +105,71 @@ export default function ActivityLogsPage() {
         <CSVLink
           data={filteredLogs}
           filename={`activity-logs-${new Date().toISOString()}.csv`}
-          className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 transition"
+          className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 transition text-center max-w-fit"
         >
           Export to CSV
         </CSVLink>
       </div>
 
-      <table className="min-w-full border-collapse border border-gray-300 text-sm">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border border-gray-300 px-3 py-2 text-left">Action</th>
-            <th className="border border-gray-300 px-3 py-2 text-left">Detail</th>
-            <th className="border border-gray-300 px-3 py-2 text-left">Timestamp</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedLogs.length === 0 ? (
+      {/* Table view for medium and up */}
+      <div className="hidden md:block">
+        <table className="min-w-full border-collapse border border-gray-300 text-sm">
+          <thead className="bg-gray-100">
             <tr>
-              <td colSpan={3} className="text-center py-4">
-                No logs found.
-              </td>
+              <th className="border border-gray-300 px-3 py-2 text-left">Action</th>
+              <th className="border border-gray-300 px-3 py-2 text-left">Detail</th>
+              <th className="border border-gray-300 px-3 py-2 text-left">Timestamp</th>
             </tr>
-          ) : (
-            paginatedLogs.map((log, idx) => (
-              <tr
-                key={idx}
-                className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
-              >
-                <td className="border border-gray-300 px-3 py-2">{log.action}</td>
-                <td className="border border-gray-300 px-3 py-2">{log.detail}</td>
-                <td className="border border-gray-300 px-3 py-2">
-                  <span>
-                    {dayjs(log.timestamp).format("DD/MM/YYYY, h:mm A")}{" "}
-                    <span className="text-gray-400 text-xs">({dayjs(log.timestamp).fromNow()})</span>
-                  </span>
-
+          </thead>
+          <tbody>
+            {paginatedLogs.length === 0 ? (
+              <tr>
+                <td colSpan={3} className="text-center py-4">
+                  No logs found.
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : (
+              paginatedLogs.map((log, idx) => (
+                <tr
+                  key={idx}
+                  className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                >
+                  <td className="border border-gray-300 px-3 py-2">{log.action}</td>
+                  <td className="border border-gray-300 px-3 py-2">{log.detail}</td>
+                  <td className="border border-gray-300 px-3 py-2">
+                    <span>
+                      {dayjs(log.timestamp).format("DD/MM/YYYY, h:mm A")}{" "}
+                      <span className="text-gray-400 text-xs">({dayjs(log.timestamp).fromNow()})</span>
+                    </span>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Card view for small screens */}
+      <div className="md:hidden space-y-4">
+        {paginatedLogs.length === 0 ? (
+          <p className="text-center">No logs found.</p>
+        ) : (
+          paginatedLogs.map((log, idx) => (
+            <div
+              key={idx}
+              className="border border-gray-300 rounded p-4 shadow-sm bg-white"
+            >
+              <p><span className="font-medium">Action:</span> {log.action}</p>
+              <p><span className="font-medium">Detail:</span> {log.detail}</p>
+              <p className="text-sm text-gray-500 mt-1">
+                {dayjs(log.timestamp).format("DD/MM/YYYY, h:mm A")} •{" "}
+                {dayjs(log.timestamp).fromNow()}
+              </p>
+            </div>
+          ))
+        )}
+      </div>
+
 
       <div className="flex justify-between items-center mt-4">
         <button
