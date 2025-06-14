@@ -28,7 +28,7 @@ export async function DELETE(req, { params }) {
   const token = authHeader.split(' ')[1];
   const userId = headers.userid;
 
-  if (!token || userId) {
+  if (!token || !userId) {
     return NextResponse.json(
       { success: false, message: 'Unauthorized: Missing credentials' },
       { status: 401 }
@@ -46,11 +46,18 @@ export async function DELETE(req, { params }) {
   try {
     const deleted = await Product.findByIdAndDelete(id);
     if (!deleted) {
-      return NextResponse.json({ success: false, message: 'Product not found' }, { status: 404 });
+      return NextResponse.json(
+        { success: false, message: 'Product not found' },
+        { status: 404 }
+      );
     }
+
     return NextResponse.json({ success: true, message: 'Product deleted' });
   } catch (err) {
-    return NextResponse.json({ success: false, message: err.message }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: err.message },
+      { status: 500 }
+    );
   }
 }
 
