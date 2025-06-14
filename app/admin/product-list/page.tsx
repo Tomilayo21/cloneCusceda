@@ -698,9 +698,9 @@ const handleExportCSV = () => {
                       setEditableProduct({ ...editableProduct, description: value })
                     }
                   />
-                  <p className="text-xs text-gray-500 italic">
+                  {/* <p className="text-xs text-gray-500 italic">
                     To insert a space, press the spacebar twice — no need to press it three times.
-                  </p>
+                  </p> */}
 
                 </div>
 
