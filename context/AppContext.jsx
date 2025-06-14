@@ -23,6 +23,19 @@ export const AppContextProvider = (props) => {
     const [userData, setUserData] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [cartItems, setCartItems] = useState({}); // Start cart from 0 (empty object)
+    
+    useEffect(() => {
+        const fetchCart = async () => {
+            const res = await fetch("/api/cart/get");
+            const data = await res.json();
+            if (data.success) {
+            setCartItems(data.cartItems); // <- this will rehydrate your cart
+            }
+        };
+
+        fetchCart();
+    }, []);
+
 
     const fetchProductData = async () => {
         try {
