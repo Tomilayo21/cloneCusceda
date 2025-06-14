@@ -4,7 +4,12 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs"; // Clerk hook for auth
 import { CSVLink } from "react-csv";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import Navbar from '@/components/admin/Navbar'
+
+dayjs.extend(relativeTime);
+
 
 
 interface LogEntry {
@@ -100,7 +105,7 @@ export default function ActivityLogsPage() {
         <CSVLink
           data={filteredLogs}
           filename={`activity-logs-${new Date().toISOString()}.csv`}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 transition"
         >
           Export to CSV
         </CSVLink>
@@ -130,7 +135,11 @@ export default function ActivityLogsPage() {
                 <td className="border border-gray-300 px-3 py-2">{log.action}</td>
                 <td className="border border-gray-300 px-3 py-2">{log.detail}</td>
                 <td className="border border-gray-300 px-3 py-2">
-                  {new Date(log.timestamp).toLocaleString()}
+                  <span>
+                    {dayjs(log.timestamp).format("DD/MM/YYYY, h:mm A")}{" "}
+                    <span className="text-gray-400 text-xs">({dayjs(log.timestamp).fromNow()})</span>
+                  </span>
+
                 </td>
               </tr>
             ))
