@@ -9,7 +9,9 @@ const ContactSchema = new mongoose.Schema({
   archived: { type: Boolean, default: false },
   read: { type: Boolean, default: false },
   deleted: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  device: String,
+  location: String,
 });
 
 export default mongoose.models.Contact || mongoose.model("Contact", ContactSchema);
