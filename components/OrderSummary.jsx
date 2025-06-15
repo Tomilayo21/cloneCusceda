@@ -24,6 +24,7 @@ const OrderSummary = () => {
   const [userAddresses, setUserAddresses] = useState([]);
   const [processing, setProcessing] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState('stripe');
+  
 
   const selected = paymentMethods.find((m) => m.id === selectedMethod);
   const baseAmount = getCartAmount() + Math.floor(getCartAmount() * 0.02); // subtotal + tax
