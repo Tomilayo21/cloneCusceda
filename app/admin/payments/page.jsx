@@ -19,7 +19,9 @@ export default function AdminTransactions() {
   const [pageSize] = useState(10);
   const [loading, setLoading] = useState(false);
   const [enlargedImg, setEnlargedImg] = useState(null);
-  const { getToken } = useAppContext()
+  const { getToken, currency } = useAppContext()
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+
 
   useEffect(() => {
     fetchTransactions();
@@ -44,34 +46,72 @@ export default function AdminTransactions() {
     txn.paymentMethod?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-const updatePaymentStatus = async (orderId, status) => {
-  try {
-    const token = await getToken(); // from your AppContext
-    const res = await axios.post(
-      "/api/admin/order/payment-status",
-      { orderId, status },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // this must be valid
-        },
-      }
-    );
-
-    if (res.data.success) {
-      toast.success("Updated payment status");
-      setTransactions((prev) =>
-        prev.map((txn) =>
-          txn._id === orderId ? { ...txn, paymentStatus: status } : txn
-        )
+  const updatePaymentStatus = async (orderId, status) => {
+    try {
+      const token = await getToken(); // from your AppContext
+      const res = await axios.post(
+        "/api/admin/order/payment-status",
+        { orderId, status },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // this must be valid
+          },
+        }
       );
-    } else {
-      toast.error(res.data.message || "Failed to update");
+
+      if (res.data.success) {
+        toast.success("Updated payment status");
+        setTransactions((prev) =>
+          prev.map((txn) =>
+            txn._id === orderId ? { ...txn, paymentStatus: status } : txn
+          )
+        );
+      } else {
+        toast.error(res.data.message || "Failed to update");
+      }
+    } catch (err) {
+      console.error("AXIOS ERROR:", err.response?.data || err.message);
+      toast.error(err.response?.data?.message || "Failed to update payment status");
     }
-  } catch (err) {
-    console.error("AXIOS ERROR:", err.response?.data || err.message);
-    toast.error(err.response?.data?.message || "Failed to update payment status");
-  }
-};
+  };
+
+  const updateOrderStatus = async (orderId, status) => {
+    try {
+      const token = await getToken();
+      const { data } = await axios.post("/api/order/update-status", { orderId, status }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (data.success) {
+        toast.success("Status updated");
+        // fetchAdminOrders(); // Refresh
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const sortedTransactions = [...filteredTransactions].sort((a, b) => {
+    if (!sortConfig.key) return 0;
+
+    const aVal = a[sortConfig.key]?.toString().toLowerCase();
+    const bVal = b[sortConfig.key]?.toString().toLowerCase();
+
+    if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+    if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  const requestSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+  
 
 
 
@@ -95,29 +135,42 @@ const updatePaymentStatus = async (orderId, status) => {
           <div className="hidden sm:block">
             <table className="min-w-full border-collapse border border-gray-300">
               <thead>
+                                               
                 <tr>
-                  <th className="border p-2">Order ID</th>
+                  <th className="border p-2 cursor-pointer" onClick={() => requestSort('_id')}>
+                    Order ID
+                  </th>
                   <th className="border p-2">User ID</th>
                   <th className="border p-2">Amount</th>
-                  <th className="border p-2">Payment Method</th>
-                  <th className="border p-2">Status</th>
+                  <th className="border p-2 cursor-pointer" onClick={() => requestSort('paymentMethod')}>
+                    Payment Method
+                  </th>
+                  <th className="border p-2 cursor-pointer" onClick={() => requestSort('paymentStatus')}>
+                    Payment Status
+                  </th>
+                  <th className="border p-2 cursor-pointer" onClick={() => requestSort('orderStatus')}>
+                    Order Status
+                  </th>
                   <th className="border p-2">Proof of Payment</th>
                   <th className="border p-2">Date</th>
-                </tr>
+                </tr> 
+
+
+
               </thead>
               <tbody>
-                {filteredTransactions.length === 0 ? (
+                {sortedTransactions.length === 0 ? (
                   <tr>
                     <td colSpan="7" className="text-center p-4">
                       No transactions found.
                     </td>
                   </tr>
                 ) : (
-                  filteredTransactions.map((txn) => (
+                  sortedTransactions.map((txn) => (
                     <tr key={txn._id} className="hover:bg-gray-100">
                       <td className="border p-2 text-sm">{txn.orderId}</td>
                       <td className="border p-2 text-sm">{txn.userId}</td>
-                      <td className="border p-2 text-sm">${txn.amount?.toFixed(2)}</td>
+                      <td className="border p-2 text-sm">{currency}{txn.amount?.toFixed(2)}</td>
                       <td className="border p-2 text-sm">{txn.paymentMethod}</td>
                       <td className="border p-2 text-sm">
                         <select
@@ -131,6 +184,22 @@ const updatePaymentStatus = async (orderId, status) => {
                         <option value="Failed">Failed</option>
                       </select>
                       </td>
+                      <td className="border p-2 text-sm">
+                      <select
+                        value={txn.orderStatus}
+                        onChange={(e) => updateOrderStatus(txn.orderId, e.target.value)}
+                        className="border px-2 py-1 rounded"
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="Order Placed">Order Placed</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                    </td>
+
+
                       <td className="border p-2 text-center">
                         {txn.proofOfPaymentUrl ? (
                           <img
@@ -165,9 +234,38 @@ const updatePaymentStatus = async (orderId, status) => {
                 <div key={txn._id} className="border rounded p-4 shadow">
                   <p><span className="font-semibold">Order ID:</span> {txn.orderId}</p>
                   <p><span className="font-semibold">User ID:</span> {txn.userId}</p>
-                  <p><span className="font-semibold">Amount:</span> ${txn.amount?.toFixed(2)}</p>
+                  <p><span className="font-semibold">Amount:</span> {currency}{txn.amount?.toFixed(2)}</p>
                   <p><span className="font-semibold">Payment Method:</span> {txn.paymentMethod}</p>
-                  <p><span className="font-semibold">Status:</span> {txn.status}</p>
+                  <p>
+                    <span className="font-semibold">Payment Status:</span>
+                    <select
+                      className="ml-2 mt-1 p-1 text-sm border rounded"
+                      value={txn.paymentStatus}
+                      onChange={(e) => updatePaymentStatus(txn._id, e.target.value)}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Successful">Successful</option>
+                      <option value="Refunded">Refunded</option>
+                      <option value="Failed">Failed</option>
+                    </select>
+                  </p>
+
+                  <p>
+                    <span className="font-semibold">Order Status:</span>
+                    <select
+                      className="ml-2 mt-1 p-1 text-sm border rounded"
+                      value={txn.orderStatus}
+                      onChange={(e) => updateOrderStatus(txn.orderId, e.target.value)}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Order Placed">Order Placed</option>
+                      <option value="Processing">Processing</option>
+                      <option value="Shipped">Shipped</option>
+                      <option value="Delivered">Delivered</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                  </p>
+
                   <p className="mt-2">
                     <span className="font-semibold">Proof of Payment:</span><br />
                     {txn.proofOfPaymentUrl ? (
