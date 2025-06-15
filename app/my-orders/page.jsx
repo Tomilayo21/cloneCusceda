@@ -207,9 +207,10 @@ const MyOrders = () => {
                              {/* – Fee:{" "}
                             {(method.fee * 100).toFixed(1)}% */}
                           </p>
-                          <p className="text-sm text-gray-600">
-                            Order ID: <span className="font-semibold">{order.orderId || order._id}</span>
-                          </p>
+                          <span className="text-gray-600 dark:text-white">
+                            Order ID: <span className="text-sm text-gray-600 font-semibold">{order.orderId || order._id}</span>
+                          </span>
+
                           </>
                         )}
                         <span className="text-sm text-gray-600">
