@@ -144,7 +144,7 @@ const BankTransferPage = () => {
           <section className="bg-gray-50 dark:bg-gray-700 p-4 rounded shadow">
             <h2 className="font-semibold mb-2">Transfer Details</h2>
             <p><strong>Amount:</strong> {currency}{total.toFixed(2)}</p>
-            <p><strong>Currency:</strong> NGN</p>
+            <p><strong>currency:</strong> NGN</p>
             <p className="text-sm mt-2">
               Use your <strong>Order ID</strong> as the transfer reference:{" "}
               <span className="font-mono bg-white px-2 py-1 rounded border border-dashed border-gray-400 dark:bg-black dark:text-white">
