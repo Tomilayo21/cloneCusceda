@@ -130,11 +130,18 @@ export default function UserList() {
     logActivity("Export", "Exported user data to CSV");
   };
 
-  const filteredUsers = users.filter((user) =>
+  const filteredUsers = users
+  .filter((user) =>
     `${user.first_name ?? ""} ${user.last_name ?? ""}`
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
-  );
+  )
+  .sort((a, b) => {
+    const roleA = a.public_metadata?.role === "admin" ? 0 : 1;
+    const roleB = b.public_metadata?.role === "admin" ? 0 : 1;
+    return roleA - roleB;
+  });
+
 
   const paginatedUsers = filteredUsers.slice(
     (currentPage - 1) * usersPerPage,
