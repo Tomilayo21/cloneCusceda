@@ -20,7 +20,96 @@ const AdminMessagesDashboard = () => {
   const [openMessage, setOpenMessage] = useState(null);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [replies, setReplies] = useState([]);
+  // const [repliesCount, setRepliesCount] = useState(0);
+  const [replyMessage, setReplyMessage] = useState("");
+  const [subject, setSubject] = useState("");
+  const [cc, setCc] = useState("");
   const pageSize = 10;
+  
+
+
+  // Whenever openMessage changes, set default subject
+  useEffect(() => {
+    if (openMessage) {
+      setSubject(`Re: ${openMessage.subject}`);
+    }
+  }, [openMessage]);
+
+  // const fetchReplies = async () => {
+  //   try {
+  //     const res = await fetch("/api/contact/reply");
+  //     const data = await res.json();
+
+  //     if (Array.isArray(data.replies)) {
+  //       setReplies(data.replies);
+  //     } else {
+  //       setReplies([]);
+  //     }
+  //   } catch (err) {
+  //     console.error("Failed to fetch replies", err);
+  //     toast.error("Failed to fetch replies");
+  //   }
+  // };
+  
+  // useEffect(() => {
+  //   const fetchReplies = async () => {
+  //     if (view === "replies") {
+  //       try {
+  //         const res = await fetch("/api/contact/reply");
+  //         const data = await res.json();
+  //         setReplies(data.replies || []);
+  //       } catch (err) {
+  //         console.error("Failed to fetch replies", err);
+  //         toast.error("Could not load replies.");
+  //       }
+  //     }
+  //   };
+
+  //   // fetchReplies();
+  // }, [view]); // ✅ Use a consistent, static array
+
+  const fetchReplies = async () => {
+  try {
+    const res = await fetch("/api/contact/reply");
+    const data = await res.json();
+
+    if (Array.isArray(data.replies)) {
+      // ✅ Deduplicate here
+      const uniqueReplies = Array.from(new Map(data.replies.map(r => [r._id, r])).values());
+      setReplies(uniqueReplies);
+    } else {
+      setReplies([]);
+    }
+  } catch (err) {
+    console.error("Failed to fetch replies", err);
+    toast.error("Failed to fetch replies");
+  }
+};
+
+// useEffect(() => {
+//   if (view === "replies") {
+//     fetchReplies();
+//   }
+// }, [view]);
+useEffect(() => {
+  if (view === "replies") {
+    const fetchReplies = async () => {
+      try {
+        const res = await fetch("/api/contact/reply");
+        const data = await res.json();
+        // Always REPLACE, never append
+        setReplies(data.replies || []);
+      } catch (err) {
+        console.error("Failed to fetch replies", err);
+        toast.error("Could not load replies.");
+      }
+    };
+
+    fetchReplies(); // ✅ Only call it once
+  }
+}, [view]); // ✅ Only run when view changes to 'replies'
+
 
   useEffect(() => {
     if (!user) return;
@@ -34,15 +123,20 @@ const AdminMessagesDashboard = () => {
   const fetchMessages = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/contact/messages");
+      const res = await fetch(`/api/contact/messages?view=${view}`);
       const data = await res.json();
-      setMessages(data);
+      setMessages(Array.isArray(data) ? data : []); // Safe fallback
     } catch (err) {
       toast.error("Failed to fetch messages.");
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchMessages();
+  }, [view]);
+
 
   const toggleSelect = (id) => {
     setSelectedIds((prev) =>
@@ -80,12 +174,12 @@ const AdminMessagesDashboard = () => {
       }
     }
 
-    toast.success("Bulk action successful");
+    toast.success("Successful");
     setSelectedIds([]);
     fetchMessages(); // Refresh UI
   } catch (err) {
     console.error("Bulk action failed:", err);
-    toast.error("Bulk action failed");
+    toast.error("Failed");
   }
 };
 
@@ -124,20 +218,28 @@ const AdminMessagesDashboard = () => {
     document.body.removeChild(link);
   };
 
-  const filteredMessages = messages
-    .filter((msg) => {
-      if (view === "inbox") return !msg.archived && !msg.deleted;
-      if (view === "unread") return !msg.read && !msg.archived && !msg.deleted;
-      if (view === "archived") return msg.archived && !msg.deleted;
-      if (view === "deleted") return msg.deleted;
-      return false;
-    })
-    .filter((msg) =>
-      [msg.name, msg.email, msg.subject, msg.message]
-        .join(" ")
-        .toLowerCase()
-        .includes(search.toLowerCase())
-    );
+  const filteredMessages =
+  view === "replies"
+    ? replies.filter((msg) =>
+        [msg.to, msg.cc, msg.subject, msg.message]
+          .join(" ")
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      )
+    : messages
+        .filter((msg) => {
+          if (view === "inbox") return !msg.archived && !msg.deleted;
+          if (view === "unread") return !msg.read && !msg.archived && !msg.deleted;
+          if (view === "archived") return msg.archived && !msg.deleted;
+          if (view === "deleted") return msg.deleted;
+          return false;
+        })
+        .filter((msg) =>
+          [msg.name, msg.email, msg.subject, msg.message]
+            .join(" ")
+            .toLowerCase()
+            .includes(search.toLowerCase())
+        );
 
   const paginatedMessages = filteredMessages.slice(
     (currentPage - 1) * pageSize,
@@ -154,6 +256,7 @@ const AdminMessagesDashboard = () => {
     (msg) => msg.archived && !msg.deleted
   ).length;
   const deletedCount = messages.filter((msg) => msg.deleted).length;
+  const repliesCount = replies.length;
 
   const totalPages = Math.ceil(filteredMessages.length / pageSize);
 
@@ -164,6 +267,15 @@ const AdminMessagesDashboard = () => {
       allSelected ? prev.filter((id) => !idsOnPage.includes(id)) : [...new Set([...prev, ...idsOnPage])]
     );
   };
+
+  const viewLabels = {
+    inbox: "Inbox",
+    unread: "Unread",
+    archived: "Archived",
+    deleted: "Deleted",
+    replies: "Replies",
+  };
+
 
   return (
     <div className="p-4 sm:p-6">
@@ -176,27 +288,29 @@ const AdminMessagesDashboard = () => {
       )}
 
       <div className="flex flex-wrap gap-2 sm:gap-4 mb-6">
-        {["inbox", "unread", "archived", "deleted"].map((v) => (
+        {Object.entries(viewLabels).map(([key, label]) => (
           <button
-            key={v}
+            key={key}
             onClick={() => {
-              setView(v);
+              setView(key);
               setCurrentPage(1);
             }}
             className={`px-4 py-2 rounded text-sm sm:text-base ${
-              view === v ? "bg-black text-white" : "border"
+              view === key ? "bg-black text-white" : "border"
             }`}
           >
-            {v[0].toUpperCase() + v.slice(1)} (
+            {label} (
               {({
                 inbox: inboxCount,
                 unread: unreadCount,
                 archived: archivedCount,
                 deleted: deletedCount,
-              }[v])}
+                replies: repliesCount,
+              }[key])}
             )
           </button>
         ))}
+
       </div>
 
       {/* Tools */}
@@ -227,65 +341,6 @@ const AdminMessagesDashboard = () => {
         </button>
       </div>
 
-      {/* Bulk Actions */}
-      {/* <div className="flex flex-wrap gap-2 mb-4">
-        <button
-          onClick={() => bulkAction("read")}
-          disabled={!selectedIds.length}
-          className="px-4 py-2 bg-white text-black border border-black rounded text-sm disabled:opacity-50"
-        >
-          Mark as Read
-        </button>
-        <button
-          onClick={() => bulkAction("unread")}
-          disabled={!selectedIds.length}
-          className="px-4 py-2 bg-yellow-600 text-white rounded text-sm disabled:opacity-50"
-        >
-          Mark as Unread
-        </button>
-        <button
-          onClick={() => bulkAction("archive")}
-          disabled={!selectedIds.length}
-          className="px-4 py-2 bg-white text-orange border border-orange-600 rounded text-sm disabled:opacity-50"
-        >
-          Archive Selected
-        </button>
-        <button
-          onClick={() => bulkAction("delete")}
-          disabled={!selectedIds.length}
-          className="px-4 py-2 bg-orange-600 text-white rounded text-sm disabled:opacity-50"
-        >
-          Delete Selected
-        </button>
-      </div> */}
-      {/* {view === "inbox" && selectedIds.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-4">
-          <button
-            onClick={() => bulkAction("read")}
-            className="px-4 py-2 bg-white text-black border border-black rounded text-sm"
-          >
-            Mark as Read
-          </button>
-          <button
-            onClick={() => bulkAction("unread")}
-            className="px-4 py-2 bg-yellow-600 text-white rounded text-sm"
-          >
-            Mark as Unread
-          </button>
-          <button
-            onClick={() => bulkAction("archive")}
-            className="px-4 py-2 bg-white text-orange border border-orange-600 rounded text-sm"
-          >
-            Archive Selected
-          </button>
-          <button
-            onClick={() => bulkAction("delete")}
-            className="px-4 py-2 bg-orange-600 text-white rounded text-sm"
-          >
-            Delete Selected
-          </button>
-        </div>
-      )} */}
       {view === "inbox" && selectedIds.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-4">
           <button
@@ -314,7 +369,6 @@ const AdminMessagesDashboard = () => {
           </button>
         </div>
       )}
-
       {view === "deleted" && selectedIds.length > 0 && (
         <>
           <button
@@ -369,11 +423,53 @@ const AdminMessagesDashboard = () => {
           </button>
         </div>
       )}
+      {view === "replies" && (
+        <div className="space-y-4">
+          {replies.map((reply) => (
+            <div key={reply._id}> {/* render reply info */} </div>
+          ))}
+        </div>
+      )}
+       {view === "replies" && (
+        <div className="space-y-4">
+          {/* {replies.map((reply) => (
+            <div key={reply._id} className="p-4 border rounded shadow">
+              <p>
+                <strong>To:</strong> {reply.to}
+              </p>
+              {reply.cc && (
+                <p>
+                  <strong>CC:</strong> {reply.cc}
+                </p>
+              )}
+              <p>
+                <strong>Subject:</strong> {reply.subject}
+              </p>
+              <p className="whitespace-pre-line">{reply.message}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Sent: {dayjs(reply.sentAt).fromNow()}
+              </p>
+            </div>
+          ))} */}
+          {replies.map((reply) => (
+          <div
+            key={reply._id}
+            className="p-4 border rounded shadow cursor-pointer hover:bg-gray-50"
+            onClick={() => setOpenMessage({ ...reply, type: "reply" })}
+          >
+            <p><strong>To:</strong> {reply.to}</p>
+            {reply.cc && <p><strong>CC:</strong> {reply.cc}</p>}
+            <p><strong>Subject:</strong> {reply.subject}</p>
+            <p className="whitespace-pre-line">{reply.message}</p>
+            <p className="text-xs text-gray-500 mt-1">Sent: {dayjs(reply.sentAt).fromNow()}</p>
+          </div>
+        ))}
 
-
+        </div>
+      )}
 
       {/* Message List */}
-      {loading ? (
+      {view !== "replies" && (loading ? (
         <p className="text-gray-500">Loading messages...</p>
       ) : paginatedMessages.length ? (
         <div className="space-y-4">
@@ -381,7 +477,7 @@ const AdminMessagesDashboard = () => {
             <div
               key={msg._id}
               onClick={() => {
-                setOpenMessage(msg);
+                setOpenMessage({ ...msg, type: "inbox" });
                 handleMarkAsRead(msg);
               }}
               className={`p-4 border rounded shadow flex flex-col sm:flex-row justify-between gap-4 cursor-pointer ${
@@ -488,19 +584,9 @@ const AdminMessagesDashboard = () => {
         </div>
       ) : (
         <p className="text-gray-500">No messages found.</p>
+      )
       )}
-      {paginatedMessages.length > 0 && (
-        <button
-          onClick={handleSelectAll}
-          className="px-4 py-2 bg-white text-black border border-black rounded text-sm disabled:opacity-50"
-        >
-          {paginatedMessages.every((msg) => selectedIds.includes(msg._id))
-            ? "Unselect All"
-            : "Select All"}
-        </button>
-      )}
-
-
+      
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="mt-6 flex justify-center gap-2 flex-wrap">
@@ -521,36 +607,133 @@ const AdminMessagesDashboard = () => {
       )}
 
       {/* Message Modal */}
-      {openMessage && (
+     {openMessage && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
-          <div className="bg-white rounded-lg p-6 max-w-lg w-full relative shadow-xl">
+          <div
+            className="bg-white rounded-lg p-6 max-w-lg w-full relative shadow-xl overflow-y-auto"
+            style={{ maxHeight: "90vh" }}
+          >
             <button
               onClick={() => setOpenMessage(null)}
               className="absolute top-2 right-2 text-gray-500 hover:text-black"
             >
               ✖
             </button>
+
             <h2 className="text-lg font-bold mb-2">{openMessage.subject}</h2>
-            <p className="text-sm text-gray-500 mb-1">
-              From: {openMessage.name} ({openMessage.email})
-            </p>
-            {/* New: Device and Location Info */}
-            {openMessage.device && (
-              <p className="text-xs text-gray-500 mb-1">
-                Sent from: {openMessage.device}
-              </p>
+
+            {view === "replies" ? (
+              <>
+                <p className="text-sm text-gray-500 mb-1">
+                  <strong>To:</strong> {openMessage.to}
+                </p>
+
+                {openMessage.cc && (
+                  <p className="text-sm text-gray-500 mb-1">
+                    <strong>CC:</strong> {openMessage.cc}
+                  </p>
+                )}
+
+                <p className="text-xs text-gray-400 mb-4">
+                  Sent {dayjs(openMessage.sentAt).fromNow()}
+                </p>
+
+                <p className="text-base whitespace-pre-line">{openMessage.message}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-gray-500 mb-1">
+                  From: {openMessage.name} ({openMessage.email})
+                </p>
+
+                {openMessage.device && (
+                  <p className="text-xs text-gray-500 mb-1">
+                    Sent from: {openMessage.device}
+                  </p>
+                )}
+
+                {openMessage.location && (
+                  <p className="text-xs text-gray-500 mb-1">
+                    Location: {openMessage.location}
+                  </p>
+                )}
+
+                <p className="text-xs text-gray-400 mb-4">
+                  Sent {dayjs(openMessage.createdAt).fromNow()}
+                </p>
+
+                <p className="text-base whitespace-pre-line">{openMessage.message}</p>
+
+                {/* Reply Form */}
+                <div className="mt-4">
+                  <div className="mb-2">
+                    <label className="block text-sm font-medium">To</label>
+                    <input
+                      type="text"
+                      className="w-full border px-3 py-2 rounded bg-gray-100 cursor-not-allowed"
+                      value={openMessage.email}
+                      readOnly
+                    />
+                  </div>
+
+                  <div className="mb-2">
+                    <label className="block text-sm font-medium">CC</label>
+                    <input
+                      type="text"
+                      className="w-full border px-3 py-2 rounded"
+                      value={cc}
+                      onChange={(e) => setCc(e.target.value)}
+                      placeholder="Optional"
+                    />
+                  </div>
+
+                  <div className="mb-2">
+                    <label className="block text-sm font-medium">Subject</label>
+                    <input
+                      type="text"
+                      className="w-full border px-3 py-2 rounded"
+                      value={subject}
+                      onChange={(e) => setSubject(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="block text-sm font-medium">Message</label>
+                    <textarea
+                      className="w-full border p-2 rounded"
+                      rows={5}
+                      value={replyMessage}
+                      onChange={(e) => setReplyMessage(e.target.value)}
+                      placeholder="Write your reply..."
+                    />
+                  </div>
+
+                  <button
+                    onClick={async () => {
+                      await fetch("/api/contact/reply", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          to: openMessage.email,
+                          cc,
+                          subject,
+                          message: replyMessage,
+                          originalMessageId: openMessage._id,
+                        }),
+                      });
+                      toast.success("Reply sent!");
+                      setReplyMessage("");
+                      setSubject(`Re: ${openMessage.subject}`);
+                      setCc("");
+                      setOpenMessage(null);
+                    }}
+                    className="mt-3 bg-black text-white px-4 py-2 rounded"
+                  >
+                    Send Reply
+                  </button>
+                </div>
+              </>
             )}
-            {openMessage.location && (
-              <p className="text-xs text-gray-500 mb-1">
-                Location: {openMessage.location}
-              </p>
-            )}
-            <p className="text-xs text-gray-400 mb-4">
-              Sent {dayjs(openMessage.createdAt).fromNow()}
-            </p>
-            <p className="text-base whitespace-pre-line">
-              {openMessage.message}
-            </p>
           </div>
         </div>
       )}
