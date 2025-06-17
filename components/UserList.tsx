@@ -130,11 +130,13 @@ export default function UserList() {
     logActivity("Export", "Exported user data to CSV");
   };
 
-  const filteredUsers = users.filter((user) =>
-    `${user.first_name ?? ""} ${user.last_name ?? ""}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+  const filteredUsers = users.filter((user) => {
+    const name = user.first_name?.toLowerCase() ?? "";
+    const email = user.email_addresses?.[0]?.email_address?.toLowerCase() ?? "";
+    const search = searchTerm.toLowerCase();
+    return name.includes(search) || email.includes(search);
+  });
+
 
   const paginatedUsers = filteredUsers.slice(
     (currentPage - 1) * usersPerPage,
@@ -154,7 +156,7 @@ export default function UserList() {
     <div className="mb-4 flex flex-col md:flex-row justify-between gap-2">
       <input
         type="text"
-        placeholder="Search by name..."
+        placeholder="Search by name, email..."
         className="px-4 py-2 border rounded w-full md:w-1/3"
         value={searchTerm}
         onChange={(e) => {
