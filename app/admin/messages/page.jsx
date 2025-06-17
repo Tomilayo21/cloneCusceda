@@ -21,10 +21,11 @@ const AdminMessagesDashboard = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [replies, setReplies] = useState([]);
-  // const [repliesCount, setRepliesCount] = useState(0);
+  const [showReplyModal, setShowReplyModal] = useState(false);
   const [replyMessage, setReplyMessage] = useState("");
   const [subject, setSubject] = useState("");
   const [cc, setCc] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
   const pageSize = 10;
   
 
@@ -92,23 +93,23 @@ const AdminMessagesDashboard = () => {
 //     fetchReplies();
 //   }
 // }, [view]);
-useEffect(() => {
-  if (view === "replies") {
-    const fetchReplies = async () => {
-      try {
-        const res = await fetch("/api/contact/reply");
-        const data = await res.json();
-        // Always REPLACE, never append
-        setReplies(data.replies || []);
-      } catch (err) {
-        console.error("Failed to fetch replies", err);
-        toast.error("Could not load replies.");
-      }
-    };
+  useEffect(() => {
+    if (view === "replies") {
+      const fetchReplies = async () => {
+        try {
+          const res = await fetch("/api/contact/reply");
+          const data = await res.json();
+          // Always REPLACE, never append
+          setReplies(data.replies || []);
+        } catch (err) {
+          console.error("Failed to fetch replies", err);
+          toast.error("Could not load replies.");
+        }
+      };
 
-    fetchReplies(); // ✅ Only call it once
-  }
-}, [view]); // ✅ Only run when view changes to 'replies'
+      fetchReplies(); // ✅ Only call it once
+    }
+  }, [view]); 
 
 
   useEffect(() => {
@@ -145,43 +146,43 @@ useEffect(() => {
   };
 
   const bulkAction = async (action) => {
-  try {
-    for (const id of selectedIds) {
-      let update = {};
+    try {
+      for (const id of selectedIds) {
+        let update = {};
 
-      if (action === "read") update.read = true;
-      else if (action === "unread") update.read = false;
-      else if (action === "archive") update.archived = true;
-      else if (action === "delete") update.deleted = true;
-      else if (action === "restore") {
-        update.archived = false;
-        update.deleted = false;
-      }
-      else if (action === "permanentDelete") {
-        await fetch(`/api/contact/messages/${id}?force=true`, {
-          method: "DELETE",
-        });
-        continue;
+        if (action === "read") update.read = true;
+        else if (action === "unread") update.read = false;
+        else if (action === "archive") update.archived = true;
+        else if (action === "delete") update.deleted = true;
+        else if (action === "restore") {
+          update.archived = false;
+          update.deleted = false;
+        }
+        else if (action === "permanentDelete") {
+          await fetch(`/api/contact/messages/${id}?force=true`, {
+            method: "DELETE",
+          });
+          continue;
+        }
+
+        // PATCH request
+        if (Object.keys(update).length > 0) {
+          await fetch(`/api/contact/messages/${id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(update),
+          });
+        }
       }
 
-      // PATCH request
-      if (Object.keys(update).length > 0) {
-        await fetch(`/api/contact/messages/${id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(update),
-        });
-      }
+      toast.success("Successful");
+      setSelectedIds([]);
+      fetchMessages(); // Refresh UI
+    } catch (err) {
+      console.error("Bulk action failed:", err);
+      toast.error("Failed");
     }
-
-    toast.success("Successful");
-    setSelectedIds([]);
-    fetchMessages(); // Refresh UI
-  } catch (err) {
-    console.error("Bulk action failed:", err);
-    toast.error("Failed");
-  }
-};
+  };
 
 
   const handleMarkAsRead = async (msg) => {
@@ -423,48 +424,87 @@ useEffect(() => {
           </button>
         </div>
       )}
-      {view === "replies" && (
-        <div className="space-y-4">
-          {replies.map((reply) => (
-            <div key={reply._id}> {/* render reply info */} </div>
-          ))}
-        </div>
-      )}
        {view === "replies" && (
-        <div className="space-y-4">
-          {/* {replies.map((reply) => (
-            <div key={reply._id} className="p-4 border rounded shadow">
-              <p>
-                <strong>To:</strong> {reply.to}
-              </p>
-              {reply.cc && (
-                <p>
-                  <strong>CC:</strong> {reply.cc}
-                </p>
-              )}
-              <p>
-                <strong>Subject:</strong> {reply.subject}
-              </p>
-              <p className="whitespace-pre-line">{reply.message}</p>
-              <p className="text-xs text-gray-500 mt-1">
-                Sent: {dayjs(reply.sentAt).fromNow()}
-              </p>
-            </div>
-          ))} */}
+        <div className="space-y-4 px-4">
           {replies.map((reply) => (
-          <div
-            key={reply._id}
-            className="p-4 border rounded shadow cursor-pointer hover:bg-gray-50"
-            onClick={() => setOpenMessage({ ...reply, type: "reply" })}
-          >
-            <p><strong>To:</strong> {reply.to}</p>
-            {reply.cc && <p><strong>CC:</strong> {reply.cc}</p>}
-            <p><strong>Subject:</strong> {reply.subject}</p>
-            <p className="whitespace-pre-line">{reply.message}</p>
-            <p className="text-xs text-gray-500 mt-1">Sent: {dayjs(reply.sentAt).fromNow()}</p>
-          </div>
-        ))}
+            <div
+              key={reply._id}
+              className="relative p-4 border rounded shadow hover:bg-gray-50 w-full max-w-2xl mx-auto"
+            >
+              {/* Delete button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDeletingId(reply._id);
+                }}
+                className="absolute top-2 right-2 text-red-600 hover:text-red-800 text-sm"
+              >
+                🗑️ Delete
+              </button>
 
+              {/* Clickable message body */}
+              <div onClick={() => setOpenMessage({ ...reply, type: "reply" })} className="cursor-pointer">
+                <p><strong>To:</strong> {reply.to}</p>
+                {reply.cc && <p><strong>CC:</strong> {reply.cc}</p>}
+                <p><strong>Subject:</strong> {reply.subject}</p>
+                <p className="whitespace-pre-line overflow-hidden text-ellipsis line-clamp-3">
+                  {reply.message}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Sent: {dayjs(reply.sentAt).fromNow()}
+                </p>
+              </div>
+
+              {/* Confirmation popup */}
+              {deletingId === reply._id && (
+                <div className="absolute inset-0 bg-white/95 backdrop-blur-md flex flex-col justify-center items-center text-center p-4 rounded z-10 shadow-inner">
+                  <p className="text-sm text-gray-700 font-medium">
+                    Are you sure you want to delete this reply?
+                  </p>
+                  <p className="text-xs text-red-500 mt-1">
+                    This action is irreversible. Deleted messages cannot be restored.
+                  </p>
+                  <div className="mt-3 flex gap-4">
+                    <button
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        try {
+                          const res = await fetch(`/api/contact/reply`, {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ id: reply._id }),
+                          });
+
+                          if (res.ok) {
+                            setReplies((prev) => prev.filter((r) => r._id !== reply._id));
+                            toast.success("Reply deleted");
+                          } else {
+                            toast.error("Failed to delete reply");
+                          }
+                        } catch (err) {
+                          toast.error("Error deleting reply");
+                        } finally {
+                          setDeletingId(null);
+                        }
+                      }}
+                      className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                    >
+                      Yes, delete
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDeletingId(null);
+                      }}
+                      className="px-3 py-1 border text-sm rounded hover:bg-gray-100"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       )}
 
@@ -664,79 +704,109 @@ useEffect(() => {
 
                 <p className="text-base whitespace-pre-line">{openMessage.message}</p>
 
-                {/* Reply Form */}
-                <div className="mt-4">
-                  <div className="mb-2">
-                    <label className="block text-sm font-medium">To</label>
-                    <input
-                      type="text"
-                      className="w-full border px-3 py-2 rounded bg-gray-100 cursor-not-allowed"
-                      value={openMessage.email}
-                      readOnly
-                    />
-                  </div>
+                {/* Reply Button */}
+                <button
+                  onClick={() => {
+                    setShowReplyModal(true);
+                    setOpenMessage(null);
+                  }}
 
-                  <div className="mb-2">
-                    <label className="block text-sm font-medium">CC</label>
-                    <input
-                      type="text"
-                      className="w-full border px-3 py-2 rounded"
-                      value={cc}
-                      onChange={(e) => setCc(e.target.value)}
-                      placeholder="Optional"
-                    />
-                  </div>
-
-                  <div className="mb-2">
-                    <label className="block text-sm font-medium">Subject</label>
-                    <input
-                      type="text"
-                      className="w-full border px-3 py-2 rounded"
-                      value={subject}
-                      onChange={(e) => setSubject(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="block text-sm font-medium">Message</label>
-                    <textarea
-                      className="w-full border p-2 rounded"
-                      rows={5}
-                      value={replyMessage}
-                      onChange={(e) => setReplyMessage(e.target.value)}
-                      placeholder="Write your reply..."
-                    />
-                  </div>
-
-                  <button
-                    onClick={async () => {
-                      await fetch("/api/contact/reply", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                          to: openMessage.email,
-                          cc,
-                          subject,
-                          message: replyMessage,
-                          originalMessageId: openMessage._id,
-                        }),
-                      });
-                      toast.success("Reply sent!");
-                      setReplyMessage("");
-                      setSubject(`Re: ${openMessage.subject}`);
-                      setCc("");
-                      setOpenMessage(null);
-                    }}
-                    className="mt-3 bg-black text-white px-4 py-2 rounded"
-                  >
-                    Send Reply
-                  </button>
-                </div>
+                  className="mt-6 bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                  Reply
+                </button>
               </>
             )}
           </div>
         </div>
       )}
+
+      {/* Reply Modal */}
+      {showReplyModal && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
+          <div
+            className="bg-white rounded-lg p-6 max-w-lg w-full relative shadow-xl overflow-y-auto"
+            style={{ maxHeight: "90vh" }}
+          >
+            <button
+              onClick={() => setShowReplyModal(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-black"
+            >
+              ✖
+            </button>
+
+            <h2 className="text-lg font-bold mb-4">Reply to Message</h2>
+
+            <div className="mb-2">
+              <label className="block text-sm font-medium">To</label>
+              <input
+                type="text"
+                className="w-full border px-3 py-2 rounded bg-gray-100 cursor-not-allowed"
+                value={openMessage?.email || ""}
+                readOnly
+              />
+            </div>
+
+            <div className="mb-2">
+              <label className="block text-sm font-medium">CC</label>
+              <input
+                type="text"
+                className="w-full border px-3 py-2 rounded"
+                value={cc}
+                onChange={(e) => setCc(e.target.value)}
+                placeholder="Optional"
+              />
+            </div>
+
+            <div className="mb-2">
+              <label className="block text-sm font-medium">Subject</label>
+              <input
+                type="text"
+                className="w-full border px-3 py-2 rounded"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="block text-sm font-medium">Message</label>
+              <textarea
+                className="w-full border p-2 rounded"
+                rows={5}
+                value={replyMessage}
+                onChange={(e) => setReplyMessage(e.target.value)}
+                placeholder="Write your reply..."
+              />
+            </div>
+
+            <button
+              onClick={async () => {
+                await fetch("/api/contact/reply", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    to: openMessage.email,
+                    cc,
+                    subject,
+                    message: replyMessage,
+                    originalMessageId: openMessage._id,
+                  }),
+                });
+                toast.success("Reply sent!");
+                setReplyMessage("");
+                setSubject(`Re: ${openMessage.subject}`);
+                setCc("");
+                setShowReplyModal(false);
+                setOpenMessage(null);
+              }}
+              className="mt-3 bg-black text-white px-4 py-2 rounded"
+            >
+              Send Reply
+            </button>
+          </div>
+        </div>
+      )}
+
 
       <div className="mt-12">
         <Footer />
