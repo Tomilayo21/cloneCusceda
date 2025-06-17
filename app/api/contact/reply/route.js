@@ -56,7 +56,6 @@ export async function GET(req) {
   return NextResponse.json({ replies });
 }
 
-
 export async function PATCH(req) {
   await connectDB();
   const { replyId, status } = await req.json();
@@ -72,4 +71,20 @@ export async function PATCH(req) {
   }
 
   return NextResponse.json({ success: true, reply });
+}
+
+export async function DELETE(req) {
+  await connectDB();
+  const { id } = await req.json();
+
+  if (!id) {
+    return NextResponse.json({ error: "Missing ID" }, { status: 400 });
+  }
+
+  try {
+    await Reply.findByIdAndDelete(id);
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
+  }
 }
