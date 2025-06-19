@@ -1,6 +1,5 @@
 
 
-
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -30,37 +29,76 @@ export default function ChatBox() {
     return () => clearInterval(interval);
   }, []);
 
+  // useEffect(() => {
+  //   if (!user) return;
+  //   const eventSource = new EventSource(`/api/messages/stream?chatId=${user.id}`);
+
+  //   eventSource.onmessage = async (event) => {
+  //     const allMessages = JSON.parse(event.data);
+
+  //     const undelivered = allMessages.filter(
+  //       (msg) => msg.isAdmin && msg.status !== "delivered"
+  //     );
+  //     if (undelivered.length > 0) {
+  //       await axios.post("/api/messages/deliver", {
+  //         ids: undelivered.map((msg) => msg._id),
+  //       });
+  //     }
+
+  //     const normalized = allMessages.map((msg) => ({
+  //       ...msg,
+  //       status: msg.status || "sent",
+  //     }));
+
+  //     setMessages(normalized);
+  //   };
+
+  //   eventSource.onerror = (err) => {
+  //     console.error("SSE Error:", err);
+  //     eventSource.close();
+  //   };
+
+  //   return () => eventSource.close();
+  // }, [user]);
   useEffect(() => {
-    if (!user) return;
+    if (!user?.id) return;
+
     const eventSource = new EventSource(`/api/messages/stream?chatId=${user.id}`);
 
     eventSource.onmessage = async (event) => {
-      const allMessages = JSON.parse(event.data);
+      try {
+        const allMessages = JSON.parse(event.data);
 
-      const undelivered = allMessages.filter(
-        (msg) => msg.isAdmin && msg.status !== "delivered"
-      );
-      if (undelivered.length > 0) {
-        await axios.post("/api/messages/deliver", {
-          ids: undelivered.map((msg) => msg._id),
-        });
+        const undelivered = allMessages.filter(
+          (msg) => msg.isAdmin && msg.status !== "delivered"
+        );
+
+        if (undelivered.length > 0) {
+          await axios.post("/api/messages/deliver", {
+            ids: undelivered.map((msg) => msg._id),
+          });
+        }
+
+        const normalized = allMessages.map((msg) => ({
+          ...msg,
+          status: msg.status || "sent",
+        }));
+
+        setMessages(normalized);
+      } catch (err) {
+        console.error("Message parse error:", err);
       }
-
-      const normalized = allMessages.map((msg) => ({
-        ...msg,
-        status: msg.status || "sent",
-      }));
-
-      setMessages(normalized);
     };
 
     eventSource.onerror = (err) => {
-      console.error("SSE Error:", err);
+      console.error("SSE connection error:", err);
       eventSource.close();
     };
 
-    return () => eventSource.close();
-  }, [user]);
+    return () => {
+      eventSource.close();
+    };
+  }, [user?.id]); // ✅ watch user.id only
 
   useEffect(() => {
     const sendWelcomeIfNeeded = async () => {
@@ -260,8 +298,6 @@ export default function ChatBox() {
     </div>
   );
 }
-
-
 
 
 
