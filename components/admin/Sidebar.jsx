@@ -10,7 +10,8 @@ import {
   Bell,
   CreditCard,
   Mail,
-  Contact
+  Contact,
+  Headphones
 } from 'lucide-react';
 
 const SideBar = () => {
@@ -18,6 +19,7 @@ const SideBar = () => {
 
   const menuItems = [
     { name: 'Add Products', path: '/admin', icon: <PlusSquare className="w-6 h-6" /> },
+    { name: 'Customer Support', path: '/admin/customer-support', icon: <Headphones className="w-6 h-6" /> },
     { name: 'Messages', path: '/admin/messages', icon: <Mail className="w-6 h-6" /> },
     { name: 'Notifications', path: '/admin/notifications', icon: <Bell className="w-6 h-6" /> },
     { name: 'Orders', path: '/admin/orders', icon: <ShoppingCart className="w-6 h-6" /> },
