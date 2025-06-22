@@ -73,7 +73,7 @@ const Orders = () => {
         </div>
 
         {Object.entries(groupedOrders)
-          .sort((a, b) => new Date(a[0]) - new Date(b[0])) // oldest to newest
+          .sort((a, b) => new Date(b[0]) - new Date(a[0])) // oldest to newest
           .map(([date, dayOrders]) => {
             const dateObj = new Date(date);
             const dateLabel = `${dateObj.toLocaleDateString("en-GB")} (${dateObj.toLocaleDateString("en-US", { weekday: "long" })})`;
