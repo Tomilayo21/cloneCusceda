@@ -22,6 +22,7 @@ const AdminMessagesDashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [replies, setReplies] = useState([]);
   const [showReplyModal, setShowReplyModal] = useState(false);
+  const [replyTarget, setReplyTarget] = useState(null); 
   const [replyMessage, setReplyMessage] = useState("");
   const [subject, setSubject] = useState("");
   const [cc, setCc] = useState("");
@@ -424,7 +425,7 @@ const AdminMessagesDashboard = () => {
           </button>
         </div>
       )}
-       {view === "replies" && (
+      {view === "replies" && (
         <div className="space-y-4 px-4">
           {replies.map((reply) => (
             <div
@@ -707,8 +708,9 @@ const AdminMessagesDashboard = () => {
                 {/* Reply Button */}
                 <button
                   onClick={() => {
-                    setShowReplyModal(true);
-                    setOpenMessage(null);
+                    setReplyTarget(openMessage);  
+                    setShowReplyModal(true);      
+                    setOpenMessage(null);   
                   }}
 
                   className="mt-6 bg-blue-600 text-white px-4 py-2 rounded"
@@ -722,14 +724,17 @@ const AdminMessagesDashboard = () => {
       )}
 
       {/* Reply Modal */}
-      {showReplyModal && (
+      {showReplyModal && replyTarget && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
           <div
             className="bg-white rounded-lg p-6 max-w-lg w-full relative shadow-xl overflow-y-auto"
             style={{ maxHeight: "90vh" }}
           >
             <button
-              onClick={() => setShowReplyModal(false)}
+              onClick={() => {
+                setShowReplyModal(false);
+                setReplyTarget(null);
+              }}
               className="absolute top-2 right-2 text-gray-500 hover:text-black"
             >
               ✖
@@ -742,7 +747,7 @@ const AdminMessagesDashboard = () => {
               <input
                 type="text"
                 className="w-full border px-3 py-2 rounded bg-gray-100 cursor-not-allowed"
-                value={openMessage?.email || ""}
+                value={replyTarget.email || ""}
                 readOnly
               />
             </div>
@@ -785,11 +790,11 @@ const AdminMessagesDashboard = () => {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
-                    to: openMessage.email,
+                    to: replyTarget.email,
                     cc,
                     subject,
                     message: replyMessage,
-                    originalMessageId: openMessage._id,
+                    originalMessageId: replyTarget._id,
                   }),
                 });
                 toast.success("Reply sent!");
