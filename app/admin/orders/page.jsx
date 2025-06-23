@@ -139,7 +139,8 @@ const Orders = () => {
                         <p className="flex flex-col">
                           <span>Method: {order.paymentMethod}</span>
                           <span>Date: {new Date(order.date).toLocaleDateString("en-GB")}</span>
-                          <span>Status: {order.status}</span>
+                          <span>Status: {order.orderStatus}</span>
+                          <span>Status: {order.paymentStatus}</span>
                         </p>
                       </div>
                     </div>
