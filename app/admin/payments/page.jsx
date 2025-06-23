@@ -48,8 +48,6 @@ export default function AdminTransactions() {
     document.body.removeChild(link);
   };
 
-
-
   useEffect(() => {
     fetchTransactions();
   }, [page]);
@@ -414,10 +412,3 @@ export default function AdminTransactions() {
   );
 
 }
-
-
-
-
-
-
-// Can you do the same thing here i.e totals perday, collaopsible sections, filtering by Amount,Payment Method,Payment Status,Order Status, date, Pagination for large datasets.
