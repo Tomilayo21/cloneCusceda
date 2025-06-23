@@ -100,6 +100,9 @@ export const AppContextProvider = (props) => {
     };
 
     // Load cartItems from localStorage on mount
+
+
+
     useEffect(() => {
         const savedCart = localStorage.getItem('cartItems');
         if (savedCart) {
@@ -126,6 +129,30 @@ export const AppContextProvider = (props) => {
 
 //   const getCartCount = () =>
 //     Object.values(cartItems).reduce((acc, qty) => acc + qty, 0);
+    
+//     const updateCartQuantity = (productId, quantity) => {
+//   setCartItems(prev => {
+//     if (quantity <= 0) {
+//       const updated = { ...prev };
+//       delete updated[productId];
+//       return updated;
+//     }
+
+//     const product = products.find(p => p._id === productId);
+//         if (!product) return prev;
+
+//         return {
+//         ...prev,
+//         [productId]: {
+//             name: product.name,
+//             image: product.image[0],
+//             price: product.offerPrice,
+//             quantity
+//         }
+//         };
+//     });
+//     };
+
     const getCartCount = () => {
         let totalCount = 0;
         for (const items in cartItems) {
