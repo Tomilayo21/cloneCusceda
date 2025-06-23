@@ -30,7 +30,7 @@ const orderSchema = new mongoose.Schema({
     required: true,
     enum: ['stripe', 'paypal', 'apple', 'google', 'amazon', 'bank-transfer', 'crypto', 'mpesa', 'paytm', 'cash-on-delivery'],
   },
-  status: {
+  orderStatus: {
     type: String,
     enum: ["Pending", "Order Placed", "Processing", "Shipped", "Delivered", "Cancelled"],
   },
