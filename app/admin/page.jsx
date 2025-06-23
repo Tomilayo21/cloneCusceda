@@ -117,7 +117,7 @@ const AddProduct = () => {
         <h1 className="text-xl md:text-2xl font-bold mb-4">Add Products</h1>
         
         {/* Image Upload */}
-        <div>
+        {/* <div>
           <p className="text-base font-medium">Product Image</p>
           <div className="flex flex-wrap items-center gap-3 mt-2">
             {[...Array(4)].map((_, index) => (
@@ -151,7 +151,68 @@ const AddProduct = () => {
             </label>
             ))}
           </div>
+        </div> */}
+        <div>
+          <p className="text-base font-medium">Product Images</p>
+          <div className="flex flex-wrap items-start gap-3 mt-2">
+            {files.map((file, index) => (
+              <div key={index} className="relative w-24 h-24 flex-shrink-0">
+                <div className="w-24 h-24 border border-gray-300 rounded overflow-hidden relative">
+                  <Image
+                    src={URL.createObjectURL(file)}
+                    alt={`preview-${index}`}
+                    width={96}
+                    height={96}
+                    className="object-cover w-full h-full"
+                  />
+
+                  {/* Make Primary */}
+                  <button
+                    onClick={() => {
+                      const reordered = [file, ...files.filter((_, i) => i !== index)];
+                      setFiles(reordered);
+                    }}
+                    className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs py-1 text-center hover:bg-black"
+                  >
+                    {index === 0 ? "Primary" : "Make Primary"}
+                  </button>
+
+                  {/* Remove */}
+                  <button
+                    onClick={() => {
+                      const updatedFiles = [...files];
+                      updatedFiles.splice(index, 1);
+                      setFiles(updatedFiles);
+                    }}
+                    className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold hover:bg-red-800"
+                    title="Remove"
+                  >
+                    –
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {/* Add New Image */}
+            {files.length < 10 && ( // limit max uploads if needed
+              <label className="w-24 h-24 border border-gray-300 rounded cursor-pointer flex items-center justify-center overflow-hidden">
+                <input
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      setFiles([...files, file]);
+                    }
+                  }}
+                />
+                <ImagePlus className="w-6 h-6 text-gray-500" />
+              </label>
+            )}
+          </div>
         </div>
+
 
         {/* Name */}
         <div className="flex flex-col gap-1 max-w-md">
