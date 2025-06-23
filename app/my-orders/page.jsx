@@ -128,7 +128,7 @@ const MyOrders = () => {
   return (
     <div className="items-center pt-8 bg-white text-black dark:bg-black dark:text-white min-h-screen">
       <Navbar />
-      <main className="flex flex-col justify-between mt-8 px-6 md:px-16 lg:px-32 py-6 min-h-screen">
+      <main className="flex flex-col justify-between mt-2 px-6 md:px-16 lg:px-32 py-6 min-h-screen">
         <div className="space-y-5">
           <h2 className="text-lg font-medium mt-6 text-black dark:text-white">
             My Orders
@@ -219,17 +219,21 @@ const MyOrders = () => {
                         <span className="text-sm text-gray-600">
                           Payment Status: <span className="font-semibold">{order.paymentStatus || "Pending"}</span>
                         </span>
-                        <span className="text-sm text-gray-600"> Order Status: <span className="font-semibold">{order.status}</span></span>
+                        <span className="text-sm text-gray-600"> Order Status: <span className="font-semibold">{order.orderStatus}</span></span>
                       </p>
-                      {order.status !== "Delivered" && order.status !== "Cancelled" && (
-                        <button
-                          onClick={() => handleCancelOrder(order._id)}
-                          className="mt-2 px-3 py-1 text-sm bg-red-600 hover:bg-red-700 transition text-white rounded"
-                        >
-                          Cancel Order
-                        </button>
+                      {order.orderStatus !== "Delivered" &&
+                        order.orderStatus !== "Cancelled" &&
+                        order.orderStatus !== "Shipped" &&
+                        order.paymentStatus !== "Successful" && (
+                          <button
+                            onClick={() => handleCancelOrder(order._id)}
+                            className="mt-2 px-3 py-1 text-sm bg-red-600 hover:bg-red-700 transition text-white rounded"
+                          >
+                            Cancel Order
+                          </button>
                       )}
-                      {order.status === "Cancelled" && (
+
+                      {order.orderStatus === "Cancelled" && (
                         <button
                           onClick={() => handleDeleteOrder(order._id)}
                           className="mt-2 px-3 py-1 text-sm bg-gray-700 hover:bg-gray-800 transition text-white rounded"
