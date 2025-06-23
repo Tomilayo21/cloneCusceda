@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const paymentMethods = [
-  { id: 'stripe', label: 'Stripe', fee: 0.029, url: 'https://checkout.stripe.com/' },
+  { id: 'stripe', label: 'Stripe', fee: 0.029, url: 'https://buy.stripe.com/test_eVqcN4dKX4XufS8cTx1B600' },
   { id: 'paypal', label: 'PayPal', fee: 0.034, url: 'https://www.paypal.com/checkoutnow' },
   { id: 'apple', label: 'Apple Pay', fee: 0.025, url: 'https://www.apple.com/apple-pay/' },
   { id: 'google', label: 'Google Pay', fee: 0.025, url: 'https://pay.google.com/' },
@@ -53,42 +53,113 @@ const OrderSummary = () => {
     setIsDropdownOpen(false);
   };
 
+  // const handlePayment = async () => {
+  //   if (processing) return;
+
+  //   if (!selectedAddress) return toast.error('Please select an address');
+  //   const cartItemsArray = Object.keys(cartItems).map((key) => ({ product: key, quantity: cartItems[key] })).filter(item => item.quantity > 0);
+  //   if (cartItemsArray.length === 0) return toast.error('Cart is empty');
+
+  //   setProcessing(true);
+
+  //   try {
+  //     const token = await getToken();
+  //     const { data } = await axios.post('/api/order/create', {
+  //       address: selectedAddress._id,
+  //       items: cartItemsArray,
+  //       paymentMethod: selected.id
+  //     }, {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     });
+
+  //     if (data.success) {
+  //       toast.success("Redirecting to payment...");
+  //       setCartItems({});
+  //       if (selected.url.startsWith('/')) {
+  //         router.push(selected.url);
+  //       } else {
+  //         window.location.href = selected.url;
+  //       }
+  //     } else {
+  //       toast.error(data.message);
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   } finally {
+  //     setProcessing(false);
+  //   }
+  // };
   const handlePayment = async () => {
-    if (processing) return;
+  if (processing) return;
 
-    if (!selectedAddress) return toast.error('Please select an address');
-    const cartItemsArray = Object.keys(cartItems).map((key) => ({ product: key, quantity: cartItems[key] })).filter(item => item.quantity > 0);
-    if (cartItemsArray.length === 0) return toast.error('Cart is empty');
+  if (!selectedAddress) return toast.error('Please select an address');
+  const cartItemsArray = Object.keys(cartItems)
+    .map((key) => ({
+      product: key,
+      quantity: cartItems[key],
+    }))
+    .filter((item) => item.quantity > 0);
 
-    setProcessing(true);
+  if (cartItemsArray.length === 0) return toast.error('Cart is empty');
 
-    try {
-      const token = await getToken();
-      const { data } = await axios.post('/api/order/create', {
+  setProcessing(true);
+
+  try {
+    const token = await getToken();
+
+    // Create order first
+    const { data } = await axios.post(
+      '/api/order/create',
+      {
         address: selectedAddress._id,
         items: cartItemsArray,
-        paymentMethod: selected.id
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      if (data.success) {
-        toast.success("Redirecting to payment...");
-        setCartItems({});
-        if (selected.url.startsWith('/')) {
-          router.push(selected.url);
-        } else {
-          window.location.href = selected.url;
-        }
-      } else {
-        toast.error(data.message);
+        paymentMethod: selected.id,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
       }
-    } catch (error) {
-      toast.error(error.message);
-    } finally {
-      setProcessing(false);
+    );
+
+    if (!data.success) {
+      toast.error(data.message);
+      return;
     }
-  };
+
+    toast.success('Redirecting to payment...');
+    setCartItems({});
+
+  
+    if (selected.id === 'stripe') {
+  const items = Object.values(cartItems).map(({ name, image, price, quantity }) => ({
+    name,
+    image: image || 'https://via.placeholder.com/300',
+    price: Math.round(price * 100), 
+    quantity
+  }));
+
+  const res = await fetch('/api/checkout/stripe', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ items: cartItems }), // cartItems = { "productId": quantity }
+  });
+
+  const session = await res.json();
+
+  if (session.url) {
+    window.location.href = session.url;
+  } else {
+    toast.error(session.error || 'Stripe checkout failed.');
+  }
+}
+
+
+  } catch (error) {
+    toast.error(error.message);
+  } finally {
+    setProcessing(false);
+  }
+};
+
 
   useEffect(() => {
     if (user) fetchUserAddresses();
