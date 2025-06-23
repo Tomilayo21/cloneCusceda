@@ -7,7 +7,7 @@ import Footer from "@/components/admin/Footer";
 // import Loading from "@/components/Loading";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Pencil, Trash2 } from "lucide-react";
+import { ImagePlus, Pencil, Trash2 } from "lucide-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import TiptapEditor from "@/components/TiptapEditor";
@@ -31,6 +31,8 @@ const ProductList = () => {
   const [openProduct, setOpenProduct] = useState(null);
   const [editableProduct, setEditableProduct] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [viewProduct, setViewProduct] = useState(null);
+
   
   dayjs.extend(relativeTime);
 
@@ -156,6 +158,7 @@ const handleExportCSV = () => {
       if (data.success) {
         toast.success("Product deleted");
         setProducts((prev) => prev.filter((p) => p._id !== productId));
+        setFilteredProducts((prev) => prev.filter((p) => p._id !== productId));
       } else {
         toast.error(data.message || "Failed to delete");
       }
@@ -212,72 +215,59 @@ const handleExportCSV = () => {
           product._id === productId ? { ...product, stock: newStock } : product
         )
       );
+      setFilteredProducts((prev) =>
+        prev.map((product) =>
+          product._id === productId ? { ...product, stock: newStock } : product
+        )
+      );
     } catch (err) {
       toast.error("Error updating stock");
     }
   };
 
-  //Update Product
-  // const handleProductUpdate = async (updatedProduct) => {
-  //   try {
-  //     const res = await fetch(`/api/product/${updatedProduct._id}`, {
-  //       method: "PUT",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(updatedProduct),
-  //     });
+  const handleProductUpdate = async (product) => {
+    try {
+      setIsUpdating(true);
+      const formData = new FormData();
 
-  //     if (!res.ok) {
-  //       throw new Error("Failed to update product");
-  //     }
+      formData.append("name", product.name);
+      formData.append("category", product.category);
+      formData.append("brand", product.brand);
+      formData.append("color", product.color);
+      formData.append("price", product.price);
+      formData.append("offerPrice", product.offerPrice);
+      formData.append("stock", product.stock);
+      formData.append("visible", product.visible);
+      formData.append("description", product.description);
+      formData.append("existingImages", JSON.stringify(product.image || []));
 
-  //     const updated = await res.json();
+      if (product.newImages && product.newImages.length > 0) {
+        for (let i = 0; i < product.newImages.length; i++) {
+          formData.append("newImages", product.newImages[i]);
+        }
+      }
 
-  //     // ✅ Update the product in local state
-  //     setProducts((prevProducts) =>
-  //       prevProducts.map((product) =>
-  //         product._id === updated._id ? updated : product
-  //       )
-  //     );
+      const res = await fetch(`/api/product/${product._id}`, {
+        method: "PUT",
+        body: formData,
+      });
 
-  //     toast.success("Product updated successfully");
-  //     setOpenProduct(null);
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error("Error updating product");
-  //   }
-  // };
-  const handleProductUpdate = async (updatedProduct) => {
-  try {
-    setIsUpdating(true); // Start loading
+      if (!res.ok) throw new Error("Update failed");
 
-    const res = await fetch(`/api/product/${updatedProduct._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedProduct),
-    });
-
-    if (!res.ok) {
-      throw new Error("Failed to update product");
+      toast.success("Product updated");
+      setOpenProduct(null);
+      setProducts((prev) =>
+        prev.map((p) =>
+          p._id === product._id ? { ...p, ...product } : p
+        )
+      );
+    } catch (err) {
+      console.error(err);
+      toast.error("Update failed");
+    } finally {
+      setIsUpdating(false);
     }
-
-    const updated = await res.json();
-
-    toast.success("Product updated successfully");
-    setOpenProduct(null);
-    router.refresh?.(); // If using App Router
-  } catch (error) {
-    console.error(error);
-    toast.error("Error updating product");
-  } finally {
-    setIsUpdating(false); // Stop loading
-  }
-};
-
-
+  };
 
   // Pagination logic
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
@@ -444,6 +434,12 @@ const handleExportCSV = () => {
                         Edit
                       </button>
                       <button
+                        onClick={() => setViewProduct(product)}
+                        className="px-3 py-2 bg-green-600 text-white rounded-md text-sm flex items-center gap-1 justify-center"
+                      >
+                        View
+                      </button>
+                      <button
                         onClick={() => handleDelete(product._id)}
                         className="px-3 py-2 bg-red-600 text-white rounded-md text-sm flex items-center gap-1 justify-center"
                       >
@@ -514,6 +510,12 @@ const handleExportCSV = () => {
                     >
                       <Trash2 className="w-4 h-4" />
                       Delete
+                    </button>
+                    <button
+                      onClick={() => setViewProduct(product)}
+                      className="px-3 py-2 bg-green-600 text-white rounded-md text-sm flex items-center gap-1 justify-center"
+                    >
+                      View
                     </button>
                     <button
                       onClick={() => toggleVisibility(product._id)}
@@ -677,19 +679,6 @@ const handleExportCSV = () => {
                     className="w-full px-3 py-1.5 border rounded"
                   />
                 </div>
-
-                {/* <div className="space-y-2">
-                  <label className="block text-sm font-semibold">Description</label>
-                  <textarea
-                    rows={3}
-                    value={editableProduct.description}
-                    onChange={(e) =>
-                      setEditableProduct({ ...editableProduct, description: e.target.value })
-                    }
-                    className="w-full px-3 py-1.5 border rounded resize-none"
-                  />
-                </div> */}
-
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold">Description</label>
                   <TiptapEditor
@@ -729,24 +718,101 @@ const handleExportCSV = () => {
                 ) : (
                   <div className="text-xs text-gray-400">Created date not available</div>
                 )}
+                  {/* Images Section */}
+                  <div className="space-y-2">
+                    <p className="text-base font-medium">Product Images</p>
+                      <div className="flex flex-wrap items-start gap-3 mt-2">
+                      {[...(editableProduct.image || []), ...(editableProduct.newImagesPreview || [])].map((img, index) => {
+                        const totalExisting = editableProduct.image?.length || 0;
+                        const isNew = index >= totalExisting;
+                        const realIndex = isNew ? index - totalExisting : index;
 
+                        return (
+                          <div key={index} className="relative w-24 h-24 flex-shrink-0">
+                            <div className="w-24 h-24 border border-gray-300 rounded overflow-hidden relative">
+                              <Image
+                                src={typeof img === "string" ? img : URL.createObjectURL(img)}
+                                alt={`image-${index}`}
+                                width={96}
+                                height={96}
+                                className="object-cover w-full h-full"
+                              />
+                              <button
+                                onClick={() => {
+                                  const allImages = [
+                                    ...(editableProduct.image || []),
+                                    ...(editableProduct.newImagesPreview || []),
+                                  ];
+                                  const selected = allImages[index];
+                                  const reordered = [selected, ...allImages.filter((_, i) => i !== index)];
 
-                <div>
-                  <Image
-                    src={editableProduct.image?.[0] || "/placeholder.jpg"}
-                    alt={editableProduct.name}
-                    width={100}
-                    height={100}
-                    className="rounded-md object-cover"
-                  />
-                </div>
+                                  const newImageArray = reordered.filter((i) => typeof i === "string");
+                                  const newFileArray = reordered.filter((i) => typeof i !== "string");
 
-                {/* <button
-                  className="mt-4 w-full bg-orange-600 text-white py-2 rounded"
-                  onClick={() => handleProductUpdate(editableProduct)}
-                >
-                  Update Product
-                </button> */}
+                                  setEditableProduct((prev) => ({
+                                    ...prev,
+                                    image: newImageArray,
+                                    newImages: newFileArray,
+                                    newImagesPreview: newFileArray,
+                                  }));
+                                }}
+                                className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs py-1 text-center hover:bg-black"
+                              >
+                                {index === 0 ? "Primary" : "Make Primary"}
+                              </button>
+
+                              <button
+                                onClick={() => {
+                                  if (!isNew) {
+                                    setEditableProduct((prev) => ({
+                                      ...prev,
+                                      image: prev.image.filter((_, i) => i !== realIndex),
+                                    }));
+                                  } else {
+                                    const newImgs = [...(editableProduct.newImages || [])];
+                                    const previews = [...(editableProduct.newImagesPreview || [])];
+                                    newImgs.splice(realIndex, 1);
+                                    previews.splice(realIndex, 1);
+
+                                    setEditableProduct((prev) => ({
+                                      ...prev,
+                                      newImages: newImgs,
+                                      newImagesPreview: previews,
+                                    }));
+                                  }
+                                }}
+                                className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold hover:bg-red-800"
+                                title="Remove"
+                              >
+                                –
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      {/* Add Image Input */}
+                      {((editableProduct.image?.length || 0) + (editableProduct.newImagesPreview?.length || 0)) < 6 && (
+                        <label className="w-24 h-24 border border-gray-300 rounded cursor-pointer flex items-center justify-center overflow-hidden">
+                          <input
+                            type="file"
+                            hidden
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files[0];
+                              if (!file) return;
+                              setEditableProduct((prev) => ({
+                                ...prev,
+                                newImages: [...(prev.newImages || []), file],
+                                newImagesPreview: [...(prev.newImagesPreview || []), file],
+                              }));
+                            }}
+                          />
+                          <ImagePlus className="w-6 h-6 text-gray-500" />
+                        </label>
+                      )}
+                    </div>
+                  </div>
                 <button
                   className="mt-4 w-full bg-orange-600 text-white py-2 rounded disabled:opacity-50"
                   onClick={() => handleProductUpdate(editableProduct)}
@@ -758,6 +824,64 @@ const handleExportCSV = () => {
               </div>
             </div>
           )}
+
+          {viewProduct && (
+            <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
+              <div className="bg-white rounded-lg p-4 max-w-md w-full relative shadow-xl space-y-3 text-sm max-h-[90vh] overflow-y-auto">
+                <button
+                  onClick={() => setViewProduct(null)}
+                  className="absolute top-2 right-2 text-gray-500 hover:text-black"
+                >
+                  ✖
+                </button>
+
+                <h2 className="text-lg font-semibold mb-2">{viewProduct.name}</h2>
+
+                <div className="space-y-1">
+                  <p><span className="font-semibold">Category:</span> {viewProduct.category}</p>
+                  <p><span className="font-semibold">Brand:</span> {viewProduct.brand}</p>
+                  <p><span className="font-semibold">Color:</span> {viewProduct.color}</p>
+                  <p><span className="font-semibold">Price:</span> ${viewProduct.price}</p>
+                  <p><span className="font-semibold">Offer Price:</span> ${viewProduct.offerPrice}</p>
+                  <p><span className="font-semibold">Stock:</span> {viewProduct.stock}</p>
+                  <p>
+                    <span className="font-semibold">Status:</span>{" "}
+                    {viewProduct.stock > 0 ? "In Stock" : "Sold Out"}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Visibility:</span>{" "}
+                    {viewProduct.visible ? "Visible" : "Hidden"}
+                  </p>
+                  <div>
+                    <p className="font-semibold">Description:</p>
+                    <div
+                      className="text-gray-700 text-sm mt-1"
+                      dangerouslySetInnerHTML={{ __html: viewProduct.description }}
+                    />
+                  </div>
+                  <div>
+                    <p className="font-semibold mb-1">Images:</p>
+                    <div className="flex gap-2 flex-wrap">
+                      {viewProduct.image?.map((img, index) => (
+                        <Image
+                          key={index}
+                          src={img}
+                          alt={`image-${index}`}
+                          width={80}
+                          height={80}
+                          className="w-20 h-20 object-cover rounded"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    Created: {new Date(viewProduct.date).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
 
         </div>
 
