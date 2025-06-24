@@ -241,6 +241,12 @@ const MyOrders = () => {
                           Delete Order
                         </button>
                       )}
+                      <p>
+                        Tracking: {order.trackingNumber} <br />
+                        Carrier: {order.shippingCarrier} <br />
+                        <a href={order.shippingLabelUrl} target="_blank">Download Label</a>
+                      </p>
+
                     </div>
                   </div>
                 );
