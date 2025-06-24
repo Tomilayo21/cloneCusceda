@@ -414,14 +414,14 @@ const Orders = () => {
                         <div>
                           <p>
                             <span className="font-medium">
-                              {order.address?.fullName}
+                              <strong>Full Name: </strong> {order.address?.fullName}
                             </span>
                             <br />
-                            {order.address?.area}
+                            <strong>Country: </strong>{order.address?.country}
                             <br />
-                            {`${order.address?.city}, ${order.address?.state}`}
+                            <strong>State: </strong>{`${order.address?.state}`}, <strong>City: </strong>{`${order.address?.city}`}
                             <br />
-                            {order.address?.phoneNumber}
+                            <strong>Phone number: </strong>{order.address?.phoneNumber}
                           </p>
                         </div>
 
