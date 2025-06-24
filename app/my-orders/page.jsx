@@ -184,12 +184,12 @@ const MyOrders = () => {
                       <div>
                         <p className="font-semibold mb-1">Shipping Address</p>
                         <address className="not-italic">
-                          <p>{order.address.fullName}</p>
-                          <p>{order.address.area}</p>
+                          <p><strong>Full Name:</strong> {order.address.fullName}</p>
+                          <p><strong>Country</strong>{order.address.country}</p>
                           <p>
-                            {order.address.city}, {order.address.state}
+                            <strong>State: </strong>{order.address.state}, <strong>City: </strong>{order.address.city}
                           </p>
-                          <p>{order.address.phoneNumber}</p>
+                          <p><strong>Phone Number: </strong>{order.address.phoneNumber}</p>
                         </address>
                       </div>
 
