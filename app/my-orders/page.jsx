@@ -26,6 +26,7 @@ const MyOrders = () => {
   const [page, setPage] = useState(1);
   const perPage = 5;
   const totalPages = Math.ceil(orders.length / perPage);
+  const [activeOrder, setActiveOrder] = useState(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -148,96 +149,78 @@ const MyOrders = () => {
               You have no orders yet.
             </p>
           ) : (
-            <section className="max-w-5xl border-t border-gray-300 dark:border-gray-600 text-sm text-black dark:text-white">
-              {orders
-                .slice((page - 1) * perPage, page * perPage)
-                .map((order, index) => {
-                const method = paymentMethods.find(
-                  (m) => m.id === order.paymentMethod
-                );
+            <section className="max-w-5xl divide-y divide-gray-300 dark:divide-gray-600 text-sm text-black dark:text-white">
+              {orders.map((order, index) => {
+                const method = paymentMethods.find((m) => m.id === order.paymentMethod);
 
                 return (
                   <div
                     key={order._id || index}
-                    className="flex flex-col md:flex-row gap-5 justify-between p-5 border-b border-gray-300 dark:border-gray-600"
+                    className="flex flex-col gap-4 py-5"
                   >
-                    {/* Items info */}
-                    <div className="flex-1 flex gap-5 max-w-80">
-                      <Image
-                        className="max-w-16 max-h-16 object-cover"
-                        src={assets.box_icon}
-                        alt="box_icon"
-                        width={64}
-                        height={64}
-                        priority={index === 0} // prioritize first image load
-                      />
-                      <p className="flex flex-col gap-3">
-                        <span className="font-medium text-base text-black dark:text-white">
-                          {order.items
-                            .map((item) => `${item.product.name} x ${item.quantity}`)
-                            .join(", ")}
-                        </span>
-                        <span className="text-black dark:text-white">
-                          Items: {order.items.length}
-                        </span>
-                      </p>
-                    </div>
+                    {/* Section: Product */}
+                    <div className="flex items-center gap-4">
+                      {/* Image that opens modal */}
+                      <button onClick={() => setActiveOrder(order)} className="focus:outline-none">
+                        <Image
+                          className="w-16 h-16 object-cover rounded"
+                          src={order.items[0]?.product.image[0] || assets.box_icon}
+                          alt={order.items[0]?.product.name || "Product"}
+                          width={64}
+                          height={64}
+                        />
+                      </button>
 
-                    {/* Shipping address */}
-                    <div>
-                      <address className="not-italic text-black dark:text-white">
-                        <p>
-                          <span className="font-medium">{order.address.fullName}</span>
-                          <br />
-                          <span>{order.address.area}</span>
-                          <br />
-                          <span>
-                            {order.address.city}, {order.address.state}
-                          </span>
-                          <br />
-                          <span>{order.address.phoneNumber}</span>
+                      <div className="space-y-1">
+                        <p className="font-semibold text-base">
+                          {order.items.map((item) => `${item.product.name} x ${item.quantity}`).join(", ")}
                         </p>
-                      </address>
+                        <p className="text-sm">Items: {order.items.length}</p>
+                      </div>
                     </div>
 
-                    {/* Amount */}
-                    <p className="font-medium my-auto whitespace-nowrap text-black dark:text-white">
-                      {currency}
-                      {order.amount.toFixed(2)}
-                    </p>
-
-                    {/* Order details and actions */}
-                    <div>
-                      <p className="flex flex-col text-black dark:text-white">
-                        {method && (
-                          <>
-                          <p className="text-sm text-gray-600">
-                            Payment Method:{" "}
-                            <span className="font-semibold">{method.label}</span>
-                             {/* – Fee:{" "}
-                            {(method.fee * 100).toFixed(1)}% */}
+                    {/* Section: Details */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                      <div>
+                        <p className="font-semibold mb-1">Shipping Address</p>
+                        <address className="not-italic">
+                          <p>{order.address.fullName}</p>
+                          <p>{order.address.area}</p>
+                          <p>
+                            {order.address.city}, {order.address.state}
                           </p>
-                          <span className="text-gray-600 dark:text-white">
-                            Order ID: <span className="text-sm text-gray-600 font-semibold">{order.orderId || order._id}</span>
-                          </span>
+                          <p>{order.address.phoneNumber}</p>
+                        </address>
+                      </div>
 
-                          </>
+                      <div>
+                        <p className="font-semibold mb-1">Order Details</p>
+                        {method && (
+                          <p className="text-sm">Payment Method: <span className="font-semibold">{method.label}</span></p>
                         )}
-                        <span className="text-sm text-gray-600">
-                          Date: <span className="font-semibold">{dayjs(order.date).format("DD/MM/YYYY")} • {dayjs(order.date).fromNow()}</span>
-                        </span>
-                        <span className="text-sm text-gray-600">
-                          Payment Status: <span className="font-semibold">{order.paymentStatus || "Pending"}</span>
-                        </span>
-                        <span className="text-sm text-gray-600"> Order Status: <span className="font-semibold">{order.orderStatus}</span></span>
-                      </p>
+                        <p className="text-sm">Order ID: <span className="font-semibold">{order.orderId || order._id}</span></p>
+                        <p className="text-sm">Date: <span className="font-semibold">{dayjs(order.date).format("DD/MM/YYYY")} • {dayjs(order.date).fromNow()}</span></p>
+                        <p className="text-sm">Payment Status: <span className="font-semibold">{order.paymentStatus || "Pending"}</span></p>
+                        <p className="text-sm">Order Status: <span className="font-semibold">{order.orderStatus}</span></p>
+                      </div>
+
+                      <div>
+                        <p className="font-semibold mb-1">Total</p>
+                        <p className="text-lg font-bold">
+                          {currency}{order.amount.toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Section: Order Tracking & Actions */}
+                    <div className="flex flex-col gap-2 mt-2">
                       {order.orderStatus !== "Delivered" &&
                         order.orderStatus !== "Cancelled" &&
                         order.orderStatus !== "Shipped" &&
                         order.paymentStatus !== "Successful" && (
                           <button
                             onClick={() => handleCancelOrder(order._id)}
-                            className="mt-2 px-3 py-1 text-sm bg-red-600 hover:bg-red-700 transition text-white rounded"
+                            className="w-fit px-3 py-1 text-sm bg-red-600 hover:bg-red-700 transition text-white rounded"
                           >
                             Cancel Order
                           </button>
@@ -246,17 +229,24 @@ const MyOrders = () => {
                       {order.orderStatus === "Cancelled" && (
                         <button
                           onClick={() => handleDeleteOrder(order._id)}
-                          className="mt-2 px-3 py-1 text-sm bg-gray-700 hover:bg-gray-800 transition text-white rounded"
+                          className="w-fit px-3 py-1 text-sm bg-gray-700 hover:bg-gray-800 transition text-white rounded"
                         >
                           Delete Order
                         </button>
                       )}
-                      <p>
-                        Tracking: {order.trackingNumber} <br />
-                        Carrier: {order.shippingCarrier} <br />
-                        <a href={order.shippingLabelUrl} target="_blank">Download Label</a>
-                      </p>
 
+                      <p className="text-sm">
+                        <span className="font-medium">Tracking:</span> {order.trackingNumber} <br />
+                        <span className="font-medium">Carrier:</span> {order.shippingCarrier} <br />
+                        <a
+                          href={order.shippingLabelUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline"
+                        >
+                          Download Shipping Label
+                        </a>
+                      </p>
                     </div>
                   </div>
                 );
@@ -324,6 +314,45 @@ const MyOrders = () => {
             </div>
           </div>
         )}
+
+        {activeOrder && (
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white dark:bg-neutral-900 p-6 rounded-lg shadow max-w-lg w-full overflow-y-auto max-h-[80vh] relative">
+              <button
+                onClick={() => setActiveOrder(null)}
+                className="absolute top-2 right-2 text-gray-600 hover:text-black dark:text-gray-300"
+              >
+                ✖
+              </button>
+              <h2 className="text-lg font-semibold mb-4">Order Items</h2>
+              <div className="space-y-4">
+                {activeOrder.items.map((item, index) => (
+                  <div key={index} className="flex gap-4 items-start border-b pb-4">
+                    <Image
+                      src={item.product.image[0] || assets.box_icon}
+                      alt={item.product.name}
+                      width={60}
+                      height={60}
+                      className="w-16 h-16 object-cover rounded"
+                    />
+                    <div>
+                      <p className="font-medium">{item.product.name}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Quantity: {item.quantity}
+                      </p>
+                      {item.product.price && (
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Price: {currency}{item.product.price.toFixed(2)}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
       </main>
       <Footer />
     </div>
