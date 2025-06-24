@@ -9,6 +9,8 @@ dayjs.extend(relativeTime);
 const SubscribersPage = () => {
   const [subscribers, setSubscribers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const pageSize = 15;
 
   useEffect(() => {
     const fetchSubscribers = async () => {
@@ -25,6 +27,16 @@ const SubscribersPage = () => {
 
     fetchSubscribers();
   }, []);
+
+  const totalPages = Math.ceil(subscribers.length / pageSize);
+  const paginatedSubscribers = subscribers.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
 
   return (
     <div className="p-2 max-w-4xl flex-1 overflow-scroll flex flex-col mx-6 mt-4">
@@ -47,7 +59,7 @@ const SubscribersPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {subscribers.map((sub, index) => (
+                {paginatedSubscribers.map((sub, index) => (
                   <tr key={index} className="hover:bg-gray-50">
                     <td className="border p-2">{sub.email}</td>
                     <td className="border p-2">
@@ -62,7 +74,7 @@ const SubscribersPage = () => {
 
           {/* Cards for small screens */}
           <div className="md:hidden flex flex-col gap-4">
-            {subscribers.map((sub, index) => (
+            {paginatedSubscribers.map((sub, index) => (
               <div
                 key={index}
                 className="border border-gray-300 p-4 rounded shadow-sm bg-white dark:bg-neutral-900"
@@ -77,6 +89,29 @@ const SubscribersPage = () => {
               </div>
             ))}
           </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="mt-6 flex justify-center items-center gap-2">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage(p => Math.max(p - 1, 1))}
+                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+              >
+                Prev
+              </button>
+              {/* <span className="text-sm">
+                Page {page} of {totalPages}
+              </span> */}
+              <button
+                disabled={page === totalPages}
+                onClick={() => setPage(p => Math.min(p + 1, totalPages))}
+                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
