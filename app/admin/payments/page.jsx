@@ -21,6 +21,8 @@ export default function AdminTransactions() {
   const [enlargedImg, setEnlargedImg] = useState(null);
   const { getToken, currency } = useAppContext()
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [totalPages, setTotalPages] = useState(1);
+
   
 
   const exportToCSV = () => {
@@ -57,6 +59,7 @@ export default function AdminTransactions() {
     try {
       const res = await axios.get(`/api/admin/transactions?page=${page}&limit=${pageSize}`);
       setTransactions(res.data.transactions || []);
+      setTotalPages(Math.ceil(res.data.totalCount / pageSize));
     } catch (error) {
       console.error("Failed to fetch transactions", error);
     } finally {
@@ -372,7 +375,7 @@ export default function AdminTransactions() {
             })}
           
           {/* Pagination */}
-          <div className="flex justify-center mt-4 space-x-4">
+          {/* <div className="flex justify-center mt-4 space-x-4">
             <button
               disabled={page === 1}
               onClick={() => setPage((p) => Math.max(p - 1, 1))}
@@ -387,7 +390,58 @@ export default function AdminTransactions() {
             >
               Next
             </button>
-          </div>
+          </div> */}
+          {totalPages > 1 && (
+  <div className="flex justify-center mt-6 space-x-2 flex-wrap">
+    {[...Array(totalPages)].map((_, index) => {
+      const pageNum = index + 1;
+
+      if (totalPages <= 10) {
+        // Show all pages if total ≤ 10
+        return (
+          <button
+            key={pageNum}
+            onClick={() => setPage(pageNum)}
+            className={`px-3 py-1 rounded border ${
+              pageNum === page ? "bg-black text-white" : "bg-gray-100 text-black"
+            }`}
+          >
+            {pageNum}
+          </button>
+        );
+      }
+
+      const showPage =
+        pageNum === 1 ||
+        pageNum === totalPages ||
+        (pageNum >= page - 1 && pageNum <= page + 1);
+
+      if (showPage) {
+        return (
+          <button
+            key={pageNum}
+            onClick={() => setPage(pageNum)}
+            className={`px-3 py-1 rounded border ${
+              pageNum === page ? "bg-black text-white" : "bg-gray-100 text-black"
+            }`}
+          >
+            {pageNum}
+          </button>
+        );
+      }
+
+      if (
+        (pageNum === 2 && page > 4) ||
+        (pageNum === totalPages - 1 && page < totalPages - 3)
+      ) {
+        return <span key={pageNum} className="px-2">...</span>;
+      }
+
+      return null;
+    })}
+  </div>
+)}
+
         </>
       )}
 
@@ -412,3 +466,10 @@ export default function AdminTransactions() {
   );
 
 }
+
+
+
+
+
+
+// Can you do the same thing here i.e totals perday, collaopsible sections, filtering by Amount,Payment Method,Payment Status,Order Status, date, Pagination for large datasets.
