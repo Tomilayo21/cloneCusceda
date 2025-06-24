@@ -11,18 +11,19 @@ export async function GET(req) {
     const limit = parseInt(searchParams.get("limit")) || 10;
     const skip = (page - 1) * limit;
 
+    // Count total number of orders (without pagination)
+    const totalCount = await Order.countDocuments();
+
+    // Fetch paginated results
     const orders = await Order.find()
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .lean();
 
-    // Optionally populate fields like 'address', 'items.product'
-    return NextResponse.json({ transactions: orders });
+    return NextResponse.json({ transactions: orders, totalCount });
   } catch (error) {
     console.error("Failed to fetch orders:", error);
     return NextResponse.json({ error: "Server Error" }, { status: 500 });
   }
 }
-
-
