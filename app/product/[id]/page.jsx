@@ -12,6 +12,8 @@ import { useUser } from '@clerk/nextjs';
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import { ThumbsUp } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useMemo } from 'react';
+
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -192,9 +194,17 @@ const handleHelpfulClick = async (reviewId) => {
 
   const totalPages = Math.ceil(reviews.length / reviewsPerPage);
   const start = (page - 1) * reviewsPerPage;
-  const current = reviews.slice(start, start + reviewsPerPage);
+  // const current = reviews.slice(start, start + reviewsPerPage);
+  const currentReviews = reviews.slice(start, start + reviewsPerPage);
   const relatedProducts = products.filter(p => p.category === productData.category && p._id !== id).slice(0, 4);
   const visibleRelatedProducts = relatedProducts.filter(p => p.visible !== false);
+  // const visibleRelatedProducts = useMemo(() => {
+  //   if (!productData) return [];
+  //   return products
+  //     .filter(p => p.category === productData.category && p._id !== id && p.visible !== false)
+  //     .slice(0, 4);
+  // }, [products, productData, id]);
+
 
   const renderStars = (rating) => {
     return (
@@ -236,6 +246,15 @@ const handleHelpfulClick = async (reviewId) => {
               dangerouslySetInnerHTML={{ __html: productData.name }}
             /> */}
             <h1 className="text-3xl font-bold text-black dark:text-white">{productData.name}</h1>
+            <div className="flex items-center gap-1 mt-2">
+              {renderStars(
+                Math.round(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length || 0)
+              )}
+              <span className="text-sm text-gray-500 ml-2">
+                ({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})
+              </span>
+            </div>
+
             <div
               className="mt-2 text-black dark:text-white"
               dangerouslySetInnerHTML={{ __html: productData.description }}
@@ -346,14 +365,21 @@ const handleHelpfulClick = async (reviewId) => {
         {/* Reviews List with Pagination */}
         <div className="w-full md:w-1/2">
           <div className="space-y-4">
-            {[...current]
+            {[...currentReviews]
               .sort((a, b) => b.rating - a.rating)
               .map(r => {
                 const foundHelpful = r.helpful?.includes(user?.id);
 
                 return (
                   <div key={r._id} className="pb-2">
-                    <p className="font-semibold text-black dark:text-white">{r.userName}</p>
+                    {/* <p className="font-semibold text-black dark:text-white">{r.userName}</p> */}
+                    <div className="flex items-center gap-2 text-black dark:text-white">
+                      <p className="font-semibold">{r.userName}</p>
+                      <span className="text-xs text-gray-500">
+                        {new Date(r.createdAt).toLocaleDateString('en-GB')}
+                      </span>
+                    </div>
+
                     {renderStars(r.rating)}
                     <p className="text-black dark:text-white">{r.comment}</p>
 
