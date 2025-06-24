@@ -23,6 +23,14 @@ const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [page, setPage] = useState(1);
+  const perPage = 5;
+  const totalPages = Math.ceil(orders.length / perPage);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
+
 
   const paymentMethods = [
     { id: "stripe", label: "Stripe", fee: 0.029 },
@@ -141,7 +149,9 @@ const MyOrders = () => {
             </p>
           ) : (
             <section className="max-w-5xl border-t border-gray-300 dark:border-gray-600 text-sm text-black dark:text-white">
-              {orders.map((order, index) => {
+              {orders
+                .slice((page - 1) * perPage, page * perPage)
+                .map((order, index) => {
                 const method = paymentMethods.find(
                   (m) => m.id === order.paymentMethod
                 );
@@ -254,6 +264,66 @@ const MyOrders = () => {
             </section>
           )}
         </div>
+        {totalPages > 1 && (
+          <div className="mt-6 flex justify-center items-center">
+            <div className="space-x-2 flex items-center">
+              {/* Prev Button */}
+              <button
+                disabled={page === 1}
+                onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+              >
+                Prev
+              </button>
+
+              {/* Page Numbers with Ellipsis */}
+              {(() => {
+                const range = [];
+                const start = Math.max(1, page - 2);
+                const end = Math.min(totalPages, page + 2);
+
+                if (start > 1) {
+                  range.push(1);
+                  if (start > 2) range.push("ellipsis-start");
+                }
+
+                for (let i = start; i <= end; i++) {
+                  range.push(i);
+                }
+
+                if (end < totalPages) {
+                  if (end < totalPages - 1) range.push("ellipsis-end");
+                  range.push(totalPages);
+                }
+
+                return range.map((item, index) =>
+                  item === "ellipsis-start" || item === "ellipsis-end" ? (
+                    <span key={index} className="px-1">...</span>
+                  ) : (
+                    <button
+                      key={item}
+                      onClick={() => setPage(item)}
+                      className={`px-3 py-1 rounded border ${
+                        page === item ? "bg-black text-white" : "bg-white"
+                      }`}
+                    >
+                      {item}
+                    </button>
+                  )
+                );
+              })()}
+
+              {/* Next Button */}
+              <button
+                disabled={page === totalPages}
+                onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
     </div>
