@@ -37,6 +37,10 @@ const ProductList = () => {
   dayjs.extend(relativeTime);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
+ 
+  useEffect(() => {
     if (openProduct) {
       setEditableProduct({ ...openProduct });
     }
@@ -533,22 +537,64 @@ const handleExportCSV = () => {
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="flex justify-center mt-6 space-x-2">
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentPage(i + 1)}
-                  className={`px-4 py-2 rounded ${
-                    currentPage === i + 1
-                      ? "bg-blue-600 text-white"
-                      : "bg-white border"
-                  }`}
-                >
-                  {i + 1}
-                </button>
-              ))}
+            <div className="flex justify-center mt-6 space-x-2 flex-wrap">
+              {/* Prev Button */}
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 rounded bg-white border disabled:opacity-50"
+              >
+                Prev
+              </button>
+
+              {/* Numbered Buttons with Ellipsis */}
+              {(() => {
+                const range = [];
+                const start = Math.max(1, currentPage - 2);
+                const end = Math.min(totalPages, currentPage + 2);
+
+                if (start > 1) {
+                  range.push(1);
+                  if (start > 2) range.push("ellipsis-start");
+                }
+
+                for (let i = start; i <= end; i++) {
+                  range.push(i);
+                }
+
+                if (end < totalPages) {
+                  if (end < totalPages - 1) range.push("ellipsis-end");
+                  range.push(totalPages);
+                }
+
+                return range.map((item, index) =>
+                  item === "ellipsis-start" || item === "ellipsis-end" ? (
+                    <span key={index} className="px-2">...</span>
+                  ) : (
+                    <button
+                      key={item}
+                      onClick={() => setCurrentPage(item)}
+                      className={`px-4 py-2 rounded ${
+                        currentPage === item ? "bg-blue-600 text-white" : "bg-white border"
+                      }`}
+                    >
+                      {item}
+                    </button>
+                  )
+                );
+              })()}
+
+              {/* Next Button */}
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 rounded bg-white border disabled:opacity-50"
+              >
+                Next
+              </button>
             </div>
           )}
+
 
           {/* Modal Pop-Up */}
           {openProduct && editableProduct && (
