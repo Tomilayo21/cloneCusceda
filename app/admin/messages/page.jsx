@@ -30,6 +30,9 @@ const AdminMessagesDashboard = () => {
   const pageSize = 10;
   
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
 
   // Whenever openMessage changes, set default subject
   useEffect(() => {
@@ -38,62 +41,25 @@ const AdminMessagesDashboard = () => {
     }
   }, [openMessage]);
 
-  // const fetchReplies = async () => {
-  //   try {
-  //     const res = await fetch("/api/contact/reply");
-  //     const data = await res.json();
-
-  //     if (Array.isArray(data.replies)) {
-  //       setReplies(data.replies);
-  //     } else {
-  //       setReplies([]);
-  //     }
-  //   } catch (err) {
-  //     console.error("Failed to fetch replies", err);
-  //     toast.error("Failed to fetch replies");
-  //   }
-  // };
   
-  // useEffect(() => {
-  //   const fetchReplies = async () => {
-  //     if (view === "replies") {
-  //       try {
-  //         const res = await fetch("/api/contact/reply");
-  //         const data = await res.json();
-  //         setReplies(data.replies || []);
-  //       } catch (err) {
-  //         console.error("Failed to fetch replies", err);
-  //         toast.error("Could not load replies.");
-  //       }
-  //     }
-  //   };
-
-  //   // fetchReplies();
-  // }, [view]); // ✅ Use a consistent, static array
-
   const fetchReplies = async () => {
-  try {
-    const res = await fetch("/api/contact/reply");
-    const data = await res.json();
+    try {
+      const res = await fetch("/api/contact/reply");
+      const data = await res.json();
 
-    if (Array.isArray(data.replies)) {
-      // ✅ Deduplicate here
-      const uniqueReplies = Array.from(new Map(data.replies.map(r => [r._id, r])).values());
-      setReplies(uniqueReplies);
-    } else {
-      setReplies([]);
+      if (Array.isArray(data.replies)) {
+        // ✅ Deduplicate here
+        const uniqueReplies = Array.from(new Map(data.replies.map(r => [r._id, r])).values());
+        setReplies(uniqueReplies);
+      } else {
+        setReplies([]);
+      }
+    } catch (err) {
+      console.error("Failed to fetch replies", err);
+      toast.error("Failed to fetch replies");
     }
-  } catch (err) {
-    console.error("Failed to fetch replies", err);
-    toast.error("Failed to fetch replies");
-  }
-};
+  };
 
-// useEffect(() => {
-//   if (view === "replies") {
-//     fetchReplies();
-//   }
-// }, [view]);
   useEffect(() => {
     if (view === "replies") {
       const fetchReplies = async () => {
@@ -258,7 +224,7 @@ const AdminMessagesDashboard = () => {
     (msg) => msg.archived && !msg.deleted
   ).length;
   const deletedCount = messages.filter((msg) => msg.deleted).length;
-  const repliesCount = replies.length;
+  const repliesCount = replies?.length || 0;
 
   const totalPages = Math.ceil(filteredMessages.length / pageSize);
 
@@ -629,7 +595,7 @@ const AdminMessagesDashboard = () => {
       )}
       
       {/* Pagination */}
-      {totalPages > 1 && (
+      {/* {totalPages > 1 && (
         <div className="mt-6 flex justify-center gap-2 flex-wrap">
           {Array.from({ length: totalPages }, (_, i) => (
             <button
@@ -645,7 +611,68 @@ const AdminMessagesDashboard = () => {
             </button>
           ))}
         </div>
+      )} */}
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="mt-8 flex justify-center">
+          <div className="flex flex-wrap gap-2 text-sm">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1 border rounded disabled:opacity-50 text-black dark:text-white"
+            >
+              Prev
+            </button>
+
+            {(() => {
+              const range = [];
+              const start = Math.max(1, currentPage - 2);
+              const end = Math.min(totalPages, currentPage + 2);
+
+              if (start > 1) {
+                range.push(1);
+                if (start > 2) range.push("ellipsis-start");
+              }
+
+              for (let i = start; i <= end; i++) {
+                range.push(i);
+              }
+
+              if (end < totalPages) {
+                if (end < totalPages - 1) range.push("ellipsis-end");
+                range.push(totalPages);
+              }
+
+              return range.map((item, index) =>
+                typeof item === "string" ? (
+                  <span key={index} className="px-2 py-1 text-gray-500">...</span>
+                ) : (
+                  <button
+                    key={item}
+                    onClick={() => setCurrentPage(item)}
+                    className={`px-3 py-1 rounded border ${
+                      currentPage === item
+                        ? "bg-black text-white"
+                        : "bg-gray-100 text-black dark:bg-gray-800 dark:text-white"
+                    }`}
+                  >
+                    {item}
+                  </button>
+                )
+              );
+            })()}
+
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 border rounded disabled:opacity-50 text-black dark:text-white"
+            >
+              Next
+            </button>
+          </div>
+        </div>
       )}
+
 
       {/* Message Modal */}
      {openMessage && (
