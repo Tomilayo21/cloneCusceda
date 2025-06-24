@@ -18,7 +18,7 @@ const AdminReviewsPage = () => {
   const [ratingFilter, setRatingFilter] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const reviewsPerPage = 3;
+  const reviewsPerPage = 10;
   const isAdmin = user?.publicMetadata?.role === 'admin';
 
   useEffect(() => {
