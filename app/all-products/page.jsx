@@ -13,7 +13,7 @@ import Footer from "@/components/Footer";
 import Filter from "@/components/Filter";
 import { useAppContext } from "@/context/AppContext";
 
-const PRODUCTS_PER_PAGE = 10;
+const PRODUCTS_PER_PAGE = 25;
 
 export default function Page() {
   return (
@@ -132,30 +132,92 @@ const AllProducts = () => {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-between items-center mt-8 mb-14 w-full max-w-xl mx-auto px-4">
-            <button
-              onClick={() => changePage(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`px-4 py-2 rounded bg-orange-600 text-white ${
-                currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-orange-700"
-              }`}
-            >
-              Previous
-            </button>
-            <span className="text-lg font-medium">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() => changePage(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className={`px-4 py-2 rounded bg-orange-600 text-white ${
-                currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-orange-700"
-              }`}
-            >
-              Next
-            </button>
+          <div className="w-full flex justify-center mt-10 mb-16">
+            <div className="flex items-center flex-wrap gap-2 px-4 py-3 rounded-lg bg-white shadow border max-w-fit">
+              {/* Prev Button */}
+              <button
+                onClick={() => changePage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`px-3 py-1 rounded border text-sm font-medium ${
+                  currentPage === 1
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    : "bg-white text-gray-700 hover:bg-orange-100"
+                }`}
+              >
+                Prev
+              </button>
+
+              {[...Array(totalPages)].map((_, index) => {
+                const pageNum = index + 1;
+
+                if (totalPages <= 10) {
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => changePage(pageNum)}
+                      className={`px-3 py-1 rounded border text-sm font-medium ${
+                        pageNum === currentPage
+                          ? "bg-orange-600 text-white"
+                          : "bg-white text-gray-800 hover:bg-orange-100"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                }
+
+                const isVisible =
+                  pageNum === 1 ||
+                  pageNum === totalPages ||
+                  (pageNum >= currentPage - 1 && pageNum <= currentPage + 1);
+
+                if (isVisible) {
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => changePage(pageNum)}
+                      className={`px-3 py-1 rounded border text-sm font-medium ${
+                        pageNum === currentPage
+                          ? "bg-orange-600 text-white"
+                          : "bg-white text-gray-800 hover:bg-orange-100"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                }
+
+                if (
+                  (pageNum === 2 && currentPage > 4) ||
+                  (pageNum === totalPages - 1 && currentPage < totalPages - 3)
+                ) {
+                  return (
+                    <span key={pageNum} className="px-2 text-gray-500">
+                      ...
+                    </span>
+                  );
+                }
+
+                return null;
+              })}
+
+              {/* Next Button */}
+              <button
+                onClick={() => changePage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className={`px-3 py-1 rounded border text-sm font-medium ${
+                  currentPage === totalPages
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    : "bg-white text-gray-700 hover:bg-orange-100"
+                }`}
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
+
+
       </div>
       <Footer />
     </>
