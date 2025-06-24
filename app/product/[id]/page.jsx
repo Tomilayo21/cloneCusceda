@@ -402,7 +402,7 @@ const handleHelpfulClick = async (reviewId) => {
                 );
               })}
 
-            {totalPages > 1 && (
+            {/* {totalPages > 1 && (
               <div className="flex justify-center items-center gap-4 mt-4">
                 <button
                   onClick={() => setPage(p => Math.max(p - 1, 1))}
@@ -420,7 +420,89 @@ const handleHelpfulClick = async (reviewId) => {
                   Next
                 </button>
               </div>
+            )} */}
+            {totalPages > 1 && (
+              <div className="w-full flex justify-center mt-8">
+                <div className="flex items-center flex-wrap gap-2 px-4 py-3 rounded-lg bg-white dark:bg-gray-800 shadow border max-w-fit">
+                  {/* Prev Button */}
+                  <button
+                    onClick={() => setPage(p => Math.max(p - 1, 1))}
+                    disabled={page === 1}
+                    className={`px-3 py-1 rounded border text-sm font-medium ${
+                      page === 1
+                        ? "bg-gray-200 text-gray-400 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed"
+                        : "bg-white dark:bg-gray-900 text-gray-800 dark:text-white hover:bg-orange-100"
+                    }`}
+                  >
+                    Prev
+                  </button>
+
+                  {[...Array(totalPages)].map((_, index) => {
+                    const pageNum = index + 1;
+
+                    if (totalPages <= 10) {
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => setPage(pageNum)}
+                          className={`px-3 py-1 rounded border text-sm font-medium ${
+                            page === pageNum
+                              ? "bg-orange-600 text-white"
+                              : "bg-white dark:bg-gray-900 text-gray-800 dark:text-white hover:bg-orange-100"
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    }
+
+                    const shouldShow =
+                      pageNum === 1 ||
+                      pageNum === totalPages ||
+                      (pageNum >= page - 1 && pageNum <= page + 1);
+
+                    if (shouldShow) {
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => setPage(pageNum)}
+                          className={`px-3 py-1 rounded border text-sm font-medium ${
+                            page === pageNum
+                              ? "bg-orange-600 text-white"
+                              : "bg-white dark:bg-gray-900 text-gray-800 dark:text-white hover:bg-orange-100"
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    }
+
+                    if (
+                      (pageNum === 2 && page > 4) ||
+                      (pageNum === totalPages - 1 && page < totalPages - 3)
+                    ) {
+                      return <span key={pageNum} className="px-2 text-gray-500 dark:text-gray-400">...</span>;
+                    }
+
+                    return null;
+                  })}
+
+                  {/* Next Button */}
+                  <button
+                    onClick={() => setPage(p => Math.min(p + 1, totalPages))}
+                    disabled={page === totalPages}
+                    className={`px-3 py-1 rounded border text-sm font-medium ${
+                      page === totalPages
+                        ? "bg-gray-200 text-gray-400 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed"
+                        : "bg-white dark:bg-gray-900 text-gray-800 dark:text-white hover:bg-orange-100"
+                    }`}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
             )}
+
           </div>
         </div>
 
