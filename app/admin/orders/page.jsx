@@ -13,6 +13,10 @@ const Orders = () => {
   const [loading, setLoading] = useState(true);
   const [collapsedGroups, setCollapsedGroups] = useState({});
   const [statusFilter, setStatusFilter] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ordersPerPage = 10;
+  const totalPages = Math.ceil(orders.length / ordersPerPage);
+
 
   const fetchAdminOrders = async () => {
     try {
@@ -36,7 +40,12 @@ const Orders = () => {
     if (user) fetchAdminOrders();
   }, [user]);
 
-  const groupedOrders = orders.reduce((acc, order) => {
+  const paginatedOrders = orders.slice(
+      (currentPage - 1) * ordersPerPage,
+      currentPage * ordersPerPage
+    );
+
+  const groupedOrders = paginatedOrders.reduce((acc, order) => {
     if (statusFilter !== "All" && order.status !== statusFilter) return acc;
     const dateKey = new Date(order.date).toISOString().split("T")[0];
     if (!acc[dateKey]) acc[dateKey] = [];
@@ -139,8 +148,9 @@ const Orders = () => {
                         <p className="flex flex-col">
                           <span>Method: {order.paymentMethod}</span>
                           <span>Date: {new Date(order.date).toLocaleDateString("en-GB")}</span>
-                          <span>Status: {order.orderStatus}</span>
-                          <span>Status: {order.paymentStatus}</span>
+                          <span>Order Status: {order.orderStatus || "N/A"}</span>
+                          <span>Payment Status: {order.paymentStatus || "N/A"}</span>
+
                         </p>
                       </div>
                     </div>
@@ -149,6 +159,64 @@ const Orders = () => {
             );
           })}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-6 space-x-2">
+          {[...Array(totalPages)].map((_, index) => {
+            const page = index + 1;
+
+            if (totalPages <= 10) {
+              // If total pages ≤ 10, show all pages
+              return (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-3 py-1 rounded border ${
+                    page === currentPage
+                      ? "bg-black text-white"
+                      : "bg-gray-100 text-black"
+                  }`}
+                >
+                  {page}
+                </button>
+              );
+            }
+
+            // If total pages > 10, use condensed display with ellipsis
+            const showPage =
+              page === 1 ||
+              page === totalPages ||
+              (page >= currentPage - 1 && page <= currentPage + 1);
+
+            if (showPage) {
+              return (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-3 py-1 rounded border ${
+                    page === currentPage
+                      ? "bg-black text-white"
+                      : "bg-gray-100 text-black"
+                  }`}
+                >
+                  {page}
+                </button>
+              );
+            }
+
+            // Show ellipsis only once
+            if (
+              (page === 2 && currentPage > 4) ||
+              (page === totalPages - 1 && currentPage < totalPages - 3)
+            ) {
+              return <span key={page}>...</span>;
+            }
+
+            return null;
+          })}
+        </div>
+      )}
+
 
       <div className="mt-12">
         <Footer />
