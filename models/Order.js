@@ -38,7 +38,16 @@ const orderSchema = new mongoose.Schema({
   paymentStatus: {
     type: String,
     enum: ['Pending', 'Successful', 'Failed', 'Refunded'],
+  },
+  trackingNumber: String,
+  shippingCarrier: String,
+  shippingLabelUrl: String,
+  deliveryStatus: {
+    type: String,
+    enum: ["Pending", "Shipped", "In Transit", "Delivered", "Cancelled"],
+    default: "Pending"
   }
+
 }, { timestamps: true });
 
 const Order = mongoose.models.Order || mongoose.model('Order', orderSchema);
