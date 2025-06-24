@@ -29,6 +29,11 @@ export default function UserList() {
   const usersPerPage = 5;
   dayjs.extend(relativeTime);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
+
+
   const logActivity = async (action: string, detail: string) => {
     await fetch("/api/activity-log", {
       method: "POST",
@@ -375,7 +380,7 @@ export default function UserList() {
 
     {/* === Pagination and Footer === */}
     <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-6 mb-8">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         <button
           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
           disabled={currentPage === 1}
@@ -383,9 +388,43 @@ export default function UserList() {
         >
           Prev
         </button>
-        <span className="text-sm">
-          Page {currentPage} of {totalPages}
-        </span>
+
+        {(() => {
+          const range = [];
+          const start = Math.max(1, currentPage - 2);
+          const end = Math.min(totalPages, currentPage + 2);
+
+          if (start > 1) {
+            range.push(1);
+            if (start > 2) range.push("ellipsis-start");
+          }
+
+          for (let i = start; i <= end; i++) {
+            range.push(i);
+          }
+
+          if (end < totalPages) {
+            if (end < totalPages - 1) range.push("ellipsis-end");
+            range.push(totalPages);
+          }
+
+          return range.map((item, index) =>
+            typeof item === "string" ? (
+              <span key={index} className="text-sm px-1">...</span>
+            ) : (
+              <button
+                key={item}
+                onClick={() => setCurrentPage(item)}
+                className={`px-3 py-1 rounded text-sm ${
+                  currentPage === item ? "bg-black text-white" : "bg-gray-200"
+                }`}
+              >
+                {item}
+              </button>
+            )
+          );
+        })()}
+
         <button
           onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
           disabled={currentPage === totalPages}
@@ -394,10 +433,12 @@ export default function UserList() {
           Next
         </button>
       </div>
+
       <Link href="/activity-log" className="text-orange hover:underline text-sm">
         View Activity Log
       </Link>
     </div>
+
   </div>
 );
 
