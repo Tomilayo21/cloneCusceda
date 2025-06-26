@@ -6,6 +6,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import TextStyle from '@tiptap/extension-text-style';
 import Paragraph from '@tiptap/extension-paragraph';
+import Placeholder from '@tiptap/extension-placeholder';
 
 const TiptapEditor = ({ description, setDescription }) => {
   const editor = useEditor({
@@ -14,6 +15,9 @@ const TiptapEditor = ({ description, setDescription }) => {
       Paragraph,
       Underline,
       TextStyle,
+      Placeholder.configure({
+        placeholder: 'Type your message here...', // ✅ Your placeholder text
+      }),
     ],
     content: description || '',
     onUpdate: ({ editor }) => {
@@ -23,10 +27,9 @@ const TiptapEditor = ({ description, setDescription }) => {
     },
   });
 
-  // ✅ Only run once when editor is ready
   useEffect(() => {
     if (editor && description) {
-      editor.commands.setContent(description); // set only initially
+      editor.commands.setContent(description);
     }
   }, [editor]);
 
