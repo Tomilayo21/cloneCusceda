@@ -116,19 +116,19 @@ const SubscribersPage = () => {
             📢 Send Broadcast
           </button>
 
-          <button
+          {/* <button
             onClick={() => setShowBroadcastHistoryModal(true)}
             className="px-4 py-2 bg-gray-800 text-white rounded"
           >
             📜 View Broadcast History
-          </button>
+          </button> */}
 
           <Link href="/admin/broadcast/logs">
             <div
               title="You can view logs of previous broadcasts and also manage them"
               className="px-4 py-2 bg-gray-700 text-white rounded cursor-pointer text-center"
             >
-              📁 View Broadcast Logs
+              📁 View Broadcast History
             </div>
           </Link>
         </div>
