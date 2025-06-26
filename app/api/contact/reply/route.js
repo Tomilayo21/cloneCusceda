@@ -26,13 +26,69 @@ export async function POST(req) {
   });
 
   try {
+    // await transporter.sendMail({
+    //   from: `"Cusceda NG" <${process.env.EMAIL_USER}>`,
+    //   to,
+    //   cc,
+    //   subject,
+    //   text: message,
+    // });
     await transporter.sendMail({
-      from: `"Cusceda NG" <${process.env.EMAIL_USER}>`,
-      to,
-      cc,
-      subject,
-      text: message,
-    });
+    from: `"Cusceda NG Support" <${process.env.EMAIL_USER}>`,
+    to,
+    cc,
+    subject: `${subject}`, 
+    text: `Hello,
+
+    Thank you for contacting Cusceda NG. Below is our response to your inquiry:
+
+    Subject: ${subject}
+
+    ${message}
+
+    If you have any further questions or concerns, feel free to reach out again.
+
+    Best regards,
+    Cusceda NG Support Team`,
+        html: `
+          <div style="max-width: 600px; margin: 40px auto; padding: 30px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 10px; font-family: 'Segoe UI', sans-serif; color: #333;">
+            <h2 style="color: #2c3e50; text-align: center; margin-bottom: 20px;">🛠️ Support Response from Cusceda NG</h2>
+
+            <p style="font-size: 16px; margin-bottom: 20px;">Hi there,</p>
+            
+            <p style="font-size: 15px; line-height: 1.6;">
+              Thank you for reaching out to us. Please find our response below:
+            </p>
+
+            <div style="margin: 30px 0; background: #f9f9f9; border-left: 4px solid #007BFF; padding: 20px;">
+              <p style="margin-top: 5px; font-size: 15px; white-space: pre-wrap;">${message}</p>
+            </div>
+
+            <p style="font-size: 14px; margin-top: 30px;">
+              If you need further assistance or have more questions, don’t hesitate to reply to this email. We’re here to help.
+            </p>
+
+            <div style="text-align: center; margin: 40px 0 20px;">
+              <a href="https://cusceda.ng/contact" style="background-color: #007BFF; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;">Contact Support</a>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid #eee; margin: 40px 0;" />
+
+            <div style="text-align: center;">
+              <p style="font-size: 13px; margin-bottom: 10px;">Stay connected:</p>
+              <p>
+                <a href="https://facebook.com/cusceda" style="margin: 0 10px;"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook" width="24" /></a>
+                <a href="https://twitter.com/cusceda" style="margin: 0 10px;"><img src="https://img.freepik.com/free-vector/new-2023-twitter-logo-x-icon-design_1017-45418.jpg" alt="Twitter" width="24" /></a>
+                <a href="https://instagram.com/cusceda" style="margin: 0 10px;"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram" width="24" /></a>
+                <a href="https://linkedin.com/company/cusceda" style="margin: 0 10px;"><img src="https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg" alt="LinkedIn" width="24" /></a>
+              </p>
+              <p style="font-size: 12px; color: #999; margin-top: 20px;">
+                &copy; ${new Date().getFullYear()} Cusceda NG. All rights reserved.
+              </p>
+            </div>
+          </div>
+        `,
+      });
 
     return NextResponse.json({ success: true, reply });
   } catch (error) {
