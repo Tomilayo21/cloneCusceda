@@ -53,14 +53,8 @@ export async function POST(req) {
         html: `
           <div style="max-width: 600px; margin: 40px auto; padding: 30px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 10px; font-family: 'Segoe UI', sans-serif; color: #333;">
             <h2 style="color: #2c3e50; text-align: center; margin-bottom: 20px;">🛠️ Support Response from Cusceda NG</h2>
-
-            <p style="font-size: 16px; margin-bottom: 20px;">Hi there,</p>
             
-            <p style="font-size: 15px; line-height: 1.6;">
-              Thank you for reaching out to us. Please find our response below:
-            </p>
-
-            <div style="margin: 30px 0; background: #f9f9f9; border-left: 4px solid #007BFF; padding: 20px;">
+            <div style="margin: 30px 0; background: #f9f9f9; border-left: 4px solid #9CA3AF; padding: 20px;">
               <p style="margin-top: 5px; font-size: 15px; white-space: pre-wrap;">${message}</p>
             </div>
 
@@ -69,7 +63,7 @@ export async function POST(req) {
             </p>
 
             <div style="text-align: center; margin: 40px 0 20px;">
-              <a href="https://cusceda.ng/contact" style="background-color: #007BFF; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;">Contact Support</a>
+              <a href="https://cusceda.ng/contact" style="background-color: #9CA3AF; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;">Contact Support</a>
             </div>
 
             <hr style="border: none; border-top: 1px solid #eee; margin: 40px 0;" />
