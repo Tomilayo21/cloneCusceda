@@ -67,22 +67,36 @@ export async function POST(req) {
       },
     });
 
-    // SAFER 'from' — do NOT use the user's email in the "from" field.
     const mailOptions = {
       from: `"Website Contact" <${process.env.EMAIL_USER}>`,
       to: process.env.ADMIN_EMAIL,
       subject: `Customer Inquiry: ${subject}`,
-      // replyTo: email,
       html: `
-        <h2>New Message Received</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
-        <p><strong>Device:</strong> ${device}</p>
-        <p><strong>Location:</strong> ${location}</p>
-        <p><strong>Message:</strong><br/>${message}</p>
+        <div style="max-width: 600px; margin: 30px auto; padding: 30px; font-family: Arial, sans-serif; background-color: #ffffff; border: 1px solid #eaeaea; border-radius: 8px; color: #333;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="color: #2c3e50;">📬 New Message Received</h2>
+            <p style="font-size: 14px; color: #777;">A customer has submitted an inquiry via the website contact form.</p>
+          </div>
+
+          <div style="font-size: 15px; line-height: 1.6;">
+            <p><strong>👤 Name:</strong> ${name}</p>
+            <p><strong>📧 Email:</strong> ${email}</p>
+            <p><strong>🎯 Subject:</strong> ${subject}</p>
+            <p><strong>💻 Device:</strong> ${device}</p>
+            <p><strong>📍 Location:</strong> ${location}</p>
+            <p><strong>📝 Message:</strong><br/>${message}</p>
+          </div>
+
+          <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;" />
+
+          <div style="text-align: center; font-size: 13px; color: #999;">
+            <p>You received this message because someone submitted the contact form on your website.</p>
+            <p style="margin-top: 10px;">&copy; ${new Date().getFullYear()} Cusceda NG. All rights reserved.</p>
+          </div>
+        </div>
       `,
     };
+
 
     const info = await transporter.sendMail(mailOptions);
     console.log("Email sent:", info.messageId);
