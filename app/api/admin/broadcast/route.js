@@ -146,7 +146,8 @@ export async function POST(req) {
                 If you did not subscribe to this newsletter, you can safely ignore this email.
               </p>
               <p style="margin: 10px 0 0;">
-                <a href="https://quick-cart-nine-puce.vercel.app/unsubscribe?email=${encodeURIComponent(email)}" style="color: #0070f3; text-decoration: none;">unsubscribe</a>
+                You can unsubscribe
+                <a href="https://quick-cart-nine-puce.vercel.app/unsubscribe?email=${encodeURIComponent(email)}" style="color: #0070f3; text-decoration: none;">here</a>
               </p>
             </div>
           </div>
