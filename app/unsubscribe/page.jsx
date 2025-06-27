@@ -128,7 +128,7 @@ export default function UnsubscribePage() {
     const statusContent = {
       success: {
         title: "Unsubscribed",
-        message: "You have been successfully removed from our subscriber list.",
+        message: "You have been successfully removed from our subscribers list.",
         color: "text-green-600",
       },
       error: {
