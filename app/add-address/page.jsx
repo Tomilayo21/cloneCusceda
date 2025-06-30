@@ -54,44 +54,77 @@ const AddAddress = () => {
     setAddress({ ...address, city: e.target.value });
   };
 
+  // const onSubmitHandler = async (e) => {
+  //   e.preventDefault();
+
+  //   if (
+  //     !address.fullName ||
+  //     !address.phoneNumber ||
+  //     !address.zipcode ||
+  //     !address.area ||
+  //     !address.city ||
+  //     !address.state ||
+  //     !address.country
+  //   ) {
+  //     toast.error("Please fill all required fields");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+  //   try {
+  //     const token = await getToken();
+
+  //     const { data } = await axios.post(
+  //       '/api/user/add-address',
+  //       { address },
+  //       { headers: { Authorization: `Bearer ${token}` } }
+  //     );
+
+  //     if (data.success) {
+  //       toast.success(data.message);
+  //       router.push('/cart');
+  //     } else {
+  //       toast.error(data.message);
+  //     }
+  //   } catch (error) {
+  //     toast.error(error?.response?.data?.message || error.message || "Something went wrong");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
-    if (
-      !address.fullName ||
-      !address.phoneNumber ||
-      !address.zipcode ||
-      !address.area ||
-      !address.city ||
-      !address.state ||
-      !address.country
-    ) {
-      toast.error("Please fill all required fields");
+    if (!token) {
+      toast.error("Please login first");
       return;
     }
 
-    setLoading(true);
     try {
-      const token = await getToken();
-
       const { data } = await axios.post(
         '/api/user/add-address',
         { address },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (data.success) {
+        const addressId = data.addressId; // ✅ Get the address ID from the response
+        localStorage.setItem("addressId", addressId); // 🔐 Save for checkout use
         toast.success(data.message);
-        router.push('/cart');
+        router.push('/cart'); // 🚚 Navigate to next step
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message || error.message || "Something went wrong");
-    } finally {
-      setLoading(false);
+      console.error(error);
+      toast.error("Failed to add address");
     }
   };
+
 
   return (
     <>
