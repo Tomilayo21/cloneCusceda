@@ -138,7 +138,7 @@ const SideBar = () => {
   return (
     <div
       className={`border-r border-gray-300 min-h-screen py-2 flex flex-col transition-all duration-300 ease-in-out ${
-        collapsed ? 'w-16' : 'w-64'
+        collapsed ? 'w-16' : 'w-50'
       }`}
     >
       {/* Toggle Button */}
