@@ -83,89 +83,44 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   PlusSquare,
   ListOrdered,
+  ShoppingCart,
   Users,
   Star,
   Bell,
   CreditCard,
   Mail,
   Contact,
-  Headphones, 
-  Tag
+  Headphones,
+  Tag,
+  ChevronsLeft,
+  ChevronsRight
 } from 'lucide-react';
 
 const SideBar = () => {
   const pathname = usePathname();
-  const [sidebarWidth, setSidebarWidth] = useState(240); // initial width in px
-  const isResizing = useRef(false);
 
-  const handleMouseDown = () => {
-    isResizing.current = true;
-    document.body.style.cursor = 'ew-resize';
-  };
+  const [collapsed, setCollapsed] = useState(false);
 
-  const handleMouseMove = (e) => {
-    if (isResizing.current) {
-      const newWidth = Math.max(64, Math.min(400, e.clientX)); // min 64px, max 400px
-      setSidebarWidth(newWidth);
+  // Load from localStorage on mount
+  useEffect(() => {
+    const savedState = localStorage.getItem('sidebar-collapsed');
+    if (savedState !== null) {
+      setCollapsed(JSON.parse(savedState));
     }
-  };
-
-  const handleMouseUp = () => {
-    isResizing.current = false;
-    document.body.style.cursor = 'default';
-  };
-
-  React.useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
   }, []);
+
+  // Save to localStorage on change
+  useEffect(() => {
+    localStorage.setItem('sidebar-collapsed', JSON.stringify(collapsed));
+  }, [collapsed]);
 
   const menuItems = [
     { name: 'Add Products', path: '/admin', icon: <PlusSquare className="w-6 h-6" /> },
@@ -182,35 +137,37 @@ const SideBar = () => {
 
   return (
     <div
-      className="border-r min-h-screen text-base border-gray-300 py-2 flex flex-col relative bg-white transition-all"
-      style={{ width: `${sidebarWidth}px` }}
+      className={`border-r border-gray-300 min-h-screen py-2 flex flex-col transition-all duration-300 ease-in-out ${
+        collapsed ? 'w-16' : 'w-64'
+      }`}
     >
+      {/* Toggle Button */}
+      <button
+        onClick={() => setCollapsed(!collapsed)}
+        className="self-end mr-2 mb-4 p-1 hover:bg-gray-200 rounded transition"
+      >
+        {collapsed ? <ChevronsRight className="w-5 h-5" /> : <ChevronsLeft className="w-5 h-5" />}
+      </button>
+
+      {/* Menu Items */}
       {menuItems.map((item) => {
         const isActive = pathname === item.path;
 
         return (
           <Link href={item.path} key={item.name} passHref>
             <div
-              className={`flex items-center py-3 px-4 gap-3 ${
+              className={`flex items-center py-3 px-4 gap-3 cursor-pointer transition-all duration-200 ${
                 isActive
-                  ? "border-r-4 md:border-r-[6px] bg-orange-600/10 border-orange-500/90"
-                  : "hover:bg-gray-100/90 border-white"
+                  ? 'border-r-4 md:border-r-[6px] bg-orange-600/10 border-orange-500/90'
+                  : 'hover:bg-gray-100/90 border-white'
               }`}
             >
               {item.icon}
-              <p className={`text-center ${sidebarWidth < 160 ? "hidden" : "block"}`}>
-                {item.name}
-              </p>
+              {!collapsed && <p className="whitespace-nowrap">{item.name}</p>}
             </div>
           </Link>
         );
       })}
-
-      {/* Resizer handle */}
-      <div
-        onMouseDown={handleMouseDown}
-        className="absolute right-0 top-0 h-full w-1 cursor-ew-resize bg-transparent hover:bg-orange-400/30 transition-colors"
-      />
     </div>
   );
 };
