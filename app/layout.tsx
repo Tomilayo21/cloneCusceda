@@ -8,8 +8,8 @@ import { ThemeProvider } from "@/context/ThemeContext";
 const outfit = Outfit({ subsets: ['latin'], weight: ["300", "400", "500"] })
 
 export const metadata = {
-  title: "QuickCart - GreatStack",
-  description: "E-Commerce with Next.js ",
+  title: "Cusceda",
+  description: "Innovative, Resilient, Growing",
 };
 
 export default function RootLayout({ children }) {
