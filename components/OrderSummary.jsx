@@ -118,35 +118,93 @@ const OrderSummary = () => {
     }
   };
 
+  // const handlePayment = async () => {
+  //   if (processing) return;
+  //   if (!selectedAddress) return toast.error('Please select an address');
+  //   if (!selectedShipping) return toast.error('Select a shipping method');
+
+  //   const cartItemsArray = Object.keys(cartItems)
+  //     .map((key) => ({ product: key, quantity: cartItems[key] }))
+  //     .filter((item) => item.quantity > 0);
+
+  //   if (cartItemsArray.length === 0) return toast.error('Cart is empty');
+
+  //   setProcessing(true);
+
+  //   try {
+  //     const token = await getToken();
+  //     const orderRes = await axios.post('/api/order/create', {
+  //       address: selectedAddress._id,
+  //       items: cartItemsArray,
+  //       paymentMethod: selected.id,
+  //       shippingRate: selectedShipping.object_id
+  //     }, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+
+  //     if (!orderRes.data.success) {
+  //       toast.error(orderRes.data.message);
+  //       return;
+  //     }
+
+  //     const bookingRes = await axios.post('/api/shipping/book', {
+  //       shipmentId: orderRes.data.shipmentId,
+  //       rateObjectId: selectedShipping.object_id
+  //     });
+
+  //     if (bookingRes.data.success) {
+  //       toast.success('Shipment booked and label generated. Redirecting to payment...');
+  //     }
+
+  //     setCartItems({});
+  //     if (selected.url.startsWith('/')) {
+  //       router.push(selected.url);
+  //     } else {
+  //       window.location.href = selected.url;
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   } finally {
+  //     setProcessing(false);
+  //   }
+  // };
   const handlePayment = async () => {
-    if (processing) return;
-    if (!selectedAddress) return toast.error('Please select an address');
-    if (!selectedShipping) return toast.error('Select a shipping method');
+  if (processing) return;
+  if (!selectedAddress) return toast.error('Please select an address');
 
-    const cartItemsArray = Object.keys(cartItems)
-      .map((key) => ({ product: key, quantity: cartItems[key] }))
-      .filter((item) => item.quantity > 0);
+  const cartItemsArray = Object.keys(cartItems)
+    .map((key) => ({ product: key, quantity: cartItems[key] }))
+    .filter((item) => item.quantity > 0);
 
-    if (cartItemsArray.length === 0) return toast.error('Cart is empty');
+  if (cartItemsArray.length === 0) return toast.error('Cart is empty');
 
-    setProcessing(true);
+  setProcessing(true);
 
-    try {
-      const token = await getToken();
-      const orderRes = await axios.post('/api/order/create', {
-        address: selectedAddress._id,
-        items: cartItemsArray,
-        paymentMethod: selected.id,
-        shippingRate: selectedShipping.object_id
-      }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+  try {
+    const token = await getToken();
 
-      if (!orderRes.data.success) {
-        toast.error(orderRes.data.message);
-        return;
-      }
+    const orderPayload = {
+      address: selectedAddress._id,
+      items: cartItemsArray,
+      paymentMethod: selected.id,
+    };
 
+    // Only include shippingRate if selectedShipping exists
+    if (selectedShipping) {
+      orderPayload.shippingRate = selectedShipping.object_id;
+    }
+
+    const orderRes = await axios.post('/api/order/create', orderPayload, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!orderRes.data.success) {
+      toast.error(orderRes.data.message);
+      return;
+    }
+
+    // Only book shipment if shippingRate was included
+    if (orderRes.data.shipmentId && selectedShipping) {
       const bookingRes = await axios.post('/api/shipping/book', {
         shipmentId: orderRes.data.shipmentId,
         rateObjectId: selectedShipping.object_id
@@ -155,19 +213,22 @@ const OrderSummary = () => {
       if (bookingRes.data.success) {
         toast.success('Shipment booked and label generated. Redirecting to payment...');
       }
-
-      setCartItems({});
-      if (selected.url.startsWith('/')) {
-        router.push(selected.url);
-      } else {
-        window.location.href = selected.url;
-      }
-    } catch (error) {
-      toast.error(error.message);
-    } finally {
-      setProcessing(false);
     }
-  };
+
+    setCartItems({});
+
+    if (selected.url.startsWith('/')) {
+      router.push(selected.url);
+    } else {
+      window.location.href = selected.url;
+    }
+  } catch (error) {
+    toast.error(error.message || "Error placing order");
+  } finally {
+    setProcessing(false);
+  }
+};
+
 
   useEffect(() => {
     if (user) fetchUserAddresses();
@@ -285,7 +346,7 @@ const OrderSummary = () => {
 
         {/* Shipping + Payment + Summary */}
         {/* Shipping Options */}
-        {shippingOptions.length > 0 && (
+        {/* {shippingOptions.length > 0 && (
           <div>
             <label className="text-base font-medium uppercase text-gray-600 block mb-2">Shipping Options</label>
             <select
@@ -303,7 +364,7 @@ const OrderSummary = () => {
               ))}
             </select>
           </div>
-        )}
+        )} */}
 
         {/* Payment Method */}
         <div className="mt-4 space-y-2">
