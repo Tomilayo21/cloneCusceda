@@ -72,6 +72,7 @@ export default function FavoritesPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-7xl">
             {favorites.map(({ _id, productId }) => {
               if (productId.visible === false) return null; 
+
               const pid = productId._id?.toString();
               const rating = ratingsMap[pid] || { avg: 0, count: 0 };
 
@@ -90,9 +91,10 @@ export default function FavoritesPage() {
                       className="w-full h-40 object-cover rounded"
                     />
                     <h2 className="mt-2 font-medium text-lg">{productId.name}</h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
-                      {productId.description}
-                    </p>
+                    <div
+                      className="text-xs text-gray-500 dark:text-gray-400 w-full line-clamp-1"
+                      dangerouslySetInnerHTML={{ __html: productId.description }}
+                    />
                     <p className="text-sm mt-1 font-semibold">
                       {currency}
                       {productId.offerPrice}
