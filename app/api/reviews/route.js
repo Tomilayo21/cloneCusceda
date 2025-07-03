@@ -31,6 +31,37 @@ export async function GET(request) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
+// export async function GET(request) {
+//   try {
+//     const { userId } = getAuth(request);
+//     await connectDB();
+
+//     const url = new URL(request.url);
+//     const productId = url.searchParams.get("productId");
+
+//     if (productId) {
+//       // Public access: only approved reviews for the given product
+//       const reviews = await Review.find({ productId, approved: true })
+//         .populate("productId", "name")
+//         .sort({ createdAt: -1 });
+
+//       return NextResponse.json(reviews, { status: 200 });
+//     }
+
+//     // Admin access: all reviews
+//     if (!userId || !(await authSeller(userId))) {
+//       return NextResponse.json({ message: "Not authorized" }, { status: 403 });
+//     }
+
+//     const reviews = await Review.find()
+//       .populate("productId", "name")
+//       .sort({ createdAt: -1 });
+
+//     return NextResponse.json({ success: true, reviews }, { status: 200 });
+//   } catch (error) {
+//     return NextResponse.json({ message: error.message }, { status: 500 });
+//   }
+// }
 
 export async function POST(request) {
   try {
@@ -41,7 +72,7 @@ export async function POST(request) {
 
     await connectDB();
 
-    const { productId, rating, comment, userName } = await request.json();
+    const { productId, rating, comment, username } = await request.json();
     if (!productId || !rating || !comment) {
       return NextResponse.json({ message: 'Missing fields' }, { status: 400 });
     }
@@ -51,7 +82,7 @@ export async function POST(request) {
       return NextResponse.json({ message: 'You already submitted a review' }, { status: 400 });
     }
 
-    const review = new Review({ productId, userId, userName, rating, comment, approved: false });
+    const review = new Review({ productId, userId, username, rating, comment, approved: false });
     await review.save();
 
     return NextResponse.json({ message: 'Review submitted for approval' }, { status: 201 });
