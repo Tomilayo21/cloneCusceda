@@ -54,7 +54,6 @@ export default function FavoritesPage() {
 
   const handleAddToCart = (product) => addToCart(product);
 
-  /* -------- UI -------- */
   return (
     <>
       <Navbar />
@@ -69,9 +68,9 @@ export default function FavoritesPage() {
         {favorites.length === 0 ? (
           <p className="text-gray-600 dark:text-gray-400">No favorites yet.</p>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-7xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-7xl mx-auto px-4">
             {favorites.map(({ _id, productId }) => {
-              if (productId.visible === false) return null; 
+              if (productId.visible === false) return null;
 
               const pid = productId._id?.toString();
               const rating = ratingsMap[pid] || { avg: 0, count: 0 };
@@ -79,42 +78,44 @@ export default function FavoritesPage() {
               return (
                 <div
                   key={_id}
-                  className="border border-gray-300 dark:border-gray-700 p-3 rounded shadow-sm bg-gray-50 dark:bg-neutral-900 mt-8 mb-14"
+                  className="flex flex-col justify-between border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm overflow-hidden bg-white dark:bg-neutral-900 transition hover:shadow-md duration-200"
                 >
-                  {/* -------- clickable area wrapped in Link -------- */}
                   <Link href={`/product/${pid}`} className="block">
                     <Image
                       src={productId.image[0]}
                       alt={productId.name}
                       width={300}
                       height={200}
-                      className="w-full h-40 object-cover rounded"
+                      className="w-full h-44 object-cover rounded-t-2xl"
                     />
-                    <h2 className="mt-2 font-medium text-lg">{productId.name}</h2>
-                    <div
-                      className="text-xs text-gray-500 dark:text-gray-400 w-full line-clamp-1"
-                      dangerouslySetInnerHTML={{ __html: productId.description }}
-                    />
-                    <p className="text-sm mt-1 font-semibold">
-                      {currency}
-                      {productId.offerPrice}
-                    </p>
-                    <div className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-                      <p>Average Rating: {rating.avg?.toFixed(1)} ⭐</p>
-                      <p>{rating.count} Reviews</p>
+                    <div className="p-4">
+                      <h2 className="text-lg font-semibold text-gray-800 dark:text-white line-clamp-1">
+                        {productId.name}
+                      </h2>
+                      <div
+                        className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-1"
+                        dangerouslySetInnerHTML={{ __html: productId.description }}
+                      />
+                      <p className="text-base font-bold text-primary mt-2">
+                        {currency}
+                        {productId.offerPrice}
+                      </p>
+                      <div className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                        <p>Average Rating: {rating.avg?.toFixed(1)} ⭐</p>
+                        <p>{rating.count} Reviews</p>
+                      </div>
                     </div>
                   </Link>
 
-                  {/* buttons stay outside so they don’t trigger navigation */}
-                  <div className="flex justify-between mt-2 text-sm">
+                  <div className="flex justify-between items-center border-t border-gray-100 dark:border-gray-700 px-4 py-2 text-sm">
                     <button
-                      className="px-2 py-1 border rounded hover:bg-gray-100 dark:hover:bg-neutral-800 dark:border-gray-600"
+                      className="px-2 py-1 border border-orange-500 text-white bg-orange-500 rounded hover:bg-orange-600 dark:hover:bg-orange-600"
                       onClick={() => handleAddToCart(productId)}
                     >
                       Add to Cart
                     </button>
                     <button
-                      className="px-2 py-1 text-red-500 dark:text-red-400 hover:underline"
+                      className="text-red-500 dark:text-red-400 hover:underline"
                       onClick={() => removeFavorite(productId._id)}
                     >
                       Remove
@@ -124,6 +125,7 @@ export default function FavoritesPage() {
               );
             })}
           </div>
+
         )}
       </div>
 
