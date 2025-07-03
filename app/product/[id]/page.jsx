@@ -84,7 +84,7 @@ const toggleLike = async () => {
         // Add user to the list if not already present
         const alreadyLiked = prevUsers.some((u) => u.id === user.id);
         if (!alreadyLiked) {
-          return [{ id: user.id, fullName: user.fullName || 'Anonymous' }, ...prevUsers];
+          return [{ id: user.id, fullName: user.username || 'Anonymous' }, ...prevUsers];
         }
         return prevUsers;
       } else {
@@ -148,7 +148,8 @@ const handleSubmitReview = async () => {
         rating,
         comment,
         userId: user.id, // include this if you're storing userId
-        userName: user.fullName || 'Anonymous'
+        // userName: user.fullName || 'Anonymous',
+        username: user.username || 'unknown'
       }),
     });
 
@@ -295,9 +296,9 @@ const handleHelpfulClick = async (reviewId) => {
                {likeUsers.length > 0 && (
                 <div className="text-xs text-gray-500 mt-1">
                   {likeUsers.length === 1 ? (
-                    <>Liked by {likeUsers[0].fullName || 'Anonymous'}</>
+                    <>Liked by {likeUsers[0].username || 'Anonymous'}</>
                   ) : (
-                    <>Liked by {likeUsers[0].fullName || 'Anonymous'} and {likeUsers.length - 1} other{likeUsers.length - 1 > 1 ? 's' : ''}</>
+                    <>Liked by {likeUsers[0].username || 'Anonymous'} and {likeUsers.length - 1} other{likeUsers.length - 1 > 1 ? 's' : ''}</>
                   )}
                 </div>
               )}
@@ -374,7 +375,7 @@ const handleHelpfulClick = async (reviewId) => {
                   <div key={r._id} className="pb-2">
                     {/* <p className="font-semibold text-black dark:text-white">{r.userName}</p> */}
                     <div className="flex items-center gap-2 text-black dark:text-white">
-                      <p className="font-semibold">{r.userName}</p>
+                      <p className="font-semibold">{r.username}</p>
                       <span className="text-xs text-gray-500">
                         {new Date(r.createdAt).toLocaleDateString('en-GB')}
                       </span>
