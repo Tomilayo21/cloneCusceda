@@ -36,7 +36,7 @@ const AdminReviewsPage = () => {
 
     if (search) {
       updated = updated.filter(r =>
-        r.userName.toLowerCase().includes(search.toLowerCase()) ||
+        r.username.toLowerCase().includes(search.toLowerCase()) ||
         r.productId.toLowerCase().includes(search.toLowerCase()) ||
         r.comment.toLowerCase().includes(search.toLowerCase())
       );
@@ -110,7 +110,7 @@ const AdminReviewsPage = () => {
   function exportToCSV() {
     const headers = ['User', 'Product ID', 'Rating', 'Comment', 'Approved', 'Date'];
     const rows = filteredReviews.map(r => [
-      r.userName,
+      r.username,
       r.productId,
       r.rating,
       r.comment,
@@ -156,7 +156,7 @@ const AdminReviewsPage = () => {
         </select>
         <select value={sortField} onChange={e => setSortField(e.target.value)} className="border p-2 rounded">
           <option value="createdAt">Date</option>
-          <option value="userName">User</option>
+          <option value="username">User</option>
           <option value="productId">Product Name</option>
         </select>
         <select value={sortOrder} onChange={e => setSortOrder(e.target.value)} className="border p-2 rounded">
@@ -192,7 +192,7 @@ const AdminReviewsPage = () => {
               <tbody>
                 {paginatedReviews.map(rev => (
                   <tr key={rev._id}>
-                    <td className="border border-gray-300 px-4 py-2">{rev.userName}</td>
+                    <td className="border border-gray-300 px-4 py-2">{rev.username}</td>
                     <td className="border border-gray-300 px-4 py-2">{rev.productId?.name || 'N/A'}</td>
                     <td className="border border-gray-300 px-4 py-2">{rev.rating}</td>
                     <td className="border border-gray-300 px-4 py-2">{rev.comment}</td>
@@ -220,7 +220,7 @@ const AdminReviewsPage = () => {
           <div className="md:hidden space-y-4 mx-4">
             {paginatedReviews.map(rev => (
               <div key={rev._id} className="border border-gray-300 rounded p-4 shadow-sm bg-white">
-                <div className="mb-2"><strong>User:</strong> {rev.userName}</div>
+                <div className="mb-2"><strong>User:</strong> {rev.username}</div>
                 <div className="mb-2"><strong>Product Name:</strong> {rev.productId?.name || 'N/A'}</div>
                 <div className="mb-2"><strong>Rating:</strong> {rev.rating} ⭐</div>
                 <div className="mb-2"><strong>Comment:</strong> {rev.comment}</div>
