@@ -121,22 +121,141 @@ const ProductCard = ({ product }) => {
     addToCart(product);
   };
 
+  // return (
+  //   <div
+  //    onClick={handleCardClick}
+  //       onMouseDown={handleLongPressStart}
+  //       onTouchStart={handleLongPressStart}
+  //       onMouseUp={handleLongPressEnd}
+  //       onMouseLeave={handleLongPressEnd}
+  //       onTouchEnd={handleLongPressEnd}
+  //       className="flex flex-col items-start gap-0.5 max-w-[200px] w-full cursor-pointer mb-16 overflow-hidden"
+  //   >
+  //     <div className="relative bg-gray-100 dark:bg-gray-800 rounded-lg w-full h-44 flex items-center justify-center overflow-hidden group">
+  //       <Image
+  //         src={product.image[0]}
+  //         alt={product.name}
+  //         width={800}
+  //         height={800}
+  //         className="w-full h-full object-cover transition-transform group-hover:scale-105"
+  //       />
+  //       <button
+  //         onClick={toggleFavorite}
+  //         className="absolute top-2 right-2 bg-white dark:bg-gray-700 p-2 rounded-full shadow-md"
+  //         aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+  //       >
+  //         {isFavorite ? (
+  //           <Heart fill="red" color="red" size={15} />
+  //         ) : (
+  //           <Heart size={15} />
+  //         )}
+  //       </button>
+  //     </div>
+
+  //     <p className="text-sm font-medium pt-1 w-full text-black dark:text-white line-clamp-2 leading-tight">
+  //       {product.name}
+  //     </p>
+  //     {/* <div
+  //       className="text-base font-medium pt-2 w-full truncate text-black dark:text-white"
+  //       dangerouslySetInnerHTML={{ __html: product.name }}
+  //     /> */}
+
+  //     {/* <p className="text-xs text-gray-500 dark:text-gray-400 w-full truncate max-sm:hidden">
+  //       {product.description}
+  //     </p> */}
+  //     <div
+  //       className="text-xs text-gray-500 dark:text-gray-400 w-full line-clamp-1"
+  //       dangerouslySetInnerHTML={{ __html: product.description }}
+  //     />
+
+  //     <div className="mt-2 flex items-center justify-between text-sm text-gray-700 dark:text-gray-300">
+  //       <div>
+  //         <p className="mb-2">Average Rating: {avgRating.toFixed(1)} ⭐</p>
+  //         <p>{reviews.length} {reviews.length === 1 ? 'Review' : 'Reviews'}</p>
+  //       </div>
+
+  //       <div className="ml-4 mt-5 text-sm text-gray-600 dark:text-gray-400">
+  //         <p>{likes.length} {likes.length === 1 ? 'like' : 'likes'}</p>
+  //       </div>
+  //     </div>
+  
+
+  //     <div className="flex items-end justify-between w-full mt-1">
+  //       <p className="text-base font-medium text-black dark:text-white">
+  //         {currency}
+  //         {product.offerPrice}
+  //       </p>
+  //       <button
+  //         onClick={handleAddToCart}
+  //         disabled={product.stock === 0}
+  //         className="px-3 py-1 text-xs text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-full hover:bg-slate-50 dark:hover:bg-gray-700 transition"
+  //       >
+  //         {product.stock === 0 ? "Sold Out" : "Add to Cart"}
+  //       </button>
+  //     </div>
+
+  //     {/* Modal shown on long press */}
+  //     {showModal && (
+  //       <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
+  //         <div className="bg-white dark:bg-gray-900 rounded-lg p-6 max-w-sm w-full relative shadow-xl overflow-y-auto max-h-[90vh]">
+  //           <h2 className="text-xl font-semibold mb-2 text-black dark:text-white">
+  //             {product.name}
+  //           </h2>
+
+  //           <Image
+  //             src={product.image[0]}
+  //             alt={product.name}
+  //             width={400}
+  //             height={400}
+  //             className="object-cover rounded mb-4 w-full h-auto"
+  //           />
+
+  //           {/* <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+  //             {product.description}
+  //           </p> */}
+  //           <div
+  //             className="text-sm text-gray-700 dark:text-gray-300 mb-2"
+  //             dangerouslySetInnerHTML={{ __html: product.description }}
+  //           />
+
+  //           <p className="text-sm text-gray-800 dark:text-gray-200 mb-1">
+  //             <strong>Price:</strong> {currency}{product.offerPrice}
+  //           </p>
+
+  //           {/* <p className="text-sm text-gray-800 dark:text-gray-200 mb-1">
+  //             <strong>Stock:</strong> {product.stock}
+  //           </p> */}
+
+  //           <p className="text-sm text-gray-800 dark:text-gray-200 mb-1">
+  //             <strong>Likes:</strong> {likes.length}
+  //           </p>
+
+  //           <p className="text-sm text-gray-800 dark:text-gray-200">
+  //             <strong>Average Rating:</strong> {avgRating.toFixed(1)} ⭐
+  //           </p>
+  //         </div>
+  //       </div>
+  //     )}
+
+  //   </div>
+  // );
   return (
     <div
-     onClick={handleCardClick}
-        onMouseDown={handleLongPressStart}
-        onTouchStart={handleLongPressStart}
-        onMouseUp={handleLongPressEnd}
-        onMouseLeave={handleLongPressEnd}
-        onTouchEnd={handleLongPressEnd}
-        className="flex flex-col items-start gap-0.5 max-w-[200px] w-full cursor-pointer mb-16 overflow-hidden"
+      onClick={handleCardClick}
+      onMouseDown={handleLongPressStart}
+      onTouchStart={handleLongPressStart}
+      onMouseUp={handleLongPressEnd}
+      onMouseLeave={handleLongPressEnd}
+      onTouchEnd={handleLongPressEnd}
+      className="flex flex-col items-start gap-0.5 max-w-[200px] w-full cursor-pointer mb-16 overflow-hidden justify-between h-[400px] rounded-2xl shadow-md overflow-hidden bg-white dark:bg-gray-900 cursor-pointer transition-transform hover:scale-[1.01]"
     >
-      <div className="relative bg-gray-100 dark:bg-gray-800 rounded-lg w-full h-44 flex items-center justify-center overflow-hidden group">
+      {/* Image */}
+      <div className="h-48 bg-gray-100 dark:bg-gray-800 flex items-center justify-center relative">
         <Image
           src={product.image[0]}
           alt={product.name}
-          width={800}
-          height={800}
+          width={300}
+          height={300}
           className="w-full h-full object-cover transition-transform group-hover:scale-105"
         />
         <button
@@ -152,49 +271,42 @@ const ProductCard = ({ product }) => {
         </button>
       </div>
 
-      <p className="text-sm font-medium pt-1 w-full text-black dark:text-white line-clamp-2 leading-tight">
-        {product.name}
-      </p>
-      {/* <div
-        className="text-base font-medium pt-2 w-full truncate text-black dark:text-white"
-        dangerouslySetInnerHTML={{ __html: product.name }}
-      /> */}
+      <div className="p-4 flex-1 flex flex-col gap-1 text-black dark:text-white">
+        <h3 className="text-sm font-semibold truncate">{product.name}</h3>
+        <div
+          className="text-xs text-gray-500 dark:text-gray-400 w-full line-clamp-2"
+          dangerouslySetInnerHTML={{ __html: product.description }}
+        />
+        <p className="text-lg font-bold mt-1">{currency}{product.offerPrice}</p>
 
-      {/* <p className="text-xs text-gray-500 dark:text-gray-400 w-full truncate max-sm:hidden">
-        {product.description}
-      </p> */}
-      <div
-        className="text-xs text-gray-500 dark:text-gray-400 w-full line-clamp-1"
-        dangerouslySetInnerHTML={{ __html: product.description }}
-      />
+        {product.stock <= 10 && product.stock > 0 && (
+          <p className="text-xs text-orange-600 font-medium mt-1 mb-3">
+            Only <span className="font-bold">{product.stock}</span> left in stock!
+          </p>
+        )}
 
-      <div className="mt-2 flex items-center justify-between text-sm text-gray-700 dark:text-gray-300">
-        <div>
-          <p className="mb-2">Average Rating: {avgRating.toFixed(1)} ⭐</p>
-          <p>{reviews.length} {reviews.length === 1 ? 'Review' : 'Reviews'}</p>
-        </div>
+        {/* <p className="text-sm text-gray-800 dark:text-gray-200 mb-1">
+                <strong>Likes:</strong> {likes.length}
+        </p> */}
 
-        <div className="ml-4 mt-5 text-sm text-gray-600 dark:text-gray-400">
-          <p>{likes.length} {likes.length === 1 ? 'like' : 'likes'}</p>
-        </div>
-      </div>
-  
-
-      <div className="flex items-end justify-between w-full mt-1">
-        <p className="text-base font-medium text-black dark:text-white">
-          {currency}
-          {product.offerPrice}
+        <p className="text-sm text-gray-800 dark:text-gray-200">
+          <strong>Average Rating:</strong> {avgRating.toFixed(1)} ⭐
         </p>
-        <button
-          onClick={handleAddToCart}
-          disabled={product.stock === 0}
-          className="px-3 py-1 text-xs text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-full hover:bg-slate-50 dark:hover:bg-gray-700 transition"
-        >
-          {product.stock === 0 ? "Sold Out" : "Add to Cart"}
-        </button>
       </div>
 
-      {/* Modal shown on long press */}
+      {/* Add to Cart */}
+      <button
+        onClick={handleAddToCart}
+        disabled={product.stock === 0}
+        className={`w-full py-2 text-white font-semibold text-sm ${
+          product.stock === 0
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-orange-600 hover:bg-orange-700'
+        } rounded-b-2xl transition`}
+      >
+        {product.stock === 0 ? "Sold Out" : "Add to cart"}
+      </button>
+
       {showModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
           <div className="bg-white dark:bg-gray-900 rounded-lg p-6 max-w-sm w-full relative shadow-xl overflow-y-auto max-h-[90vh]">
@@ -236,9 +348,9 @@ const ProductCard = ({ product }) => {
           </div>
         </div>
       )}
-
     </div>
   );
+
 };
 
 export default ProductCard;
