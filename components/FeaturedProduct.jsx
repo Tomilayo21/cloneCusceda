@@ -86,30 +86,36 @@ const FeaturedProduct = () => {
             .map((product) => (
               <div
                 key={product._id}
-                className="relative group bg-[#E6E9F2] rounded-md p-2"
+                className="relative group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-4 shadow-sm hover:shadow-lg transition duration-300"
               >
-                <img
-                  src={product.image[0]}
-                  alt={product.name}
-                  className="w-full h-auto object-cover group-hover:brightness-75 transition duration-300 rounded"
-                />
-                <div className="group-hover:-translate-y-4 transition duration-300 absolute bottom-8 left-4 text-green space-y-2">
-                  <p className="font-medium text-xl lg:text-2xl text-white dark:text-black">
+                <div className="overflow-hidden rounded-xl">
+                  <img
+                    src={product.image[0]}
+                    alt={product.name}
+                    className="w-full h-48 object-cover transform group-hover:scale-105 transition duration-300"
+                  />
+                </div>
+
+                <div className="mt-4 space-y-2">
+                  <p className="font-semibold text-lg text-gray-800 dark:text-white truncate">
                     {product.name}
                   </p>
-                  {/* <p className="text-sm lg:text-base leading-5 max-w-60 line-clamp-2 text-white dark:text-black">
+                  {/* Uncomment below if you want short description */}
+                  {/* <p className="text-sm text-gray-500 dark:text-gray-300 line-clamp-2">
                     {product.description}
                   </p> */}
                   <button
                     onClick={() => router.push(`/product/${product._id}`)}
-                    className="flex items-center gap-1.5 bg-orange-600 px-4 py-2 rounded text-white"
+                    className="mt-2 inline-flex items-center justify-center w-full px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition duration-300"
                   >
-                    Add to Cart
+                    View Product
                   </button>
                 </div>
               </div>
             ))}
         </div>
+
+        
       </div>
     </div>
   );
