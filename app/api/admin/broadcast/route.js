@@ -147,7 +147,7 @@ export async function POST(req) {
               </p>
               <p style="margin: 10px 0 0;">
                 You can unsubscribe
-                <a href="https://quick-cart-nine-puce.vercel.app/unsubscribe?email=${encodeURIComponent(email)}" style="color: #0070f3; text-decoration: none;">here</a>
+                <a href="https://quick-carty.vercel.app/unsubscribe?email=${encodeURIComponent(email)}" style="color: #0070f3; text-decoration: none;">here</a>
               </p>
             </div>
           </div>
