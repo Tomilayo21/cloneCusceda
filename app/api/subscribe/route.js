@@ -78,7 +78,7 @@ export async function POST(req) {
           </div>
 
           <div style="margin-top: 40px; font-size: 13px; color: #999; text-align: center;">
-            <p>If you didn’t sign up for this, you can unsubscribe<a href="https://quick-cart-nine-puce.vercel.app/unsubscribe?email=${encodeURIComponent(email)}" style="color: #007BFF;"> here</a>.</p>
+            <p>If you didn’t sign up for this, you can unsubscribe<a href="https://quick-carty.vercel.app/unsubscribe?email=${encodeURIComponent(email)}" style="color: #007BFF;"> here</a>.</p>
             <p>&copy; ${new Date().getFullYear()} Cusceda NG. All rights reserved.</p>
           </div>
         </div>
