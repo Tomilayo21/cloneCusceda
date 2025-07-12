@@ -176,3 +176,4 @@ export const scheduledBroadcastSender = inngest.createFunction(
 
         return { message: "Scheduled broadcasts sent." };
     }
+)
