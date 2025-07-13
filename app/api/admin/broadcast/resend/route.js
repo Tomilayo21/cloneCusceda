@@ -18,7 +18,7 @@ export async function POST(req) {
       return NextResponse.json({ error: "Broadcast not found" }, { status: 404 });
     }
 
-    const recipient = broadcast.recipients.find(r => r.email === email);
+    const recipient = broadcast.recipients.find((r) => r.email === email);
     if (!recipient) {
       return NextResponse.json({ error: "Recipient not found in broadcast" }, { status: 404 });
     }
@@ -33,43 +33,63 @@ export async function POST(req) {
       },
     });
 
-    try {
-      await await transporter.sendMail({
-        from: `"Cusceda NG" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject,
-        html: `
-            <p>${message}</p>
-            ${attachmentUrl ? `<img src="cid:attached-image" style="max-width:100%; height:auto;" />` : ""}
-        `,
-        attachments: attachmentUrl
-            ? [
-                {
-                filename: attachmentUrl.split("/").pop(),
-                path: attachmentUrl,
-                cid: "attached-image",
-                },
-            ]
-            : [],
-        });
+    const attachments = (broadcast.attachment || []).map((url, index) => ({
+      filename: url.split("/").pop(),
+      path: url,
+      cid: `attachment-${index}`,
+    }));
 
+    const attachmentsHtml = (broadcast.attachment || [])
+      .map((url, i) =>
+        url.match(/\.(jpg|jpeg|png|webp|gif|svg)$/i)
+          ? `<img src="${url}" style="max-width:100%; height:auto;" />`
+          : `<p><a href="${url}" target="_blank">View Attachment ${i + 1}</a></p>`
+      )
+      .join("");
 
-      // Update recipient status
-      const updatedRecipients = broadcast.recipients.map(r =>
-        r.email === email ? { ...r, status: "sent" } : r
-      );
+    // Send email
+    await transporter.sendMail({
+      from: `"Cusceda NG" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: broadcast.subject,
+      html: `
+        <div style="padding: 20px; font-size: 16px;">
+          <h2>${broadcast.subject}</h2>
+          <p>${broadcast.message.replace(/\n/g, "<br>")}</p>
+          ${attachmentsHtml}
+          <p>Cheers,<br/>Cusceda NG Team</p>
+        </div>
+      `,
+      attachments,
+    });
 
-      broadcast.recipients = updatedRecipients;
-      broadcast.status = "sent"; // Optional: set this only if all are sent
-      await broadcast.save();
+    // Update recipient status and time
+    await Broadcast.updateOne(
+      { _id: id, "recipients.email": email },
+      {
+        $set: {
+          "recipients.$.status": "sent",
+          "recipients.$.error": null,
+          "recipients.$.sentAt": new Date(), // ✅ Save time of delivery
+        },
+      }
+    );
 
-      return NextResponse.json({ success: true });
-    } catch (err) {
-      console.error("Resend failed:", err);
-      return NextResponse.json({ error: "Failed to resend email", details: err.message }, { status: 500 });
-    }
-  } catch (error) {
-    console.error("Resend error:", error);
-    return NextResponse.json({ error: "Resend failed" }, { status: 500 });
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("Resend failed:", err);
+
+    // Save failure reason
+    await Broadcast.updateOne(
+      { _id: id, "recipients.email": email },
+      {
+        $set: {
+          "recipients.$.status": "failed",
+          "recipients.$.error": err.message,
+        },
+      }
+    );
+
+    return NextResponse.json({ error: "Failed to resend email", details: err.message }, { status: 500 });
   }
 }
