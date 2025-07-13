@@ -158,10 +158,13 @@ const OrderSummary = () => {
 
       setCartItems({});
       if (selected.url.startsWith('/')) {
-        router.push(selected.url);
+        setTimeout(() => {
+          router.push(selected.url);
+        }, 100); // small delay ensures page transition
       } else {
         window.location.href = selected.url;
       }
+
     } catch (error) {
       toast.error(error.message);
     } finally {
