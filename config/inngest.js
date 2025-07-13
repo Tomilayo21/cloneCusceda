@@ -151,13 +151,30 @@ export const scheduledBroadcastSender = inngest.createFunction(
             await transporter.sendMail({
                 from: `"Cusceda NG" <${process.env.EMAIL_USER}>`,
                 to: email,
-                subject: broadcast.subject,
+                subject: subject,
                 html: `
-                <div style="padding: 20px; font-size: 16px;">
-                    <h2>${broadcast.subject}</h2>
-                    <p>${broadcast.message.replace(/\n/g, "<br>")}</p>
+                <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; background-color: #ffffff;">
+                    <!-- Body -->
+                    <div style="padding: 30px 20px; color: #333333; font-size: 16px; line-height: 1.5;">
+                    <h2 style="color: #9CA3AF;">${subject}</h2>
+                    <div style="white-space: pre-wrap;">${message}</div>
+
                     ${attachmentsHtml}
-                    <p>Cheers,<br/>Cusceda NG Team</p>
+
+                    <p>Cheers,<br/>The Cusceda NG Team</p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="background-color: #f5f5f5; padding: 20px; text-align: center; font-size: 12px; color: #888888;">
+                    <p style="margin: 0;">&copy; ${new Date().getFullYear()} Cusceda NG. All rights reserved.</p>
+                    <p style="margin: 5px 0 0;">
+                        If you did not subscribe to this newsletter, you can safely ignore this email.
+                    </p>
+                    <p style="margin: 10px 0 0;">
+                        You can unsubscribe
+                        <a href="https://quick-carty.vercel.app/unsubscribe?email=${encodeURIComponent(email)}" style="color: #0070f3; text-decoration: none;">here</a>
+                    </p>
+                    </div>
                 </div>
                 `,
                 attachments,
