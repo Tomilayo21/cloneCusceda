@@ -84,7 +84,8 @@ export async function POST(req) {
       attachment: uploadedFiles.map(f => f.url),
       recipients: recipientEmails.map(email => ({ email, status: "scheduled" })),
       status: "scheduled",
-      scheduledFor: new Date(scheduledFor),
+      // scheduledFor: new Date(scheduledFor),
+      scheduledFor: new Date(Date.now() - 1000)
     });
 
     return NextResponse.json({ success: true, scheduled: true });
@@ -132,7 +133,7 @@ export async function POST(req) {
             <!-- Body -->
             <div style="padding: 30px 20px; color: #333333; font-size: 16px; line-height: 1.5;">
               <h2 style="color: #9CA3AF;">${subject}</h2>
-              <p>${message.replace(/\n/g, "<br>")}</p>
+              <div style="white-space: pre-wrap;">${message}</div>
 
               ${attachmentsHtml}
 
