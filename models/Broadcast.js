@@ -10,12 +10,13 @@ const BroadcastSchema = new mongoose.Schema(
         email: String,
         status: { type: String, enum: ["sent", "failed", "scheduled"], default: "scheduled" },
         error: String,
+        sentAt: Date,
       },
     ],
     scheduledFor: Date,
     attachment: [
       {
-        type: String,
+        type: String, // URLs to uploaded files (images, PDFs, etc.)
       },
     ],
   },
