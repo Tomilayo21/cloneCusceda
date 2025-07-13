@@ -5,8 +5,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Country, State, City } from "country-state-city";
-import countries from "i18n-iso-countries";
-import enLocale from "i18n-iso-countries/langs/en.json";
+
 
 
 // ... paymentMethods here
@@ -42,11 +41,11 @@ const OrderSummary = () => {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
-
+  const [selectedAddressId, setSelectedAddressId] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
-
+  const [showAddressDropdown, setShowAddressDropdown] = useState(false);
   
 
 
@@ -54,6 +53,7 @@ const OrderSummary = () => {
   const handleAddressSelect = (address) => {
     setSelectedAddress(address);
     setIsDropdownOpen(false);
+    setShowAddressDropdown(false);
   };
 
   const fetchUserAddresses = async () => {
@@ -118,116 +118,116 @@ const OrderSummary = () => {
     }
   };
 
-  // const handlePayment = async () => {
-  //   if (processing) return;
-  //   if (!selectedAddress) return toast.error('Please select an address');
-  //   if (!selectedShipping) return toast.error('Select a shipping method');
-
-  //   const cartItemsArray = Object.keys(cartItems)
-  //     .map((key) => ({ product: key, quantity: cartItems[key] }))
-  //     .filter((item) => item.quantity > 0);
-
-  //   if (cartItemsArray.length === 0) return toast.error('Cart is empty');
-
-  //   setProcessing(true);
-
-  //   try {
-  //     const token = await getToken();
-  //     const orderRes = await axios.post('/api/order/create', {
-  //       address: selectedAddress._id,
-  //       items: cartItemsArray,
-  //       paymentMethod: selected.id,
-  //       shippingRate: selectedShipping.object_id
-  //     }, {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
-
-  //     if (!orderRes.data.success) {
-  //       toast.error(orderRes.data.message);
-  //       return;
-  //     }
-
-  //     const bookingRes = await axios.post('/api/shipping/book', {
-  //       shipmentId: orderRes.data.shipmentId,
-  //       rateObjectId: selectedShipping.object_id
-  //     });
-
-  //     if (bookingRes.data.success) {
-  //       toast.success('Shipment booked and label generated. Redirecting to payment...');
-  //     }
-
-  //     setCartItems({});
-  //     if (selected.url.startsWith('/')) {
-  //       router.push(selected.url);
-  //     } else {
-  //       window.location.href = selected.url;
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.message);
-  //   } finally {
-  //     setProcessing(false);
-  //   }
-  // };
   const handlePayment = async () => {
-  if (processing) return;
-  if (!selectedAddress) return toast.error('Please select an address');
+    if (processing) return;
+    if (!selectedAddress) return toast.error('Please select an address');
+    // if (!selectedShipping) return toast.error('Select a shipping method');
 
-  const cartItemsArray = Object.keys(cartItems)
-    .map((key) => ({ product: key, quantity: cartItems[key] }))
-    .filter((item) => item.quantity > 0);
+    const cartItemsArray = Object.keys(cartItems)
+      .map((key) => ({ product: key, quantity: cartItems[key] }))
+      .filter((item) => item.quantity > 0);
 
-  if (cartItemsArray.length === 0) return toast.error('Cart is empty');
+    if (cartItemsArray.length === 0) return toast.error('Cart is empty');
 
-  setProcessing(true);
+    setProcessing(true);
 
-  try {
-    const token = await getToken();
-
-    const orderPayload = {
-      address: selectedAddress._id,
-      items: cartItemsArray,
-      paymentMethod: selected.id,
-    };
-
-    // Only include shippingRate if selectedShipping exists
-    if (selectedShipping) {
-      orderPayload.shippingRate = selectedShipping.object_id;
-    }
-
-    const orderRes = await axios.post('/api/order/create', orderPayload, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (!orderRes.data.success) {
-      toast.error(orderRes.data.message);
-      return;
-    }
-
-    // Only book shipment if shippingRate was included
-    if (orderRes.data.shipmentId && selectedShipping) {
-      const bookingRes = await axios.post('/api/shipping/book', {
-        shipmentId: orderRes.data.shipmentId,
-        rateObjectId: selectedShipping.object_id
+    try {
+      const token = await getToken();
+      const orderRes = await axios.post('/api/order/create', {
+        address: selectedAddress._id,
+        items: cartItemsArray,
+        paymentMethod: selected.id,
+        // shippingRate: selectedShipping.object_id
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (bookingRes.data.success) {
-        toast.success('Shipment booked and label generated. Redirecting to payment...');
+      if (!orderRes.data.success) {
+        toast.error(orderRes.data.message);
+        return;
       }
-    }
 
-    setCartItems({});
+      // const bookingRes = await axios.post('/api/shipping/book', {
+      //   shipmentId: orderRes.data.shipmentId,
+      //   rateObjectId: selectedShipping.object_id
+      // });
 
-    if (selected.url.startsWith('/')) {
-      router.push(selected.url);
-    } else {
-      window.location.href = selected.url;
+      // if (bookingRes.data.success) {
+      //   toast.success('Shipment booked and label generated. Redirecting to payment...');
+      // }
+
+      setCartItems({});
+      if (selected.url.startsWith('/')) {
+        router.push(selected.url);
+      } else {
+        window.location.href = selected.url;
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setProcessing(false);
     }
-  } catch (error) {
-    toast.error(error.message || "Error placing order");
-  } finally {
-    setProcessing(false);
-  }
-};
+  };
+//   const handlePayment = async () => {
+//   if (processing) return;
+//   if (!selectedAddress) return toast.error('Please select an address');
+
+//   const cartItemsArray = Object.keys(cartItems)
+//     .map((key) => ({ product: key, quantity: cartItems[key] }))
+//     .filter((item) => item.quantity > 0);
+
+//   if (cartItemsArray.length === 0) return toast.error('Cart is empty');
+
+//   setProcessing(true);
+
+//   try {
+//     const token = await getToken();
+
+//     const orderPayload = {
+//       address: selectedAddress._id,
+//       items: cartItemsArray,
+//       paymentMethod: selected.id,
+//     };
+
+//     // Only include shippingRate if selectedShipping exists
+//     if (selectedShipping) {
+//       orderPayload.shippingRate = selectedShipping.object_id;
+//     }
+
+//     const orderRes = await axios.post('/api/order/create', orderPayload, {
+//       headers: { Authorization: `Bearer ${token}` },
+//     });
+
+//     if (!orderRes.data.success) {
+//       toast.error(orderRes.data.message);
+//       return;
+//     }
+
+//     // Only book shipment if shippingRate was included
+//     if (orderRes.data.shipmentId && selectedShipping) {
+//       const bookingRes = await axios.post('/api/shipping/book', {
+//         shipmentId: orderRes.data.shipmentId,
+//         rateObjectId: selectedShipping.object_id
+//       });
+
+//       if (bookingRes.data.success) {
+//         toast.success('Shipment booked and label generated. Redirecting to payment...');
+//       }
+//     }
+
+//     setCartItems({});
+
+//     if (selected.url.startsWith('/')) {
+//       router.push(selected.url);
+//     } else {
+//       window.location.href = selected.url;
+//     }
+//   } catch (error) {
+//     toast.error(error.message || "Error placing order");
+//   } finally {
+//     setProcessing(false);
+//   }
+// };
 
 
   useEffect(() => {
@@ -320,26 +320,50 @@ const OrderSummary = () => {
               </svg>
             </button>
             {isDropdownOpen && (
-              <ul className="absolute w-full bg-white border shadow-md mt-1 z-10 py-1.5">          
-                {userAddresses.map((address, index) => (
-                  <div key={index} className="border-t py-2 px-4 hover:bg-gray-500/10">
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => handleAddressSelect(address)}
-                    >
-                      {address.fullName}, {address.country} {address.state}, {address.city}, {address.area}
-                    </div>
-                    <div className="mt-2 flex justify-end gap-2 text-sm text-blue-600">
-                      <button onClick={() => handleEdit(address)}>Edit</button>
-                      <button onClick={() => handleDelete(address._id)}>Delete</button>
-                    </div>
-                  </div>
-                ))}
+              <div className="relative w-full">
+                <button
+                  onClick={() => setShowAddressDropdown(!showAddressDropdown)}
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-left"
+                >
+                  {selectedAddress
+                    ? `${selectedAddress.fullName}, ${selectedAddress.country} ${selectedAddress.state}, ${selectedAddress.city}, ${selectedAddress.area}`
+                    : "Select Address"}
+                </button>
 
-                <li onClick={() => router.push("/add-address")} className="px-4 py-2 hover:bg-gray-500/10 cursor-pointer text-center">
-                  + Add New Address
-                </li>
-              </ul>
+                {showAddressDropdown && (
+                  <ul className="absolute w-full bg-white border shadow-md mt-1 z-10 py-1.5 max-h-60 overflow-y-auto">
+                    {userAddresses.map((address, index) => (
+                      <div key={index} className="border-t py-2 px-4 hover:bg-gray-500/10">
+                        <div
+                          className="cursor-pointer"
+                          onClick={() => {
+                            handleAddressSelect(address);
+                            setSelectedAddressId(address._id); // optional if you're tracking ID
+                            setShowAddressDropdown(false);
+                          }}
+                        >
+                          {address.fullName}, {address.country} {address.state}, {address.city}, {address.area}
+                        </div>
+                        <div className="mt-2 flex justify-end gap-2 text-sm text-blue-600">
+                          <button onClick={() => handleEdit(address)}>Edit</button>
+                          <button onClick={() => handleDelete(address._id)}>Delete</button>
+                        </div>
+                      </div>
+                    ))}
+
+                    <li
+                      onClick={() => {
+                        router.push("/add-address");
+                        setShowAddressDropdown(false);
+                      }}
+                      className="px-4 py-2 hover:bg-gray-500/10 cursor-pointer text-center text-green-600 font-medium"
+                    >
+                      + Add New Address
+                    </li>
+                  </ul>
+                )}
+              </div>
+
             )}
           </div>
         </div>
