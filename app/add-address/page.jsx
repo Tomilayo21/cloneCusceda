@@ -10,12 +10,17 @@ import toast from "react-hot-toast";
 import { Country, State, City } from "country-state-city";
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from 'next/navigation';
+
 
 countries.registerLocale(enLocale);
 
 
 const AddAddress = () => {
-  const { getToken, router } = useAppContext();
+  // const { getToken, router } = useAppContext();
+  const { getToken } = useAuth();
+  const router = useRouter();
 
   const [address, setAddress] = useState({
     fullName: '',
@@ -92,38 +97,87 @@ const AddAddress = () => {
   //     setLoading(false);
   //   }
   // };
+  // const onSubmitHandler = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!token) {
+  //     toast.error("Please login first");
+  //     return;
+  //   }
+
+  //   try {
+  //     const { data } = await axios.post(
+  //       '/api/user/add-address',
+  //       { address },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //     if (data.success) {
+  //       const addressId = data.addressId; // ✅ Get the address ID from the response
+  //       localStorage.setItem("addressId", addressId); // 🔐 Save for checkout use
+  //       toast.success(data.message);
+  //       router.push('/cart'); // 🚚 Navigate to next step
+  //     } else {
+  //       toast.error(data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error("Failed to add address");
+  //   }
+  // };
   const onSubmitHandler = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!token) {
-      toast.error("Please login first");
-      return;
-    }
+  const token = await getToken(); // ✅ FIX: This line was missing
 
-    try {
-      const { data } = await axios.post(
-        '/api/user/add-address',
-        { address },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  if (!token) {
+    toast.error("Please login first");
+    return;
+  }
 
-      if (data.success) {
-        const addressId = data.addressId; // ✅ Get the address ID from the response
-        localStorage.setItem("addressId", addressId); // 🔐 Save for checkout use
-        toast.success(data.message);
-        router.push('/cart'); // 🚚 Navigate to next step
-      } else {
-        toast.error(data.message);
+  if (
+    !address.fullName ||
+    !address.phoneNumber ||
+    !address.zipcode ||
+    !address.area ||
+    !address.city ||
+    !address.state ||
+    !address.country
+  ) {
+    toast.error("Please fill all required fields");
+    return;
+  }
+
+  setLoading(true);
+  try {
+    const { data } = await axios.post(
+      '/api/user/add-address',
+      { address },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to add address");
+    );
+
+    if (data.success) {
+      localStorage.setItem("addressId", data.addressId);
+      toast.success(data.message);
+      router.push('/cart');
+    } else {
+      toast.error(data.message);
     }
-  };
+  } catch (error) {
+    toast.error(error?.response?.data?.message || error.message || "Something went wrong");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
 
   return (
