@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Footer from "@/components/admin/Footer";
+import Link from "next/link";
+
 
 export default function BroadcastLogsPage() {
   const [logs, setLogs] = useState([]);
@@ -97,6 +99,14 @@ export default function BroadcastLogsPage() {
 
   return (
     <div className="w-full max-w-2xl bg-white p-4 rounded-md shadow space-y-1 text-sm sm:text-base">
+      <Link href="/admin/subscribers">
+        <div
+          title="Go back to list of subscribers"
+          // className="px-4 py-2 bg-gray-700 text-white rounded cursor-pointer text-center"
+        > 
+          Go Back
+        </div>
+      </Link>
       <h1 className="text-xl font-bold mb-4">📜 Broadcast History</h1>
 
       {logs.length === 0 ? (
@@ -151,6 +161,7 @@ export default function BroadcastLogsPage() {
                         }
                       >
                         {r.status}
+                        {r.status === "sent" && r.sentAt ? ` at ${new Date(r.sentAt).toLocaleString()}` : ""}
                       </span>
                       {canResend && (
                         <button
