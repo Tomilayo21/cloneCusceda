@@ -17,7 +17,7 @@ interface ClerkUser {
   updated_at: number;
   last_sign_in_at: number | null;
   external_accounts: { provider: string }[];
-  primary_phone_number: string | null;
+  username: string | null;
 }
 
 export default function UserList() {
@@ -101,7 +101,7 @@ export default function UserList() {
       "First Name",
       "Last Name",
       "Email",
-      "Phone",
+      "Username",
       "Signup Method",
       "Role",
       "Created",
@@ -112,7 +112,7 @@ export default function UserList() {
       user.first_name ?? "N/A",
       user.last_name ?? "N/A",
       user.email_addresses[0]?.email_address ?? "N/A",
-      user.primary_phone_number ?? "N/A",
+      user.username ?? "N/A",
       user.external_accounts?.[0]?.provider === "oauth_google" ? "Google" : "Email",
       user.public_metadata?.role ?? "user",
       new Date(user.created_at * 1000).toLocaleString(),
@@ -188,7 +188,7 @@ export default function UserList() {
             <th className="px-2 py-2 border">First Name</th>
             <th className="px-2 py-2 border">Email</th>
             <th className="px-2 py-2 border">Signed Up With</th>
-            <th className="px-2 py-2 border">Phone</th>
+            <th className="px-2 py-2 border">Username</th>
             <th className="px-2 py-2 border">Created</th>
             <th className="px-2 py-2 border">Updated</th>
             <th className="px-2 py-2 border">Role</th>
@@ -210,7 +210,7 @@ export default function UserList() {
                   <td className="px-2 py-2 border font-medium">{user.first_name ?? "N/A"}</td>
                   <td className="px-2 py-2 border text-xs">{user.email_addresses[0]?.email_address}</td>
                   <td className="px-2 py-2 border">{signupMethod}</td>
-                  <td className="px-2 py-2 border text-xs">{user.primary_phone_number ?? "N/A"}</td>
+                  <td className="px-2 py-2 border text-xs">{user.username ?? "N/A"}</td>
                   <td className="px-2 py-2 border text-xs">{dayjs(user.created_at).fromNow()}</td>
                   <td className="px-2 py-2 border text-xs">{dayjs(user.updated_at).fromNow()}</td>
                   <td className="px-2 py-2 border">
@@ -247,7 +247,7 @@ export default function UserList() {
             <th className="px-2 py-2 border">First Name</th>
             <th className="px-2 py-2 border">Email</th>
             <th className="px-2 py-2 border">Signed Up With</th>
-            <th className="px-2 py-2 border">Phone</th>
+            <th className="px-2 py-2 border">Username</th>
             <th className="px-2 py-2 border">Created</th>
             <th className="px-2 py-2 border">Updated</th>
             <th className="px-2 py-2 border">Role</th>
@@ -269,7 +269,7 @@ export default function UserList() {
                   <td className="px-2 py-2 border font-medium">{user.first_name ?? "N/A"}</td>
                   <td className="px-2 py-2 border text-xs">{user.email_addresses[0]?.email_address}</td>
                   <td className="px-2 py-2 border">{signupMethod}</td>
-                  <td className="px-2 py-2 border text-xs">{user.primary_phone_number ?? "N/A"}</td>
+                  <td className="px-2 py-2 border text-xs">{user.username ?? "N/A"}</td>
                   <td className="px-2 py-2 border text-xs">{dayjs(user.created_at).fromNow()}</td>
                   <td className="px-2 py-2 border text-xs">{dayjs(user.updated_at).fromNow()}</td>
                   <td className="px-2 py-2 border">
@@ -316,7 +316,7 @@ export default function UserList() {
                   <p className="text-xs text-gray-600">{user.email_addresses[0]?.email_address}</p>
                 </div>
               </div>
-              <p className="text-xs"><span className="font-medium">Phone:</span> {user.primary_phone_number ?? "N/A"}</p>
+              <p className="text-xs"><span className="font-medium">Phone:</span> {user.username ?? "N/A"}</p>
               <p className="text-xs"><span className="font-medium">Signed Up With:</span> {signupMethod}</p>
               <p className="text-xs"><span className="font-medium">Created:</span> {dayjs(user.created_at).fromNow()}</p>
               <p className="text-xs"><span className="font-medium">Updated:</span> {dayjs(user.updated_at).fromNow()}</p>
@@ -355,7 +355,7 @@ export default function UserList() {
                   <p className="text-xs text-gray-600">{user.email_addresses[0]?.email_address}</p>
                 </div>
               </div>
-              <p className="text-xs"><span className="font-medium">Phone:</span> {user.primary_phone_number ?? "N/A"}</p>
+              <p className="text-xs"><span className="font-medium">Username:</span> {user.username ?? "N/A"}</p>
               <p className="text-xs"><span className="font-medium">Signed Up With:</span> {signupMethod}</p>
               <p className="text-xs"><span className="font-medium">Created:</span> {dayjs(user.created_at).fromNow()}</p>
               <p className="text-xs"><span className="font-medium">Updated:</span> {dayjs(user.updated_at).fromNow()}</p>
