@@ -316,7 +316,7 @@ export default function UserList() {
                   <p className="text-xs text-gray-600">{user.email_addresses[0]?.email_address}</p>
                 </div>
               </div>
-              <p className="text-xs"><span className="font-medium">Phone:</span> {user.username ?? "N/A"}</p>
+              <p className="text-xs"><span className="font-medium">Username:</span> {user.username ?? "N/A"}</p>
               <p className="text-xs"><span className="font-medium">Signed Up With:</span> {signupMethod}</p>
               <p className="text-xs"><span className="font-medium">Created:</span> {dayjs(user.created_at).fromNow()}</p>
               <p className="text-xs"><span className="font-medium">Updated:</span> {dayjs(user.updated_at).fromNow()}</p>
