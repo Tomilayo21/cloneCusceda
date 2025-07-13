@@ -102,95 +102,181 @@ export const createUserOrder = inngest.createFunction(
 )
 
 
+// export const scheduledBroadcastSender = inngest.createFunction(
+//     { id: "scheduled-broadcast-sender" },
+//     { cron: "*/5 * * * *" }, // every 5 minutes
+//     async () => {
+//         await connectDB();
+
+//         const now = new Date();
+
+//         const broadcasts = await Broadcast.find({
+//         status: "scheduled",
+//         scheduledFor: { $lte: now },
+//         });
+
+//         if (!broadcasts.length) {
+//         return { message: "No scheduled broadcasts due." };
+//         }
+
+//         const transporter = nodemailer.createTransport({
+//         host: process.env.EMAIL_HOST,
+//         port: parseInt(process.env.EMAIL_PORT),
+//         secure: true,
+//         auth: {
+//             user: process.env.EMAIL_USER,
+//             pass: process.env.EMAIL_PASS,
+//         },
+//         });
+
+//         for (const broadcast of broadcasts) {
+//         const subscribers = await Subscriber.find();
+//         const recipientEmails = subscribers.map((s) => s.email);
+
+//         const attachments = (broadcast.attachment || []).map((url, index) => ({
+//             filename: `attachment-${index + 1}`,
+//             path: url,
+//         }));
+
+//         const attachmentsHtml = (broadcast.attachment || []).map((url, i) => {
+//             return url.match(/\.(jpg|jpeg|png|webp|gif|svg)$/i)
+//             ? `<img src="${url}" style="max-width:100%; height:auto;" />`
+//             : `<p><a href="${url}" target="_blank">View Attachment ${i + 1}</a></p>`;
+//         }).join("");
+
+//         const results = [];
+
+//         for (const email of recipientEmails) {
+//             try {
+//             await transporter.sendMail({
+//                 from: `"Cusceda NG" <${process.env.EMAIL_USER}>`,
+//                 to: email,
+//                 subject: broadcast.subject,
+//                 html: `
+//                 <div style="padding: 20px; font-size: 16px;">
+//                     <h2>${broadcast.subject}</h2>
+//                     <p>${broadcast.message.replace(/\n/g, "<br>")}</p>
+//                     ${attachmentsHtml}
+//                     <p>Cheers,<br/>Cusceda NG Team</p>
+//                 </div>
+//                 `,
+//                 attachments,
+//             });
+
+//             results.push({ email, status: "sent" });
+//             } catch (err) {
+//             results.push({ email, status: "failed", error: err.message });
+//             }
+//         }
+
+//         broadcast.status = "sent";
+//         broadcast.recipients = results;
+//         await broadcast.save();
+//         }
+
+//         return { message: "Scheduled broadcasts sent." };
+//     }
+// )
 export const scheduledBroadcastSender = inngest.createFunction(
-    { id: "scheduled-broadcast-sender" },
-    { cron: "*/5 * * * *" }, // every 5 minutes
-    async () => {
-        await connectDB();
+  { id: "scheduled-broadcast-sender" },
+  { cron: "*/5 * * * *" }, // Every 5 minutes
+  async () => {
+    await connectDB();
 
-        const now = new Date();
+    const now = new Date();
+    const broadcasts = await Broadcast.find({
+      status: "scheduled",
+      scheduledFor: { $lte: now },
+    });
 
-        const broadcasts = await Broadcast.find({
-        status: "scheduled",
-        scheduledFor: { $lte: now },
-        });
-
-        if (!broadcasts.length) {
-        return { message: "No scheduled broadcasts due." };
-        }
-
-        const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: parseInt(process.env.EMAIL_PORT),
-        secure: true,
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-        });
-
-        for (const broadcast of broadcasts) {
-        const subscribers = await Subscriber.find();
-        const recipientEmails = subscribers.map((s) => s.email);
-
-        const attachments = (broadcast.attachment || []).map((url, index) => ({
-            filename: `attachment-${index + 1}`,
-            path: url,
-        }));
-
-        const attachmentsHtml = (broadcast.attachment || []).map((url, i) => {
-            return url.match(/\.(jpg|jpeg|png|webp|gif|svg)$/i)
-            ? `<img src="${url}" style="max-width:100%; height:auto;" />`
-            : `<p><a href="${url}" target="_blank">View Attachment ${i + 1}</a></p>`;
-        }).join("");
-
-        const results = [];
-
-        for (const email of recipientEmails) {
-            try {
-            await transporter.sendMail({
-                from: `"Cusceda NG" <${process.env.EMAIL_USER}>`,
-                to: email,
-                subject: subject,
-                html: `
-                <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; background-color: #ffffff;">
-                    <!-- Body -->
-                    <div style="padding: 30px 20px; color: #333333; font-size: 16px; line-height: 1.5;">
-                    <h2 style="color: #9CA3AF;">${subject}</h2>
-                    <div style="white-space: pre-wrap;">${message}</div>
-
-                    ${attachmentsHtml}
-
-                    <p>Cheers,<br/>The Cusceda NG Team</p>
-                    </div>
-
-                    <!-- Footer -->
-                    <div style="background-color: #f5f5f5; padding: 20px; text-align: center; font-size: 12px; color: #888888;">
-                    <p style="margin: 0;">&copy; ${new Date().getFullYear()} Cusceda NG. All rights reserved.</p>
-                    <p style="margin: 5px 0 0;">
-                        If you did not subscribe to this newsletter, you can safely ignore this email.
-                    </p>
-                    <p style="margin: 10px 0 0;">
-                        You can unsubscribe
-                        <a href="https://quick-carty.vercel.app/unsubscribe?email=${encodeURIComponent(email)}" style="color: #0070f3; text-decoration: none;">here</a>
-                    </p>
-                    </div>
-                </div>
-                `,
-                attachments,
-            });
-
-            results.push({ email, status: "sent" });
-            } catch (err) {
-            results.push({ email, status: "failed", error: err.message });
-            }
-        }
-
-        broadcast.status = "sent";
-        broadcast.recipients = results;
-        await broadcast.save();
-        }
-
-        return { message: "Scheduled broadcasts sent." };
+    if (!broadcasts.length) {
+      return { message: "No scheduled broadcasts due." };
     }
-)
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: parseInt(process.env.EMAIL_PORT),
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    for (const broadcast of broadcasts) {
+      const subscribers = await Subscriber.find();
+      const recipientEmails = subscribers.map((s) => s.email);
+
+      const attachments = (broadcast.attachment || []).map((url, index) => ({
+        filename: `attachment-${index + 1}`,
+        path: url,
+        cid: url.match(/\.(jpg|jpeg|png|webp|gif|svg)$/i)
+          ? `inline-img-${index}`
+          : undefined,
+      }));
+
+      const attachmentsHtml = (broadcast.attachment || [])
+        .map((url, index) => {
+          const isImage = url.match(/\.(jpg|jpeg|png|webp|gif|svg)$/i);
+          if (isImage) {
+            return `<img src="cid:inline-img-${index}" alt="attachment" style="max-width:100%; height:auto; margin-bottom: 10px;" />`;
+          } else {
+            return `<p><a href="${url}" target="_blank" rel="noopener noreferrer">View Attachment ${index + 1}</a></p>`;
+          }
+        })
+        .join("");
+
+      const results = [];
+
+      for (const email of recipientEmails) {
+        try {
+          await transporter.sendMail({
+            from: `"Cusceda NG" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: broadcast.subject,
+            html: `
+              <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; background-color: #ffffff;">
+                <!-- Body -->
+                <div style="padding: 30px 20px; color: #333333; font-size: 16px; line-height: 1.5;">
+                  <h2 style="color: #9CA3AF;">${broadcast.subject}</h2>
+                  <div style="white-space: pre-wrap;">${broadcast.message}</div>
+
+                  ${attachmentsHtml}
+
+                  <p>Cheers,<br/>The Cusceda NG Team</p>
+                </div>
+
+                <!-- Footer -->
+                <div style="background-color: #f5f5f5; padding: 20px; text-align: center; font-size: 12px; color: #888888;">
+                  <p style="margin: 0;">&copy; ${new Date().getFullYear()} Cusceda NG. All rights reserved.</p>
+                  <p style="margin: 5px 0 0;">
+                    If you did not subscribe to this newsletter, you can safely ignore this email.
+                  </p>
+                  <p style="margin: 10px 0 0;">
+                    You can unsubscribe
+                    <a href="https://quick-carty.vercel.app/unsubscribe?email=${encodeURIComponent(
+                      email
+                    )}" style="color: #0070f3; text-decoration: none;">here</a>
+                  </p>
+                </div>
+              </div>
+            `,
+            attachments,
+          });
+
+          results.push({ email, status: "sent" });
+        } catch (err) {
+          console.error("Failed to send to", email, err.message);
+          results.push({ email, status: "failed", error: err.message });
+        }
+      }
+
+      // Update broadcast status
+      broadcast.status = "sent";
+      broadcast.recipients = results;
+      await broadcast.save();
+    }
+
+    return { message: "Scheduled broadcasts sent." };
+  }
+);
