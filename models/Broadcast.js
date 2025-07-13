@@ -13,6 +13,11 @@ const BroadcastSchema = new mongoose.Schema(
       },
     ],
     scheduledFor: Date,
+    attachment: [
+      {
+        type: String,
+      },
+    ],
   },
   { timestamps: true }
 );
