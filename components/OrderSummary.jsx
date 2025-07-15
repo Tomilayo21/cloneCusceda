@@ -10,7 +10,7 @@ import { Country, State, City } from "country-state-city";
 
 // ... paymentMethods here
 const paymentMethods = [
-  { id: 'stripe', label: 'Stripe', fee: 0.029, url: 'https://buy.stripe.com/test_eVqcN4dKX4XufS8cTx1B600' },
+  { id: 'stripe', label: 'Stripe', fee: 0.029, url: null },
   { id: 'paypal', label: 'PayPal', fee: 0.034, url: 'https://www.paypal.com/checkoutnow' },
   { id: 'apple', label: 'Apple Pay', fee: 0.025, url: 'https://www.apple.com/apple-pay/' },
   { id: 'google', label: 'Google Pay', fee: 0.025, url: 'https://pay.google.com/' },
@@ -118,59 +118,223 @@ const OrderSummary = () => {
     }
   };
 
+  // const handlePayment = async () => {
+  //   if (processing) return;
+  //   if (!selectedAddress) return toast.error('Please select an address');
+
+  //   const cartItemsArray = Object.keys(cartItems)
+  //     .map((key) => ({ product: key, quantity: cartItems[key] }))
+  //     .filter((item) => item.quantity > 0);
+
+  //   if (cartItemsArray.length === 0) return toast.error('Cart is empty');
+
+  //   setProcessing(true);
+
+  //   try {
+  //     const token = await getToken();
+
+  //     const orderRes = await axios.post('/api/order/create', {
+  //       address: selectedAddress._id,
+  //       items: cartItemsArray,
+  //       paymentMethod: selected.id,
+  //     }, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+
+  //     if (!orderRes.data.success) {
+  //       toast.error(orderRes.data.message);
+  //       return;
+  //     }
+
+  //     // ✅ Stripe dynamic Checkout redirect
+  //     if (selected.id === "stripe") {
+  //       const { data } = await axios.post(
+  //         "/api/checkout/stripe",
+  //         { items: cartItems },
+  //         { headers: { Authorization: `Bearer ${token}` } }
+  //       );
+
+  //       if (!data.url) throw new Error("No Stripe session URL returned");
+
+  //       setCartItems({});
+  //       return (window.location.href = data.url);
+  //     }
+
+  //     // ✅ All other payment methods
+  //     setCartItems({});
+  //     if (selected.url.startsWith("/")) {
+  //       router.push(selected.url);
+  //     } else {
+  //       window.location.href = selected.url;
+  //     }
+
+  //   } catch (error) {
+  //     toast.error(error.message || "Error placing order");
+  //   } finally {
+  //     setProcessing(false);
+  //   }
+  // };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  // const handlePayment = async () => {
+  //   if (processing) return;
+  //   if (!selectedAddress) return toast.error("Please select an address");
+
+  //   const cartItemsArray = Object.keys(cartItems)
+  //     .map((key) => ({ product: key, quantity: cartItems[key] }))
+  //     .filter((item) => item.quantity > 0);
+
+  //   if (cartItemsArray.length === 0) return toast.error("Cart is empty");
+
+  //   setProcessing(true);
+
+  //   try {
+  //     const token = await getToken();
+
+  //     if (selected.id === "stripe") {
+  //       const { data } = await axios.post(
+  //         "/api/checkout/stripe", // ✅ the correct dynamic endpoint
+  //         { items: Object.keys(cartItems).reduce((acc, id) => {
+  //           acc[id] = cartItems[id];
+  //           return acc;
+  //         }, {}),
+  //         address: selectedAddress,          // optional but good
+  //         paymentMethod: selected.id     },
+  //         { headers: { Authorization: `Bearer ${token}` } }
+  //       );
+
+  //       if (!data.url) throw new Error("No Stripe session URL returned");
+
+  //       return (window.location.href = data.url);
+  //     }
+
+  //     // 🔁 Other payment methods (like PayPal, bank transfer, etc.)
+  //     if (selected.url.startsWith("/")) {
+  //       router.push(selected.url);
+  //     } else {
+  //       window.location.href = selected.url;
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.message || "Payment initialization failed");
+  //   } finally {
+  //     setProcessing(false);
+  //   }
+  // };
+  //.......................................................................................................
   const handlePayment = async () => {
     if (processing) return;
-    if (!selectedAddress) return toast.error('Please select an address');
-    // if (!selectedShipping) return toast.error('Select a shipping method');
+    if (!selectedAddress) return toast.error("Please select an address");
 
+    // Convert cart to array: [{ product, quantity }]
     const cartItemsArray = Object.keys(cartItems)
       .map((key) => ({ product: key, quantity: cartItems[key] }))
       .filter((item) => item.quantity > 0);
 
-    if (cartItemsArray.length === 0) return toast.error('Cart is empty');
+    if (cartItemsArray.length === 0) return toast.error("Cart is empty");
 
     setProcessing(true);
 
     try {
       const token = await getToken();
-      const orderRes = await axios.post('/api/order/create', {
-        address: selectedAddress._id,
-        items: cartItemsArray,
-        paymentMethod: selected.id,
-        // shippingRate: selectedShipping.object_id
-      }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
 
-      if (!orderRes.data.success) {
-        toast.error(orderRes.data.message);
-        return;
+      // ✅ Stripe payment flow
+      if (selected.id === "stripe") {
+        const cartItemsObject = Object.keys(cartItems).reduce((acc, id) => {
+          acc[id] = cartItems[id];
+          return acc;
+        }, {});
+
+        const { data } = await axios.post(
+          "/api/checkout/stripe",
+          {
+            items: cartItemsObject,
+            address: selectedAddress,       // optional, for metadata or future use
+            paymentMethod: selected.id
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+
+        if (!data.url) throw new Error("No Stripe session URL returned");
+
+        // Save order info temporarily to finalize after redirect
+        sessionStorage.setItem("pendingOrder", JSON.stringify({
+          addressId: selectedAddress._id,
+          items: cartItemsArray,
+          paymentMethod: selected.id
+        }));
+
+        return (window.location.href = data.url);
       }
 
-      // const bookingRes = await axios.post('/api/shipping/book', {
-      //   shipmentId: orderRes.data.shipmentId,
-      //   rateObjectId: selectedShipping.object_id
-      // });
-
-      // if (bookingRes.data.success) {
-      //   toast.success('Shipment booked and label generated. Redirecting to payment...');
-      // }
-
-      setCartItems({});
-      if (selected.url.startsWith('/')) {
-        setTimeout(() => {
-          router.push(selected.url);
-        }, 100); // small delay ensures page transition
+      // ✅ Other payment methods (bank transfer, PayPal, etc.)
+      if (selected.url.startsWith("/")) {
+        router.push(selected.url);
       } else {
         window.location.href = selected.url;
       }
 
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || "Payment initialization failed");
     } finally {
       setProcessing(false);
     }
   };
+  //.......................................................................
+
+
+
 //   const handlePayment = async () => {
 //   if (processing) return;
 //   if (!selectedAddress) return toast.error('Please select an address');
