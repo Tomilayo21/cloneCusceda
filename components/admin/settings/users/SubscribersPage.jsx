@@ -106,7 +106,7 @@ const SubscribersPage = () => {
   };
 
   return (
-    <div className="p-2 max-w-4xl flex-1 overflow-scroll flex flex-col">
+    <div className="max-w-4xl flex-1 overflow-scroll flex flex-col">
       <h1 className="text-lg  md:text-2xl font-bold mb-4">Subscribers</h1>
       <div className="flex items-center gap-4 mb-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-2 sm:space-y-0 mb-4">
@@ -117,14 +117,6 @@ const SubscribersPage = () => {
           >
             📢 Send Broadcast
           </button>
-
-          {/* <button
-            onClick={() => setShowBroadcastHistoryModal(true)}
-            className="px-4 py-2 bg-gray-800 text-white rounded"
-          >
-            📜 View Broadcast History
-          </button> */}
-
         </div>
 
         {/* Broadcast History Modal */}

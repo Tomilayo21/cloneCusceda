@@ -1,147 +1,14 @@
-// "use client";
-// import React from "react";
-// import AdminHeader from "@/components/admin/AdminHeader";
-
-// export default function AdminDashboard({ setActiveTab, setUserPanel, setOrderPanel }) {
-//   const stats = [
-//     {
-//       title: "Total Users",
-//       value: "3",
-//       change: "+100%",
-//       icon: "👤",
-//       onClick: () => {
-//         setActiveTab("users");
-//         setUserPanel("main");
-//       },
-//     },
-//     {
-//       title: "Active Accounts",
-//       value: "3",
-//       change: "+100%",
-//       icon: "✅",
-//       onClick: () => {
-//         setActiveTab("users");
-//         setUserPanel("subscribers");
-//       },
-//     },
-//     {
-//       title: "Total Value",
-//       value: "$35,000",
-//       change: "+3%",
-//       icon: "💰",
-//     },
-//     {
-//       title: "Monthly Deposit",
-//       value: "$350",
-//       change: "+22.0%",
-//       icon: "📥",
-//       onClick: () => {
-//         setActiveTab("orders");
-//         setOrderPanel("transactions");
-//       },
-//     },
-//     {
-//       title: "Daily Transaction",
-//       value: "1",
-//       change: "+3",
-//       icon: "📈",
-//       onClick: () => {
-//         setActiveTab("orders");
-//         setOrderPanel("transactions");
-//       },
-//     },
-//     {
-//       title: "Growth",
-//       value: "100%",
-//       change: "",
-//       icon: "🚀",
-//     },
-//   ];
-
-//   return (
-//     <div className="min-h-screen w-full flex bg-gray-100">
-//       <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 py-6">
-//         <AdminHeader />
-
-//         {/* First Row */}
-//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-//           {stats.slice(0, 3).map((item, idx) => (
-//             <div
-//               key={idx}
-//               onClick={item.onClick}
-//               className={`${
-//                 item.onClick ? "cursor-pointer hover:shadow-xl" : ""
-//               } bg-white p-4 rounded-lg shadow transition h-40`}
-//             >
-//               <div className="flex items-center justify-between mb-2">
-//                 <span className="text-xl">{item.icon}</span>
-//                 <span className="text-sm text-green-600">{item.change}</span>
-//               </div>
-//               <h3 className="text-sm text-gray-500">{item.title}</h3>
-//               <p className="text-xl font-bold">{item.value}</p>
-//             </div>
-//           ))}
-//         </div>
-
-//         {/* Second Row */}
-//         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-//           {stats.slice(3).map((item, idx) => (
-//             <div
-//               key={idx}
-//               onClick={item.onClick}
-//               className={`${
-//                 item.onClick ? "cursor-pointer hover:shadow-xl" : ""
-//               } bg-white p-4 rounded-lg shadow transition h-40 ${
-//                 idx === 0 ? "sm:col-span-2" : "sm:col-span-1"
-//               }`}
-//             >
-//               <div className="flex items-center justify-between mb-2">
-//                 <span className="text-xl">{item.icon}</span>
-//                 <span className="text-sm text-green-600">{item.change}</span>
-//               </div>
-//               <h3 className="text-sm text-gray-500">{item.title}</h3>
-//               <p className="text-xl font-bold">{item.value}</p>
-//             </div>
-//           ))}
-//         </div>
-//       </main>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 "use client";
 import React, {useState, useEffect} from "react";
 import AdminHeader from "@/components/admin/AdminHeader";
 import {
   Users,
-  CheckCircle,
   DollarSign,
-  Download,
   TrendingUp,
   Rocket,
+  FileBarChart,
+  CreditCard,
+  UserCheck
 } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
 import MiniChart from "./settings/charts/MiniChart";
@@ -312,7 +179,7 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
       value: subscriberCount.toString(),
     //   change: `${subscriberPercentage}% of users`,
     change: `${((subscriberCount / userCount) * 100).toFixed(1)}%`,
-      icon: <CheckCircle className="w-6 h-6 text-green-600" />,
+      icon: <UserCheck className="w-6 h-6 text-green-600" />,
       onClick: () => {
         setActiveTab("users");
         setUserPanel("subscribers");
@@ -333,7 +200,7 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
       title: "Monthly Deposit",
         value: `${currency}${monthlyTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
         change: calculateChangePercentage(monthlyTrendData, totalDeposit),
-        icon: <Download className="w-6 h-6 text-blue-600" />,
+        icon: <FileBarChart className="w-6 h-6 text-blue-600" />,
       onClick: () => {
         setActiveTab("orders");
         setOrderPanel("transactions");
@@ -344,7 +211,7 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
       title: "Daily Transaction",
       value: todayTransactionCount.toString(),
       change: `${transactionChange >= 0 ? "+" : ""}${transactionChange}%`,
-      icon: <TrendingUp className="w-6 h-6 text-purple-600" />,
+      icon: <CreditCard className="w-6 h-6 text-purple-600" />,
       onClick: () => {
         setActiveTab("orders");
         setOrderPanel("transactions");

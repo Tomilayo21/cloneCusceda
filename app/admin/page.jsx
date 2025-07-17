@@ -4,7 +4,7 @@ import AdminDashboard from "@/components/admin/AdminDashboard";
 import AdminSettings from "@/components/admin/AdminSettings";
 
 export default function AdminPage() {
-  const [activeView, setActiveView] = useState("dashboard"); // or 'settings'
+  const [activeView, setActiveView] = useState("dashboard");
   const [activeTab, setActiveTab] = useState("general");
   const [userPanel, setUserPanel] = useState("main");
   const [orderPanel, setOrderPanel] = useState(null);
@@ -13,7 +13,7 @@ export default function AdminPage() {
     <>
       {activeView === "dashboard" && (
         <AdminDashboard
-          setActiveView={setActiveView} // 👈 pass view switcher
+          setActiveView={setActiveView}
           setActiveTab={setActiveTab}
           setUserPanel={setUserPanel}
           setOrderPanel={setOrderPanel}
