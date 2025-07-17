@@ -243,32 +243,32 @@ export default function AdminTransactions() {
                   {!isCollapsed && (
                     <>
                       {/* Desktop Table View */}
-                      <div className="hidden sm:block">
-                        <table className="min-w-full border-collapse border border-gray-300">
+                      <div className="overflow-x-auto max-w-full">
+                        <table className="min-w-[900px] w-full text-sm border-collapse border border-gray-300">
                           <thead>
                             <tr>
-                              <th className="border p-2 cursor-pointer" onClick={() => requestSort('_id')}>Order ID</th>
-                              <th className="border p-2">User ID</th>
-                              <th className="border p-2">Amount</th>
-                              <th className="border p-2 cursor-pointer" onClick={() => requestSort('paymentMethod')}>Payment Method</th>
-                              <th className="border p-2 cursor-pointer" onClick={() => requestSort('paymentStatus')}>Payment Status</th>
-                              <th className="border p-2 cursor-pointer" onClick={() => requestSort('orderStatus')}>Order Status</th>
-                              <th className="border p-2">Proof of Payment</th>
-                              <th className="border p-2">Date</th>
+                              <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('_id')}>Order ID</th>
+                              <th className="border px-2 py-1">User ID</th>
+                              <th className="border px-2 py-1">Amount</th>
+                              <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('paymentMethod')}>Payment Method</th>
+                              <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('paymentStatus')}>Payment Status</th>
+                              <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('orderStatus')}>Order Status</th>
+                              <th className="border px-2 py-1">Proof</th>
+                              <th className="border px-2 py-1">Date</th>
                             </tr>
                           </thead>
                           <tbody>
                             {transactionsOfDay.map((txn) => (
                               <tr key={txn._id} className="hover:bg-gray-100">
-                                <td className="border p-2 text-sm">{txn.orderId}</td>
-                                <td className="border p-2 text-sm">{txn.userId}</td>
-                                <td className="border p-2 text-sm">{currency}{txn.amount?.toFixed(2)}</td>
-                                <td className="border p-2 text-sm">{txn.paymentMethod}</td>
-                                <td className="border p-2 text-sm">
+                                <td className="border px-2 py-1">{txn.orderId}</td>
+                                <td className="border px-2 py-1">{txn.userId}</td>
+                                <td className="border px-2 py-1">{currency}{txn.amount?.toFixed(2)}</td>
+                                <td className="border px-2 py-1">{txn.paymentMethod}</td>
+                                <td className="border px-2 py-1">
                                   <select
                                     value={txn.paymentStatus}
                                     onChange={(e) => updatePaymentStatus(txn._id, e.target.value)}
-                                    className="border px-2 py-1 rounded"
+                                    className="border text-xs px-2 py-1 rounded"
                                   >
                                     <option value="Pending">Pending</option>
                                     <option value="Successful">Successful</option>
@@ -276,11 +276,11 @@ export default function AdminTransactions() {
                                     <option value="Failed">Failed</option>
                                   </select>
                                 </td>
-                                <td className="border p-2 text-sm">
+                                <td className="border px-2 py-1">
                                   <select
                                     value={txn.orderStatus}
                                     onChange={(e) => updateOrderStatus(txn.orderId, e.target.value)}
-                                    className="border px-2 py-1 rounded"
+                                    className="border text-xs px-2 py-1 rounded"
                                   >
                                     <option value="Pending">Pending</option>
                                     <option value="Order Placed">Order Placed</option>
@@ -290,27 +290,28 @@ export default function AdminTransactions() {
                                     <option value="Cancelled">Cancelled</option>
                                   </select>
                                 </td>
-                                <td className="border p-2 text-center">
+                                <td className="border px-2 py-1 text-center">
                                   {txn.proofOfPaymentUrl ? (
                                     <img
                                       src={txn.proofOfPaymentUrl}
                                       alt="Proof"
-                                      className="w-16 h-16 object-cover cursor-pointer rounded border"
+                                      className="w-12 h-12 object-cover cursor-pointer rounded border"
                                       onClick={() => setEnlargedImg(txn.proofOfPaymentUrl)}
                                     />
                                   ) : (
                                     <span className="text-gray-500">-</span>
                                   )}
                                 </td>
-                                <td className="border p-2 text-sm">
+                                <td className="border px-2 py-1 text-xs">
                                   {new Date(txn.date).toLocaleString()}{" "}
-                                  <span className="text-gray-500 text-xs">({dayjs(txn.date).fromNow()})</span>
+                                  <span className="text-gray-500 text-[10px] block">{dayjs(txn.date).fromNow()}</span>
                                 </td>
                               </tr>
                             ))}
                           </tbody>
                         </table>
                       </div>
+
 
                       {/* Mobile Card View */}
                       <div className="sm:hidden space-y-4 mt-4">

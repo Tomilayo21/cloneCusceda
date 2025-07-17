@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { ImagePlus } from "lucide-react";
 import Footer from "@/components/admin/Footer";
 import TiptapEditor from "@/components/TiptapEditor";
+import AdminPage from "@/components/admin/AdminPage";
 
 
 
@@ -371,6 +372,7 @@ const AddProduct = () => {
       <div className='mt-12'>
         <Footer />
       </div>
+      <AdminPage/>
     </div>
   );
 };
