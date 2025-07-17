@@ -166,16 +166,16 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import AddProductPanel from '@/components/admin/settings/products/AddProductPanel';
-import ProductListPanel from '@/components/admin/settings/products/ProductListPanel';
-import ReviewPanel from '@/components/admin/settings/products/ReviewPanel';
-import UserListPanel from '@/components/admin/settings/users/UserListPanel';
-import SubscribersPage from '@/components/admin/settings/users/SubscribersPage';
 // import InviteAdminPanel from '@/components/admin/settings/users/InviteAdminPanel';
 // import RolesPanel from '@/components/admin/settings/users/RolesPanel';
 import ViewBroadcastButton from '@/components/admin/settings/users/ViewBroadcastButton';
 import OrderPanel from '@/components/admin/settings/orders/OrderPanel';
 import TransactionPanel from '@/components/admin/settings/orders/TransactionPanel';
+import AddProductPanel from "@/components/admin/settings/products/AddProductPanel";
+import ProductListPanel from "@/components/admin/settings/products/ProductListPanel";
+import ReviewPanel from "@/components/admin/settings/products/ReviewPanel";
+import UserListPanel from "@/components/admin/settings/users/UserListPanel";
+import SubscribersPage from "@/components/admin/settings/users/SubscribersPage";
 
 const settingsTabs = [
   { key: 'general', label: 'General', icon: <Cog className="w-4 h-4" /> },
@@ -206,19 +206,26 @@ export default function AdminSettings() {
       {/* Tab Header */}
       <div className="flex flex-wrap gap-2 border-b pb-2">
         {settingsTabs.map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => { setActiveTab(tab.key); setProductSubTab(null); }}
-            className={`flex items-center gap-2 px-4 py-2 rounded text-sm font-medium transition-all ${
-              activeTab === tab.key
-                ? 'bg-orange-100 text-orange-600 font-semibold'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            {tab.icon}
-            {tab.label}
-          </button>
+            <button
+                key={tab.key}
+                onClick={() => {
+                setActiveTab(tab.key);
+                setProductSubTab(null);
+                if (tab.key === "product") setProductPanel(null);
+                if (tab.key === "users") setUserPanel("main"); // ✅ Fix here
+                if (tab.key === "orders") setOrderPanel(null);
+                }}
+                className={`flex items-center gap-2 px-4 py-2 rounded text-sm font-medium transition-all ${
+                activeTab === tab.key
+                    ? 'bg-orange-100 text-orange-600 font-semibold'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+            >
+                {tab.icon}
+                {tab.label}
+            </button>
         ))}
+
       </div>
 
       {/* Content Area */}
@@ -291,93 +298,86 @@ export default function AdminSettings() {
 
 
         {/* Other settings remain unchanged */}
-        {activeTab === 'users' && (
-            <div className="relative overflow-hidden">
-                <AnimatePresence mode="wait">
-                {userPanel === 'main' && (
-                    <motion.div
-                    key="user-main"
-                    initial={{ x: 300, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -300, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="space-y-4"
-                    >
-                    <h3 className="font-semibold text-lg">Users & Subscribers</h3>
-                    <p className="text-sm text-gray-600">
-                        Role assignments, user lists, and subscriber communication tools.
-                    </p>
-
-
-                    <div className="flex gap-2 mt-4">
-                        <button onClick={() => setUserPanel('list')} className="bg-blue-600 text-white px-4 py-2 rounded">
-                        View Users
-                        </button>
-                        <button onClick={() => setUserPanel('subscribers')} className="bg-green-600 text-white px-4 py-2 rounded">
-                        Subscribers
-                        </button>
-                        <button onClick={() => setUserPanel('roles')} className="bg-purple-600 text-white px-4 py-2 rounded">
-                        Roles & Permissions
-                        </button>
-                    </div>
-                    </motion.div>
-                )}
-
-                {userPanel === 'subscribers' && (
-                    <motion.div
-                    key="user-subscribers"
-                    initial={{ x: 300, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -300, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="space-y-4"
-                    >
-                    <button
-                        onClick={() => setUserPanel('main')}
-                        className="flex items-center text-sm text-gray-600 hover:text-black"
-                    >
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+        {activeTab === "users" && (
+          <div className="relative overflow-hidden">
+            <AnimatePresence mode="wait">
+              {userPanel === "main" && (
+                <motion.div
+                  key="user-main"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <h3 className="font-semibold text-lg">Users & Subscribers</h3>
+                  <p className="text-sm text-gray-600">
+                    Role assignments, user lists, and subscriber communication tools.
+                  </p>
+                  <div className="flex gap-2 mt-4">
+                    <button onClick={() => setUserPanel("list")} className="bg-blue-600 text-white px-4 py-2 rounded">
+                      View Users
                     </button>
-
-                    <h4 className="text-lg font-semibold">Subscribers</h4>
-
-                    {/* Your subscribers list here */}
-                    <p>List of subscribers...</p>
-
-                    <button
-                        onClick={() => setUserPanel('broadcast')}
-                        className="bg-orange-600 text-white px-4 py-2 rounded"
-                    >
-                        View Broadcast
+                    <button onClick={() => setUserPanel("subscribers")} className="bg-green-600 text-white px-4 py-2 rounded">
+                      Subscribers
                     </button>
-                    </motion.div>
-                )}
-
-                {userPanel === 'broadcast' && (
-                    <motion.div
-                    key="user-broadcast"
-                    initial={{ x: 300, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -300, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="space-y-4"
-                    >
-                    <button
-                        onClick={() => setUserPanel('subscribers')}
-                        className="flex items-center text-sm text-gray-600 hover:text-black"
-                    >
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    <button onClick={() => setUserPanel("roles")} className="bg-purple-600 text-white px-4 py-2 rounded">
+                      Roles & Permissions
                     </button>
-
-                    <h4 className="text-lg font-semibold">Broadcast to Subscribers</h4>
-                    {/* Broadcast form or table */}
-                    <p>This is where you send or view subscriber messages.</p>
-                    </motion.div>
-                )}
-                </AnimatePresence>
-            </div>
+                  </div>
+                </motion.div>
+              )}
+              {userPanel === "list" && (
+                <motion.div
+                  key="user-list"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+                  <UserListPanel />
+                </motion.div>
+              )}
+              {userPanel === "subscribers" && (
+                <motion.div
+                  key="user-subscribers"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+                  <button onClick={() => setUserPanel("broadcast")} className="bg-orange-600 text-white px-4 py-2 rounded">
+                    View Broadcast History
+                  </button>
+                  <SubscribersPage />
+                </motion.div>
+              )}
+              {userPanel === "broadcast" && (
+                <motion.div
+                  key="user-broadcast"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setUserPanel("subscribers")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+                  <ViewBroadcastButton />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         )}
-
 
 
         {activeTab === 'notifications' && (
