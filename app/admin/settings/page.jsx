@@ -375,6 +375,21 @@ export default function AdminSettings() {
                   <ViewBroadcastButton />
                 </motion.div>
               )}
+              {userPanel === "roles" && (
+                <motion.div
+                  key="user-subscribers"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+                  <UserListPanel />
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
         )}
@@ -480,56 +495,56 @@ export default function AdminSettings() {
             </label>
           </div>
         )} */}
+
         {activeTab === 'security' && (
-  <div className="space-y-4">
-    <h3 className="font-semibold text-lg">Security Settings</h3>
+          <div className="space-y-4">
+            <h3 className="font-semibold text-lg">Security Settings</h3>
 
-    {/* Enable 2FA */}
-    <label className="flex items-center gap-2">
-      <input type="checkbox" className="accent-orange-600" />
-      Enable 2FA for Admins
-    </label>
+            {/* Enable 2FA */}
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" />
+              Enable 2FA for Admins
+            </label>
 
-    {/* Session Timeout */}
-    <div className="flex flex-col gap-1">
-      <label className="font-medium">Session Timeout (minutes)</label>
-      <input
-        type="number"
-        min="1"
-        className="border px-3 py-1 rounded w-32"
-        placeholder="e.g. 30"
-      />
-    </div>
+            {/* Session Timeout */}
+            <div className="flex flex-col gap-1">
+              <label className="font-medium">Session Timeout (minutes)</label>
+              <input
+                type="number"
+                min="1"
+                className="border px-3 py-1 rounded w-32"
+                placeholder="e.g. 30"
+              />
+            </div>
 
-    {/* Login Alerts */}
-    <label className="flex items-center gap-2">
-      <input type="checkbox" className="accent-orange-600" />
-      Email me on new device login
-    </label>
+            {/* Login Alerts */}
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" />
+              Email me on new device login
+            </label>
 
-    {/* Password Expiry */}
-    <label className="flex items-center gap-2">
-      <input type="checkbox" className="accent-orange-600" />
-      Force password change every 90 days
-    </label>
+            {/* Password Expiry */}
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" />
+              Force password change every 90 days
+            </label>
 
-    {/* Restrict Login IP */}
-    <div className="flex flex-col gap-1">
-      <label className="font-medium">Restrict Login by IP</label>
-      <input
-        type="text"
-        className="border px-3 py-1 rounded w-full"
-        placeholder="e.g. 192.168.0.1, 10.0.0.0/24"
-      />
-    </div>
+            {/* Restrict Login IP */}
+            <div className="flex flex-col gap-1">
+              <label className="font-medium">Restrict Login by IP</label>
+              <input
+                type="text"
+                className="border px-3 py-1 rounded w-full"
+                placeholder="e.g. 192.168.0.1, 10.0.0.0/24"
+              />
+            </div>
 
-    {/* Save button */}
-    <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-      Save Security Settings
-    </button>
-  </div>
-)}
-
+            {/* Save button */}
+            <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+              Save Security Settings
+            </button>
+          </div>
+        )}
 
         {activeTab === 'legal' && (
           <div className="space-y-4">

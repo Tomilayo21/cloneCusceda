@@ -216,6 +216,21 @@ export default function AdminSettings({
                   <ViewBroadcastButton />
                 </motion.div>
               )}
+              {userPanel === "roles" && (
+                <motion.div
+                  key="user-subscribers"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+                  <UserListPanel />
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
         )}

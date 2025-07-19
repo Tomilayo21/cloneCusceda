@@ -9,7 +9,8 @@ import {
   FileBarChart,
   CreditCard,
   UserCheck,
-  
+  Eye, 
+  EyeOff,
 } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
 import MiniChart from "./settings/charts/MiniChart";
@@ -159,10 +160,6 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
     ? ((monthlyTotal / totalDeposit) * 100).toFixed(1)
     : "0.0";
 
-
-
-
-
   const stats = [
     {
       title: "Total Users",
@@ -248,11 +245,21 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
 
         {/* Header */}
         <AdminHeader />
-        <button
+          <button
             onClick={() => setShowIcons(!showIcons)}
-            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition text-sm"
+            className="bg-blue-500 text-white px-3 py-1 mb-2 rounded hover:bg-blue-600 transition text-sm flex items-center gap-1"
           >
-            {showIcons ? "Hide Icons" : "Show Icons"}
+            {showIcons ? (
+              <>
+                <EyeOff className="w-4 h-4" />
+                <span>Hide Icons</span>
+              </>
+            ) : (
+              <>
+                <Eye className="w-4 h-4" />
+                <span>Show Icons</span>
+              </>
+            )}
           </button>
 
         {/* First Row - Same Size Cards */}

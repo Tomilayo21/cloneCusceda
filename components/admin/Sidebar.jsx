@@ -332,7 +332,9 @@ import {
   LogOut,
   Home,
   Menu,
-  Monitor
+  Monitor,
+  Inbox
+  
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
@@ -359,14 +361,19 @@ const menuItems = [
     icon: <MessageSquare className="w-5 h-5" />,
   },
   {
-    name: 'Settings',
-    path: '/admin/settings',
-    icon: <Settings className="w-5 h-5" />,
+    name: 'Contacts & Feedbacks',
+    path: '/admin/messages',
+    icon: <Inbox className="w-5 h-5" />,
   },
   {
     name: 'Activity Logs',
     path: '/admin/activity-logs',
     icon: <FileText className="w-5 h-5" />,
+  },
+  {
+    name: 'Settings',
+    path: '/admin/settings',
+    icon: <Settings className="w-5 h-5" />,
   },
 ];
 

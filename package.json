@@ -13,6 +13,7 @@
     "@clerk/nextjs": "^6.18.0",
     "@emailjs/browser": "^4.4.1",
     "@paypal/react-paypal-js": "^8.8.3",
+    "@radix-ui/react-tooltip": "^1.2.7",
     "@stripe/stripe-js": "^7.3.1",
     "@tiptap/extension-blockquote": "^2.14.0",
     "@tiptap/extension-bold": "^2.14.0",

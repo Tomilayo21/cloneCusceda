@@ -9,7 +9,8 @@ import { useClerk, UserButton } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Menu, X, Heart } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
-import { Moon, Sun } from "lucide-react";
+import * as Tooltip from '@radix-ui/react-tooltip';
+import { Moon, Sun, ShieldCheck, ShieldAlert } from "lucide-react";
 
 const Navbar = () => {
   const { isAdmin, user, getCartCount } = useAppContext();
@@ -112,9 +113,25 @@ const Navbar = () => {
         {/* Right side (Desktop) */}
         <div className="hidden md:flex items-center gap-4">
           {isAdmin && (
-            <button onClick={() => router.push("/admin")} className="text-xs border px-4 py-1.5 rounded-full">
-              Admin Dashboard
-            </button>
+            <Tooltip.Provider delayDuration={100}>
+              <Tooltip.Root>
+                <Tooltip.Trigger asChild>
+                  <div className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-default">
+                    <ShieldAlert className="w-3 h-3 text-yellow-300" />
+                    <span>Super Admin</span>
+                  </div>
+                </Tooltip.Trigger>
+                <Tooltip.Portal>
+                  <Tooltip.Content
+                    className="bg-black text-white text-xs px-2 py-1 rounded shadow-md z-50"
+                    sideOffset={5}
+                  >
+                    You have full access to all admin features.
+                    <Tooltip.Arrow className="fill-black" />
+                  </Tooltip.Content>
+                </Tooltip.Portal>
+              </Tooltip.Root>
+            </Tooltip.Provider>
           )}
 
           {/* Search */}
@@ -208,9 +225,25 @@ const Navbar = () => {
           </div>
 
           {isAdmin && (
-            <button onClick={() => router.push("/admin")} className="text-xs border px-2 py-1 rounded-full">
-              Admin
-            </button>
+            <Tooltip.Provider delayDuration={100}>
+              <Tooltip.Root>
+                <Tooltip.Trigger asChild>
+                  <div className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-default">
+                    <ShieldAlert className="w-3 h-3 text-yellow-300" />
+                    {/* <span>Super Admin</span> */}
+                  </div>
+                </Tooltip.Trigger>
+                <Tooltip.Portal>
+                  <Tooltip.Content
+                    className="bg-black text-white text-xs px-2 py-1 rounded shadow-md z-50"
+                    sideOffset={5}
+                  >
+                    You have full access to all admin features.
+                    <Tooltip.Arrow className="fill-black" />
+                  </Tooltip.Content>
+                </Tooltip.Portal>
+              </Tooltip.Root>
+            </Tooltip.Provider>
           )}
 
           <button onClick={() => setMobileMenuOpen((prev) => !prev)} aria-label="Toggle Menu">
