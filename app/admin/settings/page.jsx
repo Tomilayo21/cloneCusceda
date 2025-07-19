@@ -164,6 +164,11 @@ import {
   FileText,
   CloudDownload,
   ArrowLeft,
+  PlusCircle, 
+  List, 
+  Star,
+  Mail,
+  PackageSearch
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 // import InviteAdminPanel from '@/components/admin/settings/users/InviteAdminPanel';
@@ -180,7 +185,7 @@ import SubscribersPage from "@/components/admin/settings/users/SubscribersPage";
 const settingsTabs = [
   { key: 'general', label: 'General', icon: <Cog className="w-4 h-4" /> },
   { key: 'product', label: 'Product', icon: <Box className="w-4 h-4" /> },
-  { key: 'users', label: 'User & Roles', icon: <Users className="w-4 h-4" /> },
+  { key: 'users', label: 'Users, Subscribers & Roles', icon: <Users className="w-4 h-4" /> },
   { key: 'notifications', label: 'Notifications', icon: <Bell className="w-4 h-4" /> },
   { key: 'orders', label: 'Orders & Payments', icon: <CreditCard className="w-4 h-4" /> },
   { key: 'localization', label: 'Localization', icon: <Globe className="w-4 h-4" /> },
@@ -196,6 +201,7 @@ export default function AdminSettings() {
   const [productPanel, setProductPanel] = useState(null);
   const [userPanel, setUserPanel] = useState(null);
   const [orderPanel, setOrderPanel] = useState(null);
+    const [isOpen, setIsOpen] = useState(true);
 
 
 
@@ -251,25 +257,45 @@ export default function AdminSettings() {
                     className="space-y-4"
                     >
                     <h3 className="font-semibold text-lg">Product Settings</h3>
-                    <label className="flex items-center gap-2">
-                        <input type="checkbox" className="accent-orange-600" /> Enable Product Reviews
-                    </label>
-                    <input
-                        type="number"
-                        placeholder="Low-stock alert threshold"
-                        className="w-full p-2 border rounded"
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                      <button
+                        onClick={() => setProductPanel('add')}
+                        className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow"
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <PlusCircle className="w-5 h-5" />
+                          <span className="font-semibold">Add Product</span>
+                        </div>
+                        <p className="text-xs text-left">
+                          Create a new product, upload images, set prices, and manage availability.
+                        </p>
+                      </button>
 
-                    <div className="flex gap-2 mt-6">
-                        <button onClick={() => setProductPanel('add')} className="bg-orange-500 text-white px-4 py-2 rounded">
-                        Add Product
-                        </button>
-                        <button onClick={() => setProductPanel('list')} className="bg-blue-500 text-white px-4 py-2 rounded">
-                        Product List
-                        </button>
-                        <button onClick={() => setProductPanel('reviews')} className="bg-purple-500 text-white px-4 py-2 rounded">
-                        Reviews
-                        </button>
+                      <button
+                        onClick={() => setProductPanel('list')}
+                        className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <List className="w-5 h-5" />
+                          <span className="font-semibold">Product List</span>
+                        </div>
+                        <p className="text-xs text-left">
+                          View and manage your existing product catalog, edit or delete items.
+                        </p>
+                      </button>
+
+                      <button
+                        onClick={() => setProductPanel('reviews')}
+                        className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow"
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <Star className="w-5 h-5" />
+                          <span className="font-semibold">Reviews</span>
+                        </div>
+                        <p className="text-xs text-left">
+                          Monitor and approve customer reviews and ratings on products.
+                        </p>
+                      </button>
                     </div>
                     </motion.div>
                 )}
@@ -296,8 +322,6 @@ export default function AdminSettings() {
             </div>
         )}
 
-
-        {/* Other settings remain unchanged */}
         {activeTab === "users" && (
           <div className="relative overflow-hidden">
             <AnimatePresence mode="wait">
@@ -314,15 +338,44 @@ export default function AdminSettings() {
                   <p className="text-sm text-gray-600">
                     Role assignments, user lists, and subscriber communication tools.
                   </p>
-                  <div className="flex gap-2 mt-4">
-                    <button onClick={() => setUserPanel("list")} className="bg-blue-600 text-white px-4 py-2 rounded">
-                      View Users
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <button
+                      onClick={() => setUserPanel("list")}
+                      className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <Users className="w-5 h-5" />
+                        <span className="font-semibold">View Users</span>
+                      </div>
+                      <p className="text-xs text-left">
+                        Browse and manage all registered users, including profile info and activity.
+                      </p>
                     </button>
-                    <button onClick={() => setUserPanel("subscribers")} className="bg-green-600 text-white px-4 py-2 rounded">
-                      Subscribers
+
+                    <button
+                      onClick={() => setUserPanel("subscribers")}
+                      className="flex flex-col items-start bg-green-100 hover:bg-green-200 text-green-800 p-4 rounded-xl shadow"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <Mail className="w-5 h-5" />
+                        <span className="font-semibold">Subscribers</span>
+                      </div>
+                      <p className="text-xs text-left">
+                        View and export newsletter subscribers and manage email outreach.
+                      </p>
                     </button>
-                    <button onClick={() => setUserPanel("roles")} className="bg-purple-600 text-white px-4 py-2 rounded">
-                      Roles & Permissions
+
+                    <button
+                      onClick={() => setUserPanel("roles")}
+                      className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <ShieldCheck className="w-5 h-5" />
+                        <span className="font-semibold">Roles & Permissions</span>
+                      </div>
+                      <p className="text-xs text-left">
+                        Assign roles to users, configure access levels, and manage permissions.
+                      </p>
                     </button>
                   </div>
                 </motion.div>
@@ -394,7 +447,6 @@ export default function AdminSettings() {
           </div>
         )}
 
-
         {activeTab === 'notifications' && (
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Notifications</h3>
@@ -417,27 +469,68 @@ export default function AdminSettings() {
                     className="space-y-4"
                     >
                     <h3 className="font-semibold text-lg">Orders & Payments</h3>
-                    <label className="flex items-center gap-2">
-                        <input type="checkbox" className="accent-orange-600" /> Enable Bank Transfer
-                    </label>
-                    <input
-                        placeholder="Order auto-cancel after (minutes)"
-                        className="w-full p-2 border rounded"
-                    />
 
-                    <div className="flex gap-2 mt-6">
-                        <button
+                    {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                      <button
                         onClick={() => setOrderPanel('orders')}
-                        className="bg-orange-500 text-white px-4 py-2 rounded"
-                        >
-                        View Orders
-                        </button>
-                        <button
+                        className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow"
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <PackageSearch className="w-5 h-5" />
+                          <span className="font-semibold">View Orders</span>
+                        </div>
+                        <p className="text-xs text-left">
+                          Browse all placed orders, track delivery status, and update order stages.
+                        </p>
+                      </button>
+
+                      <button
                         onClick={() => setOrderPanel('transactions')}
-                        className="bg-blue-500 text-white px-4 py-2 rounded"
-                        >
-                        View Transactions
-                        </button>
+                        className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <CreditCard className="w-5 h-5" />
+                          <span className="font-semibold">View Transactions</span>
+                        </div>
+                        <p className="text-xs text-left">
+                          Monitor all payment records, verify receipts, and check transaction types.
+                        </p>
+                      </button>
+                    </div> */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                      <button
+                        onClick={() => setOrderPanel('orders')}
+                        className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow transition"
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <PackageSearch className="w-5 h-5" />
+                          <span className="font-semibold">View Orders</span>
+                        </div>
+                        <p className="text-xs text-left">
+                          Browse all placed orders, track delivery status, and update order stages.
+                        </p>
+                      </button>
+
+                      <button
+                        onClick={() => setOrderPanel('transactions')}
+                        className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow transition"
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <CreditCard className="w-5 h-5" />
+                          <span className="font-semibold">View Transactions</span>
+                        </div>
+                        <p className="text-xs text-left">
+                          Monitor all payment records, verify receipts, and check transaction types.
+                        </p>
+                      </button>
+
+                      {/* Placeholder for future section */}
+                      <div className="flex flex-col items-start bg-gray-100 text-gray-500 p-4 rounded-xl shadow italic">
+                        <span className="font-medium mb-1">More Coming Soon</span>
+                        <p className="text-xs">
+                          Stay tuned for additional features in this section.
+                        </p>
+                      </div>
                     </div>
                     </motion.div>
                 )}
@@ -465,7 +558,6 @@ export default function AdminSettings() {
                 </AnimatePresence>
             </div>
         )}
-
 
         {activeTab === 'localization' && (
           <div className="space-y-4">

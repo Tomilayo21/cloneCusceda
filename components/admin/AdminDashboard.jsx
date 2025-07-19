@@ -241,8 +241,6 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
   return (
     <div className="min-h-screen w-full flex bg-gray-100">
       <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 py-6">
-      {/* <main className="flex-1 w-full lg:ml-64 px-4 sm:px-6 lg:px-10 py-6 overflow-y-auto"> */}
-
         {/* Header */}
         <AdminHeader />
           <button

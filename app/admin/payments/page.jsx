@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import Footer from "@/components/admin/Footer";
 import toast from "react-hot-toast";
 import { useAppContext } from "@/context/AppContext";
 import Papa from "papaparse";
@@ -167,7 +166,7 @@ export default function AdminTransactions() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Admin Transactions</h1>
+      <h1 className="text-2xl font-bold mb-4">Transactions</h1>
 
       <input
         type="text"
@@ -243,7 +242,7 @@ export default function AdminTransactions() {
                   {!isCollapsed && (
                     <>
                       {/* Desktop Table View */}
-                      <div className="overflow-x-auto max-w-full">
+                      <div className="hidden sm:block overflow-x-auto max-w-full">
                         <table className="min-w-[900px] w-full text-sm border-collapse border border-gray-300">
                           <thead>
                             <tr>
@@ -376,73 +375,56 @@ export default function AdminTransactions() {
             })}
           
           {/* Pagination */}
-          {/* <div className="flex justify-center mt-4 space-x-4">
-            <button
-              disabled={page === 1}
-              onClick={() => setPage((p) => Math.max(p - 1, 1))}
-              className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-            >
-              Prev
-            </button>
-            <span>Page {page}</span>
-            <button
-              onClick={() => setPage((p) => p + 1)}
-              className="px-3 py-1 bg-gray-200 rounded"
-            >
-              Next
-            </button>
-          </div> */}
           {totalPages > 1 && (
-  <div className="flex justify-center mt-6 space-x-2 flex-wrap">
-    {[...Array(totalPages)].map((_, index) => {
-      const pageNum = index + 1;
+            <div className="flex justify-center mt-6 space-x-2 flex-wrap">
+              {[...Array(totalPages)].map((_, index) => {
+                const pageNum = index + 1;
 
-      if (totalPages <= 10) {
-        // Show all pages if total ≤ 10
-        return (
-          <button
-            key={pageNum}
-            onClick={() => setPage(pageNum)}
-            className={`px-3 py-1 rounded border ${
-              pageNum === page ? "bg-black text-white" : "bg-gray-100 text-black"
-            }`}
-          >
-            {pageNum}
-          </button>
-        );
-      }
+                if (totalPages <= 10) {
+                  // Show all pages if total ≤ 10
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setPage(pageNum)}
+                      className={`px-3 py-1 rounded border ${
+                        pageNum === page ? "bg-black text-white" : "bg-gray-100 text-black"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                }
 
-      const showPage =
-        pageNum === 1 ||
-        pageNum === totalPages ||
-        (pageNum >= page - 1 && pageNum <= page + 1);
+                const showPage =
+                  pageNum === 1 ||
+                  pageNum === totalPages ||
+                  (pageNum >= page - 1 && pageNum <= page + 1);
 
-      if (showPage) {
-        return (
-          <button
-            key={pageNum}
-            onClick={() => setPage(pageNum)}
-            className={`px-3 py-1 rounded border ${
-              pageNum === page ? "bg-black text-white" : "bg-gray-100 text-black"
-            }`}
-          >
-            {pageNum}
-          </button>
-        );
-      }
+                if (showPage) {
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setPage(pageNum)}
+                      className={`px-3 py-1 rounded border ${
+                        pageNum === page ? "bg-black text-white" : "bg-gray-100 text-black"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                }
 
-      if (
-        (pageNum === 2 && page > 4) ||
-        (pageNum === totalPages - 1 && page < totalPages - 3)
-      ) {
-        return <span key={pageNum} className="px-2">...</span>;
-      }
+                if (
+                  (pageNum === 2 && page > 4) ||
+                  (pageNum === totalPages - 1 && page < totalPages - 3)
+                ) {
+                  return <span key={pageNum} className="px-2">...</span>;
+                }
 
-      return null;
-    })}
-  </div>
-)}
-
+                return null;
+              })}
+            </div>
+          )}
         </>
       )}
 
@@ -460,9 +442,6 @@ export default function AdminTransactions() {
         </div>
       )}
 
-      <div className="mt-12">
-        <Footer />
-      </div>
     </div>
   );
 

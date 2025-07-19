@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import Footer from "@/components/admin/Footer";
 import toast from "react-hot-toast";
 import { useAppContext } from "@/context/AppContext";
 import Papa from "papaparse";
@@ -167,7 +166,7 @@ export default function TransactionPanel() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Admin Transactions</h1>
+      <h1 className="text-2xl font-bold mb-4">Transactions</h1>
 
       <input
         type="text"
@@ -243,7 +242,7 @@ export default function TransactionPanel() {
                   {!isCollapsed && (
                     <>
                       {/* Desktop Table View */}
-                      <div className="overflow-x-auto max-w-full">
+                      <div className="hidden sm:block overflow-x-auto max-w-full">
                         <table className="min-w-[900px] w-full text-sm border-collapse border border-gray-300">
                           <thead>
                             <tr>
@@ -460,9 +459,6 @@ export default function TransactionPanel() {
         </div>
       )}
 
-      <div className="mt-12">
-        <Footer />
-      </div>
     </div>
   );
 
