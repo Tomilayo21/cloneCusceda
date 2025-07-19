@@ -165,7 +165,7 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
       title: "Total Users",
       value: userCount.toString(),
       change: "+100%",
-        icon: <Users className="w-6 h-6 text-gray-700" />,
+        icon: <Users className="w-6 h-6 text-gray-600" />,
       onClick: () => {
         setActiveTab("users");
         // setUserPanel("main");
@@ -176,7 +176,7 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
       title: "Active Subscribers",
       value: subscriberCount.toString(),
       change: `${((subscriberCount / userCount) * 100).toFixed(1)}%`,
-      icon: <UserCheck className="w-6 h-6 text-green-600" />,
+      icon: <UserCheck className="w-6 h-6  text-gray-600" />,
       onClick: () => {
         setActiveTab("users");
         setUserPanel("subscribers");
@@ -190,14 +190,14 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
             maximumFractionDigits: 2,
         })}`,
         change: `${monthlyPercentage}%`,
-        icon: <DollarSign className="w-6 h-6 text-yellow-600" />,
+        icon: <DollarSign className="w-6 h-6  text-gray-600" />,
     },
 
     {
       title: "Monthly Deposit",
         value: `${currency}${monthlyTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
         change: calculateChangePercentage(monthlyTrendData, totalDeposit),
-        icon: <FileBarChart className="w-6 h-6 text-blue-600" />,
+        icon: <FileBarChart className="w-6 h-6  text-gray-600" />,
       onClick: () => {
         setActiveTab("orders");
         setOrderPanel("transactions");
@@ -208,7 +208,7 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
       title: "Daily Transaction",
       value: todayTransactionCount.toString(),
       change: `${transactionChange >= 0 ? "+" : ""}${transactionChange}%`,
-      icon: <CreditCard className="w-6 h-6 text-purple-600" />,
+      icon: <CreditCard className="w-6 h-6  text-gray-600" />,
       onClick: () => {
         setActiveTab("orders");
         setOrderPanel("transactions");
@@ -222,7 +222,7 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
             maximumFractionDigits: 2,
         })}`,
         change: `${dailyPercentageOfMonth}%`,
-        icon: <TrendingUp className="w-6 h-6 text-purple-600" />,
+        icon: <TrendingUp className="w-6 h-6 text-grey-600" />,
         chart: true,
         onClick: () => {
             setActiveTab("orders");
@@ -234,7 +234,7 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
       title: "Growth",
       value: `${growthPercentage}%`,
       change: "",
-      icon: <Rocket className="w-6 h-6 text-orange-500" />,
+      icon: <Rocket className="w-6 h-6  text-gray-600" />,
     },
   ];
 
@@ -245,7 +245,7 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
         <AdminHeader />
           <button
             onClick={() => setShowIcons(!showIcons)}
-            className="bg-blue-500 text-white px-3 py-1 mb-2 rounded hover:bg-blue-600 transition text-sm flex items-center gap-1"
+            className="bg-black text-white px-3 py-1 mb-2 rounded hover:bg-blue-600 transition text-sm flex items-center gap-1"
           >
             {showIcons ? (
               <>
@@ -272,7 +272,7 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
             >
               <div className="flex items-center justify-between mb-2">
                 {showIcons && <span className="text-xl">{item.icon}</span>}
-                <span className="text-sm text-green-600">{item.change}</span>
+                <span className="text-sm text-orange-600">{item.change}</span>
               </div>
               <h3 className="text-sm text-gray-500">{item.title}</h3>
               <p className="text-xl font-bold">{item.value}</p>
@@ -292,7 +292,7 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
             >
               <div className="flex items-center justify-between mb-2">
                 {showIcons && <span className="text-xl">{item.icon}</span>}
-                <span className="text-sm text-green-600">{item.change}</span>
+                <span className="text-sm text-orange-600">{item.change}</span>
                 
               </div>
               <div>

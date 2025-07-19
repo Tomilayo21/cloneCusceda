@@ -5,7 +5,7 @@ const MiniChart = ({ data }) => (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart data={data}>
         <Tooltip contentStyle={{ fontSize: "0.75rem" }} />
-        <Line type="monotone" dataKey="total" stroke="#4F46E5" strokeWidth={2} dot={false} />
+        <Line type="monotone" dataKey="total" stroke="#EA580C" strokeWidth={2} dot={false} />
       </LineChart>
     </ResponsiveContainer>
   </div>

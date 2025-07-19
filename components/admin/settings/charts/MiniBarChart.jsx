@@ -1,29 +1,3 @@
-// // components/ui/MiniBarChart.jsx
-// "use client";
-// import { BarChart, Bar, Tooltip, ResponsiveContainer } from "recharts";
-
-// export default function MiniBarChart({ data, color = "#2563eb" }) {
-//   return (
-//     <ResponsiveContainer width={100} height={40}>
-//       <BarChart data={data}>
-//         <Tooltip
-//           contentStyle={{
-//             backgroundColor: "#fff",
-//             border: "1px solid #ddd",
-//             fontSize: "0.75rem",
-//           }}
-//           formatter={(value) => [`₦${value.toLocaleString()}`, "Amount"]}
-//         />
-//         <Bar dataKey="value" fill={color} radius={[4, 4, 0, 0]} />
-//       </BarChart>
-//     </ResponsiveContainer>
-//   );
-// }
-
-
-
-
-
 "use client";
 import {
   LineChart,
@@ -58,7 +32,7 @@ export default function MiniChart({ range = "week" }) {
             key={r}
             onClick={() => setCurrentRange(r)}
             className={`text-xs px-2 py-1 rounded ${
-              currentRange === r ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-700"
+              currentRange === r ? "bg-orange-600 text-white" : "bg-gray-100 text-gray-700"
             }`}
           >
             {r === "week" ? "This Week" : "This Month"}
@@ -83,7 +57,7 @@ export default function MiniChart({ range = "week" }) {
             <Line
               type="monotone"
               dataKey="value"
-              stroke="#4F46E5"
+              stroke="#EA580C"
               strokeWidth={2}
               dot={false}
               isAnimationActive={true}
