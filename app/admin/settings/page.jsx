@@ -151,7 +151,7 @@
 
 
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Cog,
   ShieldCheck,
@@ -181,6 +181,8 @@ import ProductListPanel from "@/components/admin/settings/products/ProductListPa
 import ReviewPanel from "@/components/admin/settings/products/ReviewPanel";
 import UserListPanel from "@/components/admin/settings/users/UserListPanel";
 import SubscribersPage from "@/components/admin/settings/users/SubscribersPage";
+import toast from "react-hot-toast";
+
 
 const settingsTabs = [
   { key: 'general', label: 'General', icon: <Cog className="w-4 h-4" /> },
@@ -201,8 +203,96 @@ export default function AdminSettings() {
   const [productPanel, setProductPanel] = useState(null);
   const [userPanel, setUserPanel] = useState(null);
   const [orderPanel, setOrderPanel] = useState(null);
-    const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);
+  const [logoPreview, setLogoPreview] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [logoUrl, setLogoUrl] = useState(null);
+  const [logoFile, setLogoFile] = useState(null);
 
+
+     useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await fetch("/api/settings");
+        const data = await res.json();
+        setLogoPreview(data.logoUrl); // from MongoDB
+      } catch (err) {
+        console.error("Failed to fetch settings", err);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
+  // const handleLogoChange = async (e) => {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
+
+  //   const formData = new FormData();
+  //   formData.append("file", file);
+
+  //   try {
+  //     const res = await fetch("/api/upload-logo", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     const data = await res.json();
+  //     if (res.ok) {
+  //       setLogoPreview(data.url);
+  //       setLogoUrl(data.url); // Save to DB later
+  //     } else {
+  //       toast.error("Upload failed");
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     toast.error("Something went wrong");
+  //   }
+  // };
+
+
+  const handleLogoChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setLogoPreview(URL.createObjectURL(file));
+    setUploading(true);
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await fetch('/api/upload-logo', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const result = await res.json();
+    setUploading(false);
+
+    if (res.ok) {
+      toast.success("Logo uploaded successfully!");
+    } else {
+      toast.error(result.error || "Upload failed");
+    }
+  };
+
+
+  const handleRemoveLogo = async () => {
+    setLogoPreview(null);
+    setLogoFile(null);
+
+    try {
+      const res = await fetch('/api/settings/logo', {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) throw new Error('Failed to delete logo');
+      toast.success('Logo removed');
+    } catch (err) {
+      console.error(err);
+      toast.error('Could not remove logo');
+    }
+  };
 
 
   return (
@@ -236,13 +326,118 @@ export default function AdminSettings() {
 
       {/* Content Area */}
       <div className="bg-white p-6 rounded shadow border">
-        {activeTab === 'general' && (
+        {/* {activeTab === 'general' && (
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">General Settings</h3>
             <input placeholder="Site Title" className="w-full p-2 border rounded" />
             <input placeholder="Support Email" className="w-full p-2 border rounded" />
           </div>
+        )} */}
+        {activeTab === 'general' && (
+          <div className="space-y-6">
+            <h3 className="font-semibold text-lg text-gray-800">General Settings</h3>
+
+            {/* Site Title */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Site Title</label>
+              <input
+                type="text"
+                placeholder="Enter your site title"
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+            </div>
+
+            {/* Site Description */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Site Description</label>
+              <textarea
+                placeholder="Brief description of your site"
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                rows={3}
+              />
+            </div>
+
+            {/* Support Email */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Support Email</label>
+              <input
+                type="email"
+                placeholder="support@example.com"
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+            </div>
+
+            {/* Logo Upload */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Upload Logo</label>
+              
+              {logoPreview ? (
+                <div className="flex items-center gap-4">
+                  <img src={logoPreview} alt="Logo Preview" className="w-20 h-20 object-contain border rounded" />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleRemoveLogo()
+                    }}
+                    className="text-sm text-red-600 hover:underline"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoChange}
+                  className="w-full p-2 border rounded-md bg-white text-gray-700 file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-orange-100 file:text-orange-700 hover:file:bg-orange-200"
+                />
+              )}
+            </div>
+          </div>
         )}
+
+        {/* {activeTab === 'general' && (
+          <div className="space-y-6">
+            <h3 className="font-semibold text-lg text-gray-800">General Settings</h3>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Site Title</label>
+              <input
+                type="text"
+                placeholder="Enter your site title"
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Site Description</label>
+              <textarea
+                placeholder="Brief description of your site"
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Support Email</label>
+              <input
+                type="email"
+                placeholder="support@example.com"
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Upload Logo</label>
+              <input
+                type="file"
+                accept="image/*"
+                className="w-full p-2 border rounded-md bg-white text-gray-700 file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-orange-100 file:text-orange-700 hover:file:bg-orange-200"
+              />
+            </div>
+          </div>
+        )} */}
+
 
         {activeTab === 'product' && (
             <div className="relative overflow-hidden">
@@ -578,15 +773,6 @@ export default function AdminSettings() {
             </label>
           </div>
         )}
-
-        {/* {activeTab === 'security' && (
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Security Settings</h3>
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" /> Enable 2FA for Admins
-            </label>
-          </div>
-        )} */}
 
         {activeTab === 'security' && (
           <div className="space-y-4">

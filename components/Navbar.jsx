@@ -25,6 +25,18 @@ const Navbar = () => {
   const searchButtonRef = useRef(null);
   const cartCount = getCartCount();
   const { theme, toggleTheme } = useTheme();
+  const [logoUrl, setLogoUrl] = useState(null);
+
+  useEffect(() => {
+    const fetchLogo = async () => {
+      const res = await fetch('/api/settings');
+      const data = await res.json();
+      setLogoUrl(data.logoUrl);
+    };
+
+    fetchLogo();
+  }, []);
+
 
   const handleClick = () => {
     router.push('/admin');
@@ -96,14 +108,30 @@ const Navbar = () => {
     >
       <div className="flex items-center justify-between px-4 py-3 md:px-16 lg:px-32">
         {/* Logo */}
-        <img
+        {/* <img
           src={logoSrc}
           alt="logo"
           width={100}
           height={100}
           onClick={() => router.push("/")}
           className="cursor-pointer w-24 md:w-32"
+        /> */}
+        <img
+          src={logoUrl}
+          alt="Logo"
+          onClick={() => router.push('/')}
+          className="cursor-pointer w-24 md:w-32"
         />
+
+        {/* <img
+          src={logoPreview || "/default-logo.png"}
+          alt="logo"
+          width={100}
+          height={100}
+          onClick={() => router.push("/")}
+          className="cursor-pointer w-24 md:w-32"
+        /> */}
+
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center justify-center gap-8 flex-1 px-8">

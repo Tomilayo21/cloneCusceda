@@ -40,7 +40,7 @@ const AdminHeader = () => {
         <Gauge className="w-6 h-6 text-white-600" />
         <div>
           <h2 className="text-2xl font-bold">Admin Dashboard</h2>
-          <p className="text-sm text-gray-200">Welcome back! Here's whats happening on your platform today.</p>
+          <p className="text-sm text-gray-200">Platform Metrics Summary: Here's what's happening today.</p>
         </div>
       </div>
 
