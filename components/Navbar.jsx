@@ -26,6 +26,10 @@ const Navbar = () => {
   const cartCount = getCartCount();
   const { theme, toggleTheme } = useTheme();
 
+  const handleClick = () => {
+    router.push('/admin');
+  };
+
   // Detect screen size
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -116,7 +120,10 @@ const Navbar = () => {
             <Tooltip.Provider delayDuration={100}>
               <Tooltip.Root>
                 <Tooltip.Trigger asChild>
-                  <div className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-default">
+                  <div
+                    onClick={handleClick}
+                    className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-pointer hover:bg-purple-800 transition"
+                  >
                     <ShieldAlert className="w-3 h-3 text-yellow-300" />
                     <span>Super Admin</span>
                   </div>
@@ -228,9 +235,11 @@ const Navbar = () => {
             <Tooltip.Provider delayDuration={100}>
               <Tooltip.Root>
                 <Tooltip.Trigger asChild>
-                  <div className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-default">
+                  <div
+                    onClick={handleClick}
+                    className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-pointer hover:bg-purple-800 transition"
+                  >
                     <ShieldAlert className="w-3 h-3 text-yellow-300" />
-                    {/* <span>Super Admin</span> */}
                   </div>
                 </Tooltip.Trigger>
                 <Tooltip.Portal>
