@@ -1,119 +1,117 @@
-// 'use client';
+// // 'use client';
 
-// import React, { useState } from 'react';
-// import { Tabs } from '@/components/ui/tabs'; // optional: use a tabs component or custom logic
-// import {
-//   Cog,
-//   Palette,
-//   Bell,
-//   CreditCard,
-//   Globe,
-// } from 'lucide-react';
+// // import React, { useState } from 'react';
+// // import { Tabs } from '@/components/ui/tabs'; // optional: use a tabs component or custom logic
+// // import {
+// //   Cog,
+// //   Palette,
+// //   Bell,
+// //   CreditCard,
+// //   Globe,
+// // } from 'lucide-react';
 
-// import { AnimatePresence, motion } from 'framer-motion';
-// import { ArrowLeft } from 'lucide-react';
-// import AddProductPanel from '@/components/admin/settings/products/AddProductPanel';
-// import ProductListPanel from '@/components/admin/settings/products/ProductListPanel';
-// import ReviewPanel from '@/components/admin/settings/products/ReviewPanel';
-
-
-// export default function SettingsPage() {
-//   const [activeTab, setActiveTab] = useState('general');
-
-//   const tabs = [
-//     { key: 'general', label: 'General', icon: <Cog className="w-4 h-4" /> },
-//     { key: 'appearance', label: 'Appearance', icon: <Palette className="w-4 h-4" /> },
-//     { key: 'payments', label: 'Payments', icon: <CreditCard className="w-4 h-4" /> },
-//     { key: 'notifications', label: 'Notifications', icon: <Bell className="w-4 h-4" /> },
-//     { key: 'localization', label: 'Localization', icon: <Globe className="w-4 h-4" /> },
-//   ];
-
-//   return (
-//     <div className="max-w-5xl mx-auto p-4 space-y-6">
-//       <h2 className="text-2xl font-semibold">Settings</h2>
-
-//       {/* Tab Header */}
-//       <div className="flex gap-2 overflow-x-auto border-b pb-2">
-//         {tabs.map((tab) => (
-//           <button
-//             key={tab.key}
-//             onClick={() => setActiveTab(tab.key)}
-//             className={`flex items-center gap-2 px-4 py-2 rounded ${
-//               activeTab === tab.key
-//                 ? 'bg-orange-100 text-orange-600 font-medium'
-//                 : 'text-gray-600 hover:bg-gray-100'
-//             }`}
-//           >
-//             {tab.icon}
-//             {tab.label}
-//           </button>
-//         ))}
-//       </div>
-
-//       {/* Tab Content */}
-//       <div className="bg-white rounded-lg p-6 shadow-sm border">
-//         {activeTab === 'general' && (
-//           <div className="space-y-4">
-//             <h3 className="text-lg font-semibold">General Settings</h3>
-//             {/* Add input fields here */}
-//             <div>
-//               <label className="block mb-1 text-sm font-medium">Site Title</label>
-//               <input type="text" className="w-full border rounded px-3 py-2" placeholder="Cusceda" />
-//             </div>
-//             <div>
-//               <label className="block mb-1 text-sm font-medium">Contact Email</label>
-//               <input type="email" className="w-full border rounded px-3 py-2" placeholder="support@cusceda.com" />
-//             </div>
-//           </div>
-//         )}
-
-//         {activeTab === 'appearance' && (
-//           <div className="space-y-4">
-//             <h3 className="text-lg font-semibold">Appearance Settings</h3>
-//             {/* Theme options, color pickers */}
-//             <p>Coming soon...</p>
-//           </div>
-//         )}
-
-//         {activeTab === 'payments' && (
-//           <div className="space-y-4">
-//             <h3 className="text-lg font-semibold">Payment Settings</h3>
-//             {/* Payment method toggles */}
-//             <p>Enable/disable Stripe, PayPal, Bank Transfer...</p>
-//           </div>
-//         )}
-
-//         {activeTab === 'notifications' && (
-//           <div className="space-y-4">
-//             <h3 className="text-lg font-semibold">Notification Preferences</h3>
-//             <label className="flex items-center gap-2">
-//               <input type="checkbox" className="accent-orange-600" defaultChecked />
-//               Email me on new order
-//             </label>
-//             <label className="flex items-center gap-2">
-//               <input type="checkbox" className="accent-orange-600" />
-//               Notify me when stock is low
-//             </label>
-//           </div>
-//         )}
-
-//         {activeTab === 'localization' && (
-//           <div className="space-y-4">
-//             <h3 className="text-lg font-semibold">Localization Settings</h3>
-//             <label className="block mb-1 text-sm font-medium">Default Language</label>
-//             <select className="w-full border rounded px-3 py-2">
-//               <option>English</option>
-//               <option>French</option>
-//               <option>Spanish</option>
-//             </select>
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
+// // import { AnimatePresence, motion } from 'framer-motion';
+// // import { ArrowLeft } from 'lucide-react';
+// // import AddProductPanel from '@/components/admin/settings/products/AddProductPanel';
+// // import ProductListPanel from '@/components/admin/settings/products/ProductListPanel';
+// // import ReviewPanel from '@/components/admin/settings/products/ReviewPanel';
 
 
+// // export default function SettingsPage() {
+// //   const [activeTab, setActiveTab] = useState('general');
+
+// //   const tabs = [
+// //     { key: 'general', label: 'General', icon: <Cog className="w-4 h-4" /> },
+// //     { key: 'appearance', label: 'Appearance', icon: <Palette className="w-4 h-4" /> },
+// //     { key: 'payments', label: 'Payments', icon: <CreditCard className="w-4 h-4" /> },
+// //     { key: 'notifications', label: 'Notifications', icon: <Bell className="w-4 h-4" /> },
+// //     { key: 'localization', label: 'Localization', icon: <Globe className="w-4 h-4" /> },
+// //   ];
+
+// //   return (
+// //     <div className="max-w-5xl mx-auto p-4 space-y-6">
+// //       <h2 className="text-2xl font-semibold">Settings</h2>
+
+// //       {/* Tab Header */}
+// //       <div className="flex gap-2 overflow-x-auto border-b pb-2">
+// //         {tabs.map((tab) => (
+// //           <button
+// //             key={tab.key}
+// //             onClick={() => setActiveTab(tab.key)}
+// //             className={`flex items-center gap-2 px-4 py-2 rounded ${
+// //               activeTab === tab.key
+// //                 ? 'bg-orange-100 text-orange-600 font-medium'
+// //                 : 'text-gray-600 hover:bg-gray-100'
+// //             }`}
+// //           >
+// //             {tab.icon}
+// //             {tab.label}
+// //           </button>
+// //         ))}
+// //       </div>
+
+// //       {/* Tab Content */}
+// //       <div className="bg-white rounded-lg p-6 shadow-sm border">
+// //         {activeTab === 'general' && (
+// //           <div className="space-y-4">
+// //             <h3 className="text-lg font-semibold">General Settings</h3>
+// //             {/* Add input fields here */}
+// //             <div>
+// //               <label className="block mb-1 text-sm font-medium">Site Title</label>
+// //               <input type="text" className="w-full border rounded px-3 py-2" placeholder="Cusceda" />
+// //             </div>
+// //             <div>
+// //               <label className="block mb-1 text-sm font-medium">Contact Email</label>
+// //               <input type="email" className="w-full border rounded px-3 py-2" placeholder="support@cusceda.com" />
+// //             </div>
+// //           </div>
+// //         )}
+
+// //         {activeTab === 'appearance' && (
+// //           <div className="space-y-4">
+// //             <h3 className="text-lg font-semibold">Appearance Settings</h3>
+// //             {/* Theme options, color pickers */}
+// //             <p>Coming soon...</p>
+// //           </div>
+// //         )}
+
+// //         {activeTab === 'payments' && (
+// //           <div className="space-y-4">
+// //             <h3 className="text-lg font-semibold">Payment Settings</h3>
+// //             {/* Payment method toggles */}
+// //             <p>Enable/disable Stripe, PayPal, Bank Transfer...</p>
+// //           </div>
+// //         )}
+
+// //         {activeTab === 'notifications' && (
+// //           <div className="space-y-4">
+// //             <h3 className="text-lg font-semibold">Notification Preferences</h3>
+// //             <label className="flex items-center gap-2">
+// //               <input type="checkbox" className="accent-orange-600" defaultChecked />
+// //               Email me on new order
+// //             </label>
+// //             <label className="flex items-center gap-2">
+// //               <input type="checkbox" className="accent-orange-600" />
+// //               Notify me when stock is low
+// //             </label>
+// //           </div>
+// //         )}
+
+// //         {activeTab === 'localization' && (
+// //           <div className="space-y-4">
+// //             <h3 className="text-lg font-semibold">Localization Settings</h3>
+// //             <label className="block mb-1 text-sm font-medium">Default Language</label>
+// //             <select className="w-full border rounded px-3 py-2">
+// //               <option>English</option>
+// //               <option>French</option>
+// //               <option>Spanish</option>
+// //             </select>
+// //           </div>
+// //         )}
+// //       </div>
+// //     </div>
+// //   );
+// // }
 
 
 
@@ -151,6 +149,7 @@
 
 
 "use client"
+
 import { useState, useEffect } from 'react';
 import {
   Cog,
@@ -181,6 +180,7 @@ import ProductListPanel from "@/components/admin/settings/products/ProductListPa
 import ReviewPanel from "@/components/admin/settings/products/ReviewPanel";
 import UserListPanel from "@/components/admin/settings/users/UserListPanel";
 import SubscribersPage from "@/components/admin/settings/users/SubscribersPage";
+import RegUsers from "@/components/admin/RegUsers";
 import toast from "react-hot-toast";
 
 
@@ -206,11 +206,22 @@ export default function AdminSettings() {
   const [isOpen, setIsOpen] = useState(true);
   const [logoPreview, setLogoPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [logoUrl, setLogoUrl] = useState(null);
-  const [logoFile, setLogoFile] = useState(null);
+  // const [logoUrl, setLogoUrl] = useState(null);
+  // const [logoFile, setLogoFile] = useState(null);
+  const [siteTitle, setSiteTitle] = useState('');
+  const [siteDescription, setSiteDescription] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [footerDescription, setFooterDescription] = useState("");
+  const [footerPhone, setFooterPhone] = useState("");
+  const [footerEmail, setFooterEmail] = useState("");
+  const [footerName, setFooterName] = useState("");
+  const [supportEmail, setSupportEmail] = useState("");
+  const [settingsPanel, setSettingsPanel] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
-     useEffect(() => {
+
+  useEffect(() => {
     const fetchSettings = async () => {
       try {
         const res = await fetch("/api/settings");
@@ -224,34 +235,48 @@ export default function AdminSettings() {
     fetchSettings();
   }, []);
 
-  // const handleLogoChange = async (e) => {
-  //   const file = e.target.files[0];
-  //   if (!file) return;
+  useEffect(() => {
+    const fetchSiteDetails = async () => {
+      try {
+        const res = await fetch("/api/settings/metadata");
+        const data = await res.json();
 
-  //   const formData = new FormData();
-  //   formData.append("file", file);
+        setSiteTitle(data.siteTitle || "");
+        setSiteDescription(data.siteDescription || "");
+        setFooterDescription(data.footerDescription || "");
+        setFooterPhone(data.footerPhone || "");
+        setFooterEmail(data.footerEmail || "");
+        setFooterName(data.footerName || "");
+        setSupportEmail(data.supportEmail || "");
+      } catch (error) {
+        toast.error("Failed to load site settings");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   try {
-  //     const res = await fetch("/api/upload-logo", {
-  //       method: "POST",
-  //       body: formData,
-  //     });
+    fetchSiteDetails();
+  }, []);
 
-  //     const data = await res.json();
-  //     if (res.ok) {
-  //       setLogoPreview(data.url);
-  //       setLogoUrl(data.url); // Save to DB later
-  //     } else {
-  //       toast.error("Upload failed");
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //     toast.error("Something went wrong");
-  //   }
-  // };
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await fetch("/api/settings/footerdetails");
+        const data = await res.json();
+        if (data) {
+          setFooterDescription(data.footerDescription || "");
+          setFooterPhone(data.footerPhone || "");
+          setFooterEmail(data.footerEmail || "");
+          setFooterName(data.footerName || "");
+        }
+      } catch (err) {
+        console.error("Failed to fetch settings:", err);
+      }
+    };
+    fetchSettings();
+  }, []);
 
-
-  const handleLogoChange = async (e) => {
+   const handleLogoChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -259,10 +284,10 @@ export default function AdminSettings() {
     setUploading(true);
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
 
-    const res = await fetch('/api/upload-logo', {
-      method: 'POST',
+    const res = await fetch("/api/upload-logo", {
+      method: "POST",
       body: formData,
     });
 
@@ -270,29 +295,86 @@ export default function AdminSettings() {
     setUploading(false);
 
     if (res.ok) {
-      toast.success("Logo uploaded successfully!");
+      toast.success("Logo uploaded");
     } else {
       toast.error(result.error || "Upload failed");
     }
   };
 
-
   const handleRemoveLogo = async () => {
-    setLogoPreview(null);
-    setLogoFile(null);
-
     try {
-      const res = await fetch('/api/settings/logo', {
-        method: 'DELETE',
-      });
-
-      if (!res.ok) throw new Error('Failed to delete logo');
-      toast.success('Logo removed');
+      const res = await fetch("/api/settings/logo", { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete logo");
+      toast.success("Logo removed");
+      setLogoPreview(null);
     } catch (err) {
-      console.error(err);
-      toast.error('Could not remove logo');
+      toast.error("Error removing logo");
     }
   };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const payload = {
+  //     siteTitle,
+  //     siteDescription,
+  //     footerDescription,
+  //     footerPhone,
+  //     footerEmail,
+  //     footerName,
+  //     supportEmail,
+  //   };
+
+  //   try {
+  //     const res = await fetch("/api/settings/metadata", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(payload),
+  //     });
+
+  //     if (res.ok) {
+  //       toast.success("Settings updated");
+  //     } else {
+  //       const data = await res.json();
+  //       toast.error(data.error || "Update failed");
+  //     }
+  //   } catch (err) {
+  //     toast.error("Unexpected error");
+  //   }
+  // };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true); // Start loading
+
+    const payload = {
+      siteTitle,
+      siteDescription,
+      footerDescription,
+      footerPhone,
+      footerEmail,
+      footerName,
+      supportEmail,
+    };
+
+    try {
+      const res = await fetch("/api/settings/metadata", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        toast.success("Settings updated");
+      } else {
+        const data = await res.json();
+        toast.error(data.error || "Update failed");
+      }
+    } catch (err) {
+      toast.error("Unexpected error");
+    } finally {
+      setIsSubmitting(false); // End loading
+    }
+  };
+
 
 
   return (
@@ -321,181 +403,331 @@ export default function AdminSettings() {
                 {tab.label}
             </button>
         ))}
-
       </div>
 
       {/* Content Area */}
       <div className="bg-white p-6 rounded shadow border">
+
         {/* {activeTab === 'general' && (
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg">General Settings</h3>
-            <input placeholder="Site Title" className="w-full p-2 border rounded" />
-            <input placeholder="Support Email" className="w-full p-2 border rounded" />
-          </div>
-        )} */}
-        {activeTab === 'general' && (
           <div className="space-y-6">
             <h3 className="font-semibold text-lg text-gray-800">General Settings</h3>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <h3 className="text-lg font-semibold">Site Settings</h3>
 
-            {/* Site Title */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Site Title</label>
-              <input
-                type="text"
-                placeholder="Enter your site title"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-
-            {/* Site Description */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Site Description</label>
-              <textarea
-                placeholder="Brief description of your site"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                rows={3}
-              />
-            </div>
-
-            {/* Support Email */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Support Email</label>
-              <input
-                type="email"
-                placeholder="support@example.com"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-
-            {/* Logo Upload */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Upload Logo</label>
-              
-              {logoPreview ? (
-                <div className="flex items-center gap-4">
-                  <img src={logoPreview} alt="Logo Preview" className="w-20 h-20 object-contain border rounded" />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleRemoveLogo()
-                    }}
-                    className="text-sm text-red-600 hover:underline"
-                  >
-                    Remove
-                  </button>
+                <div className="space-y-2">
+                <label className="text-sm font-medium">Site Title</label>
+                  <input
+                    type="text"
+                    value={siteTitle}
+                    onChange={(e) => setSiteTitle(e.target.value)}
+                    className="w-full p-2 border rounded"
+                  />
                 </div>
-              ) : (
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleLogoChange}
-                  className="w-full p-2 border rounded-md bg-white text-gray-700 file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-orange-100 file:text-orange-700 hover:file:bg-orange-200"
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Site Description</label>
+                  <textarea
+                    value={siteDescription}
+                    onChange={(e) => setSiteDescription(e.target.value)}
+                    className="w-full p-2 border rounded"
+                    rows={3}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Support Email</label>
+                  <input
+                    type="email"
+                    value={supportEmail}
+                    onChange={(e) => setSupportEmail(e.target.value)}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Upload Logo</label>
+                  {logoPreview ? (
+                    <div className="flex items-center gap-4">
+                      <img src={logoPreview} alt="Logo" className="w-20 h-20 object-contain border rounded" />
+                      <button
+                        type="button"
+                        onClick={handleRemoveLogo}
+                        className="text-red-500 text-sm hover:underline"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleLogoChange}
+                      className="w-full p-2 border rounded bg-white text-gray-700"
+                    />
+                  )}
+                </div>
+
+                <h3 className="text-lg font-semibold pt-6">Footer Settings</h3>
+
+                <textarea
+                  value={footerDescription}
+                  onChange={(e) => setFooterDescription(e.target.value)}
+                  placeholder="Footer Description"
+                  className="w-full p-2 border rounded"
                 />
+
+                <input
+                  value={footerPhone}
+                  onChange={(e) => setFooterPhone(e.target.value)}
+                  placeholder="Footer Phone"
+                  className="w-full p-2 border rounded"
+                />
+
+                <input
+                  value={footerEmail}
+                  onChange={(e) => setFooterEmail(e.target.value)}
+                  placeholder="Footer Email"
+                  type="email"
+                  className="w-full p-2 border rounded"
+                />
+
+                <input
+                  value={footerName}
+                  onChange={(e) => setFooterName(e.target.value)}
+                  placeholder="Footer Name"
+                  className="w-full p-2 border rounded"
+                />
+
+                <button
+                  type="submit"
+                  className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700"
+                >
+                  Save Changes
+                </button>
+              </form>
+          </div>
+        )} */}
+
+        {activeTab === 'general' && (
+          <div className="relative overflow-hidden">
+            <AnimatePresence mode="wait">
+              {!settingsPanel && (
+                <motion.div
+                  key="general-main"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <h3 className="font-semibold text-lg">Site Settings</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <button
+                      onClick={() => setSettingsPanel('site')}
+                      className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold">Site Metadata</span>
+                      </div>
+                      <p className="text-xs text-left">
+                        Edit your site’s title, description, support email and logo.
+                      </p>
+                    </button>
+
+                    <button
+                      onClick={() => setSettingsPanel('footer')}
+                      className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold">Footer Settings</span>
+                      </div>
+                      <p className="text-xs text-left">
+                        Customize footer content such as contact info and branding.
+                      </p>
+                    </button>
+                  </div>
+                </motion.div>
               )}
-            </div>
+
+              {settingsPanel && (
+                <motion.div
+                  key="general-sub"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setSettingsPanel(null)} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+
+                  {settingsPanel === 'site' && (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <h3 className="text-lg font-semibold">Site Settings</h3>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Site Title</label>
+                        <input
+                          type="text"
+                          value={siteTitle}
+                          onChange={(e) => setSiteTitle(e.target.value)}
+                          className="w-full p-2 border rounded"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Site Description</label>
+                        <textarea
+                          value={siteDescription}
+                          onChange={(e) => setSiteDescription(e.target.value)}
+                          className="w-full p-2 border rounded"
+                          rows={3}
+                        />
+                      </div>
+
+
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Upload Logo</label>
+                        {logoPreview ? (
+                          <div className="flex items-center gap-4">
+                            <img src={logoPreview} alt="Logo" className="w-20 h-20 object-contain border rounded" />
+                            <button
+                              type="button"
+                              onClick={handleRemoveLogo}
+                              className="text-red-500 text-sm hover:underline"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ) : (
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleLogoChange}
+                            className="w-full p-2 border rounded bg-white text-gray-700"
+                          />
+                        )}
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "Saving..." : "Save Changes"}
+                      </button>
+                    </form>
+                  )}
+
+                  {settingsPanel === 'footer' && (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <h3 className="text-lg font-semibold">Footer Settings</h3>
+
+                      <textarea
+                        value={footerDescription}
+                        onChange={(e) => setFooterDescription(e.target.value)}
+                        placeholder="Footer Description"
+                        className="w-full p-2 border rounded"
+                      />
+
+                      <input
+                        value={footerPhone}
+                        onChange={(e) => setFooterPhone(e.target.value)}
+                        placeholder="Footer Phone"
+                        className="w-full p-2 border rounded"
+                      />
+
+                      <input
+                        value={footerEmail}
+                        onChange={(e) => setFooterEmail(e.target.value)}
+                        placeholder="Footer Email"
+                        type="email"
+                        className="w-full p-2 border rounded"
+                      />
+
+                      <input
+                        value={footerName}
+                        onChange={(e) => setFooterName(e.target.value)}
+                        placeholder="Footer Name"
+                        className="w-full p-2 border rounded"
+                      />
+
+                      <button
+                        type="submit"
+                        className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "Saving..." : "Save Changes"}
+                      </button>
+
+                    </form>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         )}
 
-        {/* {activeTab === 'general' && (
-          <div className="space-y-6">
-            <h3 className="font-semibold text-lg text-gray-800">General Settings</h3>
-
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Site Title</label>
-              <input
-                type="text"
-                placeholder="Enter your site title"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Site Description</label>
-              <textarea
-                placeholder="Brief description of your site"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                rows={3}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Support Email</label>
-              <input
-                type="email"
-                placeholder="support@example.com"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Upload Logo</label>
-              <input
-                type="file"
-                accept="image/*"
-                className="w-full p-2 border rounded-md bg-white text-gray-700 file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-orange-100 file:text-orange-700 hover:file:bg-orange-200"
-              />
-            </div>
-          </div>
-        )} */}
 
 
-        {activeTab === 'product' && (
-            <div className="relative overflow-hidden">
-                <AnimatePresence mode="wait">
-                {!productPanel && (
-                    <motion.div
-                    key="product-main"
-                    initial={{ x: 300, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -300, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="space-y-4"
-                    >
-                    <h3 className="font-semibold text-lg">Product Settings</h3>
+
+         {activeTab === 'product' && (
+             <div className="relative overflow-hidden">
+                 <AnimatePresence mode="wait">
+                 {!productPanel && (
+                     <motion.div
+                     key="product-main"
+                     initial={{ x: 300, opacity: 0 }}
+                     animate={{ x: 0, opacity: 1 }}
+                     exit={{ x: -300, opacity: 0 }}
+                     transition={{ duration: 0.3 }}
+                     className="space-y-4"
+                     >
+                     <h3 className="font-semibold text-lg">Product Settings</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                       <button
-                        onClick={() => setProductPanel('add')}
-                        className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow"
-                      >
-                        <div className="flex items-center gap-2 mb-1">
-                          <PlusCircle className="w-5 h-5" />
-                          <span className="font-semibold">Add Product</span>
-                        </div>
+                         onClick={() => setProductPanel('add')}
+                         className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow"
+                       >
+                         <div className="flex items-center gap-2 mb-1">
+                           <PlusCircle className="w-5 h-5" />
+                           <span className="font-semibold">Add Product</span>
+                         </div>
+                         <p className="text-xs text-left">
+                           Create a new product, upload images, set prices, and manage availability.
+                       </p>
+                       </button>
+                       <button
+                         onClick={() => setProductPanel('list')}
+                         className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
+                       >
+                         <div className="flex items-center gap-2 mb-1">
+                           <List className="w-5 h-5" />
+                           <span className="font-semibold">Product List</span>
+                         </div>
                         <p className="text-xs text-left">
-                          Create a new product, upload images, set prices, and manage availability.
-                        </p>
-                      </button>
+                           View and manage your existing product catalog, edit or delete items.
+                         </p>
+                       </button>
 
-                      <button
-                        onClick={() => setProductPanel('list')}
-                        className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
-                      >
-                        <div className="flex items-center gap-2 mb-1">
-                          <List className="w-5 h-5" />
-                          <span className="font-semibold">Product List</span>
-                        </div>
-                        <p className="text-xs text-left">
-                          View and manage your existing product catalog, edit or delete items.
-                        </p>
-                      </button>
-
-                      <button
-                        onClick={() => setProductPanel('reviews')}
-                        className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow"
-                      >
-                        <div className="flex items-center gap-2 mb-1">
-                          <Star className="w-5 h-5" />
-                          <span className="font-semibold">Reviews</span>
-                        </div>
-                        <p className="text-xs text-left">
+                       <button
+                         onClick={() => setProductPanel('reviews')}
+                         className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow"
+                       >
+                         <div className="flex items-center gap-2 mb-1">
+                           <Star className="w-5 h-5" />
+                           <span className="font-semibold">Reviews</span>
+                         </div>
+                         <p className="text-xs text-left">
                           Monitor and approve customer reviews and ratings on products.
-                        </p>
-                      </button>
-                    </div>
-                    </motion.div>
-                )}
-
-                {productPanel && (
+                         </p>
+                       </button>
+                     </div>
+                     </motion.div>
+                 )}
+                 {productPanel && (
                     <motion.div
                     key="product-sub"
                     initial={{ x: 300, opacity: 0 }}
@@ -515,9 +747,9 @@ export default function AdminSettings() {
                 )}
                 </AnimatePresence>
             </div>
-        )}
+         )}
 
-        {activeTab === "users" && (
+         {activeTab === "users" && (
           <div className="relative overflow-hidden">
             <AnimatePresence mode="wait">
               {userPanel === "main" && (
@@ -547,7 +779,7 @@ export default function AdminSettings() {
                       </p>
                     </button>
 
-                    <button
+                     <button
                       onClick={() => setUserPanel("subscribers")}
                       className="flex flex-col items-start bg-green-100 hover:bg-green-200 text-green-800 p-4 rounded-xl shadow"
                     >
@@ -574,8 +806,8 @@ export default function AdminSettings() {
                     </button>
                   </div>
                 </motion.div>
-              )}
-              {userPanel === "list" && (
+               )}
+               {userPanel === "list" && (
                 <motion.div
                   key="user-list"
                   initial={{ x: 300, opacity: 0 }}
@@ -587,10 +819,10 @@ export default function AdminSettings() {
                   <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
                     <ArrowLeft className="w-4 h-4 mr-1" /> Back
                   </button>
-                  <UserListPanel />
+                  <RegUsers />
                 </motion.div>
-              )}
-              {userPanel === "subscribers" && (
+               )}
+               {userPanel === "subscribers" && (
                 <motion.div
                   key="user-subscribers"
                   initial={{ x: 300, opacity: 0 }}
@@ -607,8 +839,8 @@ export default function AdminSettings() {
                   </button>
                   <SubscribersPage />
                 </motion.div>
-              )}
-              {userPanel === "broadcast" && (
+               )}
+               {userPanel === "broadcast" && (
                 <motion.div
                   key="user-broadcast"
                   initial={{ x: 300, opacity: 0 }}
@@ -622,8 +854,8 @@ export default function AdminSettings() {
                   </button>
                   <ViewBroadcastButton />
                 </motion.div>
-              )}
-              {userPanel === "roles" && (
+               )}
+               {userPanel === "roles" && (
                 <motion.div
                   key="user-subscribers"
                   initial={{ x: 300, opacity: 0 }}
@@ -638,20 +870,20 @@ export default function AdminSettings() {
                   <UserListPanel />
                 </motion.div>
               )}
-            </AnimatePresence>
-          </div>
-        )}
+             </AnimatePresence>
+           </div>
+         )}
 
-        {activeTab === 'notifications' && (
+         {activeTab === 'notifications' && (
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Notifications</h3>
             <label className="flex items-center gap-2">
               <input type="checkbox" defaultChecked className="accent-orange-600" /> Email on New Order
             </label>
           </div>
-        )}
+         )}
 
-        {activeTab === 'orders' && (
+         {activeTab === 'orders' && (
             <div className="relative overflow-hidden">
                 <AnimatePresence mode="wait">
                 {!orderPanel && (
@@ -665,8 +897,8 @@ export default function AdminSettings() {
                     >
                     <h3 className="font-semibold text-lg">Orders & Payments</h3>
 
-                    {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                      <button
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                       <button
                         onClick={() => setOrderPanel('orders')}
                         className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow"
                       >
@@ -691,9 +923,9 @@ export default function AdminSettings() {
                           Monitor all payment records, verify receipts, and check transaction types.
                         </p>
                       </button>
-                    </div> */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-                      <button
+                     </div> 
+                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                       <button
                         onClick={() => setOrderPanel('orders')}
                         className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow transition"
                       >
@@ -728,9 +960,9 @@ export default function AdminSettings() {
                       </div>
                     </div>
                     </motion.div>
-                )}
+                 )}
 
-                {orderPanel && (
+                 {orderPanel && (
                     <motion.div
                     key="orders-sub"
                     initial={{ x: 300, opacity: 0 }}
@@ -754,7 +986,7 @@ export default function AdminSettings() {
             </div>
         )}
 
-        {activeTab === 'localization' && (
+         {activeTab === 'localization' && (
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Localization</h3>
             <select className="w-full border p-2 rounded">
@@ -795,22 +1027,22 @@ export default function AdminSettings() {
               />
             </div>
 
-            {/* Login Alerts */}
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" />
-              Email me on new device login
-            </label>
+             {/* Login Alerts */}
+             <label className="flex items-center gap-2">
+               <input type="checkbox" className="accent-orange-600" />
+               Email me on new device login
+             </label>
 
-            {/* Password Expiry */}
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" />
-              Force password change every 90 days
-            </label>
+             {/* Password Expiry */}
+             <label className="flex items-center gap-2">
+               <input type="checkbox" className="accent-orange-600" />
+               Force password change every 90 days
+             </label>
 
-            {/* Restrict Login IP */}
-            <div className="flex flex-col gap-1">
-              <label className="font-medium">Restrict Login by IP</label>
-              <input
+             {/* Restrict Login IP */}
+             <div className="flex flex-col gap-1">
+               <label className="font-medium">Restrict Login by IP</label>
+               <input
                 type="text"
                 className="border px-3 py-1 rounded w-full"
                 placeholder="e.g. 192.168.0.1, 10.0.0.0/24"
@@ -841,3 +1073,304 @@ export default function AdminSettings() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// "use client";
+// import { useState, useEffect } from "react";
+// import toast from "react-hot-toast";
+
+// export default function SettingsForm() {
+//   const [siteTitle, setSiteTitle] = useState("");
+//   const [siteDescription, setSiteDescription] = useState("");
+//   const [footerDescription, setFooterDescription] = useState("");
+//   const [footerPhone, setFooterPhone] = useState("");
+//   const [footerEmail, setFooterEmail] = useState("");
+//   const [footerName, setFooterName] = useState("");
+//   const [supportEmail, setSupportEmail] = useState("");
+//   const [logoPreview, setLogoPreview] = useState(null);
+//   const [logoFile, setLogoFile] = useState(null);
+//   const [uploading, setUploading] = useState(false);
+
+//   useEffect(() => {
+//     const fetchSettings = async () => {
+//       try {
+//         const res = await fetch("/api/settings");
+//         const data = await res.json();
+//         setLogoPreview(data.logoUrl); // from MongoDB
+//       } catch (err) {
+//         console.error("Failed to fetch settings", err);
+//       }
+//     };
+
+//     fetchSettings();
+//   }, []);
+
+//   useEffect(() => {
+//     const fetchSiteDetails = async () => {
+//       try {
+//         const res = await fetch("/api/settings/metadata");
+//         const data = await res.json();
+
+//         setSiteTitle(data.siteTitle || "");
+//         setSiteDescription(data.siteDescription || "");
+//         setFooterDescription(data.footerDescription || "");
+//         setFooterPhone(data.footerPhone || "");
+//         setFooterEmail(data.footerEmail || "");
+//         setFooterName(data.footerName || "");
+//         setSupportEmail(data.supportEmail || "");
+//       } catch (error) {
+//         toast.error("Failed to load site settings");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSiteDetails();
+//   }, []);
+
+//   useEffect(() => {
+//     const fetchSettings = async () => {
+//       try {
+//         const res = await fetch("/api/settings/footerdetails");
+//         const data = await res.json();
+//         if (data) {
+//           setFooterDescription(data.footerDescription || "");
+//           setFooterPhone(data.footerPhone || "");
+//           setFooterEmail(data.footerEmail || "");
+//           setFooterName(data.footerName || "");
+//         }
+//       } catch (err) {
+//         console.error("Failed to fetch settings:", err);
+//       }
+//     };
+//     fetchSettings();
+//   }, []);
+
+//   // Upload logo separately
+//   const handleLogoChange = async (e) => {
+//     const file = e.target.files[0];
+//     if (!file) return;
+
+//     setLogoPreview(URL.createObjectURL(file));
+//     setUploading(true);
+
+//     const formData = new FormData();
+//     formData.append("file", file);
+
+//     const res = await fetch("/api/upload-logo", {
+//       method: "POST",
+//       body: formData,
+//     });
+
+//     const result = await res.json();
+//     setUploading(false);
+
+//     if (res.ok) {
+//       toast.success("Logo uploaded");
+//     } else {
+//       toast.error(result.error || "Upload failed");
+//     }
+//   };
+
+//   const handleRemoveLogo = async () => {
+//     try {
+//       const res = await fetch("/api/settings/logo", { method: "DELETE" });
+//       if (!res.ok) throw new Error("Failed to delete logo");
+//       toast.success("Logo removed");
+//       setLogoPreview(null);
+//     } catch (err) {
+//       toast.error("Error removing logo");
+//     }
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     const payload = {
+//       siteTitle,
+//       siteDescription,
+//       footerDescription,
+//       footerPhone,
+//       footerEmail,
+//       footerName,
+//       supportEmail,
+//     };
+
+//     try {
+//       const res = await fetch("/api/settings/metadata", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify(payload),
+//       });
+
+//       if (res.ok) {
+//         toast.success("Settings updated");
+//       } else {
+//         const data = await res.json();
+//         toast.error(data.error || "Update failed");
+//       }
+//     } catch (err) {
+//       toast.error("Unexpected error");
+//     }
+//   };
+
+//   return (
+//     <form onSubmit={handleSubmit} className="space-y-4">
+//       <h3 className="text-lg font-semibold">Site Settings</h3>
+
+//       <div className="space-y-2">
+//         <label className="text-sm font-medium">Site Title</label>
+//         <input
+//           type="text"
+//           value={siteTitle}
+//           onChange={(e) => setSiteTitle(e.target.value)}
+//           className="w-full p-2 border rounded"
+//         />
+//       </div>
+
+//       <div className="space-y-2">
+//         <label className="text-sm font-medium">Site Description</label>
+//         <textarea
+//           value={siteDescription}
+//           onChange={(e) => setSiteDescription(e.target.value)}
+//           className="w-full p-2 border rounded"
+//           rows={3}
+//         />
+//       </div>
+
+//       <div className="space-y-2">
+//         <label className="text-sm font-medium">Support Email</label>
+//         <input
+//           type="email"
+//           value={supportEmail}
+//           onChange={(e) => setSupportEmail(e.target.value)}
+//           className="w-full p-2 border rounded"
+//         />
+//       </div>
+
+//       <div className="space-y-2">
+//         <label className="text-sm font-medium">Upload Logo</label>
+//         {logoPreview ? (
+//           <div className="flex items-center gap-4">
+//             <img src={logoPreview} alt="Logo" className="w-20 h-20 object-contain border rounded" />
+//             <button
+//               type="button"
+//               onClick={handleRemoveLogo}
+//               className="text-red-500 text-sm hover:underline"
+//             >
+//               Remove
+//             </button>
+//           </div>
+//         ) : (
+//           <input
+//             type="file"
+//             accept="image/*"
+//             onChange={handleLogoChange}
+//             className="w-full p-2 border rounded bg-white text-gray-700"
+//           />
+//         )}
+//       </div>
+
+//       <h3 className="text-lg font-semibold pt-6">Footer Settings</h3>
+
+//       <textarea
+//         value={footerDescription}
+//         onChange={(e) => setFooterDescription(e.target.value)}
+//         placeholder="Footer Description"
+//         className="w-full p-2 border rounded"
+//       />
+
+//       <input
+//         value={footerPhone}
+//         onChange={(e) => setFooterPhone(e.target.value)}
+//         placeholder="Footer Phone"
+//         className="w-full p-2 border rounded"
+//       />
+
+//       <input
+//         value={footerEmail}
+//         onChange={(e) => setFooterEmail(e.target.value)}
+//         placeholder="Footer Email"
+//         type="email"
+//         className="w-full p-2 border rounded"
+//       />
+
+//       <input
+//         value={footerName}
+//         onChange={(e) => setFooterName(e.target.value)}
+//         placeholder="Footer Name"
+//         className="w-full p-2 border rounded"
+//       />
+
+//       <button
+//         type="submit"
+//         className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700"
+//       >
+//         Save Changes
+//       </button>
+//     </form>
+//   );
+// }

@@ -5,6 +5,11 @@ const SettingsSchema = new mongoose.Schema({
   siteTitle: String,
   siteDescription: String,
   supportEmail: String,
+  footerDescription: String,
+  footerPhone: String,
+  footerEmail: String,
+  footerName: String,
+  
 });
 
 export default mongoose.models.Settings || mongoose.model('Settings', SettingsSchema);
