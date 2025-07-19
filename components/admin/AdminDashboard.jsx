@@ -8,7 +8,8 @@ import {
   Rocket,
   FileBarChart,
   CreditCard,
-  UserCheck
+  UserCheck,
+  
 } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
 import MiniChart from "./settings/charts/MiniChart";
@@ -170,15 +171,14 @@ export default function AdminDashboard({ setActiveView, setActiveTab, setUserPan
         icon: <Users className="w-6 h-6 text-gray-700" />,
       onClick: () => {
         setActiveTab("users");
-        setUserPanel("main");
+        // setUserPanel("main");
         setActiveView("settings");
       },
     },
     {
       title: "Active Subscribers",
       value: subscriberCount.toString(),
-    //   change: `${subscriberPercentage}% of users`,
-    change: `${((subscriberCount / userCount) * 100).toFixed(1)}%`,
+      change: `${((subscriberCount / userCount) * 100).toFixed(1)}%`,
       icon: <UserCheck className="w-6 h-6 text-green-600" />,
       onClick: () => {
         setActiveTab("users");

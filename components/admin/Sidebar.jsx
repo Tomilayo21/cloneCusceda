@@ -1,178 +1,285 @@
-// import React from 'react';
-// import Link from 'next/link';
-// import { usePathname } from 'next/navigation';
-// import {
-//   PlusSquare,
-//   ListOrdered,
-//   ShoppingCart,
-//   Users,
-//   Star,
-//   Bell,
-//   CreditCard,
-//   Mail,
-//   Contact,
-//   Headphones, 
-//   Tag
-// } from 'lucide-react';
-
-// const SideBar = () => {
-//   const pathname = usePathname();
-
-//   const menuItems = [
-//     { name: 'Add Products', path: '/admin', icon: <PlusSquare className="w-6 h-6" /> },
-//     { name: 'Customer Support', path: '/admin/customer-support', icon: <Headphones className="w-6 h-6" /> },
-//     { name: 'Messages', path: '/admin/messages', icon: <Mail className="w-6 h-6" /> },
-//     { name: 'Notifications', path: '/admin/notifications', icon: <Bell className="w-6 h-6" /> },
-//     { name: 'Orders', path: '/admin/orders', icon: <Tag className="w-6 h-6" /> },
-//     { name: 'Products List', path: '/admin/product-list', icon: <ListOrdered className="w-6 h-6" /> },
-//     { name: 'Reviews', path: '/admin/reviews', icon: <Star className="w-6 h-6" /> },
-//     { name: 'Subscribers', path: '/admin/subscribers', icon: <Contact className="w-6 h-6" /> },
-//     { name: 'Transactions', path: '/admin/payments', icon: <CreditCard className="w-6 h-6" /> },
-//     { name: 'Users', path: '/admin/users', icon: <Users className="w-6 h-6" /> },
-//   ];
-
-//   return (
-//     <div className='md:w-64 w-16 border-r min-h-screen text-base border-gray-300 py-2 flex flex-col'>
-//       {menuItems.map((item) => {
-//         const isActive = pathname === item.path;
-
-//         return (
-//           <Link href={item.path} key={item.name} passHref>
-//             <div
-//               className={`flex items-center py-3 px-4 gap-3 ${
-//                 isActive
-//                   ? "border-r-4 md:border-r-[6px] bg-orange-600/10 border-orange-500/90"
-//                   : "hover:bg-gray-100/90 border-white"
-//               }`}
-//             >
-//               {item.icon}
-//               <p className='md:block hidden text-center'>{item.name}</p>
-//             </div>
-//           </Link>
-//         );
-//       })}
-//     </div>
-//   );
-// };
-
-// export default SideBar;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // 'use client';
 
 // import React, { useEffect, useState } from 'react';
 // import Link from 'next/link';
 // import { usePathname } from 'next/navigation';
+// import { useTranslation } from 'react-i18next';
+// import { useClerk } from "@clerk/nextjs";
 // import {
-//   PlusSquare,
-//   ListOrdered,
-//   ShoppingCart,
-//   Users,
-//   Star,
-//   Bell,
-//   CreditCard,
-//   Mail,
-//   Contact,
-//   Headphones,
-//   Tag,
-//   ChevronsLeft,
-//   ChevronsRight
+//   PlusSquare, ListOrdered, Star, Mail, Bell, Tag,
+//   CreditCard, Users, Contact, Headphones,
+//   ChevronsLeft, ChevronsRight, ChevronDown, ChevronRight,
+//   Menu, Home, LogOut, Settings
 // } from 'lucide-react';
+// import { motion, AnimatePresence } from 'framer-motion';
+// import { useRouter } from 'next/navigation';
+// import { toast } from 'react-hot-toast';
+// import { useUser, UserButton } from "@clerk/nextjs";
+// import Image from "next/image";
+// import { assets, CartIcon } from "@/assets/assets";
+
+
+
 
 // const SideBar = () => {
 //   const pathname = usePathname();
-
+//   const { t } = useTranslation();
+//   const { signOut } = useClerk();
 //   const [collapsed, setCollapsed] = useState(false);
+//   const [openGroups, setOpenGroups] = useState({});
+//   const [mobileOpen, setMobileOpen] = useState(false);
+//   const router = useRouter();
+//   const { user } = useUser();
+//   const { openSignIn } = useClerk();
+  
 
-//   // Load from localStorage on mount
+
 //   useEffect(() => {
-//     const savedState = localStorage.getItem('sidebar-collapsed');
-//     if (savedState !== null) {
-//       setCollapsed(JSON.parse(savedState));
-//     }
+//     const saved = localStorage.getItem('sidebar-collapsed');
+//     if (saved !== null) setCollapsed(JSON.parse(saved));
 //   }, []);
 
-//   // Save to localStorage on change
 //   useEffect(() => {
 //     localStorage.setItem('sidebar-collapsed', JSON.stringify(collapsed));
 //   }, [collapsed]);
 
-//   const menuItems = [
-//     { name: 'Add Products', path: '/admin', icon: <PlusSquare className="w-6 h-6" /> },
-//     { name: 'Customer Support', path: '/admin/customer-support', icon: <Headphones className="w-6 h-6" /> },
-//     { name: 'Messages', path: '/admin/messages', icon: <Mail className="w-6 h-6" /> },
-//     { name: 'Notifications', path: '/admin/notifications', icon: <Bell className="w-6 h-6" /> },
-//     { name: 'Orders', path: '/admin/orders', icon: <Tag className="w-6 h-6" /> },
-//     { name: 'Products List', path: '/admin/product-list', icon: <ListOrdered className="w-6 h-6" /> },
-//     { name: 'Reviews', path: '/admin/reviews', icon: <Star className="w-6 h-6" /> },
-//     { name: 'Subscribers', path: '/admin/subscribers', icon: <Contact className="w-6 h-6" /> },
-//     { name: 'Transactions', path: '/admin/payments', icon: <CreditCard className="w-6 h-6" /> },
-//     { name: 'Users', path: '/admin/users', icon: <Users className="w-6 h-6" /> },
+//   const toggleGroup = (groupTitle) => {
+//     setOpenGroups((prev) => ({ ...prev, [groupTitle]: !prev[groupTitle] }));
+//   };
+
+//   const menuGroups = [
+//     {
+//       title: t('admin'),
+//       items: [
+//         { name: t('dashboard'), path: '/admin', icon: <Headphones className="w-5 h-5" /> },
+//       ],
+//     },
+//     {
+//       title: t('products'),
+//       items: [
+//         { name: t('addProducts'), path: '/admin/add-products', icon: <PlusSquare className="w-5 h-5" /> },
+//         { name: t('productsList'), path: '/admin/product-list', icon: <ListOrdered className="w-5 h-5" /> },
+//         { name: t('reviews'), path: '/admin/reviews', icon: <Star className="w-5 h-5" /> },
+//       ],
+//     },
+//     {
+//       title: t('orders'),
+//       items: [
+//         { name: t('orders'), path: '/admin/orders', icon: <Tag className="w-5 h-5" /> },
+//         { name: t('transactions'), path: '/admin/payments', icon: <CreditCard className="w-5 h-5" /> },
+//       ],
+//     },
+//     {
+//       title: t('communication'),
+//       items: [
+//         { name: t('messages'), path: '/admin/messages', icon: <Mail className="w-5 h-5" /> },
+//         { name: t('notifications'), path: '/admin/notifications', icon: <Bell className="w-5 h-5" /> },
+//       ],
+//     },
+//     {
+//       title: t('users'),
+//       items: [
+//         { name: t('usersList'), path: '/admin/users', icon: <Users className="w-5 h-5" /> },
+//         { name: t('subscribers'), path: '/admin/subscribers', icon: <Contact className="w-5 h-5" /> },
+//       ],
+//     },
+//     {
+//       title: t('settings'),
+//       items: [
+//         { name: t('general'), path: '/admin/settings', icon: <Settings className="w-5 h-5" /> },
+//       ],
+//     }
+
 //   ];
 
-//   return (
-//     <div
-//       className={`border-r border-gray-300 min-h-screen py-2 flex flex-col transition-all duration-300 ease-in-out ${
-//         collapsed ? 'w-16' : 'w-50'
-//       }`}
-//     >
-//       {/* Toggle Button */}
-//       <button
-//         onClick={() => setCollapsed(!collapsed)}
-//         className="self-end mr-2 mb-4 p-1 hover:bg-gray-200 rounded transition"
-//       >
-//         {collapsed ? <ChevronsRight className="w-5 h-5" /> : <ChevronsLeft className="w-5 h-5" />}
-//       </button>
+//   const sidebarContent = (
+//     <div className={`bg-white h-full border-r border-gray-200 py-4 flex flex-col transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'}`}>
+//       {/* Header */}
+//       <div className="hidden md:flex items-center justify-between px-4 mb-4">
+//         {!collapsed && <h1 className="text-lg font-bold text-green-600">Admin Panel</h1>}
+//         <button onClick={() => setCollapsed(!collapsed)} className="p-1 hover:bg-gray-200 rounded">
+//           {collapsed ? <ChevronsRight className="w-4 h-4" /> : <ChevronsLeft className="w-4 h-4" />}
+//         </button>
+//       </div>
 
-//       {/* Menu Items */}
-//       {menuItems.map((item) => {
-//         const isActive = pathname === item.path;
 
-//         return (
-//           <Link href={item.path} key={item.name} passHref>
-//             <div
-//               className={`flex items-center py-3 px-4 gap-3 cursor-pointer transition-all duration-200 ${
-//                 isActive
-//                   ? 'border-r-4 md:border-r-[6px] bg-orange-600/10 border-orange-500/90'
-//                   : 'hover:bg-gray-100/90 border-white'
-//               }`}
-//             >
-//               {item.icon}
-//               {!collapsed && <p className="whitespace-nowrap">{item.name}</p>}
-//             </div>
-//           </Link>
-//         );
-//       })}
+//       {/* Menu */}
+//       <nav className="flex flex-col gap-1">
+//         {menuGroups.map((group) => (
+//           <div key={group.title}>
+//             {!collapsed && (
+//               <button
+//                 onClick={() => toggleGroup(group.title)}
+//                 className="flex items-center justify-between px-4 py-2 text-xs font-semibold text-gray-600 uppercase hover:bg-gray-100 w-full"
+//               >
+//                 <span>{group.title}</span>
+//                 {openGroups[group.title] ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+//               </button>
+//             )}
+
+//             <AnimatePresence>
+//               {(collapsed || openGroups[group.title]) && (
+//                 <motion.div
+//                   initial={{ height: 0, opacity: 0 }}
+//                   animate={{ height: 'auto', opacity: 1 }}
+//                   exit={{ height: 0, opacity: 0 }}
+//                   className="overflow-hidden"
+//                 >
+//                   {group.items.map((item) => {
+//                     const isActive = pathname === item.path;
+//                     return (
+//                       <Link key={item.name} href={item.path}>
+//                         <div
+//                           className={`flex items-center px-4 py-3 gap-3 text-sm font-medium cursor-pointer transition ${
+//                             isActive
+//                               ? 'bg-orange-100 text-orange-600 border-r-4 border-orange-500'
+//                               : 'hover:bg-gray-100 text-gray-700'
+//                           }`}
+//                         >
+//                           {item.icon}
+//                           {!collapsed && <span>{item.name}</span>}
+//                         </div>
+//                       </Link>
+//                     );
+//                   })}
+//                 </motion.div>
+//               )}
+//             </AnimatePresence>
+//           </div>
+//         ))}
+//       </nav>
+
+//       {/* Bottom Buttons */}
+//       {/* Bottom Buttons */}
+//       <div className="mt-auto px-4 pt-4 space-y-2">
+//         {user ? (
+//           <div className="flex items-center gap-3 p-2 rounded hover:bg-gray-100 cursor-pointer">
+//             <UserButton
+//               afterSignOutUrl="/"
+//               appearance={{ elements: { avatarBox: "w-8 h-8" } }}
+//             />
+//             {!collapsed && (
+//               <div>
+//                 <p className="text-sm font-semibold text-gray-900 leading-none">
+//                   {user.fullName || user.primaryEmailAddress?.emailAddress}
+//                 </p>
+//               </div>
+//             )}
+//           </div>
+//         ) : (
+//           <button
+//             onClick={() => {
+//               openSignIn();
+//               setMobileOpen(false);
+//             }}
+//             className="flex items-center gap-2 text-gray-700 hover:bg-[#EBEDED] rounded px-2 py-1"
+//           >
+//             <Image src={assets.user_icon} alt="user" className="w-4 h-4" />
+//             {!collapsed && <span>Sign In</span>}
+//           </button>
+//         )}
+
+//         <Link
+//           href="/"
+//           className="flex items-center gap-3 text-sm text-gray-700 hover:bg-gray-100 p-2 rounded"
+//         >
+//           <Home className="w-5 h-5" />
+//           {!collapsed && <span>Home</span>}
+//         </Link>
+
+//         <button
+//           onClick={() => {
+//             const confirmLogout = window.confirm("Are you sure you want to sign out?");
+//             if (confirmLogout) {
+//               signOut().then(() => {
+//                 toast.success("You've been signed out");
+//                 router.push('/');
+//               });
+//             }
+//           }}
+//           className="w-full flex items-center gap-3 text-sm text-red-600 hover:bg-red-100 p-2 rounded"
+//         >
+//           <LogOut className="w-5 h-5" />
+//           {!collapsed && <span>Logout</span>}
+//         </button>
+//       </div>
+
 //     </div>
+//   );
+
+//   return (
+//     <>
+//       {/* Desktop Sidebar */}
+//       <div className="hidden md:block">{sidebarContent}</div>
+
+//       {/* Mobile Drawer Toggle */}
+//       <div className="md:hidden fixed top-4 left-4 z-50">
+//         <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 bg-white shadow rounded-full">
+//           <Menu className="w-5 h-5" />
+//         </button>
+//       </div>
+
+//       {/* Mobile Drawer */}
+//       {mobileOpen && (
+//         <div className="md:hidden fixed inset-0 bg-black/40 z-40" onClick={() => setMobileOpen(false)}>
+//           <div className="w-64 h-full bg-white shadow-lg" onClick={(e) => e.stopPropagation()}>
+//             {sidebarContent}
+//           </div>
+//         </div>
+//       )}
+//     </>
 //   );
 // };
 
 // export default SideBar;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -214,184 +321,174 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-import { useClerk } from '@clerk/nextjs';
+import { useClerk, useUser, UserButton } from '@clerk/nextjs';
 import {
-  PlusSquare, ListOrdered, Star, Mail, Bell, Tag,
-  CreditCard, Users, Contact, Headphones,
-  ChevronsLeft, ChevronsRight, ChevronDown, ChevronRight,
-  Menu, Home, LogOut, Settings
+  LayoutDashboard,
+  Users,
+  CreditCard,
+  MessageSquare,
+  Settings,
+  FileText,
+  LogOut,
+  Home,
+  Menu,
+  Monitor
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 
+const menuItems = [
+  {
+    name: 'Dashboard',
+    path: '/admin',
+    icon: <LayoutDashboard className="w-5 h-5" />,
+  },
+  {
+    name: 'Users',
+    path: '/admin/users',
+    icon: <Users className="w-5 h-5" />,
+  },
+  {
+    name: 'Transactions',
+    path: '/admin/payments',
+    icon: <CreditCard className="w-5 h-5" />,
+  },
+  {
+    name: 'Support Chats',
+    path: '/admin/support-chats',
+    icon: <MessageSquare className="w-5 h-5" />,
+  },
+  {
+    name: 'Settings',
+    path: '/admin/settings',
+    icon: <Settings className="w-5 h-5" />,
+  },
+  {
+    name: 'Activity Logs',
+    path: '/admin/activity-logs',
+    icon: <FileText className="w-5 h-5" />,
+  },
+];
 
 const SideBar = () => {
   const pathname = usePathname();
   const { t } = useTranslation();
-  const { signOut } = useClerk();
-  const [collapsed, setCollapsed] = useState(false);
-  const [openGroups, setOpenGroups] = useState({});
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const { signOut, openSignIn } = useClerk();
+  const { user } = useUser();
   const router = useRouter();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  useEffect(() => {
-    const saved = localStorage.getItem('sidebar-collapsed');
-    if (saved !== null) setCollapsed(JSON.parse(saved));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('sidebar-collapsed', JSON.stringify(collapsed));
-  }, [collapsed]);
-
-  const toggleGroup = (groupTitle) => {
-    setOpenGroups((prev) => ({ ...prev, [groupTitle]: !prev[groupTitle] }));
+  const handleLogout = () => {
+    const confirmLogout = window.confirm('Are you sure you want to sign out?');
+    if (confirmLogout) {
+      signOut().then(() => {
+        toast.success("You've been signed out");
+        router.push('/');
+      });
+    }
   };
 
-  const menuGroups = [
-    {
-      title: t('admin'),
-      items: [
-        { name: t('dashboard'), path: '/admin', icon: <Headphones className="w-5 h-5" /> },
-      ],
-    },
-    {
-      title: t('products'),
-      items: [
-        { name: t('addProducts'), path: '/admin/add-products', icon: <PlusSquare className="w-5 h-5" /> },
-        { name: t('productsList'), path: '/admin/product-list', icon: <ListOrdered className="w-5 h-5" /> },
-        { name: t('reviews'), path: '/admin/reviews', icon: <Star className="w-5 h-5" /> },
-      ],
-    },
-    {
-      title: t('orders'),
-      items: [
-        { name: t('orders'), path: '/admin/orders', icon: <Tag className="w-5 h-5" /> },
-        { name: t('transactions'), path: '/admin/payments', icon: <CreditCard className="w-5 h-5" /> },
-      ],
-    },
-    {
-      title: t('communication'),
-      items: [
-        { name: t('messages'), path: '/admin/messages', icon: <Mail className="w-5 h-5" /> },
-        { name: t('notifications'), path: '/admin/notifications', icon: <Bell className="w-5 h-5" /> },
-      ],
-    },
-    {
-      title: t('users'),
-      items: [
-        { name: t('usersList'), path: '/admin/users', icon: <Users className="w-5 h-5" /> },
-        { name: t('subscribers'), path: '/admin/subscribers', icon: <Contact className="w-5 h-5" /> },
-      ],
-    },
-    {
-      title: t('settings'),
-      items: [
-        { name: t('general'), path: '/admin/settings', icon: <Settings className="w-5 h-5" /> },
-      ],
-    }
-
-  ];
-
-  const sidebarContent = (
-    <div className={`bg-white h-full border-r border-gray-200 py-4 flex flex-col transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'}`}>
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 mb-4">
-        {!collapsed && <h1 className="text-lg font-bold text-green-600">Admin Panel</h1>}
-        <button onClick={() => setCollapsed(!collapsed)} className="p-1 hover:bg-gray-200 rounded">
-          {collapsed ? <ChevronsRight className="w-4 h-4" /> : <ChevronsLeft className="w-4 h-4" />}
-        </button>
+  const SidebarContent = (
+    <div className="h-full w-64 bg-white border-r border-gray-200 flex flex-col">
+      <div className="px-6 py-4 border-b">
+        <div className="flex items-center space-x-2">
+          <Monitor className="w-6 h-6 text-black" />
+          <h2 className="text-lg font-semibold text-black-600">Admin Panel</h2>
+        </div>
+        <p className="text-sm text-gray-500 ml-8">System Management</p>
       </div>
 
-      {/* Menu */}
-      <nav className="flex flex-col gap-1">
-        {menuGroups.map((group) => (
-          <div key={group.title}>
-            {!collapsed && (
-              <button
-                onClick={() => toggleGroup(group.title)}
-                className="flex items-center justify-between px-4 py-2 text-xs font-semibold text-gray-600 uppercase hover:bg-gray-100 w-full"
-              >
-                <span>{group.title}</span>
-                {openGroups[group.title] ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-              </button>
-            )}
 
-            <AnimatePresence>
-              {(collapsed || openGroups[group.title]) && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  className="overflow-hidden"
-                >
-                  {group.items.map((item) => {
-                    const isActive = pathname === item.path;
-                    return (
-                      <Link key={item.name} href={item.path}>
-                        <div
-                          className={`flex items-center px-4 py-3 gap-3 text-sm font-medium cursor-pointer transition ${
-                            isActive
-                              ? 'bg-orange-100 text-orange-600 border-r-4 border-orange-500'
-                              : 'hover:bg-gray-100 text-gray-700'
-                          }`}
-                        >
-                          {item.icon}
-                          {!collapsed && <span>{item.name}</span>}
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        ))}
+      <nav className="flex-1 overflow-y-auto py-4">
+        <ul className="space-y-1">
+          {menuItems.map((item) => {
+            const active = pathname === item.path;
+            return (
+              <li key={item.name}>
+                <Link href={item.path}>
+                  <div
+                    className={`flex items-center gap-3 px-5 py-3 text-sm font-medium rounded-md cursor-pointer transition ${
+                      active
+                        ? 'bg-orange-100 text-black-700'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    {item.icon}
+                    <span>{item.name}</span>
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </nav>
 
-      {/* Bottom Buttons */}
-      <div className="mt-auto px-4 pt-4">
-        <Link href="/" className="flex items-center gap-3 text-sm text-gray-700 hover:bg-gray-100 p-2 rounded">
+      <div className="px-4 py-3 border-t">
+        {user ? (
+          <div className="flex items-center gap-3 mb-3 relative">
+            <UserButton afterSignOutUrl="/" />
+            <div className="absolute inset-0 z-10 cursor-default"></div>
+            <div className="text-sm font-medium">
+              {user.fullName || user.primaryEmailAddress?.emailAddress}
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => openSignIn()}
+            className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 w-full px-4 py-2 rounded-md"
+          >
+            <Users className="w-4 h-4" />
+            <span>Sign In</span>
+          </button>
+        )}
+
+        <Link
+          href="/"
+          className="flex items-center gap-3 text-sm text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md"
+        >
           <Home className="w-5 h-5" />
-          {!collapsed && <span>Home</span>}
+          <span>Home</span>
         </Link>
+
         <button
-          onClick={() => {
-            const confirmLogout = window.confirm("Are you sure you want to sign out?");
-            if (confirmLogout) {
-              signOut().then(() => {
-                toast.success("You've been signed out");
-                router.push('/');
-              });
-            }
-          }}
-          className="w-full flex items-center gap-3 text-sm text-red-600 hover:bg-red-100 p-2 rounded mt-2"
+          onClick={handleLogout}
+          className="flex items-center gap-3 text-sm text-red-600 hover:bg-red-100 px-4 py-2 rounded-md mt-2 w-full"
         >
           <LogOut className="w-5 h-5" />
-          {!collapsed && <span>Logout</span>}
+          <span>Logout</span>
         </button>
-
       </div>
     </div>
   );
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <div className="hidden md:block">{sidebarContent}</div>
+      {/* Desktop */}
+      <aside className="hidden md:block fixed top-0 left-0 h-screen z-30">
+        {SidebarContent}
+      </aside>
 
-      {/* Mobile Drawer Toggle */}
+      {/* Mobile Toggle */}
       <div className="md:hidden fixed top-4 left-4 z-50">
-        <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 bg-white shadow rounded-full">
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="p-2 bg-white border rounded-full shadow"
+        >
           <Menu className="w-5 h-5" />
         </button>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Sidebar */}
       {mobileOpen && (
-        <div className="md:hidden fixed inset-0 bg-black/40 z-40" onClick={() => setMobileOpen(false)}>
-          <div className="w-64 h-full bg-white shadow-lg" onClick={(e) => e.stopPropagation()}>
-            {sidebarContent}
+        <div
+          className="fixed inset-0 bg-black/50 z-40"
+          onClick={() => setMobileOpen(false)}
+        >
+          <div
+            className="bg-white w-64 h-full shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {SidebarContent}
           </div>
         </div>
       )}

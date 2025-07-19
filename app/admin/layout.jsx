@@ -1,21 +1,20 @@
 'use client'
-import Footer from '@/components/admin/Footer'
-import Navbar from '@/components/admin/Navbar'
+
 import Sidebar from '@/components/admin/Sidebar'
 import React from 'react'
 
 const Layout = ({ children }) => {
   return (
-    <>
-    {/* <Navbar /> */}
-    <div>
-      <div className='flex w-full'>
-        <Sidebar />
+    <div className="flex min-h-screen bg-gray-50 overflow-x-hidden">
+      {/* Fixed Sidebar */}
+      <Sidebar />
+
+      {/* Main Content */}
+      <main className="flex-1 ml-0 md:ml-64 px-4 py-6 transition-all duration-300">
         {children}
-      </div>
+        {/* <Footer /> */}
+      </main>
     </div>
-    {/* <Footer /> */}
-    </>
   )
 }
 
