@@ -12,6 +12,7 @@
     "@clerk/clerk-sdk-node": "^4.13.23",
     "@clerk/nextjs": "^6.18.0",
     "@emailjs/browser": "^4.4.1",
+    "@google-cloud/storage": "^7.16.0",
     "@paypal/react-paypal-js": "^8.8.3",
     "@radix-ui/react-tooltip": "^1.2.7",
     "@stripe/stripe-js": "^7.3.1",
