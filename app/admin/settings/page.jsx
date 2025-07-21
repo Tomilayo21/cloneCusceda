@@ -32,6 +32,9 @@ import UserListPanel from "@/components/admin/settings/users/UserListPanel";
 import SubscribersPage from "@/components/admin/settings/users/SubscribersPage";
 import RegUsers from "@/components/admin/RegUsers";
 import toast from "react-hot-toast";
+import FormatDatabase from '@/components/admin/FormatDatabase';
+import { useUser } from '@clerk/nextjs';
+import BackupModal from '@/components/admin/BackupModal';
 
 
 const settingsTabs = [
@@ -56,8 +59,6 @@ export default function AdminSettings() {
   const [isOpen, setIsOpen] = useState(true);
   const [logoPreview, setLogoPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
-  // const [logoUrl, setLogoUrl] = useState(null);
-  // const [logoFile, setLogoFile] = useState(null);
   const [siteTitle, setSiteTitle] = useState('');
   const [siteDescription, setSiteDescription] = useState('');
   const [loading, setLoading] = useState(true);
@@ -68,6 +69,13 @@ export default function AdminSettings() {
   const [supportEmail, setSupportEmail] = useState("");
   const [settingsPanel, setSettingsPanel] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { user } = useUser();
+  const [showModal, setShowModal] = useState(false);
+
+  // const isAdmin = user?.publicMetadata?.role === 'admin';
+
+  // if (!isAdmin) return null;
 
 
 
@@ -198,24 +206,24 @@ export default function AdminSettings() {
 
 
   const handleFormatDatabase = async () => {
-  const confirmed = confirm("Are you sure? This will permanently delete ALL data.");
-  if (!confirmed) return;
+    const confirmed = confirm("Are you sure? This will permanently delete ALL data.");
+    if (!confirmed) return;
 
-  try {
-    const res = await fetch("/api/admin/format-database", {
-      method: "DELETE",
-    });
+    try {
+      const res = await fetch("/api/admin/format-database", {
+        method: "DELETE",
+      });
 
-    if (res.ok) {
-      toast.success("Database wiped successfully.");
-    } else {
-      const data = await res.json();
-      toast.error(data.error || "Failed to format database.");
+      if (res.ok) {
+        toast.success("Database wiped successfully.");
+      } else {
+        const data = await res.json();
+        toast.error(data.error || "Failed to format database.");
+      }
+    } catch (err) {
+      toast.error("Unexpected error occurred.");
     }
-  } catch (err) {
-    toast.error("Unexpected error occurred.");
-  }
-};
+  };
 
 
 
@@ -838,9 +846,13 @@ export default function AdminSettings() {
             {/* Database Backup */}
             <div>
               <p className="text-sm text-gray-600 mb-1">Generate and download a full database backup.</p>
-              <button className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">
-                Download Database Backup
+              <button
+                onClick={() => setShowModal(true)}
+                className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800"
+              >
+                Database Backup
               </button>
+              {showModal && <BackupModal onClose={() => setShowModal(false)} />}
             </div>
 
             {/* Restore From Backup */}
@@ -858,12 +870,12 @@ export default function AdminSettings() {
               <p className="text-sm text-gray-600 mb-2">
                 This will permanently erase all data (orders, products, users, etc). This action cannot be undone.
               </p>
-              <button
-                onClick={handleFormatDatabase}
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-              >
-                Format Database
-              </button>
+              <FormatDatabase
+                onSuccess={() => {
+                  // Optional: trigger refetch or redirect
+                  console.log("Database cleared.");
+                }}
+              />
             </div>
           </div>
         )}

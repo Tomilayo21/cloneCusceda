@@ -1,6 +1,6 @@
 import connectDB from '@/config/db';
 import Review from '@/models/Review';
-import authSeller from '@/lib/authSeller';
+import authSeller from '@/lib/authAdmin';
 import { getAuth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 

@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "cusceda",
+  "private_key_id": "a85e046b58e91e9f4d186a52ef6b42222e3e3020",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCXuDBgn/N4g1ez\nkj5UsOWOrakvLAVCif86xEGkTw1HhK2S+VIW1/iIPF1E7htzrSpcY0vINGLlyiYu\njchNFlv/OUCMKegZTnDH0UXSkO25072wyGaoemmM+y3pTEs3vOayT70D5pNm+3Mr\nCER9kMLMH0fmblzXNW3jUJi1CIBtYNuuMUE6TXoCV2+NPys5IEFNNPYR0JKWUP5X\nrq1cRviwps03JPBur2aLkAisFsGwpqaxY89pVVXNb5leoFHQcJaFJK3ZbgXA30Zs\n2PlaLS6MuV9UucWGBan0hlU3xVLdK9Qt3I82at5ebeg/M0VWTTJzxLuACzlVyiB1\n0+2FD+E/AgMBAAECggEACooEbkneJ1J0Xqh7hPWO1LTyijDUIrWkUag9aRUGtp+c\nURfZoHWbMZeD4RxrMsNmLGnHY15kOlMrCNPXhKdXd6i596KXmV5uDitW3tQrd1ui\nkyuwmeZ6+4ydOVYP6YzJN7y7RBCZz68K5oPaAiDyryxDGdozv81Z108LdJPlG/Ph\nmttIw0PLoqy/9IP+pvv3WYMEzMnjZt+xK9yJccmBi38G3rTYrl6HvjTFRnUsqlzh\nHTby+bGL7Hg5Bi/l6aOa5ycksdmtYIMfBq7Pb4hVRzfqCqwoAn5ZWWIVFFr5EJfb\nn21GyF8NXVk9nifkEpbJR31acX4vvjr1Oxx+EpnoeQKBgQDKZkwOJhlpvjXh9UAm\nWJVp/dkprLpjFevJ0KZb/vMuybwFapfxqwAFF1vM+VNfeou7XKHDULL8QtkIpZWx\nin3pokBVErETysYzbxu5lDzmQUUZG+00WfKuE/avM8+YzvVMlnZGoKjDGWNdlgo1\nhtkqCf7XG8aUNP+cL/vqN/JdJwKBgQC/5gc95qbIvVjvZVVMhNkZMCDu55B7NE6Y\n2AYxH/rk3ZQTs0MOKPoGAYtlKDyHxdVx5BeJ4Y2Jepwax43PybNToVmZz1lQ3yex\nTDF5yUTzmu2xyli+y/O6LyZ+xLkcvY0k6jVDzAELwUgeVYN4qFnrjNrXuEXQCdY3\nHhMab48aKQKBgHcXjjTdEiL4OvhDuIVXpkMBjOBKtDlNUrojPV/wOeMT7MA7IkCe\n35ofTnLjWb1afBG4xa4JM+fe5ZmC5Pvcg44PXE8yemMs80acX/HoWZUaXrARkJc3\nPeZT9NjOYZ6GWCvCdMHGEscJj0An4sXwHKPx0bN8snHOZYDfcxkz5jYNAoGAfHDr\n801WjMiVGrFozjU8H6RhRuuteufhrCYyZbrqVW4HL3tJGa6i7DAmOBQOpLE7CB80\n0HoO8b8r6gXMRZn0C2CPnTmkHtiHgeb6EpLdfufSCkBAqoHR7MPUv9JMhIG7PNwQ\nbIWni/rsDJfBqQXrQd/WrptV0mH+o0GCe9sqPnkCgYBbuknLiPc2aCPabrq9eHm9\ngD823i4nkPnP1KqJae9k/3b6M0bOAgmSWYDHumh2wXZev/ghrqs2c7hg1XO4H4Rv\n8UWaCjv+oR4GYwVNZYp3y/fBKbXL1ijegnrWaBOe+GPr5rswZgXdfFZ0s3DGgNEJ\nxTDI0ESvmAM3MVdsdZsp3Q==\n-----END PRIVATE KEY-----\n",
+  "client_email": "mongodb-backup@cusceda.iam.gserviceaccount.com",
+  "client_id": "116626192095117045212",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/mongodb-backup%40cusceda.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

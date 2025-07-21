@@ -1,7 +1,7 @@
 import connectDB from "@/config/db";
 import Order from "@/models/Order";
 import { getAuth } from "@clerk/nextjs/server";
-import authSeller from "@/lib/authSeller";
+import authSeller from "@/lib/authAdmin";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {

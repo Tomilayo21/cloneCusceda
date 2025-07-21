@@ -3,7 +3,7 @@ import { getAuth } from "@clerk/nextjs/server";
 import Order from "@/models/Order";
 import Product from "@/models/Product";
 import Address from "@/models/Address";
-import authSeller from "@/lib/authSeller";
+import authSeller from "@/lib/authAdmin";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
