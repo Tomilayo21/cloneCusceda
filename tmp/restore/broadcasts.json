@@ -1,0 +1,443 @@
+[
+  {
+    "_id": "686e7872ef436744dea99f63",
+    "subject": "Weekly Update Newsletter",
+    "message": "<p><strong>Hello, Readers! 👋</strong></p><p>We're excited to share our latest updates, news, and insights with you. Here's what's new:</p><p>News &amp; Updates 📣</p><p>- New Project Launch: We're thrilled to announce the launch of our new project, focused on innovative solutions for the future.</p><p>- Team Member Spotlight: Meet Jane Doe, our latest team member, who's bringing her expertise in marketing to help us grow.</p><p></p><p><strong>Insights &amp; Tips 💡</strong></p><p>- 5 Ways to Boost Productivity: Check out our latest article for tips on how to stay focused and productive in your daily life.</p><p></p><p><strong>Upcoming Events 📅</strong></p><p>- Webinar: Join us next Thursday for a webinar on the latest trends in technology.</p><p></p><p><strong>Stay Connected 🌐</strong></p><p>- Follow us on social media: Get the latest updates, news, and behind-the-scenes insights on our social media channels.</p><p>That's it for now! 👋</p><p>We hope you found this newsletter informative and engaging. Stay tuned for more updates, and don't hesitate to reach out if you have any questions or feedback.</p><p>Best regards,</p><p>Tomilayo from Cusceda</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "686e7872ef436744dea99f64"
+      }
+    ],
+    "createdAt": "2025-07-09T14:10:58.533Z",
+    "updatedAt": "2025-07-09T14:10:58.533Z",
+    "__v": 0
+  },
+  {
+    "_id": "686e7b18ef436744dea99f6b",
+    "subject": "Weekly Update Newsletter",
+    "message": "<p><strong>Hello, Readers! 👋</strong></p><p>We're excited to share our latest updates, news, and insights with you. Here's what's new:</p><p></p><p><strong>News &amp; Updates 📣</strong></p><p>- New Project Launch: We're thrilled to announce the launch of our new project, focused on innovative solutions for the future.</p><p>- Team Member Spotlight: Meet Jane Doe, our latest team member, who's bringing her expertise in marketing to help us grow.</p><p></p><p><strong>Insights &amp; Tips 💡</strong></p><p>- 5 Ways to Boost Productivity: Check out our latest article for tips on how to stay focused and productive in your daily life.</p><p></p><p><strong>Upcoming Events 📅</strong></p><p>- Webinar: Join us next Thursday for a webinar on the latest trends in technology.</p><p></p><p><strong>Stay Connected 🌐</strong></p><p>- Follow us on social media: Get the latest updates, news, and behind-the-scenes insights on our social media channels.</p><p>That's it for now! 👋</p><p>We hope you found this newsletter informative and engaging. Stay tuned for more updates, and don't hesitate to reach out if you have any questions or feedback.</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "686e7b18ef436744dea99f6c"
+      }
+    ],
+    "createdAt": "2025-07-09T14:22:16.514Z",
+    "updatedAt": "2025-07-09T14:22:16.514Z",
+    "__v": 0
+  },
+  {
+    "_id": "686e7bbaef436744dea99f6f",
+    "subject": "News",
+    "message": "<p>Hello, Readers! 👋</p><p>We're excited to share our latest updates, news, and insights with you. Here's what's new:</p><p>News &amp; Updates 📣</p><p>- New Project Launch: We're thrilled to announce the launch of our new project, focused on innovative solutions for the future.</p><p>- Team Member Spotlight: Meet Jane Doe, our latest team member, who's bringing her expertise in marketing to help us grow.</p><p>Insights &amp; Tips 💡</p><p>- 5 Ways to Boost Productivity: Check out our latest article for tips on how to stay focused and productive in your daily life.</p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p>Upcoming Events 📅</p><p>- Webinar: Join us next Thursday for a webinar on the latest trends in technology.</p><p>Stay Connected 🌐</p><p>- Follow us on social media: Get the latest updates, news, and behind-the-scenes insights on our social media channels.</p><p>That's it for now! 👋</p><p>We hope you found this newsletter informative and engaging. Stay tuned for more updates, and don't hesitate to reach out if you have any questions or feedback.</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "686e7bbaef436744dea99f70"
+      }
+    ],
+    "createdAt": "2025-07-09T14:24:58.814Z",
+    "updatedAt": "2025-07-09T14:24:58.814Z",
+    "__v": 0
+  },
+  {
+    "_id": "686e7c5aef436744dea99f73",
+    "subject": "Letter",
+    "message": "<p>Hello, Readers! 👋</p><p>We're excited to share our latest updates, news, and insights with you. Here's what's new:</p><p>News &amp; Updates 📣</p><p>- New Project Launch: We're thrilled to announce the launch of our new project, focused on innovative solutions for the future.</p><p>- Team Member Spotlight: Meet Jane Doe, our latest team member, who's bringing her expertise in marketing to help us grow.</p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p>Insights &amp; Tips 💡</p><p>- 5 Ways to Boost Productivity: Check out our latest article for tips on how to stay focused and productive in your daily life.</p><p>Upcoming Events 📅</p><p>- Webinar: Join us next Thursday for a webinar on the latest trends in technology.</p><p>Stay Connected 🌐</p><p>- Follow us on social media: Get the latest updates, news, and behind-the-scenes insights on our social media channels.</p><p>That's it for now! 👋</p><p>We hope you found this newsletter informative and engaging. Stay tuned for more updates, and don't hesitate to reach out if you have any questions or feedback.</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "686e7c5aef436744dea99f74"
+      }
+    ],
+    "createdAt": "2025-07-09T14:27:38.160Z",
+    "updatedAt": "2025-07-09T14:27:38.160Z",
+    "__v": 0
+  },
+  {
+    "_id": "686e7cb9ef436744dea99f77",
+    "subject": "Men",
+    "message": "<p>div style</p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p>=\"white-space: pre-wrap;\"</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "686e7cb9ef436744dea99f78"
+      }
+    ],
+    "createdAt": "2025-07-09T14:29:13.712Z",
+    "updatedAt": "2025-07-09T14:29:13.712Z",
+    "__v": 0
+  },
+  {
+    "_id": "686e7d38ef436744dea99f7b",
+    "subject": "Hello",
+    "message": "<p>Hello, Readers! 👋</p><p>We're excited to share our latest updates, news, and insights with you. Here's what's new:</p><p>News &amp; Updates 📣</p><p>- New Project Launch: We're thrilled to announce the launch of our new project, focused on innovative solutions for the future.</p><p>- Team Member Spotlight: Meet Jane Doe, our latest team member, who's bringing her expertise in marketing to help us grow.</p><p></p><p></p><p></p><p>Insights &amp; Tips 💡</p><p>- 5 Ways to Boost Productivity: Check out our latest article for tips on how to stay focused and productive in your daily life.</p><p>Upcoming Events 📅</p><p>- Webinar: Join us next Thursday for a webinar on the latest trends in technology.</p><p>Stay Connected 🌐</p><p>- Follow us on social media: Get the latest updates, news, and behind-the-scenes insights on our social media channels.</p><p>That's it for now! 👋</p><p>We hope you found this newsletter informative and engaging. Stay tuned for more updates, and don't hesitate to reach out if you have any questions or feedback.</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "686e7d38ef436744dea99f7c"
+      }
+    ],
+    "createdAt": "2025-07-09T14:31:20.944Z",
+    "updatedAt": "2025-07-09T14:31:20.944Z",
+    "__v": 0
+  },
+  {
+    "_id": "687265c65fe70aeea50a9f31",
+    "subject": "Men",
+    "message": "<p>Men Against Boys</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "6872f1296536df9e4136ecd1"
+      }
+    ],
+    "scheduledFor": "2025-07-12T13:41:00.000Z",
+    "createdAt": "2025-07-12T13:40:22.103Z",
+    "updatedAt": "2025-07-12T23:35:05.039Z",
+    "__v": 1
+  },
+  {
+    "_id": "6872671e5fe70aeea50a9f35",
+    "subject": "Subject",
+    "message": "<p>Men</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "6872f12b6536df9e4136ecd4"
+      }
+    ],
+    "scheduledFor": "2025-07-12T13:47:00.000Z",
+    "createdAt": "2025-07-12T13:46:06.297Z",
+    "updatedAt": "2025-07-12T23:35:07.363Z",
+    "__v": 1
+  },
+  {
+    "_id": "6872efc2742e0f38666c4e61",
+    "subject": "Great",
+    "message": "<p>Greater</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "6872fe0c966cd386c94a1bb2"
+      }
+    ],
+    "scheduledFor": "2025-07-13T00:30:00.000Z",
+    "createdAt": "2025-07-12T23:29:06.218Z",
+    "updatedAt": "2025-07-13T00:30:04.456Z",
+    "__v": 1,
+    "attachment": []
+  },
+  {
+    "_id": "6872f1846536df9e4136ecd7",
+    "subject": "Send Broadcast",
+    "message": "<p><strong>Send Broadcast</strong></p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "68730065966cd386c94a1bcd"
+      }
+    ],
+    "scheduledFor": "2025-07-13T00:38:00.000Z",
+    "createdAt": "2025-07-12T23:36:36.227Z",
+    "updatedAt": "2025-07-13T00:40:05.306Z",
+    "__v": 1,
+    "attachment": []
+  },
+  {
+    "_id": "6872f4626536df9e4136ecdd",
+    "subject": "HEllo",
+    "message": "<p>HEllo</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "failed",
+        "error": "subject is not defined",
+        "_id": "687302b81d1044917827f327"
+      }
+    ],
+    "scheduledFor": "2025-07-13T00:50:00.000Z",
+    "createdAt": "2025-07-12T23:48:50.632Z",
+    "updatedAt": "2025-07-13T00:50:00.641Z",
+    "__v": 1,
+    "attachment": []
+  },
+  {
+    "_id": "6872f897f53cb9e5c9705349",
+    "subject": "Band for Band",
+    "message": "<p>Band</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "6872f95bf53cb9e5c970534f"
+      }
+    ],
+    "scheduledFor": "2025-07-13T00:06:46.068Z",
+    "attachment": [],
+    "createdAt": "2025-07-13T00:06:47.077Z",
+    "updatedAt": "2025-07-13T00:10:03.377Z",
+    "__v": 1
+  },
+  {
+    "_id": "6872fa14966cd386c94a1b5f",
+    "subject": "Great Grace Upon You",
+    "message": "<p>Great Grace upon you</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "6872fa89966cd386c94a1b65"
+      }
+    ],
+    "scheduledFor": "2025-07-13T00:13:07.413Z",
+    "attachment": [],
+    "createdAt": "2025-07-13T00:13:08.424Z",
+    "updatedAt": "2025-07-13T00:15:05.264Z",
+    "__v": 1
+  },
+  {
+    "_id": "6872fc4d966cd386c94a1b8c",
+    "subject": "Can you wait",
+    "message": "<p>Can you wait?</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "6872fcde966cd386c94a1bad"
+      }
+    ],
+    "scheduledFor": "2025-07-13T00:22:36.156Z",
+    "attachment": [],
+    "createdAt": "2025-07-13T00:22:37.157Z",
+    "updatedAt": "2025-07-13T00:25:02.764Z",
+    "__v": 1
+  },
+  {
+    "_id": "6872ff91966cd386c94a1bc3",
+    "subject": "Men",
+    "message": "<p>Men</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "6872ff91966cd386c94a1bc4"
+      }
+    ],
+    "attachment": [],
+    "createdAt": "2025-07-13T00:36:33.900Z",
+    "updatedAt": "2025-07-13T00:36:33.900Z",
+    "__v": 0
+  },
+  {
+    "_id": "6872ffbc966cd386c94a1bc7",
+    "subject": "Boys",
+    "message": "<p>Boys</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "6872ffbc966cd386c94a1bc8"
+      }
+    ],
+    "attachment": [],
+    "createdAt": "2025-07-13T00:37:16.033Z",
+    "updatedAt": "2025-07-13T00:37:16.033Z",
+    "__v": 0
+  },
+  {
+    "_id": "687300301f65c35297e889bf",
+    "subject": "Men",
+    "message": "<p>Mens</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "687300301f65c35297e889c0"
+      }
+    ],
+    "attachment": [],
+    "createdAt": "2025-07-13T00:39:12.336Z",
+    "updatedAt": "2025-07-13T00:39:12.336Z",
+    "__v": 0
+  },
+  {
+    "_id": "687300a61f65c35297e889c3",
+    "subject": "We",
+    "message": "<p>We are here for you</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "failed",
+        "error": "subject is not defined",
+        "_id": "6873018ff3c6c202a755d422"
+      }
+    ],
+    "scheduledFor": "2025-07-13T00:41:09.674Z",
+    "attachment": [],
+    "createdAt": "2025-07-13T00:41:10.682Z",
+    "updatedAt": "2025-07-13T00:45:03.440Z",
+    "__v": 1
+  },
+  {
+    "_id": "687302301d1044917827f31f",
+    "subject": "God is Good",
+    "message": "<p>God is Good</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "error": null,
+        "_id": "687302b81d1044917827f32a",
+        "sentAt": "2025-07-13T01:41:07.558Z"
+      }
+    ],
+    "scheduledFor": "2025-07-13T00:47:43.341Z",
+    "attachment": [],
+    "createdAt": "2025-07-13T00:47:44.345Z",
+    "updatedAt": "2025-07-13T01:41:07.559Z",
+    "__v": 1
+  },
+  {
+    "_id": "687303621d1044917827f346",
+    "subject": "Why isnt is going through?",
+    "message": "<p>Why not?</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "error": null,
+        "_id": "687303e41d1044917827f358"
+      }
+    ],
+    "scheduledFor": "2025-07-13T00:52:49.216Z",
+    "attachment": [],
+    "createdAt": "2025-07-13T00:52:50.218Z",
+    "updatedAt": "2025-07-13T01:28:50.797Z",
+    "__v": 1
+  },
+  {
+    "_id": "68730647d60122ee1bd13ea5",
+    "subject": "Why",
+    "message": "<p>When</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "6873076cd60122ee1bd13ec6"
+      }
+    ],
+    "scheduledFor": "2025-07-13T01:05:10.592Z",
+    "attachment": [],
+    "createdAt": "2025-07-13T01:05:11.600Z",
+    "updatedAt": "2025-07-13T01:10:04.469Z",
+    "__v": 1
+  },
+  {
+    "_id": "68730792d60122ee1bd13ed6",
+    "subject": "Lets hope it works",
+    "message": "<p>Lets hope it works</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "68730897d60122ee1bd13ee8"
+      }
+    ],
+    "scheduledFor": "2025-07-13T01:10:41.562Z",
+    "attachment": [],
+    "createdAt": "2025-07-13T01:10:42.564Z",
+    "updatedAt": "2025-07-13T01:15:03.023Z",
+    "__v": 1
+  },
+  {
+    "_id": "68732ada43d709c9325a723b",
+    "subject": "Menu ",
+    "message": "<p>Menus </p>",
+    "status": "scheduled",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "scheduled",
+        "_id": "68732ada43d709c9325a723c"
+      }
+    ],
+    "scheduledFor": "2025-07-13T03:41:13.667Z",
+    "attachment": [],
+    "createdAt": "2025-07-13T03:41:14.677Z",
+    "updatedAt": "2025-07-13T03:41:14.677Z",
+    "__v": 0
+  },
+  {
+    "_id": "6879076c197c5ae2f503165a",
+    "subject": "Hello",
+    "message": "<p>Whatsup</p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "6879076c197c5ae2f503165b"
+      }
+    ],
+    "attachment": [],
+    "createdAt": "2025-07-17T14:23:40.175Z",
+    "updatedAt": "2025-07-17T14:23:40.175Z",
+    "__v": 0
+  },
+  {
+    "_id": "687e14498de64020c4bef558",
+    "subject": "Olajide ",
+    "message": "<p>Good morning </p>",
+    "status": "sent",
+    "recipients": [
+      {
+        "email": "contendasonlinemedia@yahoo.com",
+        "status": "sent",
+        "_id": "687e14498de64020c4bef559"
+      },
+      {
+        "email": "cusceda@yahoo.com",
+        "status": "sent",
+        "_id": "687e14498de64020c4bef55a"
+      }
+    ],
+    "attachment": [],
+    "createdAt": "2025-07-21T10:19:53.256Z",
+    "updatedAt": "2025-07-21T10:19:53.256Z",
+    "__v": 0
+  }
+]

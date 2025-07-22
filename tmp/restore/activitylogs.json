@@ -1,0 +1,65 @@
+[
+  {
+    "_id": "6866605932e166e5ec7eadd3",
+    "action": "User Deletion",
+    "detail": "Deleted user user_2zMSrtlgUn7AZqeq1LMF3WIbpg3",
+    "timestamp": "2025-07-03T10:50:02.085Z",
+    "__v": 0
+  },
+  {
+    "_id": "686667bf32e166e5ec7eaded",
+    "action": "Role Change",
+    "detail": "Changed role of user user_2zMWFJZQxAl1Wx0d5DPzqjyJWQP to admin",
+    "timestamp": "2025-07-03T11:21:35.106Z",
+    "__v": 0
+  },
+  {
+    "_id": "686667d332e166e5ec7eadf3",
+    "action": "Role Change",
+    "detail": "Changed role of user user_2zMUGpiosSoe8CnehRQkdWAXK40 to admin",
+    "timestamp": "2025-07-03T11:21:55.651Z",
+    "__v": 0
+  },
+  {
+    "_id": "68667a2f32e166e5ec7eaeb1",
+    "action": "Role Change",
+    "detail": "Changed role of user user_2zMYe0SojMHuf0SZoqZErEnBuIv to admin",
+    "timestamp": "2025-07-03T12:40:15.265Z",
+    "__v": 0
+  },
+  {
+    "_id": "687adc849b6b4f3ee825a4dc",
+    "action": "User Deletion",
+    "detail": "Deleted user user_2zhhHEswja7I3oNGvdUFmTrd8Mz",
+    "timestamp": "2025-07-18T23:45:08.698Z",
+    "__v": 0
+  },
+  {
+    "_id": "687adf7f9b6b4f3ee825a4ea",
+    "action": "User Deletion",
+    "detail": "Deleted user user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "timestamp": "2025-07-18T23:57:51.349Z",
+    "__v": 0
+  },
+  {
+    "_id": "687ae1cc482e7b032799366a",
+    "action": "User Deletion",
+    "detail": "Deleted user user_304Ng5S6kdItXfvB1ah23fFdjEQ",
+    "timestamp": "2025-07-19T00:07:40.159Z",
+    "__v": 0
+  },
+  {
+    "_id": "687ae8e5482e7b0327993677",
+    "action": "Role Change",
+    "detail": "Changed role of user user_304Ofh8FE9HoT9H5Je5McwmyM25 to admin",
+    "timestamp": "2025-07-19T00:37:57.086Z",
+    "__v": 0
+  },
+  {
+    "_id": "687af4af482e7b0327993915",
+    "action": "Role Change",
+    "detail": "Changed role of user user_304Sl9LTTrlCrcLnZ7ctNblqgxX to admin",
+    "timestamp": "2025-07-19T01:28:15.737Z",
+    "__v": 0
+  }
+]

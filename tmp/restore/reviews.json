@@ -1,0 +1,33 @@
+[
+  {
+    "_id": "6865de1632e166e5ec7ead8d",
+    "productId": "686328e51d3e36e27408c98a",
+    "userId": "user_2zL9rJlRh3x71X59b1QmQOHADQg",
+    "username": "cusceda_ng",
+    "rating": 5,
+    "comment": "I recently purchased a pipe from Cusceda Store, and I'm impressed! The quality is top-notch, and the design is sleek. It's durable and functions perfectly. Great value for the price. Highly recommend Cusceda Store for their excellent products and customer service! 👍💯",
+    "approved": true,
+    "helpful": [
+      "user_2zL9rJlRh3x71X59b1QmQOHADQg",
+      "user_2zhhHEswja7I3oNGvdUFmTrd8Mz"
+    ],
+    "createdAt": "2025-07-03T01:34:14.135Z",
+    "updatedAt": "2025-07-10T23:12:50.691Z",
+    "__v": 4
+  },
+  {
+    "_id": "6866811eeebd59e2c6ea7c4e",
+    "productId": "68667c8e32e166e5ec7eaecf",
+    "userId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "username": "ola_oluwa",
+    "rating": 5,
+    "comment": "Just got my AirPods Pro and I'm loving them! 🎧 The sound quality is amazing, noise cancellation is top-notch, and they're super comfy. Wireless charging is a bonus! 💯 Highly recommend for anyone looking for premium earbuds. 👍",
+    "approved": true,
+    "helpful": [
+      "user_2zMYe0SojMHuf0SZoqZErEnBuIv"
+    ],
+    "createdAt": "2025-07-03T13:09:50.678Z",
+    "updatedAt": "2025-07-03T13:11:51.721Z",
+    "__v": 1
+  }
+]

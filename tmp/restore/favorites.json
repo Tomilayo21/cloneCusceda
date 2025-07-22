@@ -1,0 +1,42 @@
+[
+  {
+    "_id": "686329a21d3e36e27408c9a6",
+    "userId": "user_2xQZbmZrQ6tRZ4JBFgOqapnz3cC",
+    "productId": "686328e51d3e36e27408c98a",
+    "createdAt": "2025-07-01T00:19:46.883Z",
+    "updatedAt": "2025-07-01T00:19:46.883Z",
+    "__v": 0
+  },
+  {
+    "_id": "6865e559cd3c13428a91c8f1",
+    "userId": "user_2zL6Gp0ea7n6v3CZlcIvzTh6Wiy",
+    "productId": "686328e51d3e36e27408c98a",
+    "createdAt": "2025-07-03T02:05:13.541Z",
+    "updatedAt": "2025-07-03T02:05:13.541Z",
+    "__v": 0
+  },
+  {
+    "_id": "6866712432e166e5ec7eae32",
+    "userId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "productId": "686328e51d3e36e27408c98a",
+    "createdAt": "2025-07-03T12:01:41.727Z",
+    "updatedAt": "2025-07-03T12:01:41.727Z",
+    "__v": 0
+  },
+  {
+    "_id": "68667aa832e166e5ec7eaebd",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "productId": "686328e51d3e36e27408c98a",
+    "createdAt": "2025-07-03T12:42:16.268Z",
+    "updatedAt": "2025-07-03T12:42:16.268Z",
+    "__v": 0
+  },
+  {
+    "_id": "6873b888f404d2ab7dba91e7",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "productId": "68667c8e32e166e5ec7eaecf",
+    "createdAt": "2025-07-13T13:45:44.123Z",
+    "updatedAt": "2025-07-13T13:45:44.123Z",
+    "__v": 0
+  }
+]

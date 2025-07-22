@@ -1,0 +1,47 @@
+[
+  {
+    "_id": "686328e51d3e36e27408c98a",
+    "userId": "user_2xQZbmZrQ6tRZ4JBFgOqapnz3cC",
+    "name": "Pipes",
+    "description": "<p>Elevate your smoking experience with SmokeEase, a premium handcrafted pipe designed for comfort and durability. Crafted with high-quality materials, this pipe features a smooth draw and stylish design. Perfect for pipe enthusiasts and connoisseurs. 🌿🔥</p>",
+    "price": 20,
+    "offerPrice": 10,
+    "image": [
+      "https://res.cloudinary.com/du4buottr/image/upload/v1751329006/iysdhwqmduavgag8sown.jpg"
+    ],
+    "category": "Accessories",
+    "brand": "Bose",
+    "color": "Red",
+    "date": "2025-07-01T00:16:37.425Z",
+    "stock": 3,
+    "visible": true,
+    "likes": [
+      "user_2zL9rJlRh3x71X59b1QmQOHADQg",
+      "user_2zhhHEswja7I3oNGvdUFmTrd8Mz"
+    ],
+    "__v": 2
+  },
+  {
+    "_id": "68667c8e32e166e5ec7eaecf",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "name": "AirPods Pro",
+    "description": "<p>AirPods Pro - True Wireless Sound Mastery</p><p>Upgrade your audio experience with AirPods Pro! Enjoy crystal-clear sound, active noise cancellation, and seamless connectivity. With long-lasting battery life and ergonomic design, these true wireless earbuds are perfect for music, calls, and more. Experience sound mastery! 🎧✨</p>",
+    "price": 35,
+    "offerPrice": 25,
+    "image": [
+      "https://res.cloudinary.com/du4buottr/image/upload/v1751547031/n5f4m2nuxqyep7qcfoi1.jpg"
+    ],
+    "category": "Earphone",
+    "brand": "Apple",
+    "color": "Black",
+    "date": "2025-07-03T12:50:22.678Z",
+    "stock": 1,
+    "visible": false,
+    "likes": [
+      "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+      "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+      "user_304Sl9LTTrlCrcLnZ7ctNblqgxX"
+    ],
+    "__v": 3
+  }
+]

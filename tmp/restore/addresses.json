@@ -1,0 +1,32 @@
+[
+  {
+    "_id": "6867157332e166e5ec7eafc8",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "fullName": "Oluwatomilayo Olajide",
+    "phoneNumber": "08100515622",
+    "zipcode": "100001",
+    "area": "Lagos",
+    "city": "Ashkāsham",
+    "state": "BDS",
+    "country": "AF",
+    "email": "contendasonlinemedia@yahoo.com",
+    "createdAt": "2025-07-03T23:42:45.922Z",
+    "updatedAt": "2025-07-03T23:42:45.922Z",
+    "__v": 0
+  },
+  {
+    "_id": "6873cc52afb0c92a0320cbe0",
+    "userId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "fullName": "Olajide Oluwapelumi ",
+    "phoneNumber": "08100515622",
+    "zipcode": "101276",
+    "area": "14, Solomon Bankole Street, Off Pako Bustop, Iyana Dopemu",
+    "city": "Ikeja",
+    "state": "LA",
+    "country": "NG",
+    "email": "cusceda@yahoo.com",
+    "createdAt": "2025-07-13T15:10:10.987Z",
+    "updatedAt": "2025-07-13T15:10:10.987Z",
+    "__v": 0
+  }
+]

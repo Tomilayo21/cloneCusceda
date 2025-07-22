@@ -105,12 +105,24 @@ export default function FormatDatabaseButton() {
   const [showModal, setShowModal] = useState(false);
   const [password, setPassword] = useState("");
 
+
   useEffect(() => {
     const checkAdminRole = async () => {
-      const res = await fetch("/api/current-user");
-      const data = await res.json();
-      setIsAdmin(data?.role === "admin");
+      try {
+        const res = await fetch("/api/admin/current-user" , {
+        method: "GET",
+        credentials: "include", // ✅ IMPORTANT
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          setIsAdmin(data.role === "admin");
+        }
+      } catch (err) {
+        console.error("Error checking admin role", err);
+      }
     };
+
     if (isSignedIn) checkAdminRole();
   }, [isSignedIn]);
 
@@ -130,7 +142,7 @@ export default function FormatDatabaseButton() {
     }
   };
 
-  if (!isAdmin) return null;
+  // if (!isAdmin) return null;
 
   return (
     <>

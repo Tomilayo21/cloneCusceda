@@ -11,6 +11,8 @@ import { Menu, X, Heart } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { Moon, Sun, ShieldCheck, ShieldAlert } from "lucide-react";
+import SuperAdminUnlock from '@/components/admin/SuperAdminUnlock'; 
+import AdminOtpVerification from '@/components/admin/AdminOtpVerification'; 
 
 const Navbar = () => {
   const { isAdmin, user, getCartCount } = useAppContext();
@@ -26,6 +28,21 @@ const Navbar = () => {
   const cartCount = getCartCount();
   const { theme, toggleTheme } = useTheme();
   const [logoUrl, setLogoUrl] = useState(null);
+  const [promptPassword, setPromptPassword] = useState(false);
+  const [hasAccess, setHasAccess] = useState(false);
+  const [showOtpPrompt, setShowOtpPrompt] = useState(false);
+
+  const handleClick = () => {
+    if (!hasAccess) {
+      setPromptPassword(true);
+    } else {
+      // ✅ Redirect to /admin
+      router.push('/admin');
+    }
+  };
+  const handleAdminClick = () => {
+    setShowOtpPrompt(true);
+  };
 
   useEffect(() => {
     const fetchLogo = async () => {
@@ -38,9 +55,9 @@ const Navbar = () => {
   }, []);
 
 
-  const handleClick = () => {
-    router.push('/admin');
-  };
+  // const handleClick = () => {
+  //   router.push('/admin');
+  // };
 
   // Detect screen size
   useEffect(() => {
@@ -144,7 +161,7 @@ const Navbar = () => {
 
         {/* Right side (Desktop) */}
         <div className="hidden md:flex items-center gap-4">
-          {isAdmin && (
+          {/* {isAdmin && (
             <Tooltip.Provider delayDuration={100}>
               <Tooltip.Root>
                 <Tooltip.Trigger asChild>
@@ -167,7 +184,82 @@ const Navbar = () => {
                 </Tooltip.Portal>
               </Tooltip.Root>
             </Tooltip.Provider>
+          )} */}
+
+          {/* {isAdmin && (
+            <Tooltip.Provider delayDuration={100}>
+              <Tooltip.Root>
+                <Tooltip.Trigger asChild>
+                  <div
+                    onClick={handleClick}
+                    className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-pointer hover:bg-purple-800 transition"
+                  >
+                    <ShieldAlert className="w-3 h-3 text-yellow-300" />
+                    <span>Super Admin</span>
+                  </div>
+                </Tooltip.Trigger>
+                <Tooltip.Portal>
+                  <Tooltip.Content
+                    className="bg-black text-white text-xs px-2 py-1 rounded shadow-md z-50"
+                    sideOffset={5}
+                  >
+                    You have full access to all admin features.
+                    <Tooltip.Arrow className="fill-black" />
+                  </Tooltip.Content>
+                </Tooltip.Portal>
+              </Tooltip.Root>
+            </Tooltip.Provider>
+          )} */}
+
+          {/* {promptPassword && !hasAccess && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <SuperAdminUnlock
+              onSuccess={() => {
+                setHasAccess(true);
+                setPromptPassword(false);
+                router.push('/admin'); // ✅ Optional: auto-redirect after success
+              }}
+              onCancel={() => setPromptPassword(false)}
+            />
+            </div>
+          )} */}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          {isAdmin && (
+            <>
+              <div
+                onClick={handleAdminClick}
+                className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-pointer hover:bg-purple-800 transition"
+              >
+                <ShieldAlert className="w-3 h-3 text-yellow-300" />
+                <span>Super Admin</span>
+              </div>
+
+              {showOtpPrompt && (
+                <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
+                  <AdminOtpVerification
+                    email={user.emailAddresses[0].emailAddress}
+                    onCancel={() => setShowOtpPrompt(false)}
+                  />
+                </div>
+              )}
+            </>
           )}
+
 
           {/* Search */}
           <div className="relative flex items-center">
@@ -259,7 +351,7 @@ const Navbar = () => {
             </button>
           </div>
 
-          {isAdmin && (
+          {/* {isAdmin && (
             <Tooltip.Provider delayDuration={100}>
               <Tooltip.Root>
                 <Tooltip.Trigger asChild>
@@ -281,6 +373,38 @@ const Navbar = () => {
                 </Tooltip.Portal>
               </Tooltip.Root>
             </Tooltip.Provider>
+          )}
+          {promptPassword && !hasAccess && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <SuperAdminUnlock
+              onSuccess={() => {
+                setHasAccess(true);
+                setPromptPassword(false);
+                router.push('/admin'); // ✅ Optional: auto-redirect after success
+              }}
+              onCancel={() => setPromptPassword(false)}
+            />
+            </div>
+          )} */}
+
+          {isAdmin && (
+            <>
+              <div
+                onClick={handleAdminClick}
+                className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-pointer hover:bg-purple-800 transition"
+              >
+                <ShieldAlert className="w-3 h-3 text-yellow-300" />
+              </div>
+
+              {showOtpPrompt && (
+                <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
+                  <AdminOtpVerification
+                    email={user.emailAddresses[0].emailAddress}
+                    onCancel={() => setShowOtpPrompt(false)}
+                  />
+                </div>
+              )}
+            </>
           )}
 
           <button onClick={() => setMobileMenuOpen((prev) => !prev)} aria-label="Toggle Menu">

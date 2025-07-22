@@ -35,6 +35,11 @@ import toast from "react-hot-toast";
 import FormatDatabase from '@/components/admin/FormatDatabase';
 import { useUser } from '@clerk/nextjs';
 import BackupModal from '@/components/admin/BackupModal';
+import AdminRestore from '@/components/admin/AdminRestore';
+import RestoreModal from '@/components/admin/RestoreModal';
+
+
+
 
 
 const settingsTabs = [
@@ -72,6 +77,7 @@ export default function AdminSettings() {
 
   const { user } = useUser();
   const [showModal, setShowModal] = useState(false);
+  const [open, setOpen] = useState(false);
 
   // const isAdmin = user?.publicMetadata?.role === 'admin';
 
@@ -858,10 +864,16 @@ export default function AdminSettings() {
             {/* Restore From Backup */}
             <div>
               <p className="text-sm text-gray-600 mb-1">Restore data from a backup file.</p>
-              <input type="file" className="block mb-2" />
-              <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                Import Backup
+              {/* <input type="file" className="block mb-2" /> */}
+              <button
+                onClick={() => setOpen(true)}
+                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+              >
+                🛠 Restore Backup
               </button>
+
+              {/* <RestoreModal isOpen={open} onClose={() => setOpen(false)}/> */}
+              <RestoreModal isOpen={open} onClose={() => setOpen(false)} />
             </div>
 
             {/* Format (Wipe Database) */}

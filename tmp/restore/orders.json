@@ -1,0 +1,721 @@
+[
+  {
+    "_id": "6873c319f404d2ab7dba9255",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 1,
+        "_id": "6873c319f404d2ab7dba9256"
+      }
+    ],
+    "amount": 35,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-13T14:30:49.287Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Processing",
+    "paymentStatus": "Successful",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-Z2MNHWQ5KDWA",
+    "createdAt": "2025-07-13T14:30:49.320Z",
+    "updatedAt": "2025-07-13T14:36:27.916Z",
+    "__v": 0
+  },
+  {
+    "_id": "6873c585f404d2ab7dba92b4",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 1,
+        "_id": "6873c585f404d2ab7dba92b5"
+      }
+    ],
+    "amount": 35,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-13T14:41:09.277Z",
+    "paymentMethod": "bank-transfer",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-HR0A18PL3A0D",
+    "createdAt": "2025-07-13T14:41:09.288Z",
+    "updatedAt": "2025-07-13T14:50:29.218Z",
+    "__v": 0
+  },
+  {
+    "_id": "6873c5f0f404d2ab7dba92d0",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 1,
+        "_id": "6873c5f0f404d2ab7dba92d1"
+      }
+    ],
+    "amount": 35,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-13T14:42:56.036Z",
+    "paymentMethod": "bank-transfer",
+    "orderStatus": "Order Placed",
+    "paymentStatus": "Successful",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-O0JY59GRTQS2",
+    "createdAt": "2025-07-13T14:42:56.045Z",
+    "updatedAt": "2025-07-13T14:47:18.056Z",
+    "__v": 0,
+    "proofOfPaymentUrl": "https://res.cloudinary.com/du4buottr/image/upload/v1752417982/proofs/ORD-O0JY59GRTQS2-proof.jpg"
+  },
+  {
+    "_id": "6873c75cf404d2ab7dba932b",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 5,
+        "_id": "6873c75cf404d2ab7dba932c"
+      }
+    ],
+    "amount": 178,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-13T14:49:00.341Z",
+    "paymentMethod": "bank-transfer",
+    "orderStatus": "Shipped",
+    "paymentStatus": "Successful",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-UHYZ0FSR82GU",
+    "createdAt": "2025-07-13T14:49:00.351Z",
+    "updatedAt": "2025-07-13T14:51:31.619Z",
+    "__v": 0,
+    "proofOfPaymentUrl": "https://res.cloudinary.com/du4buottr/image/upload/v1752418200/proofs/ORD-UHYZ0FSR82GU-proof.jpg"
+  },
+  {
+    "_id": "6873cf99f404d2ab7dba939d",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 1,
+        "_id": "6873cf99f404d2ab7dba939e"
+      }
+    ],
+    "amount": 35,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-13T15:24:09.862Z",
+    "paymentMethod": "bank-transfer",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-G994O9YCFXXY",
+    "createdAt": "2025-07-13T15:24:09.872Z",
+    "updatedAt": "2025-07-13T15:24:09.872Z",
+    "__v": 0
+  },
+  {
+    "_id": "68752e98f404d2ab7dba93bd",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 1,
+        "_id": "68752e98f404d2ab7dba93be"
+      }
+    ],
+    "amount": 35,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-14T16:21:44.334Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-B1108FRIYKAI",
+    "createdAt": "2025-07-14T16:21:44.341Z",
+    "updatedAt": "2025-07-14T16:21:44.341Z",
+    "__v": 0
+  },
+  {
+    "_id": "68753169f404d2ab7dba93d5",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 1,
+        "_id": "68753169f404d2ab7dba93d6"
+      }
+    ],
+    "amount": 35,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-14T16:33:45.834Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-YM4MPVZVMER3",
+    "createdAt": "2025-07-14T16:33:45.845Z",
+    "updatedAt": "2025-07-14T16:33:45.845Z",
+    "__v": 0
+  },
+  {
+    "_id": "68753189f404d2ab7dba93dd",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 1,
+        "_id": "68753189f404d2ab7dba93de"
+      }
+    ],
+    "amount": 35,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-14T16:34:17.539Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-TPS4N0189C52",
+    "createdAt": "2025-07-14T16:34:17.542Z",
+    "updatedAt": "2025-07-14T16:34:17.542Z",
+    "__v": 0
+  },
+  {
+    "_id": "68753233f404d2ab7dba93e5",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 1,
+        "_id": "68753233f404d2ab7dba93e6"
+      }
+    ],
+    "amount": 35,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-14T16:37:07.207Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-JSUC6JGG97I7",
+    "createdAt": "2025-07-14T16:37:07.214Z",
+    "updatedAt": "2025-07-14T16:37:07.214Z",
+    "__v": 0
+  },
+  {
+    "_id": "687532eaf404d2ab7dba93ed",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 1,
+        "_id": "687532eaf404d2ab7dba93ee"
+      }
+    ],
+    "amount": 35,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-14T16:40:10.973Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-PGH381VHMS7T",
+    "createdAt": "2025-07-14T16:40:10.977Z",
+    "updatedAt": "2025-07-14T16:40:10.977Z",
+    "__v": 0
+  },
+  {
+    "_id": "68753403f404d2ab7dba9404",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 2,
+        "_id": "68753403f404d2ab7dba9405"
+      }
+    ],
+    "amount": 71,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-14T16:44:51.922Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-G0S5VV0XXAOB",
+    "createdAt": "2025-07-14T16:44:51.926Z",
+    "updatedAt": "2025-07-14T16:44:51.926Z",
+    "__v": 0
+  },
+  {
+    "_id": "68753601f404d2ab7dba943b",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 1,
+        "_id": "68753601f404d2ab7dba943c"
+      }
+    ],
+    "amount": 35,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-14T16:53:21.016Z",
+    "paymentMethod": "bank-transfer",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-0BTOS8TIH9KL",
+    "createdAt": "2025-07-14T16:53:21.021Z",
+    "updatedAt": "2025-07-14T16:53:21.021Z",
+    "__v": 0
+  },
+  {
+    "_id": "6875a38f33d5800aac84fc44",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 1,
+        "_id": "6875a38f33d5800aac84fc45"
+      }
+    ],
+    "amount": 20,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T00:40:47.780Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-8KD2H5I5921F",
+    "createdAt": "2025-07-15T00:40:47.788Z",
+    "updatedAt": "2025-07-15T00:40:47.788Z",
+    "__v": 0
+  },
+  {
+    "_id": "6875a41633d5800aac84fc73",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 2,
+        "_id": "6875a41633d5800aac84fc74"
+      }
+    ],
+    "amount": 40,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T00:43:02.711Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-IYDJL8SXBBQS",
+    "createdAt": "2025-07-15T00:43:02.717Z",
+    "updatedAt": "2025-07-15T00:43:02.717Z",
+    "__v": 0
+  },
+  {
+    "_id": "68764bb63734649e6edc3242",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 1,
+        "_id": "68764bb63734649e6edc3243"
+      }
+    ],
+    "amount": 20,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T12:38:14.567Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-TN7A5TOA89HF",
+    "createdAt": "2025-07-15T12:38:14.597Z",
+    "updatedAt": "2025-07-15T12:38:14.597Z",
+    "__v": 0
+  },
+  {
+    "_id": "68764cd03734649e6edc3293",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 2,
+        "_id": "68764cd03734649e6edc3294"
+      }
+    ],
+    "amount": 40,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T12:42:56.369Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-899ONNIFY9CC",
+    "createdAt": "2025-07-15T12:42:56.379Z",
+    "updatedAt": "2025-07-15T12:42:56.379Z",
+    "__v": 0
+  },
+  {
+    "_id": "68764d9d3734649e6edc32df",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 3,
+        "_id": "68764d9d3734649e6edc32e0"
+      }
+    ],
+    "amount": 61,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T12:46:21.575Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-1IPSSBINP5NM",
+    "createdAt": "2025-07-15T12:46:21.580Z",
+    "updatedAt": "2025-07-15T12:46:21.580Z",
+    "__v": 0
+  },
+  {
+    "_id": "68764f6d3734649e6edc3388",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 2,
+        "_id": "68764f6d3734649e6edc3389"
+      }
+    ],
+    "amount": 40,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T12:54:05.628Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-RNJR1EWSMS9M",
+    "createdAt": "2025-07-15T12:54:05.642Z",
+    "updatedAt": "2025-07-15T12:54:05.642Z",
+    "__v": 0
+  },
+  {
+    "_id": "687650223734649e6edc33e3",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 1,
+        "_id": "687650223734649e6edc33e4"
+      }
+    ],
+    "amount": 20,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T12:57:06.770Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-BNZNWUXOJE8P",
+    "createdAt": "2025-07-15T12:57:06.775Z",
+    "updatedAt": "2025-07-15T13:05:16.919Z",
+    "__v": 0,
+    "proofOfPaymentUrl": "https://res.cloudinary.com/du4buottr/image/upload/v1752584715/proofs/ORD-BNZNWUXOJE8P-proof.jpg"
+  },
+  {
+    "_id": "6876529f3734649e6edc353d",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 2,
+        "_id": "6876529f3734649e6edc353e"
+      }
+    ],
+    "amount": 40,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T13:07:43.447Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-2ZH2YZT0RV88",
+    "createdAt": "2025-07-15T13:07:43.461Z",
+    "updatedAt": "2025-07-15T13:33:43.259Z",
+    "__v": 0,
+    "proofOfPaymentUrl": "https://res.cloudinary.com/du4buottr/image/upload/v1752586422/proofs/ORD-2ZH2YZT0RV88-proof.jpg"
+  },
+  {
+    "_id": "68765cfb3f3e4c57ad57850b",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 1,
+        "_id": "68765cfb3f3e4c57ad57850c"
+      }
+    ],
+    "amount": 20,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T13:51:55.727Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-N9OVIZ7KXBN3",
+    "createdAt": "2025-07-15T13:51:55.743Z",
+    "updatedAt": "2025-07-15T15:07:34.736Z",
+    "__v": 0,
+    "proofOfPaymentUrl": "https://res.cloudinary.com/du4buottr/image/upload/v1752592054/proofs/ORD-N9OVIZ7KXBN3-proof.jpg"
+  },
+  {
+    "_id": "68766ec51a0ab438e850b323",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 2,
+        "_id": "68766ec51a0ab438e850b324"
+      }
+    ],
+    "amount": 40,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T15:07:49.616Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-SBPRQTUFD8S0",
+    "createdAt": "2025-07-15T15:07:49.630Z",
+    "updatedAt": "2025-07-15T15:07:49.630Z",
+    "__v": 0
+  },
+  {
+    "_id": "68766ec51a0ab438e850b326",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 2,
+        "_id": "68766ec51a0ab438e850b327"
+      }
+    ],
+    "amount": 40,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T15:07:49.648Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-F5XUX7G8K5LQ",
+    "createdAt": "2025-07-15T15:07:49.651Z",
+    "updatedAt": "2025-07-15T15:32:47.139Z",
+    "__v": 0,
+    "proofOfPaymentUrl": "https://res.cloudinary.com/du4buottr/image/upload/v1752593567/proofs/ORD-F5XUX7G8K5LQ-proof.jpg"
+  },
+  {
+    "_id": "687675211a0ab438e850b64f",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 1,
+        "_id": "687675211a0ab438e850b650"
+      }
+    ],
+    "amount": 20,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T15:34:57.566Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-G9X6AHERD9J9",
+    "createdAt": "2025-07-15T15:34:57.578Z",
+    "updatedAt": "2025-07-15T15:36:28.340Z",
+    "__v": 0,
+    "proofOfPaymentUrl": "https://res.cloudinary.com/du4buottr/image/upload/v1752593788/proofs/ORD-G9X6AHERD9J9-proof.jpg"
+  },
+  {
+    "_id": "687676561a0ab438e850b757",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 1,
+        "_id": "687676561a0ab438e850b758"
+      }
+    ],
+    "amount": 20,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T15:40:06.355Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-C9J9S5H37ESG",
+    "createdAt": "2025-07-15T15:40:06.359Z",
+    "updatedAt": "2025-07-15T15:42:42.168Z",
+    "__v": 0,
+    "proofOfPaymentUrl": "https://res.cloudinary.com/du4buottr/image/upload/v1752594162/proofs/ORD-C9J9S5H37ESG-proof.jpg"
+  },
+  {
+    "_id": "687677c21a0ab438e850b870",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 1,
+        "_id": "687677c21a0ab438e850b871"
+      }
+    ],
+    "amount": 20,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T15:46:10.629Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-EV0SU5DYQFIO",
+    "createdAt": "2025-07-15T15:46:10.646Z",
+    "updatedAt": "2025-07-15T15:48:10.420Z",
+    "__v": 0,
+    "proofOfPaymentUrl": "https://res.cloudinary.com/du4buottr/image/upload/v1752594490/proofs/ORD-EV0SU5DYQFIO-proof.jpg"
+  },
+  {
+    "_id": "68767b741a0ab438e850ba40",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 1,
+        "_id": "68767b741a0ab438e850ba41"
+      }
+    ],
+    "amount": 20,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T16:01:56.618Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-XGOHOFXEVENS",
+    "createdAt": "2025-07-15T16:01:56.622Z",
+    "updatedAt": "2025-07-15T16:01:56.622Z",
+    "__v": 0
+  },
+  {
+    "_id": "68767c991a0ab438e850baa0",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 1,
+        "_id": "68767c991a0ab438e850baa1"
+      }
+    ],
+    "amount": 20,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T16:06:49.517Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-BDCP2FQKJUPE",
+    "createdAt": "2025-07-15T16:06:49.526Z",
+    "updatedAt": "2025-07-15T16:08:29.917Z",
+    "__v": 0,
+    "proofOfPaymentUrl": "https://res.cloudinary.com/du4buottr/image/upload/v1752595710/proofs/ORD-BDCP2FQKJUPE-proof.jpg"
+  },
+  {
+    "_id": "68767d8f1a0ab438e850bb90",
+    "userId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "items": [
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 1,
+        "_id": "68767d8f1a0ab438e850bb91"
+      }
+    ],
+    "amount": 20,
+    "address": "6867157332e166e5ec7eafc8",
+    "date": "2025-07-15T16:10:55.626Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-1CG1G5I90N54",
+    "createdAt": "2025-07-15T16:10:55.633Z",
+    "updatedAt": "2025-07-15T16:10:55.633Z",
+    "__v": 0
+  },
+  {
+    "_id": "68788c53bc84caf422314f9b",
+    "userId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 1,
+        "_id": "68788c53bc84caf422314f9c"
+      },
+      {
+        "product": "686328e51d3e36e27408c98a",
+        "quantity": 1,
+        "_id": "68788c53bc84caf422314f9d"
+      }
+    ],
+    "amount": 56,
+    "address": "6873cc52afb0c92a0320cbe0",
+    "date": "2025-07-17T05:38:27.632Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-9DKMAE1N56P9",
+    "createdAt": "2025-07-17T05:38:27.906Z",
+    "updatedAt": "2025-07-17T05:38:27.906Z",
+    "__v": 0
+  },
+  {
+    "_id": "6878ba1dbc84caf4223154ce",
+    "userId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 3,
+        "_id": "6878ba1dbc84caf4223154cf"
+      }
+    ],
+    "amount": 107,
+    "address": "6873cc52afb0c92a0320cbe0",
+    "date": "2025-07-17T08:53:49.673Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-77YDU0U8IGEM",
+    "createdAt": "2025-07-17T08:53:49.790Z",
+    "updatedAt": "2025-07-17T08:53:49.790Z",
+    "__v": 0
+  },
+  {
+    "_id": "6878caafbc84caf422315769",
+    "userId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "items": [
+      {
+        "product": "68667c8e32e166e5ec7eaecf",
+        "quantity": 14,
+        "_id": "6878caafbc84caf42231576a"
+      }
+    ],
+    "amount": 499,
+    "address": "6873cc52afb0c92a0320cbe0",
+    "date": "2025-07-17T10:04:31.424Z",
+    "paymentMethod": "stripe",
+    "orderStatus": "Pending",
+    "paymentStatus": "Pending",
+    "deliveryStatus": "Pending",
+    "orderId": "ORD-9J94P7SG06XA",
+    "createdAt": "2025-07-17T10:04:31.439Z",
+    "updatedAt": "2025-07-17T10:04:31.439Z",
+    "__v": 0
+  }
+]

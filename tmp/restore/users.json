@@ -1,0 +1,42 @@
+[
+  {
+    "_id": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "name": "Oluwatomilayo Olajide",
+    "username": "wa79bdpr",
+    "email": "cusceda@yahoo.com",
+    "imageUrl": "https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18yekw2bEZPWlZqbnlBOUFwWXRQQktWdzJIVG4iLCJyaWQiOiJ1c2VyXzJ6TVVHcGlvc1NvZThDbmVoUlFrZFdBWEs0MCIsImluaXRpYWxzIjoiT08ifQ",
+    "welcomeSent": false,
+    "cartItems": {},
+    "__v": 115
+  },
+  {
+    "_id": "user_304Ofh8FE9HoT9H5Je5McwmyM25",
+    "name": "Samuel Olajide",
+    "username": "contend",
+    "email": "contendasonlinemedia@yahoo.com",
+    "imageUrl": "https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18yekw2bEZPWlZqbnlBOUFwWXRQQktWdzJIVG4iLCJyaWQiOiJ1c2VyXzMwNE9maDhGRTlIb1Q5SDVKZTVNY3dteU0yNSIsImluaXRpYWxzIjoiU08ifQ",
+    "welcomeSent": false,
+    "cartItems": {},
+    "__v": 0
+  },
+  {
+    "_id": "user_304QGeWph8UiGH0ARkBkzf4MBiI",
+    "name": "oluwatomilayo olajide",
+    "username": "contendasonlinemedia",
+    "email": "oluwatomilayoolajide2023@gmail.com",
+    "imageUrl": "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18zMDRRR2FlWWZ0MUc2b0c2Q0FqR3hjZEFCbjEifQ",
+    "welcomeSent": false,
+    "cartItems": {},
+    "__v": 0
+  },
+  {
+    "_id": "user_304Sl9LTTrlCrcLnZ7ctNblqgxX",
+    "name": "Oluwatomilayo Olajide",
+    "username": "tomlajex23",
+    "email": "tomilayo1998@yahoo.com",
+    "imageUrl": "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18zMDRTbDRHOHp6STJYSzA0TXF0ZUk4VHlHU0UifQ",
+    "welcomeSent": false,
+    "cartItems": {},
+    "__v": 0
+  }
+]

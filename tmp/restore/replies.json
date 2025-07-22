@@ -1,0 +1,24 @@
+[
+  {
+    "_id": "687e1350ee88b4cb9d267619",
+    "to": "contendasonlinemedia@yahoo.com",
+    "cc": "",
+    "subject": "Re: Issue with Tracking My Recent Order (#123456789)",
+    "message": "Seen\nThank you ",
+    "originalMessageId": "687e133333c4cf3422d4f6d0",
+    "status": "active",
+    "sentAt": "2025-07-21T10:15:44.203Z",
+    "__v": 0
+  },
+  {
+    "_id": "687e1353ee88b4cb9d26761b",
+    "to": "contendasonlinemedia@yahoo.com",
+    "cc": "",
+    "subject": "Re: Issue with Tracking My Recent Order (#123456789)",
+    "message": "Seen\nThank you ",
+    "originalMessageId": "687e133333c4cf3422d4f6d0",
+    "status": "active",
+    "sentAt": "2025-07-21T10:15:47.090Z",
+    "__v": 0
+  }
+]

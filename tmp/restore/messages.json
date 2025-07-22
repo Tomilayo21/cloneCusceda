@@ -1,0 +1,658 @@
+[
+  {
+    "_id": "687051dff6e6321a1fc97387",
+    "senderId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "senderName": "Oluwatomilayo Olajide",
+    "content": "Hi",
+    "isAdmin": false,
+    "chatId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:50:57.952Z",
+    "updatedAt": "2025-07-10T23:50:57.952Z",
+    "__v": 0
+  },
+  {
+    "_id": "687051e2f6e6321a1fc9738a",
+    "senderId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "senderName": "Oluwatomilayo Olajide",
+    "content": "Hi",
+    "isAdmin": false,
+    "chatId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:50:58.156Z",
+    "updatedAt": "2025-07-10T23:50:58.156Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870524607de80a2f8b8deca",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "senderName": "Admin",
+    "content": "Welcome to Cusceda! Let us know how we can help you.",
+    "isAdmin": true,
+    "chatId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "delivered",
+    "createdAt": "2025-07-10T23:52:38.957Z",
+    "updatedAt": "2025-07-11T23:11:13.833Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870524a07de80a2f8b8ded0",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:42.212Z",
+    "updatedAt": "2025-07-10T23:52:42.212Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870524a7c472f938e55f442",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:42.233Z",
+    "updatedAt": "2025-07-10T23:52:42.233Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870524c07de80a2f8b8ded4",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:45.000Z",
+    "updatedAt": "2025-07-10T23:52:45.000Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870524d07de80a2f8b8ded6",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:45.016Z",
+    "updatedAt": "2025-07-10T23:52:45.016Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870524d07de80a2f8b8ded8",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "senderName": "Olajide Oluwatomilayo",
+    "content": "What's up",
+    "isAdmin": false,
+    "chatId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:45.241Z",
+    "updatedAt": "2025-07-10T23:52:45.241Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870524f07de80a2f8b8dedc",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:47.847Z",
+    "updatedAt": "2025-07-10T23:52:47.847Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870524f07de80a2f8b8dede",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:47.962Z",
+    "updatedAt": "2025-07-10T23:52:47.962Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870525207de80a2f8b8dee2",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:50.938Z",
+    "updatedAt": "2025-07-10T23:52:50.938Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870525307de80a2f8b8dee4",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:51.112Z",
+    "updatedAt": "2025-07-10T23:52:51.112Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870525507de80a2f8b8dee8",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:53.917Z",
+    "updatedAt": "2025-07-10T23:52:53.917Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870525507de80a2f8b8deea",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:53.968Z",
+    "updatedAt": "2025-07-10T23:52:53.968Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870525807de80a2f8b8deee",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:56.823Z",
+    "updatedAt": "2025-07-10T23:52:56.823Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870525807de80a2f8b8def0",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:56.975Z",
+    "updatedAt": "2025-07-10T23:52:56.975Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870525b07de80a2f8b8def4",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:59.866Z",
+    "updatedAt": "2025-07-10T23:52:59.866Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870525b07de80a2f8b8def6",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:52:59.979Z",
+    "updatedAt": "2025-07-10T23:52:59.979Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870525e07de80a2f8b8defa",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:02.802Z",
+    "updatedAt": "2025-07-10T23:53:02.802Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870525f07de80a2f8b8defc",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:03.046Z",
+    "updatedAt": "2025-07-10T23:53:03.046Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870526107de80a2f8b8df00",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:05.843Z",
+    "updatedAt": "2025-07-10T23:53:05.843Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870526107de80a2f8b8df02",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:05.973Z",
+    "updatedAt": "2025-07-10T23:53:05.973Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870526407de80a2f8b8df06",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:08.813Z",
+    "updatedAt": "2025-07-10T23:53:08.813Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870526407de80a2f8b8df08",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:08.957Z",
+    "updatedAt": "2025-07-10T23:53:08.957Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870526807de80a2f8b8df0c",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:12.016Z",
+    "updatedAt": "2025-07-10T23:53:12.016Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870526807de80a2f8b8df0e",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:12.469Z",
+    "updatedAt": "2025-07-10T23:53:12.469Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870526a07de80a2f8b8df12",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:14.824Z",
+    "updatedAt": "2025-07-10T23:53:14.824Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870526b07de80a2f8b8df14",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:15.057Z",
+    "updatedAt": "2025-07-10T23:53:15.057Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870526d07de80a2f8b8df18",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:17.817Z",
+    "updatedAt": "2025-07-10T23:53:17.817Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870526d07de80a2f8b8df1a",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:17.963Z",
+    "updatedAt": "2025-07-10T23:53:17.963Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870527007de80a2f8b8df1e",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:20.833Z",
+    "updatedAt": "2025-07-10T23:53:20.833Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870527007de80a2f8b8df20",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:20.959Z",
+    "updatedAt": "2025-07-10T23:53:20.959Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870527307de80a2f8b8df24",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:23.888Z",
+    "updatedAt": "2025-07-10T23:53:23.888Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870527307de80a2f8b8df26",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:23.971Z",
+    "updatedAt": "2025-07-10T23:53:23.971Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870527607de80a2f8b8df2a",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:26.810Z",
+    "updatedAt": "2025-07-10T23:53:26.810Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870527607de80a2f8b8df2c",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:26.978Z",
+    "updatedAt": "2025-07-10T23:53:26.978Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870527a07de80a2f8b8df30",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:30.026Z",
+    "updatedAt": "2025-07-10T23:53:30.026Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870527a7c472f938e55f444",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:30.047Z",
+    "updatedAt": "2025-07-10T23:53:30.047Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870527c07de80a2f8b8df33",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:32.992Z",
+    "updatedAt": "2025-07-10T23:53:32.992Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870528007de80a2f8b8df36",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:36.073Z",
+    "updatedAt": "2025-07-10T23:53:36.073Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870528207de80a2f8b8df39",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:38.972Z",
+    "updatedAt": "2025-07-10T23:53:38.972Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870528507de80a2f8b8df3c",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:41.991Z",
+    "updatedAt": "2025-07-10T23:53:41.991Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870528807de80a2f8b8df3f",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:44.976Z",
+    "updatedAt": "2025-07-10T23:53:44.976Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870527df6e6321a1fc973d9",
+    "senderId": null,
+    "senderName": "Admin",
+    "content": "Welcome to Cusceda! Let us know how we can help you.",
+    "isAdmin": true,
+    "chatId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "read": false,
+    "status": "delivered",
+    "createdAt": "2025-07-10T23:53:33.630Z",
+    "updatedAt": "2025-07-10T23:55:20.332Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870527ff6e6321a1fc973dc",
+    "senderId": null,
+    "senderName": "Admin",
+    "content": "Welcome to Cusceda! Let us know how we can help you.",
+    "isAdmin": true,
+    "chatId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "read": false,
+    "status": "delivered",
+    "createdAt": "2025-07-10T23:53:35.702Z",
+    "updatedAt": "2025-07-10T23:55:20.332Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870528c07de80a2f8b8df42",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:53:48.074Z",
+    "updatedAt": "2025-07-10T23:53:48.074Z",
+    "__v": 0
+  },
+  {
+    "_id": "687052d5f6e6321a1fc97428",
+    "senderId": null,
+    "senderName": "Admin",
+    "content": "Nawa for you!",
+    "isAdmin": true,
+    "chatId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "delivered",
+    "createdAt": "2025-07-10T23:55:01.833Z",
+    "updatedAt": "2025-07-11T23:11:13.833Z",
+    "__v": 0
+  },
+  {
+    "_id": "687052e707de80a2f8b8df62",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:55:19.053Z",
+    "updatedAt": "2025-07-10T23:55:19.053Z",
+    "__v": 0
+  },
+  {
+    "_id": "687052dcf6e6321a1fc97430",
+    "senderId": null,
+    "senderName": "Admin",
+    "content": "Nawa for you!",
+    "isAdmin": true,
+    "chatId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "delivered",
+    "createdAt": "2025-07-10T23:55:08.465Z",
+    "updatedAt": "2025-07-11T23:11:13.833Z",
+    "__v": 0
+  },
+  {
+    "_id": "687052f207de80a2f8b8df69",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-10T23:55:30.667Z",
+    "updatedAt": "2025-07-10T23:55:30.667Z",
+    "__v": 0
+  },
+  {
+    "_id": "687052e8f6e6321a1fc97447",
+    "senderId": null,
+    "senderName": "Admin",
+    "content": "Nawa for you!",
+    "isAdmin": true,
+    "chatId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "delivered",
+    "createdAt": "2025-07-10T23:55:20.424Z",
+    "updatedAt": "2025-07-11T23:11:13.833Z",
+    "__v": 0
+  },
+  {
+    "_id": "68705349f6e6321a1fc9747e",
+    "senderId": null,
+    "senderName": "Admin",
+    "content": "Welcome to Cusceda! Let us know how we can help you.",
+    "isAdmin": true,
+    "chatId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "read": false,
+    "status": "delivered",
+    "createdAt": "2025-07-10T23:56:57.444Z",
+    "updatedAt": "2025-07-11T23:11:13.833Z",
+    "__v": 0
+  },
+  {
+    "_id": "68705349f6e6321a1fc97480",
+    "senderId": null,
+    "senderName": "Admin",
+    "content": "Welcome to Cusceda! Let us know how we can help you.",
+    "isAdmin": true,
+    "chatId": "user_2zMUGpiosSoe8CnehRQkdWAXK40",
+    "read": false,
+    "status": "delivered",
+    "createdAt": "2025-07-10T23:56:57.463Z",
+    "updatedAt": "2025-07-11T23:11:13.833Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870541a8225a4b11d034d14",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:00:26.237Z",
+    "updatedAt": "2025-07-11T00:00:26.237Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870541d8225a4b11d034d17",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:00:29.203Z",
+    "updatedAt": "2025-07-11T00:00:29.203Z",
+    "__v": 0
+  },
+  {
+    "_id": "687054208225a4b11d034d1a",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:00:32.230Z",
+    "updatedAt": "2025-07-11T00:00:32.230Z",
+    "__v": 0
+  },
+  {
+    "_id": "687054238225a4b11d034d1d",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:00:35.205Z",
+    "updatedAt": "2025-07-11T00:00:35.205Z",
+    "__v": 0
+  },
+  {
+    "_id": "687054708225a4b11d034d3a",
+    "senderId": null,
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:01:52.096Z",
+    "updatedAt": "2025-07-11T00:01:52.096Z",
+    "__v": 0
+  },
+  {
+    "_id": "687054855ab069d1714ebb0e",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:02:13.941Z",
+    "updatedAt": "2025-07-11T00:02:13.941Z",
+    "__v": 0
+  },
+  {
+    "_id": "687054895ab069d1714ebb11",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:02:17.110Z",
+    "updatedAt": "2025-07-11T00:02:17.110Z",
+    "__v": 0
+  },
+  {
+    "_id": "687055195ab069d1714ebb47",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:04:41.765Z",
+    "updatedAt": "2025-07-11T00:04:41.765Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870551d8225a4b11d034d7d",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:04:45.150Z",
+    "updatedAt": "2025-07-11T00:04:45.150Z",
+    "__v": 0
+  },
+  {
+    "_id": "687055255ab069d1714ebb57",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:04:53.207Z",
+    "updatedAt": "2025-07-11T00:04:53.207Z",
+    "__v": 0
+  },
+  {
+    "_id": "687055255ab069d1714ebb59",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:04:53.279Z",
+    "updatedAt": "2025-07-11T00:04:53.279Z",
+    "__v": 0
+  },
+  {
+    "_id": "687055268225a4b11d034d82",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:04:54.106Z",
+    "updatedAt": "2025-07-11T00:04:54.106Z",
+    "__v": 0
+  },
+  {
+    "_id": "687055298225a4b11d034d85",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:04:57.274Z",
+    "updatedAt": "2025-07-11T00:04:57.274Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870552c5ab069d1714ebb62",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:05:00.099Z",
+    "updatedAt": "2025-07-11T00:05:00.099Z",
+    "__v": 0
+  },
+  {
+    "_id": "6870552f5ab069d1714ebb67",
+    "senderId": "user_2zMYe0SojMHuf0SZoqZErEnBuIv",
+    "read": false,
+    "status": "sent",
+    "createdAt": "2025-07-11T00:05:03.426Z",
+    "updatedAt": "2025-07-11T00:05:03.426Z",
+    "__v": 0
+  }
+]

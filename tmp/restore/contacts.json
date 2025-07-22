@@ -1,0 +1,30 @@
+[
+  {
+    "_id": "687e12f84d333497ed8cab41",
+    "name": "Oluwatomiiiii ",
+    "email": "cusceda@yahoo.com",
+    "subject": "Issue with Tracking My Recent Order (#123456789)",
+    "message": "Good morning Sir",
+    "archived": false,
+    "read": true,
+    "deleted": false,
+    "device": "Mobile Chrome on Android",
+    "location": "Ibadan, Oyo State, NG",
+    "createdAt": "2025-07-21T10:14:16.586Z",
+    "__v": 0
+  },
+  {
+    "_id": "687e133333c4cf3422d4f6d0",
+    "name": "Olajide ",
+    "email": "contendasonlinemedia@yahoo.com",
+    "subject": "Issue with Tracking My Recent Order (#123456789)",
+    "message": "Good morning Sir",
+    "archived": false,
+    "read": true,
+    "deleted": false,
+    "device": "Mobile Chrome on Android",
+    "location": "Ibadan, Oyo State, NG",
+    "createdAt": "2025-07-21T10:15:15.098Z",
+    "__v": 0
+  }
+]
