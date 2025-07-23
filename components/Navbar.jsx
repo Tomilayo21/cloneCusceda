@@ -32,17 +32,17 @@ const Navbar = () => {
   const [hasAccess, setHasAccess] = useState(false);
   const [showOtpPrompt, setShowOtpPrompt] = useState(false);
 
-  const handleClick = () => {
-    if (!hasAccess) {
-      setPromptPassword(true);
-    } else {
-      // ✅ Redirect to /admin
-      router.push('/admin');
-    }
-  };
-  const handleAdminClick = () => {
-    setShowOtpPrompt(true);
-  };
+  // const handleClick = () => {
+  //   if (!hasAccess) {
+  //     setPromptPassword(true);
+  //   } else {
+  //     // ✅ Redirect to /admin
+  //     router.push('/admin');
+  //   }
+  // };
+  // const handleAdminClick = () => {
+  //   setShowOtpPrompt(true);
+  // };
 
   useEffect(() => {
     const fetchLogo = async () => {
@@ -55,9 +55,9 @@ const Navbar = () => {
   }, []);
 
 
-  // const handleClick = () => {
-  //   router.push('/admin');
-  // };
+  const handleClick = () => {
+    router.push('/admin');
+  };
 
   // Detect screen size
   useEffect(() => {
@@ -161,7 +161,7 @@ const Navbar = () => {
 
         {/* Right side (Desktop) */}
         <div className="hidden md:flex items-center gap-4">
-          {/* {isAdmin && (
+          {isAdmin && (
             <Tooltip.Provider delayDuration={100}>
               <Tooltip.Root>
                 <Tooltip.Trigger asChild>
@@ -184,7 +184,7 @@ const Navbar = () => {
                 </Tooltip.Portal>
               </Tooltip.Root>
             </Tooltip.Provider>
-          )} */}
+          )}
 
           {/* {isAdmin && (
             <Tooltip.Provider delayDuration={100}>
@@ -239,7 +239,7 @@ const Navbar = () => {
 
 
 
-          {isAdmin && (
+{/*           {isAdmin && (
             <>
               <div
                 onClick={handleAdminClick}
@@ -258,7 +258,7 @@ const Navbar = () => {
                 </div>
               )}
             </>
-          )}
+          )} */}
 
 
           {/* Search */}
@@ -351,7 +351,7 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* {isAdmin && (
+          {isAdmin && (
             <Tooltip.Provider delayDuration={100}>
               <Tooltip.Root>
                 <Tooltip.Trigger asChild>
@@ -374,7 +374,7 @@ const Navbar = () => {
               </Tooltip.Root>
             </Tooltip.Provider>
           )}
-          {promptPassword && !hasAccess && (
+{/*           {promptPassword && !hasAccess && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
               <SuperAdminUnlock
               onSuccess={() => {
@@ -387,7 +387,7 @@ const Navbar = () => {
             </div>
           )} */}
 
-          {isAdmin && (
+{/*           {isAdmin && (
             <>
               <div
                 onClick={handleAdminClick}
@@ -406,7 +406,7 @@ const Navbar = () => {
               )}
             </>
           )}
-
+ */}
           <button onClick={() => setMobileMenuOpen((prev) => !prev)} aria-label="Toggle Menu">
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
