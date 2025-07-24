@@ -152,7 +152,7 @@ const Navbar = () => {
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center justify-center gap-8 flex-1 px-8">
-          <Link href="/" className="hover:bg-[#EBEDED] p-2 rounded">Home</Link>
+          <Link href="/" className="hover:bg-[#EBEDED] p-2 rounded">Homme</Link>
           <Link href="/all-products" className="hover:bg-[#EBEDED] p-2 rounded">Products</Link>
           {/* <Link href="/about" className="hover:bg-[#EBEDED] p-2 rounded">About Us</Link>
           <Link href="/contact" className="hover:bg-[#EBEDED] p-2 rounded">Contact</Link> */}
