@@ -17,5 +17,11 @@ export default {
       },
     },
   },
+  extend: {
+    colors: {
+      highcontrast: '#000',
+      highcontrastText: '#FFD700', // gold or yellow for text
+    },
+  },
   plugins: [],
 };

@@ -37,8 +37,10 @@ import { useUser } from '@clerk/nextjs';
 import BackupModal from '@/components/admin/BackupModal';
 import AdminRestore from '@/components/admin/AdminRestore';
 import RestoreModal from '@/components/admin/RestoreModal';
-
-
+import { useAppContext } from '@/context/AppContext';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
+import LayoutStyleSelector from "@/components/LayoutStyleSelector";
 
 
 
@@ -56,6 +58,28 @@ const settingsTabs = [
 ];
 
 export default function AdminSettings() {
+     const { 
+    currency, 
+    setCurrency, 
+    themeColor, 
+    setThemeColor, 
+    themeMode, 
+    setThemeMode, 
+    contrastMode, 
+    setContrastMode,
+    layoutStyle,
+    setLayoutStyle,
+    fontSize,
+    setFontSize,
+    savePreferences,
+    layout,
+    updateSettings,
+    saveLayoutStyle,
+    cancelPreview,
+    
+  } = useAppContext();
+
+
   const [activeTab, setActiveTab] = useState('general');
   const [productSubTab, setProductSubTab] = useState(null);
   const [productPanel, setProductPanel] = useState(null);
@@ -74,10 +98,18 @@ export default function AdminSettings() {
   const [supportEmail, setSupportEmail] = useState("");
   const [settingsPanel, setSettingsPanel] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const { user } = useUser();
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const [layoutVal, setLayoutVal] = useState(layout);
+  const [fontVal, setFontVal] = useState(fontSize);
+  const [selectedFontSize, setSelectedFontSize] = useState(fontSize);
+  const [selectedLayout, setSelectedLayout] = useState(layoutStyle);
+      const [localLayout, setLocalLayout] = useState(layoutStyle);
+    const [localFontSize, setLocalFontSize] = useState(fontSize);
+
+
 
   // const isAdmin = user?.publicMetadata?.role === 'admin';
 
@@ -230,6 +262,28 @@ export default function AdminSettings() {
       toast.error("Unexpected error occurred.");
     }
   };
+
+
+  const router = useRouter();
+  const changeLanguage = (e) => {
+    const lang = e.target.value;
+    Cookies.set('lang', lang, { expires: 30 });
+    router.refresh(); // triggers layout re-render
+  };
+
+
+
+
+    useEffect(() => {
+        setLocalLayout(layoutStyle);
+        setLocalFontSize(fontSize);
+    }, [layoutStyle, fontSize]);
+
+    const handleSave = async () => {
+      setLayoutStyle(localLayout);
+      setFontSize(localFontSize);
+      await savePreferences(localFontSize, localLayout); // ✅ pass updated values
+    };
 
 
 
@@ -738,25 +792,261 @@ export default function AdminSettings() {
             </div>
         )}
 
-         {activeTab === 'localization' && (
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Localization</h3>
-            <select className="w-full border p-2 rounded">
-              <option>English</option>
-              <option>French</option>
-              <option>Spanish</option>
-            </select>
-          </div>
+        {activeTab === 'localization' && (
+            <div className="space-y-5">
+                <h3 className="font-semibold text-lg">Localization Settings</h3>
+
+                {/* Language Selection */}
+                {/* <div>
+                    <label className="block text-sm font-medium mb-1">Preferred Language</label>
+                    <select
+                        className="w-full border p-2 rounded"
+                        // onChange={changeLanguage}
+                        // defaultValue={i18n.language}
+                    >
+                        <option value="en">English</option>
+                        <option value="fr">French</option>
+                        <option value="es">Spanish</option>
+                        <option value="de">German</option>
+                        <option value="zh">Chinese (Simplified)</option>
+                        <option value="ar">Arabic</option>
+                    </select>
+                </div> */}
+                <div>
+                    <label className="block text-sm font-medium mb-1">Preferred Language</label>
+                    <select
+                        className="w-full border p-2 rounded"
+                        onChange={changeLanguage}
+                        defaultValue={Cookies.get('lang') || 'en'}
+                    >
+                        <option value="en">English</option>
+                        <option value="fr">French</option>
+                        <option value="es">Spanish</option>
+                        <option value="de">German</option>
+                        <option value="zh">Chinese (Simplified)</option>
+                        <option value="ar">Arabic</option>
+                    </select>
+                </div>
+
+                {/* Timezone Selection */}
+                <div>
+                <label className="block text-sm font-medium mb-1">Timezone</label>
+                <select className="w-full border p-2 rounded">
+                    <option>(GMT+01:00) West Africa Time</option>
+                    <option>(GMT+00:00) UTC</option>
+                    <option>(GMT-05:00) Eastern Time (US & Canada)</option>
+                    <option>(GMT+08:00) China Standard Time</option>
+                    <option>(GMT+05:30) India Standard Time</option>
+                </select>
+                </div>
+
+                {/* Date Format */}
+                <div>
+                <label className="block text-sm font-medium mb-1">Date Format</label>
+                <select className="w-full border p-2 rounded">
+                    <option>MM/DD/YYYY</option>
+                    <option>DD/MM/YYYY</option>
+                    <option>YYYY-MM-DD</option>
+                </select>
+                </div>
+
+                {/* Number Format */}
+                <div>
+                <label className="block text-sm font-medium mb-1">Number Format</label>
+                <select className="w-full border p-2 rounded">
+                    <option>1,234.56 (US)</option>
+                    <option>1.234,56 (EU)</option>
+                    <option>1 234,56 (Russia/Arabic)</option>
+                </select>
+                </div>
+
+                {/* Currency Preference */}
+                <div>
+                    <label className="block text-sm font-medium mb-1">Currency</label>
+                    <select
+                        className="w-full border p-2 rounded"
+                        value={currency}
+                        onChange={(e) => setCurrency(e.target.value)}
+                    >
+                        <option value="$">USD - US Dollar</option>
+                        <option value="€">EUR - Euro</option>
+                        <option value="₦">NGN - Nigerian Naira</option>
+                        <option value="£">GBP - British Pound</option>
+                        <option value="¥">JPY - Japanese Yen</option>
+                    </select>
+                    <p className="mt-2 text-green-600 text-sm">
+                        Selected: {currency}
+                    </p>
+                </div>
+
+
+
+
+
+                {/* Text Direction */}
+                <div>
+                <label className="block text-sm font-medium mb-1">Text Direction</label>
+                <select className="w-full border p-2 rounded">
+                    <option value="ltr">Left to Right (LTR)</option>
+                    <option value="rtl">Right to Left (RTL)</option>
+                </select>
+                </div>
+
+                {/* Regional Content Toggle */}
+                <div className="flex items-center gap-2">
+                <input type="checkbox" id="regional" className="accent-blue-500" />
+                <label htmlFor="regional" className="text-sm">Show region-specific content (e.g., holidays, local news)</label>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-3 pt-4">
+                <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Apply Settings
+                </button>
+                <button className="border border-gray-300 px-4 py-2 rounded hover:bg-gray-100">
+                    Reset to Default
+                </button>
+                </div>
+            </div>
         )}
 
+
         {activeTab === 'appearance' && (
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Appearance / Theme</h3>
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" /> Use Dark Mode by Default
-            </label>
-          </div>
+            <div className="space-y-4">
+                <h3 className="font-semibold text-lg">Appearance / Theme</h3>
+
+                {/* Dark Mode Toggle */}
+                <label className="flex items-center gap-2">
+                <input type="checkbox" className="accent-orange-600" />
+                Use Dark Mode by Default
+                </label>
+
+                {/* System Theme Sync */}
+                <label className="flex items-center gap-2">
+                <input type="checkbox" className="accent-orange-600" />
+                Sync with System Theme
+                </label>
+
+                {/* High Contrast Mode */}
+                <label className="flex items-center gap-2">
+                <input type="checkbox" className="accent-orange-600" />
+                Enable High Contrast Mode
+                </label>
+
+                {/* Theme Color Picker */}
+
+                <div className="space-y-1">
+                    <label className="block text-sm font-medium text-gray-700">
+                        Theme Color
+                    </label>
+                    <input
+                        type="color"
+                        value={themeColor}
+                        onChange={(e) => setThemeColor(e.target.value)}
+                        className="w-12 h-8 border rounded"
+                    />
+                </div>
+
+                {/* Font Size Selector */}
+
+                {/* <div className="p-4 space-y-4">
+                    <div>
+                        <label className="block mb-1">Font Size</label>
+                        <select
+                        value={localFontSize}
+                        onChange={(e) => setLocalFontSize(e.target.value)}
+                        className="p-2 border rounded w-full"
+                        >
+                        <option value="small">Small</option>
+                        <option value="medium">Medium</option>
+                        <option value="large">Large</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label className="block mb-1">Layout</label>
+                        <select
+                        value={localLayout}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setSelectedLayout(value);
+                            saveLayoutStyle(value); // ✅ make sure this comes from context
+                        }}
+                        className="p-2 border rounded w-full"
+                        >
+                        <option value="grid">Grid</option>
+                        <option value="list">List</option>
+                        </select>
+                    </div>
+
+                    <button
+                        onClick={handleSave}
+                        className="px-4 py-2 bg-black text-white rounded"
+                    >
+                        Save Preferences
+                    </button>
+                </div> */}
+
+                <div className="space-y-4">
+                    <h3 className="font-semibold text-lg">Appearance / Theme</h3>
+
+                    <label className="flex items-center gap-2">
+                        <input
+                        type="radio"
+                        name="theme"
+                        checked={themeMode === "light"}
+                        onChange={() => setThemeMode("light")}
+                        />
+                        Light Mode
+                    </label>
+
+                    <label className="flex items-center gap-2">
+                        <input
+                        type="radio"
+                        name="theme"
+                        checked={themeMode === "dark"}
+                        onChange={() => setThemeMode("dark")}
+                        />
+                        Dark Mode
+                    </label>
+
+                    <label className="flex items-center gap-2">
+                        <input
+                        type="radio"
+                        name="theme"
+                        checked={themeMode === "system"}
+                        onChange={() => setThemeMode("system")}
+                        />
+                        System Preference
+                    </label>
+                </div>
+
+                <div className="space-y-4">
+                    <h3 className="font-semibold text-lg">High Contrast</h3>
+
+                    <label className="flex items-center gap-2">
+                        <input
+                        type="checkbox"
+                        checked={contrastMode}
+                        onChange={(e) => setContrastMode(e.target.checked)}
+                        />
+                        Enable High Contrast Mode (Accessibility)
+                    </label>
+                </div>
+
+                {/* Layout Style */}
+                <div className="space-y-1">
+                    <LayoutStyleSelector />
+                </div>
+
+                {/* Rounded Corners */}
+                <label className="flex items-center gap-2">
+                <input type="checkbox" className="accent-orange-600" />
+                Use Rounded Corners
+                </label>
+            </div>
         )}
+
 
         {activeTab === 'security' && (
           <div className="space-y-4">

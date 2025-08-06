@@ -44,3 +44,27 @@ body {
 .ProseMirror p {
   margin-bottom: 1em; /* paragraph spacing */
 }
+
+.high-contrast body {
+  background-color: black;
+  color: yellow;
+}
+
+.high-contrast a {
+  color: cyan;
+}
+
+.high-contrast button {
+  background-color: yellow;
+  color: black;
+}
+
+.font-size-small {
+  font-size: 0.875rem;
+}
+.font-size-medium {
+  font-size: 1rem;
+}
+.font-size-large {
+  font-size: 1.25rem;
+}

@@ -7,12 +7,13 @@ import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
 import { useClerk, UserButton } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { Menu, X, Heart } from "lucide-react";
+import { Menu, X, Heart, Search } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { Moon, Sun, ShieldCheck, ShieldAlert } from "lucide-react";
 import SuperAdminUnlock from '@/components/admin/SuperAdminUnlock'; 
 import AdminOtpVerification from '@/components/admin/AdminOtpVerification'; 
+import SearchBar from "./Searchbar";
 
 const Navbar = () => {
   const { isAdmin, user, getCartCount } = useAppContext();
@@ -31,6 +32,8 @@ const Navbar = () => {
   const [promptPassword, setPromptPassword] = useState(false);
   const [hasAccess, setHasAccess] = useState(false);
   const [showOtpPrompt, setShowOtpPrompt] = useState(false);
+  const [recentSearches, setRecentSearches] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   // const handleClick = () => {
   //   if (!hasAccess) {
@@ -97,14 +100,56 @@ const Navbar = () => {
   }, []);
 
   // Search submission
-  const handleSearch = () => {
-    if (inputValue.trim()) {
-      router.push(`/all-products?search=${encodeURIComponent(inputValue.trim())}`);
-      setSearchExpanded(false);
-    } else {
-      setSearchExpanded((prev) => !prev);
-    }
-  };
+  // const handleSearch = () => {
+  //   if (inputValue.trim()) {
+  //     router.push(`/all-products?search=${encodeURIComponent(inputValue.trim())}`);
+  //     setSearchExpanded(false);
+  //   } else {
+  //     setSearchExpanded((prev) => !prev);
+  //   }
+  // };
+
+  useEffect(() => {
+      const stored = localStorage.getItem("recentSearches");
+      if (stored) setRecentSearches(JSON.parse(stored));
+    }, []);
+  
+    const handleSearch = () => {
+      if (inputValue.trim()) {
+        const newSearch = inputValue.trim();
+        const updatedRecent = [
+          newSearch,
+          ...recentSearches.filter((s) => s !== newSearch),
+        ].slice(0, 5);
+        setRecentSearches(updatedRecent);
+        localStorage.setItem("recentSearches", JSON.stringify(updatedRecent));
+  
+        router.push(`/all-products?search=${encodeURIComponent(newSearch)}`);
+        setShowDropdown(false);
+        setSearchExpanded(false);
+      } else {
+        setShowDropdown((prev) => !prev);
+        setSearchExpanded((prev) => !prev);
+      }
+    };
+  
+    const handleSelectSearch = (value) => {
+      setInputValue(value);
+      setShowDropdown(false);
+      router.push(`/all-products?search=${encodeURIComponent(value)}`);
+    };
+  
+    const handleClearItem = (item) => {
+      const updated = recentSearches.filter((s) => s !== item);
+      setRecentSearches(updated);
+      localStorage.setItem("recentSearches", JSON.stringify(updated));
+    };
+  
+    const handleClearAll = () => {
+      setRecentSearches([]);
+      localStorage.removeItem("recentSearches");
+    };
+  
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") handleSearch();
@@ -152,7 +197,7 @@ const Navbar = () => {
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center justify-center gap-8 flex-1 px-8">
-          <Link href="/" className="hover:bg-[#EBEDED] p-2 rounded">Homme</Link>
+          <Link href="/" className="hover:bg-[#EBEDED] p-2 rounded">Home</Link>
           <Link href="/all-products" className="hover:bg-[#EBEDED] p-2 rounded">Products</Link>
           {/* <Link href="/about" className="hover:bg-[#EBEDED] p-2 rounded">About Us</Link>
           <Link href="/contact" className="hover:bg-[#EBEDED] p-2 rounded">Contact</Link> */}
@@ -261,28 +306,9 @@ const Navbar = () => {
           )} */}
 
 
-          {/* Search */}
-          <div className="relative flex items-center">
-            <input
-              ref={searchRef}
-              type="text"
-              placeholder="Search..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onFocus={() => setSearchExpanded(true)}
-              onKeyDown={handleKeyDown}
-              className={`transition-all duration-300 bg-white border border-gray-300 rounded-full px-4 py-1 text-sm text-gray-700 ${
-                searchExpanded ? "opacity-100 w-48" : "opacity-0 w-0 px-0"
-              }`}
-            />
-            <button
-              ref={searchButtonRef}
-              onClick={handleSearch}
-              className="ml-1"
-              aria-label="Search"
-            >
-              <Image src={assets.search_icon} alt="search" className="w-4 h-4" />
-            </button>
+          {/* Search */}          
+          <div className="mt-2 sm:mt-0 w-full sm:w-auto">
+            <SearchBar />
           </div>
 
           {/* Favorites */}
@@ -328,28 +354,8 @@ const Navbar = () => {
         {/* Mobile Right Side */}
         <div className="flex md:hidden items-center gap-2">
           {/* Search */}
-          <div className="relative flex items-center">
-            <input
-              ref={searchRef}
-              type="text"
-              placeholder="Search..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onFocus={() => setSearchExpanded(true)}
-              onKeyDown={handleKeyDown}
-              className={`transition-all duration-300 bg-white border border-gray-300 rounded-full px-4 py-1 text-sm text-gray-700 ${
-                searchExpanded ? "opacity-100 w-40" : "opacity-0 w-0 px-0"
-              }`}
-            />
-            <button
-              ref={searchButtonRef}
-              onClick={handleSearch}
-              className="ml-1"
-              aria-label="Search"
-            >
-              <Image src={assets.search_icon} alt="search" className="w-4 h-4" />
-            </button>
-          </div>
+
+          <SearchBar />
 
           {isAdmin && (
             <Tooltip.Provider delayDuration={100}>
