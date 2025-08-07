@@ -41,6 +41,12 @@ import { useAppContext } from '@/context/AppContext';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import LayoutStyleSelector from "@/components/LayoutStyleSelector";
+import FAQEditor from '@/components/FAQEditor';
+import TermsEditor from '@/components/TermsEditor';
+import PrivacyEditor from '@/components/PrivacyEditor';
+import ReturnsEditor from '@/components/ReturnsEditor';
+
+
 
 
 
@@ -101,6 +107,8 @@ export default function AdminSettings() {
   const { user } = useUser();
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
+  const [legalPanel, setLegalPanel] = useState("main");
+
 
   const [layoutVal, setLayoutVal] = useState(layout);
   const [fontVal, setFontVal] = useState(fontSize);
@@ -108,6 +116,7 @@ export default function AdminSettings() {
   const [selectedLayout, setSelectedLayout] = useState(layoutStyle);
       const [localLayout, setLocalLayout] = useState(layoutStyle);
     const [localFontSize, setLocalFontSize] = useState(fontSize);
+    
 
 
 
@@ -1098,19 +1107,173 @@ export default function AdminSettings() {
           </div>
         )}
 
-        {activeTab === 'legal' && (
+        {/* {activeTab === 'legal' && (
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Legal & Policy</h3>
             <textarea placeholder="Privacy Policy..." className="w-full border p-2 rounded" rows={4}></textarea>
           </div>
+        )} */}
+
+
+       {activeTab === "legal" && (
+          <div className="relative overflow-hidden">
+            <AnimatePresence mode="wait">
+              {legalPanel === "main" && (
+                <motion.div
+                  key="legal-main"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <h3 className="font-semibold text-lg">Legal & Policy</h3>
+                  <p className="text-sm text-gray-600">
+                    Manage your website's legal documents and policy pages.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <button
+                      onClick={() => setLegalPanel("privacy")}
+                      className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold">Privacy Policy</span>
+                      </div>
+                      <p className="text-xs text-left">
+                        Describe how user data is collected and used.
+                      </p>
+                    </button>
+
+                    <button
+                      onClick={() => setLegalPanel("terms")}
+                      className="flex flex-col items-start bg-green-100 hover:bg-green-200 text-green-800 p-4 rounded-xl shadow"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold">Terms & Conditions</span>
+                      </div>
+                      <p className="text-xs text-left">
+                        Outline the rules for using your service.
+                      </p>
+                    </button>
+
+                    <button
+                      onClick={() => setLegalPanel("returns")}
+                      className="flex flex-col items-start bg-yellow-100 hover:bg-yellow-200 text-yellow-800 p-4 rounded-xl shadow"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold">Return Policy</span>
+                      </div>
+                      <p className="text-xs text-left">
+                        Specify your returns and refund process.
+                      </p>
+                    </button>
+
+                    <button
+                      onClick={() => setLegalPanel("faq")}
+                      className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold">FAQs</span>
+                      </div>
+                      <p className="text-xs text-left">
+                        Manage common legal-related questions and answers.
+                      </p>
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Privacy Policy Panel */}
+              {legalPanel === "privacy" && (
+                <motion.div
+                  key="legal-privacy"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setLegalPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+                  <h3 className="font-semibold text-lg">Edit Privacy Policy</h3>
+                  
+                  <PrivacyEditor />
+                </motion.div>
+              )}
+
+              {/* Terms & Conditions Panel */}
+              {legalPanel === "terms" && (
+                <motion.div
+                  key="legal-terms"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button
+                    onClick={() => setLegalPanel("main")}
+                    className="flex items-center text-sm text-gray-600 hover:text-black"
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+                  <h3 className="font-semibold text-lg">Edit Terms & Conditions</h3>
+
+                  <TermsEditor />
+
+                </motion.div>
+              )}
+
+
+              {/* Return Policy Panel */}
+              {legalPanel === "returns" && (
+                <motion.div
+                  key="legal-returns"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button
+                    onClick={() => setLegalPanel("main")}
+                    className="flex items-center text-sm text-gray-600 hover:text-black"
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+
+                   <ReturnsEditor />
+
+
+                </motion.div>
+              )}
+
+
+              {/* FAQ Panel */}
+              {legalPanel === "faq" && (
+                <motion.div
+                  key="legal-faqs"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setLegalPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+                  <h3 className="font-semibold text-lg">Edit FAQs</h3>
+
+                  <FAQEditor />
+                </motion.div>
+              )}
+
+            </AnimatePresence>
+          </div>
         )}
 
-        {/* {activeTab === 'backup' && (
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Backup & Export</h3>
-            <button className="bg-orange-600 text-white px-4 py-2 rounded">Export Orders CSV</button>
-          </div>
-        )} */}
         {activeTab === 'backup' && (
           <div className="space-y-6">
             <h3 className="font-semibold text-lg">Backup & Export</h3>

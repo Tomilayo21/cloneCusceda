@@ -52,14 +52,7 @@ const Footer = () => {
       <div className="flex flex-col md:flex-row items-start justify-center px-6 md:px-16 lg:px-32 gap-10 py-14 border-b border-gray-500/30 dark:border-gray-600/50">
         {/* Logo & Description */}
         <div className="w-4/5 max-w-sm">
-          {/* <Image
-            src={logoSrc}
-            alt="Cusceda Logo"
-            width={128}
-            height={128}
-            className="w-28 md:w-32 cursor-pointer"
-            priority
-          /> */}
+
           <img
             src={logoUrl}
             alt="Logo"
@@ -72,7 +65,7 @@ const Footer = () => {
         </div>
 
         {/* Company Links */}
-        <div className="w-1/2 flex items-center justify-start md:justify-center">
+        {/* <div className="w-1/2 flex items-center justify-start md:justify-center">
           <div>
             <h2 className="font-medium text-gray-900 dark:text-gray-100 mb-5 text-lg">Company</h2>
             <ul className="text-sm space-y-2">
@@ -98,7 +91,50 @@ const Footer = () => {
               </li>
             </ul>
           </div>
+        </div> */}
+        <div className="w-full md:w-1/2 flex items-start justify-start md:justify-center">
+          <div>
+            <h2 className="font-medium text-gray-900 dark:text-gray-100 mb-5 text-lg">Company</h2>
+            <ul className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
+              <li>
+                <Link href="/" className="hover:underline transition">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="hover:underline transition">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:underline transition">
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="hover:underline transition">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/return-policy" className="hover:underline transition">
+                  Return Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms-and-conditions" className="hover:underline transition">
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="hover:underline transition">
+                  FAQs
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
+
 
         {/* Contact Info */}
         <div className="w-1/2 flex items-start justify-start md:justify-center">
