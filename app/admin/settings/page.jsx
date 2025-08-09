@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import {
   Cog,
+  Building,
+  Briefcase,
   ShieldCheck,
   Palette,
   Globe,
@@ -45,6 +47,7 @@ import FAQEditor from '@/components/FAQEditor';
 import TermsEditor from '@/components/TermsEditor';
 import PrivacyEditor from '@/components/PrivacyEditor';
 import ReturnsEditor from '@/components/ReturnsEditor';
+import AboutEditor from '@/components/AboutEditor';
 
 
 
@@ -52,6 +55,7 @@ import ReturnsEditor from '@/components/ReturnsEditor';
 
 const settingsTabs = [
   { key: 'general', label: 'General', icon: <Cog className="w-4 h-4" /> },
+  { key: 'company', label: 'Company', icon: <Briefcase className="w-4 h-4" /> },
   { key: 'product', label: 'Product', icon: <Box className="w-4 h-4" /> },
   { key: 'users', label: 'Users, Subscribers & Roles', icon: <Users className="w-4 h-4" /> },
   { key: 'notifications', label: 'Notifications', icon: <Bell className="w-4 h-4" /> },
@@ -64,7 +68,7 @@ const settingsTabs = [
 ];
 
 export default function AdminSettings() {
-     const { 
+  const { 
     currency, 
     setCurrency, 
     themeColor, 
@@ -108,6 +112,7 @@ export default function AdminSettings() {
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [legalPanel, setLegalPanel] = useState("main");
+  const [companyPanel, setCompanyPanel] = useState("main");
 
 
   const [layoutVal, setLayoutVal] = useState(layout);
@@ -163,25 +168,7 @@ export default function AdminSettings() {
     fetchSiteDetails();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchSettings = async () => {
-  //     try {
-  //       const res = await fetch("/api/settings/footerdetails");
-  //       const data = await res.json();
-  //       if (data) {
-  //         setFooterDescription(data.footerDescription || "");
-  //         setFooterPhone(data.footerPhone || "");
-  //         setFooterEmail(data.footerEmail || "");
-  //         setFooterName(data.footerName || "");
-  //       }
-  //     } catch (err) {
-  //       console.error("Failed to fetch settings:", err);
-  //     }
-  //   };
-  //   fetchSettings();
-  // }, []);
-
-   const handleLogoChange = async (e) => {
+  const handleLogoChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -487,6 +474,139 @@ export default function AdminSettings() {
             </AnimatePresence>
           </div>
         )}
+
+        {activeTab === "company" && (
+          <div className="relative overflow-hidden">
+            <AnimatePresence mode="wait">
+              {companyPanel === "main" && (
+                <motion.div
+                  key="company-main"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <h3 className="font-semibold text-lg">Company Info</h3>
+                  <p className="text-sm text-gray-600">
+                    Manage your company's public-facing content and team details.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <button
+                      onClick={() => setCompanyPanel("about")}
+                      className="flex flex-col items-start bg-sky-100 hover:bg-sky-200 text-sky-800 p-4 rounded-xl shadow"
+                    >
+                      <span className="font-semibold mb-1">About Us</span>
+                      <p className="text-xs text-left">Edit your company's story and purpose.</p>
+                    </button>
+
+                    <button
+                      onClick={() => setCompanyPanel("partners")}
+                      className="flex flex-col items-start bg-pink-100 hover:bg-pink-200 text-pink-800 p-4 rounded-xl shadow"
+                    >
+                      <span className="font-semibold mb-1">Partner With Us</span>
+                      <p className="text-xs text-left">Manage partnership information and callouts.</p>
+                    </button>
+
+                    <button
+                      onClick={() => setCompanyPanel("who")}
+                      className="flex flex-col items-start bg-indigo-100 hover:bg-indigo-200 text-indigo-800 p-4 rounded-xl shadow"
+                    >
+                      <span className="font-semibold mb-1">Who We Are</span>
+                      <p className="text-xs text-left">Define your identity, mission, and values.</p>
+                    </button>
+
+                    <button
+                      onClick={() => setCompanyPanel("team")}
+                      className="flex flex-col items-start bg-rose-100 hover:bg-rose-200 text-rose-800 p-4 rounded-xl shadow"
+                    >
+                      <span className="font-semibold mb-1">Cusceda Team</span>
+                      <p className="text-xs text-left">Showcase team members and bios.</p>
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* About Us Panel */}
+              {companyPanel === "about" && (
+                <motion.div
+                  key="company-about"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setCompanyPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+                  <h3 className="font-semibold text-lg">Edit About Us</h3>
+
+                  <AboutEditor />
+                </motion.div>
+              )}
+
+              {/* Partner With Us Panel */}
+              {companyPanel === "partners" && (
+                <motion.div
+                  key="company-partners"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setCompanyPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+                  <h3 className="font-semibold text-lg">Edit Partner With Us</h3>
+
+                  <PartnerEditor />
+                </motion.div>
+              )}
+
+              {/* Who We Are Panel */}
+              {companyPanel === "who" && (
+                <motion.div
+                  key="company-who"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setCompanyPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+                  <h3 className="font-semibold text-lg">Edit Who We Are</h3>
+
+                  <WhoWeAreEditor />
+                </motion.div>
+              )}
+
+              {/* Cusceda Team Panel */}
+              {companyPanel === "team" && (
+                <motion.div
+                  key="company-team"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setCompanyPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+                  <h3 className="font-semibold text-lg">Edit Cusceda Team</h3>
+
+                  <TeamEditor />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
+
 
          {activeTab === 'product' && (
              <div className="relative overflow-hidden">
@@ -1106,13 +1226,6 @@ export default function AdminSettings() {
             </button>
           </div>
         )}
-
-        {/* {activeTab === 'legal' && (
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Legal & Policy</h3>
-            <textarea placeholder="Privacy Policy..." className="w-full border p-2 rounded" rows={4}></textarea>
-          </div>
-        )} */}
 
 
        {activeTab === "legal" && (
