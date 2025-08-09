@@ -49,6 +49,8 @@ import PrivacyEditor from '@/components/PrivacyEditor';
 import ReturnsEditor from '@/components/ReturnsEditor';
 import AboutEditor from '@/components/AboutEditor';
 import TeamEditor from '@/components/TeamEditor';
+import Testimonials from "@/components/Testimonials";
+
 
 
 
@@ -581,7 +583,8 @@ export default function AdminSettings() {
                   </button>
                   <h3 className="font-semibold text-lg">Edit Who We Are</h3>
 
-                  <WhoWeAreEditor />
+                  {/* <WhoWeAreEditor /> */}
+                  <Testimonials />
                 </motion.div>
               )}
 

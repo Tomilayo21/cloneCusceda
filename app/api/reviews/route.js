@@ -31,37 +31,6 @@ export async function GET(request) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
-// export async function GET(request) {
-//   try {
-//     const { userId } = getAuth(request);
-//     await connectDB();
-
-//     const url = new URL(request.url);
-//     const productId = url.searchParams.get("productId");
-
-//     if (productId) {
-//       // Public access: only approved reviews for the given product
-//       const reviews = await Review.find({ productId, approved: true })
-//         .populate("productId", "name")
-//         .sort({ createdAt: -1 });
-
-//       return NextResponse.json(reviews, { status: 200 });
-//     }
-
-//     // Admin access: all reviews
-//     if (!userId || !(await authSeller(userId))) {
-//       return NextResponse.json({ message: "Not authorized" }, { status: 403 });
-//     }
-
-//     const reviews = await Review.find()
-//       .populate("productId", "name")
-//       .sort({ createdAt: -1 });
-
-//     return NextResponse.json({ success: true, reviews }, { status: 200 });
-//   } catch (error) {
-//     return NextResponse.json({ message: error.message }, { status: 500 });
-//   }
-// }
 
 export async function POST(request) {
   try {
