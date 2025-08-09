@@ -48,6 +48,7 @@ import TermsEditor from '@/components/TermsEditor';
 import PrivacyEditor from '@/components/PrivacyEditor';
 import ReturnsEditor from '@/components/ReturnsEditor';
 import AboutEditor from '@/components/AboutEditor';
+import TeamEditor from '@/components/TeamEditor';
 
 
 
@@ -541,7 +542,6 @@ export default function AdminSettings() {
                   <button onClick={() => setCompanyPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
                     <ArrowLeft className="w-4 h-4 mr-1" /> Back
                   </button>
-                  <h3 className="font-semibold text-lg">Edit About Us</h3>
 
                   <AboutEditor />
                 </motion.div>
@@ -598,7 +598,6 @@ export default function AdminSettings() {
                   <button onClick={() => setCompanyPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
                     <ArrowLeft className="w-4 h-4 mr-1" /> Back
                   </button>
-                  <h3 className="font-semibold text-lg">Edit Cusceda Team</h3>
 
                   <TeamEditor />
                 </motion.div>
