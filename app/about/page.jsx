@@ -461,130 +461,130 @@
 
 
 //About Us
-"use client";
+// "use client";
 
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
-import { useEffect, useState } from "react";
+// import Footer from "@/components/Footer";
+// import Navbar from "@/components/Navbar";
+// import { useEffect, useState } from "react";
 
-export default function AboutPage() {
-  const [entries, setEntries] = useState([]);
+// export default function AboutPage() {
+//   const [entries, setEntries] = useState([]);
 
-  useEffect(() => {
-    fetch("/api/about")
-      .then((res) => res.json())
-      .then((data) => {
-        const sorted = data.sort((a, b) => a.position - b.position);
-        setEntries(sorted);
-      });
-  }, []);
+//   useEffect(() => {
+//     fetch("/api/about")
+//       .then((res) => res.json())
+//       .then((data) => {
+//         const sorted = data.sort((a, b) => a.position - b.position);
+//         setEntries(sorted);
+//       });
+//   }, []);
 
-  const grouped = [];
-  const sectionMap = {};
+//   const grouped = [];
+//   const sectionMap = {};
 
-  entries.forEach((item) => {
-    if (!sectionMap[item.section]) {
-      sectionMap[item.section] = [];
-      grouped.push([item.section, sectionMap[item.section]]);
-    }
-    sectionMap[item.section].push(item);
-  });
+//   entries.forEach((item) => {
+//     if (!sectionMap[item.section]) {
+//       sectionMap[item.section] = [];
+//       grouped.push([item.section, sectionMap[item.section]]);
+//     }
+//     sectionMap[item.section].push(item);
+//   });
 
-  return (
-    <>
-    <Navbar />
-    <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
-      <h1 className="text-3xl font-bold text-center mb-4">About Us</h1>
+//   return (
+//     <>
+//     <Navbar />
+//     <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
+//       <h1 className="text-3xl font-bold text-center mb-4">About Us</h1>
 
-      {grouped.map(([section, items]) => (
-        <div key={section}>
-          <h2 className="text-2xl font-semibold border-b pb-2 mb-4 text-center">
-            {items[0]?.heading}
-          </h2>
+//       {grouped.map(([section, items]) => (
+//         <div key={section}>
+//           <h2 className="text-2xl font-semibold border-b pb-2 mb-4 text-center">
+//             {items[0]?.heading}
+//           </h2>
 
-          <div className="space-y-10">
-            {items.map((entry) => (
-              <div
-                key={entry._id}
-                className="flex flex-col items-center text-center border p-6 rounded-lg shadow-sm bg-white"
-              >
+//           <div className="space-y-10">
+//             {items.map((entry) => (
+//               <div
+//                 key={entry._id}
+//                 className="flex flex-col items-center text-center border p-6 rounded-lg shadow-sm bg-white"
+//               >
                 
 
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">{entry.subheading}</h3>
+//                 <h3 className="text-xl font-semibold text-gray-700 mb-2">{entry.subheading}</h3>
 
 
-                <div
-                  className="text-gray-700 mb-4 prose"
-                  dangerouslySetInnerHTML={{ __html: entry.description }}
-                ></div>
+//                 <div
+//                   className="text-gray-700 mb-4 prose"
+//                   dangerouslySetInnerHTML={{ __html: entry.description }}
+//                 ></div>
 
 
 
-                {entry.image?.length > 0 && (
-                  <div className="flex flex-wrap justify-center gap-4 mt-4">
-                    {entry.image.map((img, index) => (
-                      <img
-                        key={index}
-                        src={img}
-                        alt={`${entry.heading} - image ${index + 1}`}
-                        className="w-32 h-32 object-cover rounded"
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
-      {/* {grouped.map(([section, items]) => (
-        <div key={section}>
-          <h2 className="text-2xl font-semibold border-b pb-2 mb-4 text-center">
-            {section}
-          </h2>
+//                 {entry.image?.length > 0 && (
+//                   <div className="flex flex-wrap justify-center gap-4 mt-4">
+//                     {entry.image.map((img, index) => (
+//                       <img
+//                         key={index}
+//                         src={img}
+//                         alt={`${entry.heading} - image ${index + 1}`}
+//                         className="w-32 h-32 object-cover rounded"
+//                       />
+//                     ))}
+//                   </div>
+//                 )}
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       ))}
+//       {/* {grouped.map(([section, items]) => (
+//         <div key={section}>
+//           <h2 className="text-2xl font-semibold border-b pb-2 mb-4 text-center">
+//             {section}
+//           </h2>
 
-          <div className="space-y-10">
-            {items.map((entry) => (
-              <div
-                key={entry._id}
-                className="flex flex-col items-center text-center border p-6 rounded-lg shadow-sm bg-white"
-              >
+//           <div className="space-y-10">
+//             {items.map((entry) => (
+//               <div
+//                 key={entry._id}
+//                 className="flex flex-col items-center text-center border p-6 rounded-lg shadow-sm bg-white"
+//               >
 
-                <h3 className="text-xl font-bold">{entry.heading}</h3>
-
-
-                {entry.subheading && (
-                  <p className="text-md text-gray-600 mb-2">{entry.subheading}</p>
-                )}
+//                 <h3 className="text-xl font-bold">{entry.heading}</h3>
 
 
-                <p className="text-gray-700 whitespace-pre-line mb-4">
-                  {entry.description}
-                </p>
+//                 {entry.subheading && (
+//                   <p className="text-md text-gray-600 mb-2">{entry.subheading}</p>
+//                 )}
 
 
-                {entry.image?.length > 0 && (
-                  <div className="flex flex-wrap justify-center gap-4 mt-4">
-                    {entry.image.map((img, index) => (
-                      <img
-                        key={index}
-                        src={img}
-                        alt={`${entry.heading} - image ${index + 1}`}
-                        className="w-32 h-32 object-cover rounded"
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      ))} */}
-    </div>
-    <Footer />
-    </>
-  );
-}
+//                 <p className="text-gray-700 whitespace-pre-line mb-4">
+//                   {entry.description}
+//                 </p>
+
+
+//                 {entry.image?.length > 0 && (
+//                   <div className="flex flex-wrap justify-center gap-4 mt-4">
+//                     {entry.image.map((img, index) => (
+//                       <img
+//                         key={index}
+//                         src={img}
+//                         alt={`${entry.heading} - image ${index + 1}`}
+//                         className="w-32 h-32 object-cover rounded"
+//                       />
+//                     ))}
+//                   </div>
+//                 )}
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       ))} */}
+//     </div>
+//     <Footer />
+//     </>
+//   );
+// }
 
 
 
@@ -733,3 +733,279 @@ export default function AboutPage() {
 //     </>
 //   );
 // }
+
+
+
+
+
+
+
+
+
+
+// // File: ReviewsDisplay.jsx
+// "use client";
+
+// import React, { useEffect, useState } from "react";
+// import Footer from "@/components/Footer";
+// import Navbar from "@/components/Navbar";
+
+// export default function ReviewsDisplay() {
+//   const [entries, setEntries] = useState([]);
+
+//   useEffect(() => {
+//     const fetchApproved = async () => {
+//       try {
+//         const res = await fetch("/api/reviews");
+//         if (!res.ok) throw new Error("Failed to fetch reviews");
+//         const data = await res.json();
+//         const list = data.reviews ?? data;
+
+//         const approved = list
+//           .filter((r) => r.approved)
+//           .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+//           .slice(0, 5);
+
+//         setEntries(approved);
+//       } catch (err) {
+//         console.error(err);
+//       }
+//     };
+
+//     fetchApproved();
+//   }, []);
+
+//   return (
+//     <>
+//       <Navbar />
+//       <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
+//         <h1 className="text-3xl font-bold text-center mb-4">Customer Testimonials</h1>
+
+//         <div className="space-y-6">
+//           {entries.map((review) => (
+//             <div
+//               key={review._id}
+//               className="flex flex-col items-center text-center border p-6 rounded-lg shadow-sm bg-white"
+//             >
+//               <p className="font-semibold text-lg">
+//                 {review.username || "Anonymous"}
+//               </p>
+//               <p className="text-yellow-600 font-bold mb-2">
+//                 Rating: {review.rating} ⭐
+//               </p>
+//               <p className="text-gray-700">{review.comment}</p>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//       <Footer />
+//     </>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+// //Testimonials Display
+// "use client";
+
+// import React, { useEffect, useState } from "react";
+// import Footer from "@/components/Footer";
+// import Navbar from "@/components/Navbar";
+
+// export default function ReviewsDisplay() {
+//   const [entries, setEntries] = useState([]);
+
+//   useEffect(() => {
+//     const fetchApproved = async () => {
+//       try {
+//         const res = await fetch("/api/reviews");
+//         if (!res.ok) throw new Error("Failed to fetch reviews");
+
+//         const data = await res.json();
+//         const list = data.reviews ?? data;
+
+//         const approved = list
+//           .filter((r) => r.approved)
+//           .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+
+//         setEntries(approved);
+//       } catch (err) {
+//         console.error(err);
+//       }
+//     };
+
+//     fetchApproved();
+//   }, []);
+
+//   // Group by section
+//   const grouped = [];
+//   const sectionMap = {};
+
+//   entries.forEach((item) => {
+//     if (!sectionMap[item.section]) {
+//       sectionMap[item.section] = [];
+//       grouped.push([item.section, sectionMap[item.section]]);
+//     }
+//     sectionMap[item.section].push(item);
+//   });
+
+//   return (
+//     <>
+//       <Navbar />
+//       <div className="max-w-4xl mx-auto px-4 py-8 space-y-16">
+//         <h1 className="text-3xl font-bold text-center mb-12">Customer Testimonials</h1>
+
+//         {grouped.map(([section, items]) => (
+//           <section key={section} className="space-y-12">
+//             <h2 className="text-2xl font-semibold border-b pb-2 mb-8 text-center">
+//               {items[0]?.heading || section}
+//             </h2>
+
+//             {items.map((review) => (
+//               <blockquote
+//                 key={review._id}
+//                 className="flex items-start border-l-4 border-yellow-500 pl-6 italic bg-white p-6 rounded-lg shadow-sm"
+//               >
+//                 {/* Image on the left */}
+//                 {review.imageUrl && (
+//                   <img
+//                     src={review.imageUrl}
+//                     alt={review.username || review.name || "User"}
+//                     className="w-20 h-20 rounded-full object-cover flex-shrink-0 mr-6"
+//                   />
+//                 )}
+
+//                 {/* Content on the right */}
+//                 <div className="text-gray-800 max-w-[600px]">
+//                   <p
+//                     className="mb-4 text-lg leading-relaxed"
+//                     dangerouslySetInnerHTML={{ __html: review.comment || review.description || "" }}
+//                   ></p>
+
+//                   <footer className="not-italic text-right font-semibold text-gray-600">
+//                     — {review.username || review.name || "Anonymous"}
+//                     {review.location ? `, ${review.location}` : ""}
+//                   </footer>
+//                 </div>
+//               </blockquote>
+//             ))}
+//           </section>
+//         ))}
+
+//         <p className="text-center mt-12 italic text-gray-600">
+//           Tag us with <strong>#MyCuscedaExperience</strong> to get featured!
+//         </p>
+//       </div>
+//       <Footer />
+//     </>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
+export default function ApprovedPartnersDisplay() {
+  const [partners, setPartners] = useState([]);
+
+  useEffect(() => {
+    const fetchApprovedPartners = async () => {
+      try {
+        const res = await fetch("/api/partners");
+        if (!res.ok) throw new Error("Failed to fetch partners");
+
+        const data = await res.json();
+
+        // Filter and sort approved partners
+        const approved = (data.partners ?? data).filter((p) => p.approved)
+          .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+
+        setPartners(approved);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchApprovedPartners();
+  }, []);
+
+  return (
+    <>
+      <Navbar />
+      <main className="max-w-4xl mx-auto px-4 py-8 space-y-12">
+        <h1 className="text-3xl font-bold text-center mb-12">Our Trusted Partners</h1>
+
+        {partners.length === 0 && (
+          <p className="text-center text-gray-500">No approved partners found.</p>
+        )}
+
+        {partners.map((partner) => (
+          <blockquote
+            key={partner._id}
+            className="flex items-start border-l-4 border-green-500 pl-6 italic bg-white p-6 rounded-lg shadow-sm"
+          >
+            {/* Show first image if available (partner.imageUrl can be array or string) */}
+            {partner.imageUrl && (
+              <img
+                src={
+                  Array.isArray(partner.imageUrl)
+                    ? partner.imageUrl[0]
+                    : partner.imageUrl
+                }
+                alt={partner.username || partner.name || "Partner"}
+                className="w-20 h-20 rounded-full object-cover flex-shrink-0 mr-6"
+              />
+            )}
+
+            <div className="text-gray-800 max-w-[600px]">
+              <p
+                className="mb-4 text-lg leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: partner.comment || "" }}
+              ></p>
+
+              <footer className="not-italic text-right font-semibold text-gray-600">
+                — {partner.username || partner.name || "Anonymous"}
+              </footer>
+            </div>
+          </blockquote>
+        ))}
+      </main>
+      <Footer />
+    </>
+  );
+}

@@ -1,10 +1,43 @@
+// import connectDB from '@/config/db';
+// import Review from '@/models/Review';
+// import authSeller from '@/lib/authAdmin';
+// import { getAuth } from '@clerk/nextjs/server';
+// import { NextResponse } from 'next/server';
+
+// // Unified reviews route with GET, POST, PATCH, DELETE
+// export async function GET(request) {
+//   try {
+//     const { userId } = getAuth(request);
+//     await connectDB();
+
+//     const url = new URL(request.url);
+//     const productId = url.searchParams.get('productId');
+
+//     if (productId) {
+//       // Public: only approved reviews
+//       const reviews = await Review.find({ productId, approved: true }).populate('productId', 'name').sort({ createdAt: -1 });
+//       return NextResponse.json(reviews, { status: 200 });
+//     }
+
+//     // Admin: all reviews
+//     if (!userId || !(await authSeller(userId))) {
+//       return NextResponse.json({ message: 'Not authorized' }, { status: 403 });
+//     }
+
+//     const reviews = await Review.find().populate('productId', 'name').sort({ createdAt: -1 });
+
+//     return NextResponse.json({ success: true, reviews }, { status: 200 });
+//   } catch (error) {
+//     return NextResponse.json({ message: error.message }, { status: 500 });
+//   }
+// }
 import connectDB from '@/config/db';
 import Review from '@/models/Review';
+import User from '@/models/User';
 import authSeller from '@/lib/authAdmin';
-import { getAuth } from '@clerk/nextjs/server';
+import { getAuth, clerkClient } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
-// Unified reviews route with GET, POST, PATCH, DELETE
 export async function GET(request) {
   try {
     const { userId } = getAuth(request);
@@ -13,20 +46,48 @@ export async function GET(request) {
     const url = new URL(request.url);
     const productId = url.searchParams.get('productId');
 
+    let reviews;
     if (productId) {
       // Public: only approved reviews
-      const reviews = await Review.find({ productId, approved: true }).populate('productId', 'name').sort({ createdAt: -1 });
-      return NextResponse.json(reviews, { status: 200 });
+      reviews = await Review.find({ productId, approved: true })
+        .populate('productId', 'name')
+        .sort({ createdAt: -1 });
+    } else {
+      // Admin: all reviews
+      if (!userId || !(await authSeller(userId))) {
+        return NextResponse.json({ message: 'Not authorized' }, { status: 403 });
+      }
+      reviews = await Review.find()
+        .populate('productId', 'name')
+        .sort({ createdAt: -1 });
     }
 
-    // Admin: all reviews
-    if (!userId || !(await authSeller(userId))) {
-      return NextResponse.json({ message: 'Not authorized' }, { status: 403 });
-    }
+    // Fetch user images dynamically
+    const reviewsWithImages = await Promise.all(
+      reviews.map(async (review) => {
+        let imageUrl = null;
 
-    const reviews = await Review.find().populate('productId', 'name').sort({ createdAt: -1 });
+        try {
+          // Try Clerk first
+          const clerkUser = await clerkClient.users.getUser(review.userId);
+          imageUrl = clerkUser?.imageUrl || null;
+        } catch {
+          // If Clerk fails, fallback to your User model
+          const dbUser = await User.findById(review.userId);
+          imageUrl = dbUser?.imageUrl || null;
+        }
 
-    return NextResponse.json({ success: true, reviews }, { status: 200 });
+        return {
+          ...review.toObject(),
+          imageUrl,
+        };
+      })
+    );
+
+    return NextResponse.json(
+      productId ? reviewsWithImages : { success: true, reviews: reviewsWithImages },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }

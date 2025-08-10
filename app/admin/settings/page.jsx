@@ -50,6 +50,8 @@ import ReturnsEditor from '@/components/ReturnsEditor';
 import AboutEditor from '@/components/AboutEditor';
 import TeamEditor from '@/components/TeamEditor';
 import Testimonials from "@/components/Testimonials";
+import PartnerEditor from '@/components/PartnerEditor';
+
 
 
 
@@ -516,8 +518,8 @@ export default function AdminSettings() {
                       onClick={() => setCompanyPanel("who")}
                       className="flex flex-col items-start bg-indigo-100 hover:bg-indigo-200 text-indigo-800 p-4 rounded-xl shadow"
                     >
-                      <span className="font-semibold mb-1">Who We Are</span>
-                      <p className="text-xs text-left">Define your identity, mission, and values.</p>
+                      <span className="font-semibold mb-1">Testimonials</span>
+                      <p className="text-xs text-left">Showcase what clients or customers say about you.</p>
                     </button>
 
                     <button
@@ -581,8 +583,6 @@ export default function AdminSettings() {
                   <button onClick={() => setCompanyPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
                     <ArrowLeft className="w-4 h-4 mr-1" /> Back
                   </button>
-                  <h3 className="font-semibold text-lg">Edit Who We Are</h3>
-
                   {/* <WhoWeAreEditor /> */}
                   <Testimonials />
                 </motion.div>
