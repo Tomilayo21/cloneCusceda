@@ -1116,13 +1116,34 @@ export default function AllSectionsPage() {
     fetchApprovedPartners();
   }, []);
 
+    const [footerData, setFooterData] = useState({
+      footerName: "",
+    });
+  
+    useEffect(() => {
+      const fetchFooter = async () => {
+        const res = await fetch("/api/settings/footerdetails");
+        const data = await res.json();
+        setFooterData({
+          footerName: data.footerName,
+  
+        });
+      };
+      fetchFooter();
+    }, []);
+
   return (
     <>
       <Navbar />
 
       {/* About Us Section */}
       <div className="max-w-4xl mx-auto px-4 mt-8 py-8 space-y-10">
-        <h1 className="text-3xl font-bold text-center mb-4">About Us</h1>
+        <div className="flex flex-col items-center mt-8 mb-4">
+          <p className="text-3xl font-medium">
+            Our <span className="text-orange-600">Journey</span>
+          </p>
+          <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
+        </div>
         {aboutGrouped.map(([section, items]) => (
           <div key={section}>
             <h2 className="text-2xl font-semibold border-b pb-2 mb-4 text-center">
@@ -1164,53 +1185,7 @@ export default function AllSectionsPage() {
       </div>
 
       {/* Testimonials Section */}
-      {/* <div className="max-w-4xl mx-auto px-4 py-8 space-y-16">
-        <h1 className="text-3xl font-bold text-center mb-12">
-          Customer Testimonials
-        </h1>
-
-        {reviewsGrouped.map(([section, items]) => (
-          <section key={section} className="space-y-12">
-            <h2 className="text-2xl font-semibold border-b pb-2 mb-8 text-center">
-              {items[0]?.heading || section}
-            </h2>
-
-            {items.map((review) => (
-              <blockquote
-                key={review._id}
-                className="flex items-start border-l-4 border-yellow-500 pl-6 italic bg-white p-6 rounded-lg shadow-sm"
-              >
-                {review.imageUrl && (
-                  <img
-                    src={review.imageUrl}
-                    alt={review.username || review.name || "User"}
-                    className="w-20 h-20 rounded-full object-cover flex-shrink-0 mr-6"
-                  />
-                )}
-
-                <div className="text-gray-800 max-w-[600px]">
-                  <p
-                    className="mb-4 text-lg leading-relaxed"
-                    dangerouslySetInnerHTML={{
-                      __html: review.comment || review.description || "",
-                    }}
-                  ></p>
-
-                  <footer className="not-italic text-right font-semibold text-gray-600">
-                    — {review.username || review.name || "Anonymous"}
-                    {review.location ? `, ${review.location}` : ""}
-                  </footer>
-                </div>
-              </blockquote>
-            ))}
-          </section>
-        ))}
-
-        <p className="text-center mt-12 italic text-gray-600">
-          Tag us with <strong>#MyCuscedaExperience</strong> to get featured!
-        </p>
-      </div> */}
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
+      {/* <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
         <h1 className="text-3xl font-bold text-center mb-12">
           Customers Testimonials
         </h1>
@@ -1253,15 +1228,76 @@ export default function AllSectionsPage() {
         ))}
 
         <p className="text-center mt-12 italic text-gray-600">
-          Tag us with <strong>#MyCuscedaExperience</strong> to get featured!
+          Tag us with <strong>#My{footerData.footerName}Experience</strong> to get featured!
+        </p>
+      </div> */}
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="flex flex-col items-center mt-8 mb-4">
+          <p className="text-3xl font-medium">
+            Voices of <span className="text-orange-600">Satisfaction</span>
+          </p>
+          <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
+        </div>
+
+        <div className="flex flex-wrap gap-8">
+          {reviewsGrouped.map(([section, items], idx) => (
+            <section
+              key={section}
+              className="flex-1 min-w-[45%] space-y-6 bg-white p-6 rounded-lg shadow"
+            >
+              <h2 className="text-2xl font-semibold border-b pb-2 mb-8 text-center">
+                {items[0]?.heading || section}
+              </h2>
+
+              {items.map((review) => (
+                <blockquote
+                  key={review._id}
+                  className="flex items-start border-l-4 border-yellow-500 pl-6 italic bg-white p-4 rounded shadow-sm mb-4"
+                >
+                  {review.imageUrl && (
+                    <img
+                      src={review.imageUrl}
+                      alt={review.username || review.name || "User"}
+                      className="w-16 h-16 rounded-full object-cover flex-shrink-0 mr-4"
+                    />
+                  )}
+
+                  <div className="text-gray-800 max-w-[600px]">
+                    <p
+                      className="mb-2 text-base leading-relaxed"
+                      dangerouslySetInnerHTML={{
+                        __html: review.comment || review.description || "",
+                      }}
+                    ></p>
+
+                    <footer className="not-italic text-right font-semibold text-gray-600 text-sm">
+                      — {review.username || review.name || "Anonymous"}
+                      {review.location ? `, ${review.location}` : ""}
+                    </footer>
+                  </div>
+                </blockquote>
+              ))}
+            </section>
+          ))}
+        </div>
+
+        <p className="text-center mt-12 italic text-gray-600">
+          Tag us with <strong>#My{footerData.footerName}Experience</strong> to get
+          featured!
         </p>
       </div>
+
 
 
       {/* Team Section */}
       
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
-        <h1 className="text-3xl font-bold text-center mb-4">Team</h1>
+        <div className="flex flex-col items-center mt-8 mb-4">
+          <p className="text-3xl font-medium">
+            Our Dedi <span className="text-orange-600">cated Team</span>
+          </p>
+          <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
+        </div>
 
         {/* Wrap the entire sections container in a flex with wrap and gap */}
         <div className="flex flex-wrap gap-10 justify-center">
@@ -1318,13 +1354,14 @@ export default function AllSectionsPage() {
       {/* Partners Section */}
       <section className="bg-gray-50 py-16">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">
-            Our Trusted Partners
-          </h2>
+          <div className="flex flex-col items-center mt-8 mb-4">
+          <p className="text-3xl font-medium">
+            Collaborative <span className="text-orange-600"> Partners</span>
+          </p>
+          <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
+        </div>
 
-          {partners.length === 0 ? (
-            <p className="text-center text-gray-500">No approved partners found.</p>
-          ) : (
+
             <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {partners.map((partner) => {
                 const imageUrl = Array.isArray(partner.imageUrl)
@@ -1361,7 +1398,7 @@ export default function AllSectionsPage() {
                 );
               })}
             </div>
-          )}
+
 
           <div className="mt-16 max-w-3xl mx-auto text-center">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">

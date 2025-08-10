@@ -170,7 +170,7 @@ export default function AboutEditor() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Manage About Us</h2>
+        <h2 className="text-xl font-semibold">Manage "About Us"</h2>
         <button
           onClick={() => openEditor(null)}
           className="flex items-center gap-1 text-sm text-blue-600"

@@ -238,7 +238,7 @@ export default function PartnerEditor() {
 
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
-      <h2 className="text-2xl font-semibold">Customer Partners (Admin)</h2>
+      <h2 className="text-2xl font-semibold">Partners</h2>
 
       <div className="flex items-center justify-between">
         <div>

@@ -113,14 +113,14 @@ export default function TestimonialAdmin() {
     }
   };
 
-  if (loading) return <div className="p-6">Loading reviews...</div>;
+  if (loading) return <div className="p-6">Loading testimonials...</div>;
 
   const approved = reviews.filter((r) => r.approved).sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
   const pending = reviews.filter((r) => !r.approved);
 
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
-      <h2 className="text-2xl font-semibold">Customer Testimonials (Admin)</h2>
+      <h2 className="text-2xl font-semibold">Customers Testimonials </h2>
 
       <div className="flex items-center justify-between">
         <div>

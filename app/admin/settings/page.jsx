@@ -564,7 +564,6 @@ export default function AdminSettings() {
                   <button onClick={() => setCompanyPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
                     <ArrowLeft className="w-4 h-4 mr-1" /> Back
                   </button>
-                  <h3 className="font-semibold text-lg">Edit Partner With Us</h3>
 
                   <PartnerEditor />
                 </motion.div>

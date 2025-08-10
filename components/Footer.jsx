@@ -65,33 +65,7 @@ const Footer = () => {
         </div>
 
         {/* Company Links */}
-        {/* <div className="w-1/2 flex items-center justify-start md:justify-center">
-          <div>
-            <h2 className="font-medium text-gray-900 dark:text-gray-100 mb-5 text-lg">Company</h2>
-            <ul className="text-sm space-y-2">
-              <li>
-                <Link href="/" className="hover:underline transition">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:underline transition">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:underline transition">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy-policy" className="hover:underline transition">
-                  Privacy Policy
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div> */}
+
         <div className="w-full md:w-1/2 flex items-start justify-start md:justify-center">
           <div>
             <h2 className="font-medium text-gray-900 dark:text-gray-100 mb-5 text-lg">Company</h2>
