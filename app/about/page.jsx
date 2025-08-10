@@ -1164,7 +1164,7 @@ export default function AllSectionsPage() {
       </div>
 
       {/* Testimonials Section */}
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-16">
+      {/* <div className="max-w-4xl mx-auto px-4 py-8 space-y-16">
         <h1 className="text-3xl font-bold text-center mb-12">
           Customer Testimonials
         </h1>
@@ -1209,54 +1209,115 @@ export default function AllSectionsPage() {
         <p className="text-center mt-12 italic text-gray-600">
           Tag us with <strong>#MyCuscedaExperience</strong> to get featured!
         </p>
-      </div>
-
-      {/* Team Section */}
+      </div> */}
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
-        <h1 className="text-3xl font-bold text-center mb-4">Team</h1>
-        {teamGrouped.map(([section, items]) => (
-          <div key={section}>
-            <h2 className="text-2xl font-semibold border-b pb-2 mb-4 text-center">
-              {items[0]?.heading}
+        <h1 className="text-3xl font-bold text-center mb-12">
+          Customers Testimonials
+        </h1>
+
+        {reviewsGrouped.map(([section, items]) => (
+          <section key={section} className="space-y-12">
+            <h2 className="text-2xl font-semibold border-b pb-2 mb-8 text-center">
+              {items[0]?.heading || section}
             </h2>
 
-            <div className="space-y-10">
-              {items.map((entry) => (
-                <div
-                  key={entry._id}
-                  className="flex flex-col items-center text-center border p-6 rounded-lg shadow-sm bg-white"
-                >
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                    {entry.subheading}
-                  </h3>
+            {items.map((review) => (
+              <blockquote
+                key={review._id}
+                className="flex items-start border-l-4 border-yellow-500 pl-6 italic bg-white p-6 rounded-lg shadow-sm"
+              >
+                {review.imageUrl && (
+                  <img
+                    src={review.imageUrl}
+                    alt={review.username || review.name || "User"}
+                    className="w-20 h-20 rounded-full object-cover flex-shrink-0 mr-6"
+                  />
+                )}
 
-                  <div
-                    className="text-gray-700 mb-4 prose"
-                    dangerouslySetInnerHTML={{ __html: entry.description }}
-                  ></div>
+                <div className="text-gray-800 max-w-[600px]">
+                  <p
+                    className="mb-4 text-lg leading-relaxed"
+                    dangerouslySetInnerHTML={{
+                      __html: review.comment || review.description || "",
+                    }}
+                  ></p>
 
-                  {entry.image?.length > 0 && (
-                    <div className="flex flex-wrap justify-center gap-4 mt-4">
-                      {entry.image.map((img, index) => (
-                        <img
-                          key={index}
-                          src={img}
-                          alt={`${entry.heading} - image ${index + 1}`}
-                          className="w-32 h-32 object-cover rounded"
-                        />
-                      ))}
-                    </div>
-                  )}
+                  <footer className="not-italic text-right font-semibold text-gray-600">
+                    — {review.username || review.name || "Anonymous"}
+                    {review.location ? `, ${review.location}` : ""}
+                  </footer>
                 </div>
-              ))}
-            </div>
-          </div>
+              </blockquote>
+            ))}
+          </section>
         ))}
+
+        <p className="text-center mt-12 italic text-gray-600">
+          Tag us with <strong>#MyCuscedaExperience</strong> to get featured!
+        </p>
       </div>
+
+
+      {/* Team Section */}
+      
+      <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
+        <h1 className="text-3xl font-bold text-center mb-4">Team</h1>
+
+        {/* Wrap the entire sections container in a flex with wrap and gap */}
+        <div className="flex flex-wrap gap-10 justify-center">
+          {teamGrouped.map(([section, items]) => (
+            <div
+              key={section}
+              className="flex-1 min-w-[320px] max-w-[48%] border rounded-lg shadow-sm bg-white p-6"
+            >
+              
+
+              <div className="space-y-10">
+                {items.map((entry) => (
+                  <div
+                    key={entry._id}
+                    className="flex items-center gap-6"
+                  >
+                    {/* Left: image */}
+                    {entry.image?.length > 0 ? (
+                      <img
+                        src={entry.image[0]}
+                        alt={`${entry.heading} - image 1`}
+                        className="w-32 h-32 object-cover rounded-full flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="w-32 h-32 bg-gray-300 rounded-full flex-shrink-0 flex items-center justify-center text-gray-500">
+                        No Image
+                      </div>
+                    )}
+
+                    {/* Right: content */}
+                    <div>
+                      <h2 className="text-2xl font-semibold border-b pb-2 mb-4">
+                        {items[0]?.heading}
+                      </h2>
+
+                      <h3 className="text-xl font-semibold text-gray-700 mb-1">
+                        {entry.subheading}
+                      </h3>
+
+                      <div
+                        className="text-gray-700 prose max-w-[400px]"
+                        dangerouslySetInnerHTML={{ __html: entry.description }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
 
       {/* Partners Section */}
       <section className="bg-gray-50 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">
             Our Trusted Partners
           </h2>
@@ -1290,12 +1351,12 @@ export default function AllSectionsPage() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">
                       {partner.name || partner.username || "Anonymous"}
                     </h3>
-
+{/* 
                     {partner.comment && (
                       <p className="text-gray-600 text-sm line-clamp-3">
                         {partner.comment}
                       </p>
-                    )}
+                    )} */}
                   </div>
                 );
               })}
@@ -1314,6 +1375,7 @@ export default function AllSectionsPage() {
           </div>
         </div>
       </section>
+
 
       <Footer />
     </>
