@@ -743,72 +743,6 @@
 
 
 
-// // File: ReviewsDisplay.jsx
-// "use client";
-
-// import React, { useEffect, useState } from "react";
-// import Footer from "@/components/Footer";
-// import Navbar from "@/components/Navbar";
-
-// export default function ReviewsDisplay() {
-//   const [entries, setEntries] = useState([]);
-
-//   useEffect(() => {
-//     const fetchApproved = async () => {
-//       try {
-//         const res = await fetch("/api/reviews");
-//         if (!res.ok) throw new Error("Failed to fetch reviews");
-//         const data = await res.json();
-//         const list = data.reviews ?? data;
-
-//         const approved = list
-//           .filter((r) => r.approved)
-//           .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-//           .slice(0, 5);
-
-//         setEntries(approved);
-//       } catch (err) {
-//         console.error(err);
-//       }
-//     };
-
-//     fetchApproved();
-//   }, []);
-
-//   return (
-//     <>
-//       <Navbar />
-//       <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
-//         <h1 className="text-3xl font-bold text-center mb-4">Customer Testimonials</h1>
-
-//         <div className="space-y-6">
-//           {entries.map((review) => (
-//             <div
-//               key={review._id}
-//               className="flex flex-col items-center text-center border p-6 rounded-lg shadow-sm bg-white"
-//             >
-//               <p className="font-semibold text-lg">
-//                 {review.username || "Anonymous"}
-//               </p>
-//               <p className="text-yellow-600 font-bold mb-2">
-//                 Rating: {review.rating} ⭐
-//               </p>
-//               <p className="text-gray-700">{review.comment}</p>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//       <Footer />
-//     </>
-//   );
-// }
-
-
-
-
-
-
-
 
 
 
@@ -931,6 +865,149 @@
 
 
 
+// "use client";
+
+// import React, { useEffect, useState } from "react";
+// import Navbar from "@/components/Navbar";
+// import Footer from "@/components/Footer";
+
+// export default function ApprovedPartnersDisplay() {
+//   const [partners, setPartners] = useState([]);
+
+//   useEffect(() => {
+//     const fetchApprovedPartners = async () => {
+//       try {
+//         const res = await fetch("/api/partners");
+//         if (!res.ok) throw new Error("Failed to fetch partners");
+
+//         const data = await res.json();
+
+//         const approved = (data.partners ?? data)
+//           .filter((p) => p.approved)
+//           .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+
+//         setPartners(approved);
+//       } catch (err) {
+//         console.error(err);
+//       }
+//     };
+
+//     fetchApprovedPartners();
+//   }, []);
+
+//   return (
+//     <>
+//       <Navbar />
+//       <section className="bg-gray-50 py-16">
+//         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+//           <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">
+//             Our Trusted Partners
+//           </h2>
+
+//           {partners.length === 0 ? (
+//             <p className="text-center text-gray-500">No approved partners found.</p>
+//           ) : (
+//             <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+//               {partners.map((partner) => {
+//                 const imageUrl = Array.isArray(partner.imageUrl)
+//                   ? partner.imageUrl[0]
+//                   : partner.imageUrl;
+
+//                 return (
+//                   <div
+//                     key={partner._id}
+//                     className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center"
+//                   >
+//                     {imageUrl ? (
+//                       <img
+//                         src={imageUrl}
+//                         alt={partner.name || partner.username || "Partner"}
+//                         className="w-24 h-24 object-cover rounded-full mb-4"
+//                       />
+//                     ) : (
+//                       <div className="w-24 h-24 bg-gray-300 rounded-full mb-4 flex items-center justify-center text-gray-500">
+//                         No Image
+//                       </div>
+//                     )}
+
+//                     <h3 className="text-lg font-semibold text-gray-900 mb-2">
+//                       {partner.name || partner.username || "Anonymous"}
+//                     </h3>
+
+//                     {partner.comment && (
+//                       <p className="text-gray-600 text-sm line-clamp-3">
+//                         {partner.comment}
+//                       </p>
+//                     )}
+//                   </div>
+//                 );
+//               })}
+//             </div>
+//           )}
+
+//           {/* CTA Section */}
+//           <div className="mt-16 max-w-3xl mx-auto text-center">
+//             <h3 className="text-2xl font-bold text-gray-900 mb-4">
+//               Want to partner with us?
+//             </h3>
+//             <p className="text-gray-700 text-lg">
+//               We’re always looking to collaborate with amazing brands and
+//               individuals. Reach out to join our growing network of trusted
+//               partners and create something great together.
+//             </p>
+//             {/* Optional: add a button or link here */}
+//             {/* <a href="/contact" className="inline-block mt-6 px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
+//               Contact Us
+//             </a> */}
+//           </div>
+//         </div>
+//       </section>
+//       <Footer />
+//     </>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -940,9 +1017,84 @@ import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-export default function ApprovedPartnersDisplay() {
-  const [partners, setPartners] = useState([]);
+export default function AllSectionsPage() {
+  // About Us state and effect
+  const [aboutEntries, setAboutEntries] = useState([]);
+  useEffect(() => {
+    fetch("/api/about")
+      .then((res) => res.json())
+      .then((data) => {
+        const sorted = data.sort((a, b) => a.position - b.position);
+        setAboutEntries(sorted);
+      });
+  }, []);
 
+  const aboutGrouped = [];
+  const aboutSectionMap = {};
+  aboutEntries.forEach((item) => {
+    if (!aboutSectionMap[item.section]) {
+      aboutSectionMap[item.section] = [];
+      aboutGrouped.push([item.section, aboutSectionMap[item.section]]);
+    }
+    aboutSectionMap[item.section].push(item);
+  });
+
+  // Testimonials state and effect
+  const [reviews, setReviews] = useState([]);
+  useEffect(() => {
+    const fetchApproved = async () => {
+      try {
+        const res = await fetch("/api/reviews");
+        if (!res.ok) throw new Error("Failed to fetch reviews");
+
+        const data = await res.json();
+        const list = data.reviews ?? data;
+
+        const approved = list
+          .filter((r) => r.approved)
+          .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+
+        setReviews(approved);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchApproved();
+  }, []);
+
+  const reviewsGrouped = [];
+  const reviewsSectionMap = {};
+  reviews.forEach((item) => {
+    if (!reviewsSectionMap[item.section]) {
+      reviewsSectionMap[item.section] = [];
+      reviewsGrouped.push([item.section, reviewsSectionMap[item.section]]);
+    }
+    reviewsSectionMap[item.section].push(item);
+  });
+
+  // Team state and effect
+  const [teamEntries, setTeamEntries] = useState([]);
+  useEffect(() => {
+    fetch("/api/team")
+      .then((res) => res.json())
+      .then((data) => {
+        const sorted = data.sort((a, b) => a.position - b.position);
+        setTeamEntries(sorted);
+      });
+  }, []);
+
+  const teamGrouped = [];
+  const teamSectionMap = {};
+  teamEntries.forEach((item) => {
+    if (!teamSectionMap[item.section]) {
+      teamSectionMap[item.section] = [];
+      teamGrouped.push([item.section, teamSectionMap[item.section]]);
+    }
+    teamSectionMap[item.section].push(item);
+  });
+
+  // Partners state and effect
+  const [partners, setPartners] = useState([]);
   useEffect(() => {
     const fetchApprovedPartners = async () => {
       try {
@@ -951,8 +1103,8 @@ export default function ApprovedPartnersDisplay() {
 
         const data = await res.json();
 
-        // Filter and sort approved partners
-        const approved = (data.partners ?? data).filter((p) => p.approved)
+        const approved = (data.partners ?? data)
+          .filter((p) => p.approved)
           .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
 
         setPartners(approved);
@@ -967,44 +1119,202 @@ export default function ApprovedPartnersDisplay() {
   return (
     <>
       <Navbar />
-      <main className="max-w-4xl mx-auto px-4 py-8 space-y-12">
-        <h1 className="text-3xl font-bold text-center mb-12">Our Trusted Partners</h1>
 
-        {partners.length === 0 && (
-          <p className="text-center text-gray-500">No approved partners found.</p>
-        )}
+      {/* About Us Section */}
+      <div className="max-w-4xl mx-auto px-4 mt-8 py-8 space-y-10">
+        <h1 className="text-3xl font-bold text-center mb-4">About Us</h1>
+        {aboutGrouped.map(([section, items]) => (
+          <div key={section}>
+            <h2 className="text-2xl font-semibold border-b pb-2 mb-4 text-center">
+              {items[0]?.heading}
+            </h2>
 
-        {partners.map((partner) => (
-          <blockquote
-            key={partner._id}
-            className="flex items-start border-l-4 border-green-500 pl-6 italic bg-white p-6 rounded-lg shadow-sm"
-          >
-            {/* Show first image if available (partner.imageUrl can be array or string) */}
-            {partner.imageUrl && (
-              <img
-                src={
-                  Array.isArray(partner.imageUrl)
-                    ? partner.imageUrl[0]
-                    : partner.imageUrl
-                }
-                alt={partner.username || partner.name || "Partner"}
-                className="w-20 h-20 rounded-full object-cover flex-shrink-0 mr-6"
-              />
-            )}
+            <div className="space-y-10">
+              {items.map((entry) => (
+                <div
+                  key={entry._id}
+                  className="flex flex-col items-center text-center border p-6 rounded-lg shadow-sm bg-white"
+                >
+                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                    {entry.subheading}
+                  </h3>
 
-            <div className="text-gray-800 max-w-[600px]">
-              <p
-                className="mb-4 text-lg leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: partner.comment || "" }}
-              ></p>
+                  <div
+                    className="text-gray-700 mb-4 prose"
+                    dangerouslySetInnerHTML={{ __html: entry.description }}
+                  ></div>
 
-              <footer className="not-italic text-right font-semibold text-gray-600">
-                — {partner.username || partner.name || "Anonymous"}
-              </footer>
+                  {entry.image?.length > 0 && (
+                    <div className="flex flex-wrap justify-center gap-4 mt-4">
+                      {entry.image.map((img, index) => (
+                        <img
+                          key={index}
+                          src={img}
+                          alt={`${entry.heading} - image ${index + 1}`}
+                          className="w-32 h-32 object-cover rounded"
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
-          </blockquote>
+          </div>
         ))}
-      </main>
+      </div>
+
+      {/* Testimonials Section */}
+      <div className="max-w-4xl mx-auto px-4 py-8 space-y-16">
+        <h1 className="text-3xl font-bold text-center mb-12">
+          Customer Testimonials
+        </h1>
+
+        {reviewsGrouped.map(([section, items]) => (
+          <section key={section} className="space-y-12">
+            <h2 className="text-2xl font-semibold border-b pb-2 mb-8 text-center">
+              {items[0]?.heading || section}
+            </h2>
+
+            {items.map((review) => (
+              <blockquote
+                key={review._id}
+                className="flex items-start border-l-4 border-yellow-500 pl-6 italic bg-white p-6 rounded-lg shadow-sm"
+              >
+                {review.imageUrl && (
+                  <img
+                    src={review.imageUrl}
+                    alt={review.username || review.name || "User"}
+                    className="w-20 h-20 rounded-full object-cover flex-shrink-0 mr-6"
+                  />
+                )}
+
+                <div className="text-gray-800 max-w-[600px]">
+                  <p
+                    className="mb-4 text-lg leading-relaxed"
+                    dangerouslySetInnerHTML={{
+                      __html: review.comment || review.description || "",
+                    }}
+                  ></p>
+
+                  <footer className="not-italic text-right font-semibold text-gray-600">
+                    — {review.username || review.name || "Anonymous"}
+                    {review.location ? `, ${review.location}` : ""}
+                  </footer>
+                </div>
+              </blockquote>
+            ))}
+          </section>
+        ))}
+
+        <p className="text-center mt-12 italic text-gray-600">
+          Tag us with <strong>#MyCuscedaExperience</strong> to get featured!
+        </p>
+      </div>
+
+      {/* Team Section */}
+      <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
+        <h1 className="text-3xl font-bold text-center mb-4">Team</h1>
+        {teamGrouped.map(([section, items]) => (
+          <div key={section}>
+            <h2 className="text-2xl font-semibold border-b pb-2 mb-4 text-center">
+              {items[0]?.heading}
+            </h2>
+
+            <div className="space-y-10">
+              {items.map((entry) => (
+                <div
+                  key={entry._id}
+                  className="flex flex-col items-center text-center border p-6 rounded-lg shadow-sm bg-white"
+                >
+                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                    {entry.subheading}
+                  </h3>
+
+                  <div
+                    className="text-gray-700 mb-4 prose"
+                    dangerouslySetInnerHTML={{ __html: entry.description }}
+                  ></div>
+
+                  {entry.image?.length > 0 && (
+                    <div className="flex flex-wrap justify-center gap-4 mt-4">
+                      {entry.image.map((img, index) => (
+                        <img
+                          key={index}
+                          src={img}
+                          alt={`${entry.heading} - image ${index + 1}`}
+                          className="w-32 h-32 object-cover rounded"
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Partners Section */}
+      <section className="bg-gray-50 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">
+            Our Trusted Partners
+          </h2>
+
+          {partners.length === 0 ? (
+            <p className="text-center text-gray-500">No approved partners found.</p>
+          ) : (
+            <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {partners.map((partner) => {
+                const imageUrl = Array.isArray(partner.imageUrl)
+                  ? partner.imageUrl[0]
+                  : partner.imageUrl;
+
+                return (
+                  <div
+                    key={partner._id}
+                    className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center"
+                  >
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={partner.name || partner.username || "Partner"}
+                        className="w-24 h-24 object-cover rounded-full mb-4"
+                      />
+                    ) : (
+                      <div className="w-24 h-24 bg-gray-300 rounded-full mb-4 flex items-center justify-center text-gray-500">
+                        No Image
+                      </div>
+                    )}
+
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      {partner.name || partner.username || "Anonymous"}
+                    </h3>
+
+                    {partner.comment && (
+                      <p className="text-gray-600 text-sm line-clamp-3">
+                        {partner.comment}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="mt-16 max-w-3xl mx-auto text-center">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Want to partner with us?
+            </h3>
+            <p className="text-gray-700 text-lg">
+              We’re always looking to collaborate with amazing brands and
+              individuals. Reach out to join our growing network of trusted
+              partners and create something great together.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </>
   );
