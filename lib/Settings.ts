@@ -1,6 +1,7 @@
 // types/Settings.ts
 export interface ISettings {
-  logoUrl?: string;
+  lightLogoUrl?: string | null;
+  darkLogoUrl?: string | null;
   siteTitle?: string;
   siteDescription?: string;
   supportEmail?: string;

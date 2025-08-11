@@ -1139,14 +1139,14 @@ export default function AllSectionsPage() {
       {/* About Us Section */}
       <div className="max-w-4xl mx-auto px-4 mt-8 py-8 space-y-10">
         <div className="flex flex-col items-center mt-8 mb-4">
-          <p className="text-3xl font-medium">
+          <p className="text-3xl font-medium text-gray-900 dark:text-gray-100">
             Our <span className="text-orange-600">Journey</span>
           </p>
           <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
         </div>
         {aboutGrouped.map(([section, items]) => (
           <div key={section}>
-            <h2 className="text-2xl font-semibold border-b pb-2 mb-4 text-center">
+            <h2 className="text-2xl font-semibold border-b pb-2 mb-4 text-center text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700">
               {items[0]?.heading}
             </h2>
 
@@ -1154,14 +1154,14 @@ export default function AllSectionsPage() {
               {items.map((entry) => (
                 <div
                   key={entry._id}
-                  className="flex flex-col items-center text-center border p-6 rounded-lg shadow-sm bg-white"
+                  className="flex flex-col items-center text-center border p-6 rounded-lg shadow-sm bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
                 >
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-2">
                     {entry.subheading}
                   </h3>
 
                   <div
-                    className="text-gray-700 mb-4 prose"
+                    className="text-gray-700 dark:text-gray-300 mb-4 prose dark:prose-invert"
                     dangerouslySetInnerHTML={{ __html: entry.description }}
                   ></div>
 
@@ -1185,236 +1185,172 @@ export default function AllSectionsPage() {
       </div>
 
       {/* Testimonials Section */}
-      {/* <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
-        <h1 className="text-3xl font-bold text-center mb-12">
-          Customers Testimonials
-        </h1>
+      <div className="bg-gray-50 dark:bg-gray-900 py-16">
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <div className="flex flex-col items-center mb-8">
+            <p className="text-3xl font-medium text-gray-900 dark:text-gray-100">
+              Voices of <span className="text-orange-600">Satisfaction</span>
+            </p>
+            <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
+          </div>
 
-        {reviewsGrouped.map(([section, items]) => (
-          <section key={section} className="space-y-12">
-            <h2 className="text-2xl font-semibold border-b pb-2 mb-8 text-center">
-              {items[0]?.heading || section}
-            </h2>
-
-            {items.map((review) => (
-              <blockquote
-                key={review._id}
-                className="flex items-start border-l-4 border-yellow-500 pl-6 italic bg-white p-6 rounded-lg shadow-sm"
+          <div className="flex flex-wrap gap-8">
+            {reviewsGrouped.map(([section, items], idx) => (
+              <section
+                key={section}
+                className="flex-1 min-w-[45%] space-y-6 bg-white dark:bg-gray-800 p-6 rounded-lg shadow"
               >
-                {review.imageUrl && (
-                  <img
-                    src={review.imageUrl}
-                    alt={review.username || review.name || "User"}
-                    className="w-20 h-20 rounded-full object-cover flex-shrink-0 mr-6"
-                  />
-                )}
+                <h2 className="text-2xl font-semibold border-b pb-2 mb-8 text-center text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700">
+                  {items[0]?.heading || section}
+                </h2>
 
-                <div className="text-gray-800 max-w-[600px]">
-                  <p
-                    className="mb-4 text-lg leading-relaxed"
-                    dangerouslySetInnerHTML={{
-                      __html: review.comment || review.description || "",
-                    }}
-                  ></p>
-
-                  <footer className="not-italic text-right font-semibold text-gray-600">
-                    — {review.username || review.name || "Anonymous"}
-                    {review.location ? `, ${review.location}` : ""}
-                  </footer>
-                </div>
-              </blockquote>
-            ))}
-          </section>
-        ))}
-
-        <p className="text-center mt-12 italic text-gray-600">
-          Tag us with <strong>#My{footerData.footerName}Experience</strong> to get featured!
-        </p>
-      </div> */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex flex-col items-center mt-8 mb-4">
-          <p className="text-3xl font-medium">
-            Voices of <span className="text-orange-600">Satisfaction</span>
-          </p>
-          <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
-        </div>
-
-        <div className="flex flex-wrap gap-8">
-          {reviewsGrouped.map(([section, items], idx) => (
-            <section
-              key={section}
-              className="flex-1 min-w-[45%] space-y-6 bg-white p-6 rounded-lg shadow"
-            >
-              <h2 className="text-2xl font-semibold border-b pb-2 mb-8 text-center">
-                {items[0]?.heading || section}
-              </h2>
-
-              {items.map((review) => (
-                <blockquote
-                  key={review._id}
-                  className="flex items-start border-l-4 border-yellow-500 pl-6 italic bg-white p-4 rounded shadow-sm mb-4"
-                >
-                  {review.imageUrl && (
-                    <img
-                      src={review.imageUrl}
-                      alt={review.username || review.name || "User"}
-                      className="w-16 h-16 rounded-full object-cover flex-shrink-0 mr-4"
-                    />
-                  )}
-
-                  <div className="text-gray-800 max-w-[600px]">
-                    <p
-                      className="mb-2 text-base leading-relaxed"
-                      dangerouslySetInnerHTML={{
-                        __html: review.comment || review.description || "",
-                      }}
-                    ></p>
-
-                    <footer className="not-italic text-right font-semibold text-gray-600 text-sm">
-                      — {review.username || review.name || "Anonymous"}
-                      {review.location ? `, ${review.location}` : ""}
-                    </footer>
-                  </div>
-                </blockquote>
-              ))}
-            </section>
-          ))}
-        </div>
-
-        <p className="text-center mt-12 italic text-gray-600">
-          Tag us with <strong>#My{footerData.footerName}Experience</strong> to get
-          featured!
-        </p>
-      </div>
-
-
-
-      {/* Team Section */}
-      
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
-        <div className="flex flex-col items-center mt-8 mb-4">
-          <p className="text-3xl font-medium">
-            Our Dedi <span className="text-orange-600">cated Team</span>
-          </p>
-          <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
-        </div>
-
-        {/* Wrap the entire sections container in a flex with wrap and gap */}
-        <div className="flex flex-wrap gap-10 justify-center">
-          {teamGrouped.map(([section, items]) => (
-            <div
-              key={section}
-              className="flex-1 min-w-[320px] max-w-[48%] border rounded-lg shadow-sm bg-white p-6"
-            >
-              
-
-              <div className="space-y-10">
-                {items.map((entry) => (
-                  <div
-                    key={entry._id}
-                    className="flex items-center gap-6"
+                {items.map((review) => (
+                  <blockquote
+                    key={review._id}
+                    className="flex items-start border-l-4 border-yellow-500 pl-6 italic bg-white dark:bg-gray-700 p-4 rounded shadow-sm mb-4"
                   >
-                    {/* Left: image */}
-                    {entry.image?.length > 0 ? (
+                    {review.imageUrl && (
                       <img
-                        src={entry.image[0]}
-                        alt={`${entry.heading} - image 1`}
-                        className="w-32 h-32 object-cover rounded-full flex-shrink-0"
+                        src={review.imageUrl}
+                        alt={review.username || review.name || "User"}
+                        className="w-16 h-16 rounded-full object-cover flex-shrink-0 mr-4"
                       />
-                    ) : (
-                      <div className="w-32 h-32 bg-gray-300 rounded-full flex-shrink-0 flex items-center justify-center text-gray-500">
-                        No Image
-                      </div>
                     )}
 
-                    {/* Right: content */}
-                    <div>
-                      <h2 className="text-2xl font-semibold border-b pb-2 mb-4">
-                        {items[0]?.heading}
-                      </h2>
+                    <div className="text-gray-800 dark:text-gray-200 max-w-[600px]">
+                      <p
+                        className="mb-2 text-base leading-relaxed"
+                        dangerouslySetInnerHTML={{
+                          __html: review.comment || review.description || "",
+                        }}
+                      ></p>
 
-                      <h3 className="text-xl font-semibold text-gray-700 mb-1">
-                        {entry.subheading}
-                      </h3>
-
-                      <div
-                        className="text-gray-700 prose max-w-[400px]"
-                        dangerouslySetInnerHTML={{ __html: entry.description }}
-                      ></div>
+                      <footer className="not-italic text-right font-semibold text-gray-600 dark:text-gray-400 text-sm">
+                        — {review.username || review.name || "Anonymous"}
+                        {review.location ? `, ${review.location}` : ""}
+                      </footer>
                     </div>
-                  </div>
+                  </blockquote>
                 ))}
-              </div>
-            </div>
-          ))}
+              </section>
+            ))}
+          </div>
+
+          <p className="text-center mt-12 italic text-gray-600 dark:text-gray-400">
+            Tag us with <strong>#My{footerData.footerName}Experience</strong> to get
+            featured!
+          </p>
         </div>
       </div>
 
+      {/* Team Section */}
+      <div className="py-16">
+        <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
+          <div className="flex flex-col items-center mb-4">
+            <p className="text-3xl font-medium text-gray-900 dark:text-gray-100">
+              Our Dedi<span className="text-orange-600">cated Team</span>
+            </p>
+            <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
+          </div>
+          <div className="flex flex-wrap gap-10 justify-center">
+            {teamGrouped.map(([section, items]) => (
+              <div
+                key={section}
+                className="flex-1 min-w-[320px] max-w-[48%] border rounded-lg shadow-sm bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+              >
+                <div className="space-y-10">
+                  {items.map((entry) => (
+                    <div key={entry._id} className="flex items-center gap-6">
+                      {entry.image?.length > 0 ? (
+                        <img
+                          src={entry.image[0]}
+                          alt={`${entry.heading} - image 1`}
+                          className="w-32 h-32 px-3 py-3 object-cover rounded-full flex-shrink-0"
+                        />
+                      ) : (
+                        <div className="w-28 h-28 px-3 bg-gray-300 dark:bg-gray-600 rounded-full flex-shrink-0 flex items-center justify-center text-gray-500 dark:text-gray-300">
+                          No Image
+                        </div>
+                      )}
+
+                      <div>
+                        <h2 className="text-2xl font-semibold border-b pb-2 mb-4 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700">
+                          {items[0]?.heading}
+                        </h2>
+
+                        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                          {entry.subheading}
+                        </h3>
+
+                        <div
+                          className="text-gray-700 dark:text-gray-300 prose dark:prose-invert max-w-[400px]"
+                          dangerouslySetInnerHTML={{ __html: entry.description }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* Partners Section */}
-      <section className="bg-gray-50 py-16">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="flex flex-col items-center mt-8 mb-4">
-          <p className="text-3xl font-medium">
+      <div className="bg-gray-50 dark:bg-gray-900 py-16">
+        <div className="flex flex-col items-center mb-8 mt-8">
+          <p className="text-3xl font-medium text-gray-900 dark:text-gray-100">
             Collaborative <span className="text-orange-600"> Partners</span>
           </p>
           <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
         </div>
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {partners.map((partner) => {
+              const imageUrl = Array.isArray(partner.imageUrl)
+                ? partner.imageUrl[0]
+                : partner.imageUrl;
 
+              return (
+                <div
+                  key={partner._id}
+                  className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col items-center text-center"
+                >
+                  {imageUrl ? (
+                    <img
+                      src={imageUrl}
+                      alt={partner.name || partner.username || "Partner"}
+                      className="w-24 h-24 object-cover rounded-full mb-4"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 bg-gray-300 dark:bg-gray-600 rounded-full mb-4 flex items-center justify-center text-gray-500 dark:text-gray-300">
+                      No Image
+                    </div>
+                  )}
 
-            <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {partners.map((partner) => {
-                const imageUrl = Array.isArray(partner.imageUrl)
-                  ? partner.imageUrl[0]
-                  : partner.imageUrl;
-
-                return (
-                  <div
-                    key={partner._id}
-                    className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center"
-                  >
-                    {imageUrl ? (
-                      <img
-                        src={imageUrl}
-                        alt={partner.name || partner.username || "Partner"}
-                        className="w-24 h-24 object-cover rounded-full mb-4"
-                      />
-                    ) : (
-                      <div className="w-24 h-24 bg-gray-300 rounded-full mb-4 flex items-center justify-center text-gray-500">
-                        No Image
-                      </div>
-                    )}
-
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      {partner.name || partner.username || "Anonymous"}
-                    </h3>
-{/* 
-                    {partner.comment && (
-                      <p className="text-gray-600 text-sm line-clamp-3">
-                        {partner.comment}
-                      </p>
-                    )} */}
-                  </div>
-                );
-              })}
-            </div>
-
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                    {partner.name || partner.username || "Anonymous"}
+                  </h3>
+                </div>
+              );
+            })}
+          </div>
 
           <div className="mt-16 max-w-3xl mx-auto text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Want to partner with us?
             </h3>
-            <p className="text-gray-700 text-lg">
+            <p className="text-gray-700 dark:text-gray-300 text-lg">
               We’re always looking to collaborate with amazing brands and
               individuals. Reach out to join our growing network of trusted
               partners and create something great together.
             </p>
           </div>
         </div>
-      </section>
-
+      </div>
 
       <Footer />
     </>
+
   );
 }

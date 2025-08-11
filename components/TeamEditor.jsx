@@ -243,7 +243,7 @@ export default function TeamEditor() {
 
             <input
               type="text"
-              placeholder="Heading"
+              placeholder="Name"
               value={selectedEntry?.heading || ""}
               onChange={(e) => setSelectedEntry({ ...selectedEntry, heading: e.target.value })}
               className="w-full border p-2 rounded"
@@ -251,7 +251,7 @@ export default function TeamEditor() {
 
             <input
               type="text"
-              placeholder="Subheading"
+              placeholder="Position"
               value={selectedEntry?.subheading || ""}
               onChange={(e) => setSelectedEntry({ ...selectedEntry, subheading: e.target.value })}
               className="w-full border p-2 rounded"

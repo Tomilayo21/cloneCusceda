@@ -61,7 +61,7 @@ import PartnerEditor from '@/components/PartnerEditor';
 const settingsTabs = [
   { key: 'general', label: 'General', icon: <Cog className="w-4 h-4" /> },
   { key: 'company', label: 'Company', icon: <Briefcase className="w-4 h-4" /> },
-  { key: 'product', label: 'Product', icon: <Box className="w-4 h-4" /> },
+  { key: 'product', label: 'Products & Reviews', icon: <Box className="w-4 h-4" /> },
   { key: 'users', label: 'Users, Subscribers & Roles', icon: <Users className="w-4 h-4" /> },
   { key: 'notifications', label: 'Notifications', icon: <Bell className="w-4 h-4" /> },
   { key: 'orders', label: 'Orders & Payments', icon: <CreditCard className="w-4 h-4" /> },
@@ -94,7 +94,6 @@ export default function AdminSettings() {
     
   } = useAppContext();
 
-
   const [activeTab, setActiveTab] = useState('general');
   const [productSubTab, setProductSubTab] = useState(null);
   const [productPanel, setProductPanel] = useState(null);
@@ -118,6 +117,9 @@ export default function AdminSettings() {
   const [open, setOpen] = useState(false);
   const [legalPanel, setLegalPanel] = useState("main");
   const [companyPanel, setCompanyPanel] = useState("main");
+  const [lightLogoPreview, setLightLogoPreview] = useState(null);
+  const [darkLogoPreview, setDarkLogoPreview] = useState(null);
+
 
 
   const [layoutVal, setLayoutVal] = useState(layout);
@@ -136,19 +138,19 @@ export default function AdminSettings() {
 
 
 
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const res = await fetch("/api/settings");
-        const data = await res.json();
-        setLogoPreview(data.logoUrl); // from MongoDB
-      } catch (err) {
-        console.error("Failed to fetch settings", err);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchSettings = async () => {
+  //     try {
+  //       const res = await fetch("/api/settings");
+  //       const data = await res.json();
+  //       setLogoPreview(data.logoUrl); // from MongoDB
+  //     } catch (err) {
+  //       console.error("Failed to fetch settings", err);
+  //     }
+  //   };
 
-    fetchSettings();
-  }, []);
+  //   fetchSettings();
+  // }, []);
 
   useEffect(() => {
     const fetchSiteDetails = async () => {
@@ -173,15 +175,52 @@ export default function AdminSettings() {
     fetchSiteDetails();
   }, []);
 
-  const handleLogoChange = async (e) => {
+  // const handleLogoChange = async (e) => {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
+
+  //   setLogoPreview(URL.createObjectURL(file));
+  //   setUploading(true);
+
+  //   const formData = new FormData();
+  //   formData.append("file", file);
+
+  //   const res = await fetch("/api/upload-logo", {
+  //     method: "POST",
+  //     body: formData,
+  //   });
+
+  //   const result = await res.json();
+  //   setUploading(false);
+
+  //   if (res.ok) {
+  //     toast.success("Logo uploaded");
+  //   } else {
+  //     toast.error(result.error || "Upload failed");
+  //   }
+  // };
+
+  // const handleRemoveLogo = async () => {
+  //   try {
+  //     const res = await fetch("/api/settings/logo", { method: "DELETE" });
+  //     if (!res.ok) throw new Error("Failed to delete logo");
+  //     toast.success("Logo removed");
+  //     setLogoPreview(null);
+  //   } catch (err) {
+  //     toast.error("Error removing logo");
+  //   }
+  // };
+// Light logo upload
+  
+  const handleLightLogoChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    setLogoPreview(URL.createObjectURL(file));
     setUploading(true);
 
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("type", "light");
 
     const res = await fetch("/api/upload-logo", {
       method: "POST",
@@ -192,22 +231,78 @@ export default function AdminSettings() {
     setUploading(false);
 
     if (res.ok) {
-      toast.success("Logo uploaded");
+      setLightLogoPreview(result.lightLogoUrl); 
+      toast.success("Light mode logo uploaded");
     } else {
       toast.error(result.error || "Upload failed");
     }
   };
 
-  const handleRemoveLogo = async () => {
+  // Dark logo upload
+  const handleDarkLogoChange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  setUploading(true);
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("type", "dark");
+
+  const res = await fetch("/api/upload-logo", {
+    method: "POST",
+    body: formData,
+  });
+
+  const result = await res.json();
+  setUploading(false);
+
+  if (res.ok) {
+    setDarkLogoPreview(result.darkLogoUrl); 
+    toast.success("Dark mode logo uploaded");
+  } else {
+    toast.error(result.error || "Upload failed");
+  }
+};
+
+
+  const handleRemoveLightLogo = async () => {
     try {
-      const res = await fetch("/api/settings/logo", { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete logo");
-      toast.success("Logo removed");
-      setLogoPreview(null);
-    } catch (err) {
-      toast.error("Error removing logo");
+      const res = await fetch("/api/settings/logo?type=light", { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete light logo");
+      toast.success("Light mode logo removed");
+      setLightLogoPreview(null);
+    } catch {
+      toast.error("Error removing light logo");
     }
   };
+
+  const handleRemoveDarkLogo = async () => {
+    try {
+      const res = await fetch("/api/settings/logo?type=dark", { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete dark logo");
+      toast.success("Dark mode logo removed");
+      setDarkLogoPreview(null);
+    } catch {
+      toast.error("Error removing dark logo");
+    }
+  };
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await fetch("/api/settings");
+        const data = await res.json();
+        setLightLogoPreview(data.lightLogoUrl || null);
+        setDarkLogoPreview(data.darkLogoUrl || null);
+      } catch (err) {
+        console.error("Failed to fetch settings", err);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -243,7 +338,6 @@ export default function AdminSettings() {
     }
   };
 
-
   const handleFormatDatabase = async () => {
     const confirmed = confirm("Are you sure? This will permanently delete ALL data.");
     if (!confirmed) return;
@@ -275,16 +369,16 @@ export default function AdminSettings() {
 
 
 
-    useEffect(() => {
-        setLocalLayout(layoutStyle);
-        setLocalFontSize(fontSize);
-    }, [layoutStyle, fontSize]);
+  useEffect(() => {
+      setLocalLayout(layoutStyle);
+      setLocalFontSize(fontSize);
+  }, [layoutStyle, fontSize]);
 
-    const handleSave = async () => {
-      setLayoutStyle(localLayout);
-      setFontSize(localFontSize);
-      await savePreferences(localFontSize, localLayout); // ✅ pass updated values
-    };
+  const handleSave = async () => {
+    setLayoutStyle(localLayout);
+    setFontSize(localFontSize);
+    await savePreferences(localFontSize, localLayout);
+  };
 
 
 
@@ -398,7 +492,7 @@ export default function AdminSettings() {
                         />
                       </div>
 
-                      <div className="space-y-2">
+                      {/* <div className="space-y-2">
                         <label className="text-sm font-medium">Upload Logo</label>
                         {logoPreview ? (
                           <div className="flex items-center gap-4">
@@ -419,7 +513,54 @@ export default function AdminSettings() {
                             className="w-full p-2 border rounded bg-white text-gray-700"
                           />
                         )}
+                      </div> */}
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Upload Light Mode Logo</label>
+                        {lightLogoPreview ? (
+                          <div className="flex items-center gap-4">
+                            <img src={lightLogoPreview} alt="Light Logo" className="w-20 h-20 object-contain border rounded" />
+                            <button
+                              type="button"
+                              onClick={handleRemoveLightLogo}
+                              className="text-red-500 text-sm hover:underline"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ) : (
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleLightLogoChange}
+                            className="w-full p-2 border rounded bg-white text-gray-700"
+                          />
+                        )}
                       </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Upload Dark Mode Logo</label>
+                        {darkLogoPreview ? (
+                          <div className="flex items-center gap-4">
+                            <img src={darkLogoPreview} alt="Dark Logo" className="w-20 h-20 object-contain border rounded" />
+                            <button
+                              type="button"
+                              onClick={handleRemoveDarkLogo}
+                              className="text-red-500 text-sm hover:underline"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ) : (
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleDarkLogoChange}
+                            className="w-full p-2 border rounded bg-white text-gray-700"
+                          />
+                        )}
+                      </div>
+
 
                       <button
                         type="submit"
@@ -434,35 +575,47 @@ export default function AdminSettings() {
                   {settingsPanel === 'footer' && (
                     <form onSubmit={handleSubmit} className="space-y-4">
                       <h3 className="text-lg font-semibold">Footer Settings</h3>
+                    
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Footer Description</label>
+                        <textarea
+                          value={footerDescription}
+                          onChange={(e) => setFooterDescription(e.target.value)}
+                          placeholder="Footer Description"
+                          className="w-full p-2 border rounded"
+                        />
+                      </div>
 
-                      <textarea
-                        value={footerDescription}
-                        onChange={(e) => setFooterDescription(e.target.value)}
-                        placeholder="Footer Description"
-                        className="w-full p-2 border rounded"
-                      />
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Footer Contact Number</label>
+                        <input
+                          value={footerPhone}
+                          onChange={(e) => setFooterPhone(e.target.value)}
+                          placeholder="Footer Phone"
+                          className="w-full p-2 border rounded"
+                        />
+                      </div>
 
-                      <input
-                        value={footerPhone}
-                        onChange={(e) => setFooterPhone(e.target.value)}
-                        placeholder="Footer Phone"
-                        className="w-full p-2 border rounded"
-                      />
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Footer Contact Email</label>
+                        <input
+                          value={footerEmail}
+                          onChange={(e) => setFooterEmail(e.target.value)}
+                          placeholder="Footer Email"
+                          type="email"
+                          className="w-full p-2 border rounded"
+                        />
+                      </div>
 
-                      <input
-                        value={footerEmail}
-                        onChange={(e) => setFooterEmail(e.target.value)}
-                        placeholder="Footer Email"
-                        type="email"
-                        className="w-full p-2 border rounded"
-                      />
-
-                      <input
-                        value={footerName}
-                        onChange={(e) => setFooterName(e.target.value)}
-                        placeholder="Footer Name"
-                        className="w-full p-2 border rounded"
-                      />
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Footer Name i.e. "copyright @Footer_Name"</label>
+                        <input
+                          value={footerName}
+                          onChange={(e) => setFooterName(e.target.value)}
+                          placeholder="Footer Name"
+                          className="w-full p-2 border rounded"
+                        />
+                      </div>
 
                       <button
                         type="submit"

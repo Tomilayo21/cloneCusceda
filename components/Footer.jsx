@@ -8,6 +8,8 @@ import { useTheme } from "@/context/ThemeContext";
 const Footer = () => {
   const [logoUrl, setLogoUrl] = useState(null);
   const { theme } = useTheme();
+  const [lightLogoUrl, setLightLogoUrl] = useState(null);
+  const [darkLogoUrl, setDarkLogoUrl] = useState(null);
 
   const [footerData, setFooterData] = useState({
     footerDescription: "",
@@ -15,6 +17,28 @@ const Footer = () => {
     footerEmail: "",
     footerName: "",
   });
+
+  useEffect(() => {
+    const fetchLogos = async () => {
+      try {
+        const res = await fetch("/api/settings");
+        const data = await res.json();
+        setLightLogoUrl(data.lightLogoUrl || null);
+        setDarkLogoUrl(data.darkLogoUrl || null);
+      } catch (err) {
+        console.error("Failed to fetch logos", err);
+      }
+    };
+
+    fetchLogos();
+  }, []);
+
+  const logoSrc =
+    theme === "dark"
+      ? darkLogoUrl || lightLogoUrl 
+      : lightLogoUrl || darkLogoUrl; 
+
+  
 
   useEffect(() => {
     const fetchFooter = async () => {
@@ -32,17 +56,13 @@ const Footer = () => {
   }, []);
 
   // Select logo based on theme
-  const logoSrc = theme === "dark" ? "/cusceda___.png" : "/cusceda__.png";
-  
   useEffect(() => {
-      const fetchLogo = async () => {
-        const res = await fetch('/api/settings');
-        const data = await res.json();
-        setLogoUrl(data.logoUrl);
-      };
-  
-      fetchLogo();
-    }, []);
+    if (theme === "dark") {
+      setLogoUrl(darkLogoUrl || lightLogoUrl);
+    } else {
+      setLogoUrl(lightLogoUrl || darkLogoUrl);
+    }
+  }, [theme, lightLogoUrl, darkLogoUrl]);
 
   // Automatically get the current year
   const currentYear = new Date().getFullYear();
@@ -54,7 +74,7 @@ const Footer = () => {
         <div className="w-4/5 max-w-sm">
 
           <img
-            src={logoUrl}
+            src={logoSrc}
             alt="Logo"
             onClick={() => router.push('/')}
             className="cursor-pointer w-24 md:w-32"

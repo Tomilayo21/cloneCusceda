@@ -3,7 +3,8 @@ import mongoose, { Schema, Model, models } from "mongoose";
 
 
 const SettingsSchema = new Schema<ISettings>({
-  logoUrl: String,
+  lightLogoUrl: String,
+  darkLogoUrl: String,
   siteTitle: String,
   siteDescription: String,
   supportEmail: String,

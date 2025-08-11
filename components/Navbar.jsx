@@ -21,19 +21,20 @@ const Navbar = () => {
   const router = useRouter();
   const [searchExpanded, setSearchExpanded] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [inputValue, setInputValue] = useState("");
   const [isMobile, setIsMobile] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const searchRef = useRef(null);
   const searchButtonRef = useRef(null);
   const cartCount = getCartCount();
   const { theme, toggleTheme } = useTheme();
-  const [logoUrl, setLogoUrl] = useState(null);
   const [promptPassword, setPromptPassword] = useState(false);
   const [hasAccess, setHasAccess] = useState(false);
   const [showOtpPrompt, setShowOtpPrompt] = useState(false);
-  const [recentSearches, setRecentSearches] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [lightLogoUrl, setLightLogoUrl] = useState(null);
+  const [darkLogoUrl, setDarkLogoUrl] = useState(null);
+
+
+  
 
   // const handleClick = () => {
   //   if (!hasAccess) {
@@ -47,15 +48,36 @@ const Navbar = () => {
   //   setShowOtpPrompt(true);
   // };
 
+  // useEffect(() => {
+  //   const fetchLogo = async () => {
+  //     const res = await fetch('/api/settings');
+  //     const data = await res.json();
+  //     setLogoUrl(data.logoUrl);
+  //   };
+
+  //   fetchLogo();
+  // }, []);
+
+
   useEffect(() => {
-    const fetchLogo = async () => {
-      const res = await fetch('/api/settings');
-      const data = await res.json();
-      setLogoUrl(data.logoUrl);
+    const fetchLogos = async () => {
+      try {
+        const res = await fetch("/api/settings");
+        const data = await res.json();
+        setLightLogoUrl(data.lightLogoUrl || null);
+        setDarkLogoUrl(data.darkLogoUrl || null);
+      } catch (err) {
+        console.error("Failed to fetch logos", err);
+      }
     };
 
-    fetchLogo();
+    fetchLogos();
   }, []);
+
+  const logoSrc =
+    theme === "dark"
+      ? darkLogoUrl || lightLogoUrl 
+      : lightLogoUrl || darkLogoUrl; 
 
 
   const handleClick = () => {
@@ -99,68 +121,11 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Search submission
-  // const handleSearch = () => {
-  //   if (inputValue.trim()) {
-  //     router.push(`/all-products?search=${encodeURIComponent(inputValue.trim())}`);
-  //     setSearchExpanded(false);
-  //   } else {
-  //     setSearchExpanded((prev) => !prev);
-  //   }
-  // };
 
-  useEffect(() => {
-      const stored = localStorage.getItem("recentSearches");
-      if (stored) setRecentSearches(JSON.parse(stored));
-    }, []);
-  
-    const handleSearch = () => {
-      if (inputValue.trim()) {
-        const newSearch = inputValue.trim();
-        const updatedRecent = [
-          newSearch,
-          ...recentSearches.filter((s) => s !== newSearch),
-        ].slice(0, 5);
-        setRecentSearches(updatedRecent);
-        localStorage.setItem("recentSearches", JSON.stringify(updatedRecent));
-  
-        router.push(`/all-products?search=${encodeURIComponent(newSearch)}`);
-        setShowDropdown(false);
-        setSearchExpanded(false);
-      } else {
-        setShowDropdown((prev) => !prev);
-        setSearchExpanded((prev) => !prev);
-      }
-    };
-  
-    const handleSelectSearch = (value) => {
-      setInputValue(value);
-      setShowDropdown(false);
-      router.push(`/all-products?search=${encodeURIComponent(value)}`);
-    };
-  
-    const handleClearItem = (item) => {
-      const updated = recentSearches.filter((s) => s !== item);
-      setRecentSearches(updated);
-      localStorage.setItem("recentSearches", JSON.stringify(updated));
-    };
-  
-    const handleClearAll = () => {
-      setRecentSearches([]);
-      localStorage.removeItem("recentSearches");
-    };
-  
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") handleSearch();
-  };
-
-  // Determine logo src based on theme
-  const logoSrc = theme === "dark" ? "/cusceda___.png" : "/cusceda__.png";
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent border-b border-gray-700 shadow-md bg-black ${
         isScrolled
           ? theme === "dark"
             ? "border-b border-gray-700 shadow-md bg-black"
@@ -168,39 +133,25 @@ const Navbar = () => {
           : "bg-transparent"
       }`}
     >
+      {/* <nav
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent border-b border-gray-700 shadow-md bg-black`}
+      > */}
       <div className="flex items-center justify-between px-4 py-3 md:px-16 lg:px-32">
         {/* Logo */}
-        {/* <img
+        <img
           src={logoSrc}
           alt="logo"
           width={100}
           height={100}
           onClick={() => router.push("/")}
           className="cursor-pointer w-24 md:w-32"
-        /> */}
-        <img
-          src={logoUrl}
-          alt="Logo"
-          onClick={() => router.push('/')}
-          className="cursor-pointer w-24 md:w-32"
         />
-
-        {/* <img
-          src={logoPreview || "/default-logo.png"}
-          alt="logo"
-          width={100}
-          height={100}
-          onClick={() => router.push("/")}
-          className="cursor-pointer w-24 md:w-32"
-        /> */}
 
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center justify-center gap-8 flex-1 px-8">
           <Link href="/" className="hover:bg-[#EBEDED] p-2 rounded">Home</Link>
           <Link href="/all-products" className="hover:bg-[#EBEDED] p-2 rounded">Products</Link>
-          {/* <Link href="/about" className="hover:bg-[#EBEDED] p-2 rounded">About Us</Link>
-          <Link href="/contact" className="hover:bg-[#EBEDED] p-2 rounded">Contact</Link> */}
           {user && <Link href="/my-orders" className="hover:bg-[#EBEDED] p-2 rounded">My Orders</Link>}
         </div>
 
