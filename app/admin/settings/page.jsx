@@ -99,8 +99,6 @@ export default function AdminSettings() {
   const [productPanel, setProductPanel] = useState(null);
   const [userPanel, setUserPanel] = useState(null);
   const [orderPanel, setOrderPanel] = useState(null);
-  const [isOpen, setIsOpen] = useState(true);
-  const [logoPreview, setLogoPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [siteTitle, setSiteTitle] = useState('');
   const [siteDescription, setSiteDescription] = useState('');
@@ -119,6 +117,8 @@ export default function AdminSettings() {
   const [companyPanel, setCompanyPanel] = useState("main");
   const [lightLogoPreview, setLightLogoPreview] = useState(null);
   const [darkLogoPreview, setDarkLogoPreview] = useState(null);
+  const [socialLinks, setSocialLinks] = useState([]);
+
 
 
 
@@ -165,6 +165,7 @@ export default function AdminSettings() {
         setFooterEmail(data.footerEmail || "");
         setFooterName(data.footerName || "");
         setSupportEmail(data.supportEmail || "");
+        setSocialLinks(data.socialLinks || []);
       } catch (error) {
         toast.error("Failed to load site settings");
       } finally {
@@ -174,43 +175,6 @@ export default function AdminSettings() {
 
     fetchSiteDetails();
   }, []);
-
-  // const handleLogoChange = async (e) => {
-  //   const file = e.target.files[0];
-  //   if (!file) return;
-
-  //   setLogoPreview(URL.createObjectURL(file));
-  //   setUploading(true);
-
-  //   const formData = new FormData();
-  //   formData.append("file", file);
-
-  //   const res = await fetch("/api/upload-logo", {
-  //     method: "POST",
-  //     body: formData,
-  //   });
-
-  //   const result = await res.json();
-  //   setUploading(false);
-
-  //   if (res.ok) {
-  //     toast.success("Logo uploaded");
-  //   } else {
-  //     toast.error(result.error || "Upload failed");
-  //   }
-  // };
-
-  // const handleRemoveLogo = async () => {
-  //   try {
-  //     const res = await fetch("/api/settings/logo", { method: "DELETE" });
-  //     if (!res.ok) throw new Error("Failed to delete logo");
-  //     toast.success("Logo removed");
-  //     setLogoPreview(null);
-  //   } catch (err) {
-  //     toast.error("Error removing logo");
-  //   }
-  // };
-// Light logo upload
   
   const handleLightLogoChange = async (e) => {
     const file = e.target.files[0];
@@ -492,28 +456,6 @@ export default function AdminSettings() {
                         />
                       </div>
 
-                      {/* <div className="space-y-2">
-                        <label className="text-sm font-medium">Upload Logo</label>
-                        {logoPreview ? (
-                          <div className="flex items-center gap-4">
-                            <img src={logoPreview} alt="Logo" className="w-20 h-20 object-contain border rounded" />
-                            <button
-                              type="button"
-                              onClick={handleRemoveLogo}
-                              className="text-red-500 text-sm hover:underline"
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        ) : (
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleLogoChange}
-                            className="w-full p-2 border rounded bg-white text-gray-700"
-                          />
-                        )}
-                      </div> */}
 
                       <div className="space-y-2">
                         <label className="text-sm font-medium">Upload Light Mode Logo</label>
@@ -624,8 +566,183 @@ export default function AdminSettings() {
                       >
                         {isSubmitting ? "Saving..." : "Save Changes"}
                       </button>
+                      {/* <div className="space-y-2">
+                        <label className="text-sm font-medium">Social Media Links</label>
+                        
+                        {socialLinks.map((link, index) => (
+                          <div key={index} className="flex gap-2 items-center">
+                            <input
+                              value={link.platform}
+                              onChange={(e) => {
+                                const updated = [...socialLinks];
+                                updated[index].platform = e.target.value;
+                                setSocialLinks(updated);
+                              }}
+                              placeholder="Platform Name (e.g. Facebook)"
+                              className="w-1/3 p-2 border rounded"
+                            />
+                            <input
+                              value={link.iconClass}
+                              onChange={(e) => {
+                                const updated = [...socialLinks];
+                                updated[index].iconClass = e.target.value;
+                                setSocialLinks(updated);
+                              }}
+                              placeholder="Font Awesome class (e.g. fab fa-facebook)"
+                              className="w-1/3 p-2 border rounded"
+                            />
+                            <input
+                              value={link.url}
+                              onChange={(e) => {
+                                const updated = [...socialLinks];
+                                updated[index].url = e.target.value;
+                                setSocialLinks(updated);
+                              }}
+                              placeholder="URL"
+                              className="w-1/3 p-2 border rounded"
+                            />
+                            <button
+                              type="button"
+                              className="text-red-500"
+                              onClick={() => {
+                                const updated = socialLinks.filter((_, i) => i !== index);
+                                setSocialLinks(updated);
+                              }}
+                            >
+                              ✖
+                            </button>
+                          </div>
+                        ))}
+
+                        <button
+                          type="button"
+                          onClick={() => setSocialLinks([...socialLinks, { platform: "", iconClass: "", url: "" }])}
+                          className="text-blue-600"
+                        >
+                          ➕ Add Social Link
+                        </button>
+                      </div> */}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Social Media Links</label>
+
+                        {socialLinks.map((link, index) => (
+                          <div key={index} className="flex flex-col gap-2 border p-3 rounded">
+                            {/* Platform Name */}
+                            <input
+                              value={link.platform}
+                              onChange={(e) => {
+                                const updated = [...socialLinks];
+                                updated[index].platform = e.target.value;
+                                setSocialLinks(updated);
+                              }}
+                              placeholder="Platform Name"
+                              className="p-2 border rounded"
+                            />
+
+                            {/* Profile URL */}
+                            <input
+                              value={link.url}
+                              onChange={(e) => {
+                                const updated = [...socialLinks];
+                                updated[index].url = e.target.value;
+                                setSocialLinks(updated);
+                              }}
+                              placeholder="Profile URL"
+                              className="p-2 border rounded"
+                            />
+
+                            {/* If icon exists, show preview + remove/replace */}
+                            {link.iconUrl ? (
+                              <div className="flex items-center gap-3">
+                                <img src={link.iconUrl} alt={link.platform} className="w-10 h-10 object-contain" />
+                                <button
+                                  type="button"
+                                  className="text-blue-600"
+                                  onClick={() => {
+                                    const updated = [...socialLinks];
+                                    updated[index].iconUrl = ""; // clear image so file input reappears
+                                    setSocialLinks(updated);
+                                  }}
+                                >
+                                  🔄 Replace Icon
+                                </button>
+                              </div>
+                            ) : (
+                              // If no icon, show file input
+                              <input
+                                type="file"
+                                onChange={async (e) => {
+                                  const file = e.target.files[0];
+                                  if (!file) return;
+
+                                  const { platform, url } = socialLinks[index];
+                                  if (!platform || !url) {
+                                    alert("Please enter the platform name and profile URL before uploading an icon.");
+                                    e.target.value = "";
+                                    return;
+                                  }
+
+                                  const formData = new FormData();
+                                  formData.append("file", file);
+                                  formData.append("platform", platform);
+                                  formData.append("url", url);
+
+                                  const res = await fetch("/api/settings/social-icon-upload", {
+                                    method: "POST",
+                                    body: formData,
+                                  });
+
+                                  const data = await res.json();
+                                  if (data.success) {
+                                    const updated = [...socialLinks];
+                                    updated[index].iconUrl =
+                                      data.socialLinks.find((sl) => sl.platform === platform)?.iconUrl;
+                                    setSocialLinks(updated);
+                                  }
+                                }}
+                              />
+                            )}
+
+                            {/* Remove social link */}
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                const platform = socialLinks[index].platform;
+
+                                // Delete from DB
+                                const res = await fetch("/api/settings/social-icon-upload", {
+                                  method: "DELETE",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ platform }),
+                                });
+
+                                const data = await res.json();
+                                if (data.success) {
+                                  setSocialLinks(data.socialLinks); // Update from server
+                                } else {
+                                  alert(data.error || "Failed to delete social link");
+                                }
+                              }}
+
+                              className="text-red-500"
+                            >
+                              ✖ Remove
+                            </button>
+                          </div>
+                        ))}
+
+                        <button
+                          type="button"
+                          onClick={() => setSocialLinks([...socialLinks, { platform: "", iconUrl: "", url: "" }])}
+                          className="text-blue-600"
+                        >
+                          ➕ Add Social Link
+                        </button>
+                      </div>
+
 
                     </form>
+                    
                   )}
                 </motion.div>
               )}

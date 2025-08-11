@@ -9,4 +9,9 @@ export interface ISettings {
   footerPhone?: string;
   footerEmail?: string;
   footerName?: string;
+  socialLinks?: {
+    platform: string;
+    iconUrl: string;
+    url: string;
+  }[];
 }

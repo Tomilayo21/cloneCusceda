@@ -12,6 +12,13 @@ const SettingsSchema = new Schema<ISettings>({
   footerPhone: String,
   footerEmail: String,
   footerName: String,
+  socialLinks: [
+    {
+      platform: String, 
+      iconUrl: String,
+      url: String, 
+    },
+  ],
 });
 
 const Settings: Model<ISettings> = models.Settings || mongoose.model<ISettings>("Settings", SettingsSchema);

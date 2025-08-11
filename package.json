@@ -17,6 +17,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@emailjs/browser": "^4.4.1",
     "@formkit/auto-animate": "^0.8.2",
+    "@fortawesome/fontawesome-free": "^7.0.0",
     "@google-cloud/storage": "^7.16.0",
     "@headlessui/react": "^2.2.4",
     "@paypal/react-paypal-js": "^8.8.3",

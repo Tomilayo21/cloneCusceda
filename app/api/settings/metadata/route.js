@@ -13,9 +13,9 @@ export async function POST(req) {
       footerEmail,
       footerName,
       supportEmail,
+      socialLinks, // <-- added
     } = await req.json();
 
-    // Validate required fields (at least title and description)
     if (!siteTitle || !siteDescription) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
@@ -32,6 +32,7 @@ export async function POST(req) {
         footerEmail,
         footerName,
         supportEmail,
+        socialLinks, // <-- added
       },
       { upsert: true, new: true }
     );
@@ -58,6 +59,7 @@ export async function GET() {
         footerEmail: settings?.footerEmail || "",
         footerName: settings?.footerName || "",
         supportEmail: settings?.supportEmail || "",
+        socialLinks: settings?.socialLinks || [], // <-- added
       },
       { status: 200 }
     );
