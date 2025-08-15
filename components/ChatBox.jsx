@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
 import { format, isToday, isYesterday, parseISO } from "date-fns";
+import { Send, Camera, Image, FileText } from "lucide-react";
+import { PaperAirplaneIcon, PaperClipIcon } from "@heroicons/react/24/solid";
 
 export default function ChatBox() {
   const { user } = useUser();
@@ -17,6 +19,8 @@ export default function ChatBox() {
   const scrollContainerRef = useRef(null);
   const [justSent, setJustSent] = useState(false);
   const ref = useRef(null);
+  const [showAttachmentMenu, setShowAttachmentMenu] = useState(false);
+
 
   useEffect(() => {
     const fetchStatus = async () => {
@@ -29,37 +33,6 @@ export default function ChatBox() {
     return () => clearInterval(interval);
   }, []);
 
-  // useEffect(() => {
-  //   if (!user) return;
-  //   const eventSource = new EventSource(`/api/messages/stream?chatId=${user.id}`);
-
-  //   eventSource.onmessage = async (event) => {
-  //     const allMessages = JSON.parse(event.data);
-
-  //     const undelivered = allMessages.filter(
-  //       (msg) => msg.isAdmin && msg.status !== "delivered"
-  //     );
-  //     if (undelivered.length > 0) {
-  //       await axios.post("/api/messages/deliver", {
-  //         ids: undelivered.map((msg) => msg._id),
-  //       });
-  //     }
-
-  //     const normalized = allMessages.map((msg) => ({
-  //       ...msg,
-  //       status: msg.status || "sent",
-  //     }));
-
-  //     setMessages(normalized);
-  //   };
-
-  //   eventSource.onerror = (err) => {
-  //     console.error("SSE Error:", err);
-  //     eventSource.close();
-  //   };
-
-  //   return () => eventSource.close();
-  // }, [user]);
   useEffect(() => {
     if (!user?.id) return;
 
@@ -150,7 +123,7 @@ export default function ChatBox() {
         method: "POST",
         body: JSON.stringify({ chatId: user?.id, typing: true }),
       });
-    }, 300);
+    }, 3000);
     return () => clearTimeout(timeout);
   }, [newMsg]);
 
@@ -159,7 +132,7 @@ export default function ChatBox() {
       const res = await fetch("/api/typing-status");
       const data = await res.json();
       setIsTyping(data.typingUsers.includes("admin"));
-    }, 2000);
+    }, 3000);
     return () => clearInterval(poll);
   }, []);
 
@@ -273,28 +246,111 @@ export default function ChatBox() {
         </p>
       )}
 
-      <div className="flex mt-2 gap-2">
-        <input
-          type="text"
-          value={newMsg}
-          onChange={(e) => setNewMsg(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              sendMessage();
-            }
-          }}
-          className="flex-1 p-2 border rounded"
-          placeholder="Type a message..."
-        />
 
-        <button
-          onClick={sendMessage}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Send
-        </button>
+      {/* <div className="relative"> 
+        <div className="flex mt-2 gap-2">
+          <input
+            type="text"
+            value={newMsg}
+            onChange={(e) => setNewMsg(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+              }
+            }}
+            className="flex-1 p-2 border rounded"
+            placeholder="Type a message..."
+          />
+
+          <button
+            onClick={() => {
+              if (newMsg.trim().length > 0) {
+                sendMessage();
+              } else {
+                setShowAttachmentMenu((prev) => !prev);
+              }
+            }}
+            className="bg-orange-600 p-3 rounded-full text-white hover:bg-orange-700 transition-colors"
+          >
+            {newMsg.trim().length > 0 ? (
+              <PaperAirplaneIcon className="h-5 w-5" />
+            ) : (
+              <PaperClipIcon className="h-5 w-5" />
+            )}
+          </button>
+        </div>
+
+        {showAttachmentMenu && (
+          <div className="absolute bottom-14 right-0 bg-white shadow-lg rounded-lg p-2 w-40 animate-fadeIn">
+            <button className="flex items-center gap-2 w-full p-2 hover:bg-gray-100 rounded">
+              <Camera className="w-5 h-5" /> Camera
+            </button>
+            <button className="flex items-center gap-2 w-full p-2 hover:bg-gray-100 rounded">
+              <Image className="w-5 h-5" /> Gallery
+            </button>
+            <button className="flex items-center gap-2 w-full p-2 hover:bg-gray-100 rounded">
+              <FileText className="w-5 h-5" /> Document
+            </button>
+          </div>
+        )}
+      </div> */}
+      <div className="relative"> {/* Relative wrapper for popup positioning */}
+        <div className="flex mt-2 gap-2">
+          <input
+            type="text"
+            value={newMsg}
+            onChange={(e) => {
+              setNewMsg(e.target.value);
+
+              // Hide attachment menu when typing
+              if (e.target.value.trim().length > 0 && showAttachmentMenu) {
+                setShowAttachmentMenu(false);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+              }
+            }}
+            className="flex-1 p-2 border rounded"
+            placeholder="Type a message..."
+          />
+
+          <button
+            onClick={() => {
+              if (newMsg.trim().length > 0) {
+                sendMessage();
+              } else {
+                setShowAttachmentMenu((prev) => !prev);
+              }
+            }}
+            className="bg-orange-600 p-3 rounded-full text-white hover:bg-orange-700 transition-colors"
+          >
+            {newMsg.trim().length > 0 ? (
+              <PaperAirplaneIcon className="h-5 w-5" />
+            ) : (
+              <PaperClipIcon className="h-5 w-5" />
+            )}
+          </button>
+        </div>
+
+        {showAttachmentMenu && (
+          <div className="absolute bottom-14 right-0 bg-white shadow-lg rounded-lg p-2 w-40 animate-fadeIn">
+            <button className="flex items-center gap-2 w-full p-2 hover:bg-gray-100 rounded">
+              <Camera className="w-5 h-5" /> Camera
+            </button>
+            <button className="flex items-center gap-2 w-full p-2 hover:bg-gray-100 rounded">
+              <Image className="w-5 h-5" /> Gallery
+            </button>
+            <button className="flex items-center gap-2 w-full p-2 hover:bg-gray-100 rounded">
+              <FileText className="w-5 h-5" /> Document
+            </button>
+          </div>
+        )}
       </div>
+
     </div>
   );
 }

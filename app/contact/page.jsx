@@ -120,7 +120,7 @@ const ContactPage = () => {
       {/* Floating Chat Icon Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition"
+        className="fixed bottom-6 right-6 z-50 bg-orange-600 text-white p-4 rounded-full shadow-lg hover:bg-orange-700 transition"
         aria-label="Chat"
       >
         <MessageCircle size={24} />

@@ -604,7 +604,7 @@ export default function Page() {
 }
 
 const AllProducts = () => {
-  const { products, loading, themeColor, fontSize, layoutStyle, layoutStyle: effectiveLayout } = useAppContext();
+  const { products, loading, themeColor, secondaryColor, tertiaryColor, fontSize, layoutStyle, layoutStyle: effectiveLayout } = useAppContext();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -704,7 +704,7 @@ const AllProducts = () => {
       <Navbar />
       <div className="flex flex-col items-start px-6 md:px-16 lg:px-32 pt-8">
         <div className="flex flex-col items-end pt-12">
-          <p className={`font-semibold ${fontSizeClass}`}>All products</p>
+          <p className={`font-semibold ${fontSizeClass}`} style={{ color: secondaryColor }}>All products</p>
           <div 
             className="w-16 h-0.5 rounded-full"
             style={{ backgroundColor: themeColor }}

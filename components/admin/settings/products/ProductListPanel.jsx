@@ -32,6 +32,7 @@ const ProductListPanel = () => {
   const [editableProduct, setEditableProduct] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [viewProduct, setViewProduct] = useState(null);
+  
 
   
   dayjs.extend(relativeTime);
@@ -84,52 +85,51 @@ const ProductListPanel = () => {
 
   // Date range filtering
   temp = temp.filter((p) => {
-  const created = new Date(p.date); // use the correct date field from your schema
-  return (
-    (!parsedStart || created >= parsedStart) &&
-    (!parsedEnd || created <= parsedEnd)
-  );
-});
+    const created = new Date(p.date); // use the correct date field from your schema
+    return (
+      (!parsedStart || created >= parsedStart) &&
+      (!parsedEnd || created <= parsedEnd)
+    );
+  });
 
   // Sorting
   if (sortOption === "price-asc") {
     temp.sort((a, b) => a.offerPrice - b.offerPrice);
-  } else if (sortOption === "price-desc") {
-    temp.sort((a, b) => b.offerPrice - a.offerPrice);
-  } else if (sortOption === "stock-asc") {
-    temp.sort((a, b) => a.stock - b.stock);
-  } else if (sortOption === "stock-desc") {
-    temp.sort((a, b) => b.stock - a.stock);
-  }
+    } else if (sortOption === "price-desc") {
+      temp.sort((a, b) => b.offerPrice - a.offerPrice);
+    } else if (sortOption === "stock-asc") {
+      temp.sort((a, b) => a.stock - b.stock);
+    } else if (sortOption === "stock-desc") {
+      temp.sort((a, b) => b.stock - a.stock);
+    }
+    setFilteredProducts(temp);
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory, products, sortOption, startDate, endDate]);
 
-  setFilteredProducts(temp);
-  setCurrentPage(1);
-}, [searchTerm, selectedCategory, products, sortOption, startDate, endDate]);
 
+  const handleExportCSV = () => {
+    const headers = ["Name", "Category", "Price", "Stock", "Created At"];
+    const rows = filteredProducts.map((p) => [
+      p.name,
+      p.category,
+      p.offerPrice,
+      p.stock,
+      new Date(p.createdAt).toLocaleString(),
+    ]);
 
-const handleExportCSV = () => {
-  const headers = ["Name", "Category", "Price", "Stock", "Created At"];
-  const rows = filteredProducts.map((p) => [
-    p.name,
-    p.category,
-    p.offerPrice,
-    p.stock,
-    new Date(p.createdAt).toLocaleString(),
-  ]);
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) => row.join(",")),
+    ].join("\n");
 
-  const csvContent = [
-    headers.join(","),
-    ...rows.map((row) => row.join(",")),
-  ].join("\n");
-
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.setAttribute("download", "products.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", "products.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   useEffect(() => {
     if (user) fetchAdminProduct();
@@ -360,35 +360,50 @@ const handleExportCSV = () => {
             </button>
           </div>
           {/* Desktop Table */}
-          <div className="hidden md:block bg-white border border-gray-300 rounded-md overflow-x-auto">
-            <table className="table-fixed w-full">
-              <thead className="text-gray-900 text-sm text-left bg-gray-100">
+          <div className="hidden md:block bg-white border border-gray-200 rounded-lg shadow-sm overflow-x-auto">
+            <table className="table-fixed w-full border-collapse">
+              <thead className="bg-gray-50 text-gray-800 text-sm">
                 <tr>
-                  <th className="w-2/3 md:w-2/5 px-4 py-3 font-medium truncate">Product</th>
-                  <th className="px-4 py-3 font-medium truncate">Category</th>
-                  <th className="px-4 py-3 font-medium truncate">Price</th>
-                  <th className="px-4 py-3 font-medium truncate">Stock</th>
-                  <th className="px-4 py-3 font-medium truncate">Status</th>
-                  <th className="px-4 py-3 font-medium truncate">Visibility</th>
-                  <th className="px-4 py-3 font-medium truncate">Action</th>
+                  <th className="w-2/3 md:w-1/5 px-4 py-3 font-medium text-left">Product</th>
+                  <th className="px-4 py-3 font-medium text-left">Category</th>
+                  <th className="px-4 py-3 font-medium text-left">Price</th>
+                  <th className="px-4 py-3 font-medium text-left">Stock</th>
+                  <th className="px-4 py-3 font-medium text-left">Status</th>
+                  <th className="px-4 py-3 font-medium text-left">Visibility</th>
+                  <th className="px-4 py-3 font-medium text-left">Action</th>
                 </tr>
               </thead>
-              <tbody className="text-sm text-gray-600">
-                {paginatedProducts.map((product) => (
-                  <tr key={product._id} className="border-t border-gray-300 hover:bg-gray-50">
-                    <td className="px-4 py-3 flex items-center space-x-3">
-                      <Image
-                        src={product.image[0]}
-                        alt="product image"
-                        className="w-16 h-16 object-cover rounded"
-                        width={64}
-                        height={64}
-                      />
-                      <span className="truncate">{product.name}</span>
-                    </td>
-                    <td className="px-4 py-3">{product.category}</td>
-                    <td className="px-4 py-3">${product.offerPrice}</td>
+              <tbody className="text-sm text-gray-700">
+                {paginatedProducts.map((product, index) => (
+                  <tr
+                    key={product._id}
+                    className={`${
+                      index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                    } border-t border-gray-200 hover:bg-orange-50 transition`}
+                  >
+                    {/* Product */}
                     <td className="px-4 py-3">
+                      <div className="flex flex-col items-center space-y-2">
+                        <Image
+                          src={product.image[0]}
+                          alt="product image"
+                          className="w-14 h-14 object-cover rounded-md border"
+                          width={56}
+                          height={56}
+                        />
+                        <span className="truncate font-medium text-center">{product.name}</span>
+                      </div>
+                    </td>
+
+
+                    {/* Category */}
+                    <td className="px-4 py-3">{product.category}</td>
+
+                    {/* Price */}
+                    <td className="px-4 py-3 font-semibold">${product.offerPrice}</td>
+
+                    {/* Stock Input */}
+                    {/* <td className="px-4 py-3">
                       <input
                         type="number"
                         value={stockInputs[product._id] ?? product.stock}
@@ -404,51 +419,56 @@ const handleExportCSV = () => {
                             handleStockUpdate(product._id, stockInputs[product._id]);
                           }
                         }}
-                        className="w-20 px-2 py-1 border rounded"
+                        className="w-20 px-2 py-1 border border-gray-300 rounded-md text-center focus:ring-2 focus:ring-orange-400 outline-none"
                       />
+                    </td> */}
+                    <td className="px-4 py-3 text-center">
+                      <span className="w-20 px-2 py-1  border-gray-300 rounded-md text-center inline-block">
+                        {stockInputs[product._id] ?? product.stock}
+                      </span>
                     </td>
+
+
+                    {/* Stock Status */}
                     <td className="px-4 py-3">
                       {product.stock > 0 ? (
-                        <span className="text-black-400 font-semibold">
-                        In Stock</span>
+                        <span className="text-green-600 font-semibold">In Stock</span>
                       ) : (
-                        <span className="text-orange-600 font-semibold">Sold Out</span>
+                        <span className="text-red-500 font-semibold">Sold Out</span>
                       )}
                     </td>
+
+                    {/* Visibility */}
                     <td className="px-4 py-3">
                       <button
                         onClick={() => toggleVisibility(product._id)}
-                        className={`px-3 py-1 rounded-md text-white text-sm ${
-                          product.visible ? "bg-orange-600" : "bg-gray-400"
+                        className={`px-3 py-1.5 rounded-md text-white text-xs font-medium transition ${
+                          product.visible ? "bg-orange-500 hover:bg-orange-600" : "bg-gray-400 hover:bg-gray-500"
                         }`}
                       >
                         {product.visible ? "Visible" : "Hidden"}
                       </button>
                     </td>
+
+                    {/* Actions */}
                     <td className="px-4 py-3 flex flex-col gap-2">
-                      {/* <button
-                        onClick={() => router.push(`/admin/product/edit/${product._id}`)}
-                        className="px-3 py-2 bg-blue-600 text-white rounded-md text-sm flex items-center gap-1 justify-center"
-                      > */}
                       <button
                         onClick={() => setOpenProduct(product)}
-                        className="text-black bg-orange rounded-md hover:text-white px-3 py-2 hover:bg-black flex items-center gap-1"
+                        className="px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-xs flex items-center gap-1 justify-center transition"
                       >
-                        <Pencil className="w-4 h-4" />
-                        Edit
+                        <Pencil className="w-4 h-4" /> Edit
                       </button>
                       <button
                         onClick={() => setViewProduct(product)}
-                        className="px-3 py-2 bg-green-600 text-white rounded-md text-sm flex items-center gap-1 justify-center"
+                        className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs flex items-center gap-1 justify-center transition"
                       >
                         View
                       </button>
                       <button
                         onClick={() => handleDelete(product._id)}
-                        className="px-3 py-2 bg-red-600 text-white rounded-md text-sm flex items-center gap-1 justify-center"
+                        className="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs flex items-center gap-1 justify-center transition"
                       >
-                        <Trash2 className="w-4 h-4" />
-                        Delete
+                        <Trash2 className="w-4 h-4" /> Delete
                       </button>
                     </td>
                   </tr>
@@ -460,71 +480,88 @@ const handleExportCSV = () => {
           {/* Mobile Cards */}
           <div className="block md:hidden space-y-4">
             {paginatedProducts.map((product) => (
-              <div key={product._id} className="bg-white border rounded-md shadow-sm p-4 flex gap-4">
+              <div
+                key={product._id}
+                className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex gap-4 hover:shadow-md transition"
+              >
+                {/* Product Image */}
                 <Image
                   src={product.image[0]}
                   alt="product image"
                   width={80}
                   height={80}
-                  className="w-20 h-20 object-cover rounded"
+                  className="w-20 h-20 object-cover rounded-md border"
                 />
-                <div className="flex-1">
-                  <h3 className="font-semibold text-lg">{product.name}</h3>
-                  <p className="text-sm text-gray-600">{product.category}</p>
-                  <p className="text-sm text-gray-800 font-medium">${product.offerPrice}</p>
-                  <p className="text-sm">
+
+                {/* Product Info */}
+                <div className="flex-1 space-y-1">
+                  <h3 className="font-semibold text-base truncate">{product.name}</h3>
+                  <p className="text-xs text-gray-500">{product.category}</p>
+                  <p className="text-sm font-medium text-gray-800">${product.offerPrice}</p>
+
+                  {/* Stock Status */}
+                  {/* <div className="mt-1 flex items-center gap-2">
                     {product.stock > 0 ? (
-                      <div>
+                      <>
                         <input
-                        type="number"
-                        value={stockInputs[product._id] ?? product.stock}
-                        min={0}
-                        onChange={(e) =>
-                          setStockInputs((prev) => ({
-                            ...prev,
-                            [product._id]: parseInt(e.target.value, 10),
-                          }))
-                        }
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handleStockUpdate(product._id, stockInputs[product._id]);
+                          type="number"
+                          value={stockInputs[product._id] ?? product.stock}
+                          min={0}
+                          onChange={(e) =>
+                            setStockInputs((prev) => ({
+                              ...prev,
+                              [product._id]: parseInt(e.target.value, 10),
+                            }))
                           }
-                        }}
-                        className="w-12 px-2 py-1 border rounded"
-                      /><span className="text-black-400 ml-2">In Stock</span></div>
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              handleStockUpdate(product._id, stockInputs[product._id]);
+                            }
+                          }}
+                          className="w-14 px-2 py-1 border border-gray-300 rounded-md text-center text-sm focus:ring-2 focus:ring-orange-400 outline-none"
+                        />
+                        <span className="text-green-600 text-xs font-medium">In Stock</span>
+                      </>
                     ) : (
-                      <span className="text-orange-600">Sold Out</span>
+                      <span className="text-red-500 text-xs font-medium">Sold Out</span>
                     )}
-                  </p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {/* <button
-                      onClick={() => router.push(`/admin/product/edit/${product._id}`)}
-                      className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md flex items-center gap-1"
-                    > */}
+                  </div> */}
+                  <div className="mt-1 flex items-center gap-2">
+                    {product.stock > 0 ? (
+                      <>
+                        <span className="text-sm font-medium">{product.stock}</span>
+                        <span className="text-green-600 text-xs font-medium">In Stock</span>
+                      </>
+                    ) : (
+                      <span className="text-red-500 text-xs font-medium">Sold Out</span>
+                    )}
+                  </div>
+
+
+                  {/* Action Buttons */}
+                  <div className="mt-3 flex flex-wrap gap-2">
                     <button
                       onClick={() => setOpenProduct(product)}
-                      className="text-black bg-orange rounded-md hover:text-white px-3 py-2 hover:bg-black flex items-center gap-1"
+                      className="px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-xs flex items-center gap-1 transition"
                     >
-                      <Pencil className="w-4 h-4" />
-                      Edit
+                      <Pencil className="w-4 h-4" /> Edit
                     </button>
                     <button
                       onClick={() => handleDelete(product._id)}
-                      className="px-3 py-1 text-sm bg-red-600 text-white rounded-md flex items-center gap-1"
+                      className="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs flex items-center gap-1 transition"
                     >
-                      <Trash2 className="w-4 h-4" />
-                      Delete
+                      <Trash2 className="w-4 h-4" /> Delete
                     </button>
                     <button
                       onClick={() => setViewProduct(product)}
-                      className="px-3 py-2 bg-green-600 text-white rounded-md text-sm flex items-center gap-1 justify-center"
+                      className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs flex items-center gap-1 transition"
                     >
                       View
                     </button>
                     <button
                       onClick={() => toggleVisibility(product._id)}
-                      className={`px-3 py-1 text-sm rounded-md text-white ${
-                        product.visible ? "bg-orange-600" : "bg-gray-500"
+                      className={`px-3 py-1.5 text-xs rounded-md text-white transition ${
+                        product.visible ? "bg-orange-500 hover:bg-orange-600" : "bg-gray-400 hover:bg-gray-500"
                       }`}
                     >
                       {product.visible ? "Visible" : "Hidden"}
@@ -733,10 +770,6 @@ const handleExportCSV = () => {
                       setEditableProduct({ ...editableProduct, description: value })
                     }
                   />
-                  {/* <p className="text-xs text-gray-500 italic">
-                    To insert a space, press the spacebar twice — no need to press it three times.
-                  </p> */}
-
                 </div>
 
 
@@ -928,10 +961,8 @@ const handleExportCSV = () => {
             </div>
           )}
 
-
         </div>
 
-      <Footer />
     </div>
   );
 };

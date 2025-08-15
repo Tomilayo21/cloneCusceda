@@ -40,30 +40,6 @@ const AdminHeader = () => {
   return (
     <div className="bg-gradient-to-r from-black to-orange-600 text-white rounded-xl p-6 mb-6 flex flex-col md:flex-row items-start md:items-center justify-between">
       {/* Left Section */}
-      {/*<div className="flex items-center gap-4 mb-4 md:mb-0">
-        <Gauge className="w-6 h-6 text-white-600" />
-        <div>
-          <h2 className="text-2xl font-bold">
-            Admin Dashboard
-          </h2>
-          <p className="text-sm text-gray-200">
-            Platform Metrics Summary: Here's what's happening today.
-          </p>
-          {user ? (
-            <div className="mt-1 text-sm text-white font-medium">
-              Welcome, {user.fullName || user.primaryEmailAddress?.emailAddress}
-            </div>
-          ) : (
-            <button
-              onClick={() => openSignIn()}
-              className="mt-2 flex items-center gap-2 text-white hover:bg-white/10 px-3 py-1 rounded-md border border-white/30"
-            >
-              <Users className="w-4 h-4" />
-              <span>Sign In</span>
-            </button>
-          )}
-        </div>
-      </div>*/}
 
       <div className="flex items-center gap-4 mb-4 md:mb-0">
         <Gauge className="w-6 h-6 text-white-600" />
@@ -95,14 +71,23 @@ const AdminHeader = () => {
 
 
       {/* Right Section */}
-      <div className="flex items-center gap-2">
+      {/* <div className="flex items-center gap-2">
         <span className="bg-black text-white px-3 py-1 rounded-md text-sm flex items-center gap-1">
           📅 <span>{date}</span>
         </span>
         <span className="bg-black text-white px-3 py-1 rounded-md text-sm flex items-center gap-1">
           🕒 <span>{time}</span>
         </span>
+      </div> */}
+      <div className="flex items-center gap-4">
+        <span className="flex items-center gap-1 animate-pulse">
+          📅 <span className="text-white font-medium">{date}</span>
+        </span>
+        <span className="flex items-center gap-1 animate-pulse">
+          🕒 <span className="text-white font-medium">{time}</span>
+        </span>
       </div>
+
     </div>
   );
 };

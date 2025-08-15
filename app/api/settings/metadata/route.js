@@ -59,7 +59,7 @@ export async function GET() {
         footerEmail: settings?.footerEmail || "",
         footerName: settings?.footerName || "",
         supportEmail: settings?.supportEmail || "",
-        socialLinks: settings?.socialLinks || [], // <-- added
+        socialLinks: settings?.socialLinks || [], 
       },
       { status: 200 }
     );

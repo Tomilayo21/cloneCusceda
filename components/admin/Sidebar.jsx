@@ -338,6 +338,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
+import PasswordConfirmPopup from './PasswordConfirmPopup';
 
 const menuItems = [
   {
@@ -357,7 +358,7 @@ const menuItems = [
   },
   {
     name: 'Support Chats',
-    path: '/admin/support-chats',
+    path: '/admin/customer-support',
     icon: <MessageSquare className="w-5 h-5" />,
   },
   {
@@ -384,6 +385,23 @@ const SideBar = () => {
   const { user } = useUser();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleLogoutClick = () => {
+    setShowPopup(true);
+  };
+
+  const confirmLogout = (enteredPassword) => {
+    if (enteredPassword === process.env.NEXT_PUBLIC_LOGOUT_PASSWORD) {
+      signOut().then(() => {
+        toast.success("You've been signed out");
+        router.push("/");
+      });
+    } else {
+      toast.error("Incorrect password");
+    }
+    setShowPopup(false);
+  };
 
   const handleLogout = () => {
     const confirmLogout = window.confirm('Are you sure you want to sign out?');
@@ -457,13 +475,29 @@ const SideBar = () => {
           <span>Home</span>
         </Link>
 
-        <button
+        {/* <button
           onClick={handleLogout}
           className="flex items-center gap-3 text-sm text-red-600 hover:bg-red-100 px-4 py-2 rounded-md mt-2 w-full"
         >
           <LogOut className="w-5 h-5" />
           <span>Logout</span>
-        </button>
+        </button> */}
+        <>
+          <button
+            onClick={handleLogoutClick}
+            className="flex items-center gap-3 text-sm text-red-600 hover:bg-red-100 px-4 py-2 rounded-md mt-2 w-full"
+          >
+            <LogOut className="w-5 h-5" />
+            <span>Logout</span>
+          </button>
+
+          {showPopup && (
+            <PasswordConfirmPopup
+              onClose={() => setShowPopup(false)}
+              onConfirm={confirmLogout}
+            />
+          )}
+        </>
       </div>
     </div>
   );

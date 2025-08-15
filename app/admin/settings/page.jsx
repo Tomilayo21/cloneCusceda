@@ -51,6 +51,9 @@ import AboutEditor from '@/components/AboutEditor';
 import TeamEditor from '@/components/TeamEditor';
 import Testimonials from "@/components/Testimonials";
 import PartnerEditor from '@/components/PartnerEditor';
+import ExportUserCSV from '@/components/admin/settings/users/ExportUsersCSV';
+import ExportProductsCSV from '@/components/admin/settings/products/ExportProductsCSV';
+import ExportOrdersCSV from '@/components/admin/settings/orders/ExportOrdersCSV';
 
 
 
@@ -78,6 +81,10 @@ export default function AdminSettings() {
     setCurrency, 
     themeColor, 
     setThemeColor, 
+    secondaryColor,
+    setSecondaryColor,
+    tertiaryColor,
+    setTertiaryColor,
     themeMode, 
     setThemeMode, 
     contrastMode, 
@@ -118,6 +125,10 @@ export default function AdminSettings() {
   const [lightLogoPreview, setLightLogoPreview] = useState(null);
   const [darkLogoPreview, setDarkLogoPreview] = useState(null);
   const [socialLinks, setSocialLinks] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+
 
 
 
@@ -280,6 +291,7 @@ export default function AdminSettings() {
       footerEmail,
       footerName,
       supportEmail,
+      socialLinks, // <-- added
     };
 
     try {
@@ -330,9 +342,6 @@ export default function AdminSettings() {
     router.refresh(); // triggers layout re-render
   };
 
-
-
-
   useEffect(() => {
       setLocalLayout(layoutStyle);
       setLocalFontSize(fontSize);
@@ -343,6 +352,35 @@ export default function AdminSettings() {
     setFontSize(localFontSize);
     await savePreferences(localFontSize, localLayout);
   };
+
+  //Exports CSVs
+  //Users
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch("/api/clerk-users");
+        if (!res.ok) throw new Error("Failed to load users");
+        const data = await res.json();
+        setUsers(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  const logActivity = async (action, detail) => {
+    await fetch("/api/activity-log", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, detail }),
+    });
+  };
+
+  //Products
 
 
 
@@ -559,13 +597,6 @@ export default function AdminSettings() {
                         />
                       </div>
 
-                      <button
-                        type="submit"
-                        className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? "Saving..." : "Save Changes"}
-                      </button>
                       <div className="space-y-2">
                         <label className="text-sm font-medium">Social Media Links</label>
 
@@ -692,6 +723,16 @@ export default function AdminSettings() {
                           ➕ Add Social Link
                         </button>
                       </div>
+
+                      <button
+                        type="submit"
+                        className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "Saving..." : "Save Changes"}
+                      </button>
+                      
+
 
                     </form>
                     
@@ -831,217 +872,254 @@ export default function AdminSettings() {
         )}
 
 
-         {activeTab === 'product' && (
-             <div className="relative overflow-hidden">
-                 <AnimatePresence mode="wait">
-                 {!productPanel && (
-                     <motion.div
-                     key="product-main"
-                     initial={{ x: 300, opacity: 0 }}
-                     animate={{ x: 0, opacity: 1 }}
-                     exit={{ x: -300, opacity: 0 }}
-                     transition={{ duration: 0.3 }}
-                     className="space-y-4"
-                     >
-                     <h3 className="font-semibold text-lg">Product Settings</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                      <button
-                         onClick={() => setProductPanel('add')}
-                         className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow"
-                       >
-                         <div className="flex items-center gap-2 mb-1">
-                           <PlusCircle className="w-5 h-5" />
-                           <span className="font-semibold">Add Product</span>
-                         </div>
-                         <p className="text-xs text-left">
-                           Create a new product, upload images, set prices, and manage availability.
-                       </p>
-                       </button>
-                       <button
-                         onClick={() => setProductPanel('list')}
-                         className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
-                       >
-                         <div className="flex items-center gap-2 mb-1">
-                           <List className="w-5 h-5" />
-                           <span className="font-semibold">Product List</span>
-                         </div>
-                        <p className="text-xs text-left">
-                           View and manage your existing product catalog, edit or delete items.
-                         </p>
-                       </button>
-
-                       <button
-                         onClick={() => setProductPanel('reviews')}
-                         className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow"
-                       >
-                         <div className="flex items-center gap-2 mb-1">
-                           <Star className="w-5 h-5" />
-                           <span className="font-semibold">Reviews</span>
-                         </div>
-                         <p className="text-xs text-left">
-                          Monitor and approve customer reviews and ratings on products.
-                         </p>
-                       </button>
-                     </div>
-                     </motion.div>
-                 )}
-                 {productPanel && (
+        {activeTab === 'product' && (
+            <div className="relative overflow-hidden">
+                <AnimatePresence mode="wait">
+                {!productPanel && (
                     <motion.div
-                    key="product-sub"
+                    key="product-main"
                     initial={{ x: 300, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: -300, opacity: 0 }}
                     transition={{ duration: 0.3 }}
                     className="space-y-4"
                     >
-                    <button onClick={() => setProductPanel(null)} className="flex items-center text-sm text-gray-600 hover:text-black">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                    </button>
+                    <h3 className="font-semibold text-lg">Product Settings</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <button
+                        onClick={() => setProductPanel('add')}
+                        className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow"
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <PlusCircle className="w-5 h-5" />
+                          <span className="font-semibold">Add Product</span>
+                        </div>
+                        <p className="text-xs text-left">
+                          Create a new product, upload images, set prices, and manage availability.
+                      </p>
+                      </button>
+                      <button
+                        onClick={() => setProductPanel('list')}
+                        className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <List className="w-5 h-5" />
+                          <span className="font-semibold">Product List</span>
+                        </div>
+                      <p className="text-xs text-left">
+                          View and manage your existing product catalog, edit or delete items.
+                        </p>
+                      </button>
 
-                    {productPanel === 'add' && <AddProductPanel />}
-                    {productPanel === 'list' && <ProductListPanel />}
-                    {productPanel === 'reviews' && <ReviewPanel />}
+                      <button
+                        onClick={() => setProductPanel('reviews')}
+                        className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow"
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <Star className="w-5 h-5" />
+                          <span className="font-semibold">Reviews</span>
+                        </div>
+                        <p className="text-xs text-left">
+                        Monitor and approve customer reviews and ratings on products.
+                        </p>
+                      </button>
+                    </div>
                     </motion.div>
                 )}
-                </AnimatePresence>
-            </div>
-         )}
+                {productPanel && (
+                  <motion.div
+                  key="product-sub"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                  >
+                  <button onClick={() => setProductPanel(null)} className="flex items-center text-sm text-gray-600 hover:text-black">
+                      <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
 
-         {activeTab === "users" && (
-          <div className="relative overflow-hidden">
-            <AnimatePresence mode="wait">
-              {userPanel === "main" && (
-                <motion.div
-                  key="user-main"
-                  initial={{ x: 300, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -300, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4"
-                >
-                  <h3 className="font-semibold text-lg">Users & Subscribers</h3>
-                  <p className="text-sm text-gray-600">
-                    Role assignments, user lists, and subscriber communication tools.
-                  </p>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                    <button
-                      onClick={() => setUserPanel("list")}
-                      className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
-                    >
-                      <div className="flex items-center gap-2 mb-1">
-                        <Users className="w-5 h-5" />
-                        <span className="font-semibold">View Users</span>
-                      </div>
-                      <p className="text-xs text-left">
-                        Browse and manage all registered users, including profile info and activity.
-                      </p>
-                    </button>
-
-                     <button
-                      onClick={() => setUserPanel("subscribers")}
-                      className="flex flex-col items-start bg-green-100 hover:bg-green-200 text-green-800 p-4 rounded-xl shadow"
-                    >
-                      <div className="flex items-center gap-2 mb-1">
-                        <Mail className="w-5 h-5" />
-                        <span className="font-semibold">Subscribers</span>
-                      </div>
-                      <p className="text-xs text-left">
-                        View and export newsletter subscribers and manage email outreach.
-                      </p>
-                    </button>
-
-                    <button
-                      onClick={() => setUserPanel("roles")}
-                      className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow"
-                    >
-                      <div className="flex items-center gap-2 mb-1">
-                        <ShieldCheck className="w-5 h-5" />
-                        <span className="font-semibold">Roles & Permissions</span>
-                      </div>
-                      <p className="text-xs text-left">
-                        Assign roles to users, configure access levels, and manage permissions.
-                      </p>
-                    </button>
-                  </div>
-                </motion.div>
-               )}
-               {userPanel === "list" && (
-                <motion.div
-                  key="user-list"
-                  initial={{ x: 300, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -300, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4"
-                >
-                  <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
-                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                  </button>
-                  <RegUsers />
-                </motion.div>
-               )}
-               {userPanel === "subscribers" && (
-                <motion.div
-                  key="user-subscribers"
-                  initial={{ x: 300, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -300, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4"
-                >
-                  <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
-                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                  </button>
-                  <button onClick={() => setUserPanel("broadcast")} className="bg-orange-600 text-white px-4 py-2 rounded">
-                    View Broadcast History
-                  </button>
-                  <SubscribersPage />
-                </motion.div>
-               )}
-               {userPanel === "broadcast" && (
-                <motion.div
-                  key="user-broadcast"
-                  initial={{ x: 300, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -300, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4"
-                >
-                  <button onClick={() => setUserPanel("subscribers")} className="flex items-center text-sm text-gray-600 hover:text-black">
-                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                  </button>
-                  <ViewBroadcastButton />
-                </motion.div>
-               )}
-               {userPanel === "roles" && (
-                <motion.div
-                  key="user-subscribers"
-                  initial={{ x: 300, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -300, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4"
-                >
-                  <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
-                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                  </button>
-                  <UserListPanel />
-                </motion.div>
+                  {productPanel === 'add' && <AddProductPanel />}
+                  {productPanel === 'list' && <ProductListPanel />}
+                  {productPanel === 'reviews' && <ReviewPanel />}
+                  </motion.div>
               )}
-             </AnimatePresence>
-           </div>
-         )}
+              </AnimatePresence>
+          </div>
+        )}
 
-         {activeTab === 'notifications' && (
+        {activeTab === "users" && (
+        <div className="relative overflow-hidden">
+          <AnimatePresence mode="wait">
+            {userPanel === "main" && (
+              <motion.div
+                key="user-main"
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-4"
+              >
+                <h3 className="font-semibold text-lg">Users & Subscribers</h3>
+                <p className="text-sm text-gray-600">
+                  Role assignments, user lists, and subscriber communication tools.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                  <button
+                    onClick={() => setUserPanel("list")}
+                    className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <Users className="w-5 h-5" />
+                      <span className="font-semibold">View Users</span>
+                    </div>
+                    <p className="text-xs text-left">
+                      Browse and manage all registered users, including profile info and activity.
+                    </p>
+                  </button>
+
+                    <button
+                    onClick={() => setUserPanel("subscribers")}
+                    className="flex flex-col items-start bg-green-100 hover:bg-green-200 text-green-800 p-4 rounded-xl shadow"
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <Mail className="w-5 h-5" />
+                      <span className="font-semibold">Subscribers</span>
+                    </div>
+                    <p className="text-xs text-left">
+                      View and export newsletter subscribers and manage email outreach.
+                    </p>
+                  </button>
+
+                  <button
+                    onClick={() => setUserPanel("roles")}
+                    className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow"
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <ShieldCheck className="w-5 h-5" />
+                      <span className="font-semibold">Roles & Permissions</span>
+                    </div>
+                    <p className="text-xs text-left">
+                      Assign roles to users, configure access levels, and manage permissions.
+                    </p>
+                  </button>
+                </div>
+              </motion.div>
+              )}
+              {userPanel === "list" && (
+              <motion.div
+                key="user-list"
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-4"
+              >
+                <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                  <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                </button>
+                <RegUsers />
+              </motion.div>
+              )}
+              {userPanel === "subscribers" && (
+              <motion.div
+                key="user-subscribers"
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-4"
+              >
+                <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                  <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                </button>
+                <button onClick={() => setUserPanel("broadcast")} className="bg-orange-600 text-white px-4 py-2 rounded">
+                  View Broadcast History
+                </button>
+                <SubscribersPage />
+              </motion.div>
+              )}
+              {userPanel === "broadcast" && (
+              <motion.div
+                key="user-broadcast"
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-4"
+              >
+                <button onClick={() => setUserPanel("subscribers")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                  <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                </button>
+                <ViewBroadcastButton />
+              </motion.div>
+              )}
+              {userPanel === "roles" && (
+              <motion.div
+                key="user-subscribers"
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-4"
+              >
+                <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                  <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                </button>
+                <UserListPanel />
+              </motion.div>
+            )}
+            </AnimatePresence>
+          </div>
+        )}
+
+        {activeTab === 'notifications' && (
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Notifications</h3>
+
+            {/* Orders */}
+            <p className="text-sm font-medium text-gray-600">Orders</p>
             <label className="flex items-center gap-2">
               <input type="checkbox" defaultChecked className="accent-orange-600" /> Email on New Order
             </label>
-          </div>
-         )}
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" /> Email on Order Shipped
+            </label>
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" /> Email on Order Delivered
+            </label>
 
-         {activeTab === 'orders' && (
+            {/* Reviews */}
+            <p className="text-sm font-medium text-gray-600">Reviews</p>
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" /> Email on New Review
+            </label>
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" /> Email on Review Approval
+            </label>
+
+            {/* Stock Alerts */}
+            <p className="text-sm font-medium text-gray-600">Stock Alerts</p>
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" /> Email on Low Stock
+            </label>
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" /> Email on Out-of-Stock Product
+            </label>
+
+            {/* Marketing */}
+            <p className="text-sm font-medium text-gray-600">Marketing</p>
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" /> Receive Newsletter
+            </label>
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" /> Receive Promotional Offers
+            </label>
+          </div>
+        )}
+
+
+        {activeTab === 'orders' && (
             <div className="relative overflow-hidden">
                 <AnimatePresence mode="wait">
                 {!orderPanel && (
@@ -1265,38 +1343,51 @@ export default function AdminSettings() {
 
         {activeTab === 'appearance' && (
             <div className="space-y-4">
-                <h3 className="font-semibold text-lg">Appearance / Theme</h3>
-
-                {/* Dark Mode Toggle */}
-                <label className="flex items-center gap-2">
-                <input type="checkbox" className="accent-orange-600" />
-                Use Dark Mode by Default
-                </label>
-
-                {/* System Theme Sync */}
-                <label className="flex items-center gap-2">
-                <input type="checkbox" className="accent-orange-600" />
-                Sync with System Theme
-                </label>
-
-                {/* High Contrast Mode */}
-                <label className="flex items-center gap-2">
-                <input type="checkbox" className="accent-orange-600" />
-                Enable High Contrast Mode
-                </label>
 
                 {/* Theme Color Picker */}
-
-                <div className="space-y-1">
-                    <label className="block text-sm font-medium text-gray-700">
+                <div>
+                  <h3 className="font-semibold text-lg mb-4">Color Picker</h3>
+{/* #f97316  249 115 22 */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {/* Theme Color */}
+                    <div className="space-y-1">
+                      <label className="block text-sm font-medium text-gray-700">
                         Theme Color
-                    </label>
-                    <input
+                      </label>
+                      <input
                         type="color"
                         value={themeColor}
                         onChange={(e) => setThemeColor(e.target.value)}
                         className="w-12 h-8 border rounded"
-                    />
+                      />
+                    </div>
+
+                    {/* Secondary Color */}
+                    <div className="space-y-1">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Secondary Color
+                      </label>
+                      <input
+                        type="color"
+                        value={secondaryColor}
+                        onChange={(e) => setSecondaryColor(e.target.value)}
+                        className="w-12 h-8 border rounded"
+                      />
+                    </div>
+
+                    {/* Tertiary Color */}
+                    <div className="space-y-1">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Tertiary Color
+                      </label>
+                      <input
+                        type="color"
+                        value={tertiaryColor}
+                        onChange={(e) => setTertiaryColor(e.target.value)}
+                        className="w-12 h-8 border rounded"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Font Size Selector */}
@@ -1399,7 +1490,6 @@ export default function AdminSettings() {
             </div>
         )}
 
-
         {activeTab === 'security' && (
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Security Settings</h3>
@@ -1407,7 +1497,7 @@ export default function AdminSettings() {
             {/* Enable 2FA */}
             <label className="flex items-center gap-2">
               <input type="checkbox" className="accent-orange-600" />
-              Enable 2FA for Admins
+              Require 2FA for Admins
             </label>
 
             {/* Session Timeout */}
@@ -1421,27 +1511,49 @@ export default function AdminSettings() {
               />
             </div>
 
-             {/* Login Alerts */}
-             <label className="flex items-center gap-2">
-               <input type="checkbox" className="accent-orange-600" />
-               Email me on new device login
-             </label>
+            {/* Login Alerts */}
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" />
+              Email me on new device login
+            </label>
 
-             {/* Password Expiry */}
-             <label className="flex items-center gap-2">
-               <input type="checkbox" className="accent-orange-600" />
-               Force password change every 90 days
-             </label>
+            {/* Password Expiry */}
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" />
+              Force password change every 90 days
+            </label>
 
-             {/* Restrict Login IP */}
-             <div className="flex flex-col gap-1">
-               <label className="font-medium">Restrict Login by IP</label>
-               <input
+            {/* Restrict Login IP */}
+            <div className="flex flex-col gap-1">
+              <label className="font-medium">Restrict Login by IP</label>
+              <input
                 type="text"
                 className="border px-3 py-1 rounded w-full"
                 placeholder="e.g. 192.168.0.1, 10.0.0.0/24"
               />
             </div>
+
+            {/* Restrict Admin Panel Access by Country */}
+            <div className="flex flex-col gap-1">
+              <label className="font-medium">Restrict Admin Panel by Country</label>
+              <input
+                type="text"
+                className="border px-3 py-1 rounded w-full"
+                placeholder="e.g. US, CA, GB"
+              />
+            </div>
+
+            {/* Admin Action Confirmation */}
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" />
+              Require password confirmation for editing/deleting products
+            </label>
+
+            {/* Audit Logging */}
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="accent-orange-600" />
+              Enable admin activity logging
+            </label>
 
             {/* Save button */}
             <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
@@ -1449,9 +1561,9 @@ export default function AdminSettings() {
             </button>
           </div>
         )}
+        
 
-
-       {activeTab === "legal" && (
+        {activeTab === "legal" && (
           <div className="relative overflow-hidden">
             <AnimatePresence mode="wait">
               {legalPanel === "main" && (
@@ -1617,25 +1729,26 @@ export default function AdminSettings() {
             {/* Export Orders */}
             <div>
               <p className="text-sm text-gray-600 mb-1">Download all order records in CSV format.</p>
-              <button className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">
-                Export Orders CSV
-              </button>
+              <ExportOrdersCSV orders={orders} />
             </div>
 
             {/* Export Products */}
             <div>
               <p className="text-sm text-gray-600 mb-1">Download product inventory as CSV.</p>
-              <button className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">
+              {/* <button className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">
                 Export Products CSV
-              </button>
+              </button> */}
+              <ExportProductsCSV filteredProducts={filteredProducts} />
             </div>
 
             {/* Export Users */}
             <div>
               <p className="text-sm text-gray-600 mb-1">Download user list in CSV format.</p>
-              <button className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">
+              {/* <button className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">
                 Export Users CSV
-              </button>
+              </button> */}
+              <ExportUserCSV users={users} logActivity={logActivity} />
+
             </div>
 
             {/* Database Backup */}

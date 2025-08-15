@@ -14,8 +14,10 @@ export const useAppContext = () => {
 
 export const AppContextProvider = (props) => {
     // const currency = process.env.NEXT_PUBLIC_CURRENCY;
-    const [currency, setCurrency] = useState('USD'); 
+    const [currency, setCurrency] = useState('$'); 
     const [themeColor, setThemeColor] = useState("#f97316"); 
+    const [secondaryColor, setSecondaryColor] = useState("#000000");
+    const [tertiaryColor, setTertiaryColor] = useState("#ffffff");
     const [themeMode, setThemeMode] = useState("system");
     const [contrastMode, setContrastMode] = useState(false);
     const [layoutStyle, setLayoutStyle] = useState("default"); 
@@ -50,13 +52,25 @@ export const AppContextProvider = (props) => {
 
     //Theme Color
     useEffect(() => {
-        const savedColor = localStorage.getItem("themeColor");
-        if (savedColor) setThemeColor(savedColor);
+        const savedTheme = localStorage.getItem("themeColor");
+        const savedSecondary = localStorage.getItem("secondaryColor");
+        const savedTertiary = localStorage.getItem("tertiaryColor");
+
+        if (savedTheme) setThemeColor(savedTheme);
+        if (savedSecondary) setSecondaryColor(savedSecondary);
+        if (savedTertiary) setTertiaryColor(savedTertiary);
     }, []);
 
     useEffect(() => {
         localStorage.setItem("themeColor", themeColor);
     }, [themeColor]);
+      useEffect(() => {
+    localStorage.setItem("secondaryColor", secondaryColor);
+    }, [secondaryColor]);
+
+    useEffect(() => {
+        localStorage.setItem("tertiaryColor", tertiaryColor);
+    }, [tertiaryColor]);
 
 
     //Cart
@@ -374,6 +388,10 @@ export const AppContextProvider = (props) => {
         getCartAmount,
         themeColor,
         setThemeColor,
+        secondaryColor,
+        setSecondaryColor,
+        tertiaryColor,
+        setTertiaryColor,
         themeMode,
         setThemeMode,
         contrastMode,
