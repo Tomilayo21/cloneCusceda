@@ -667,12 +667,18 @@ const Cart = () => {
       <Navbar />
       <div className="px-6 md:px-16 lg:px-32 pt-10 mt-8 mb-20">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8 border-b border-gray-200 pb-6">
-          <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">
-            My <span className="text-orange-600">Cart</span>
-          </h2>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 border-b border-gray-200 pb-6">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
+             Shopping <span className="text-orange-600">Bag</span>
+            </h2>
+            <p className="text-sm md:text-base text-gray-500 mt-2">
+              Review the items you’ve added before checking out.
+            </p>
+          </div>
+
           {!loading && cartCount > 0 && (
-            <p className="text-lg md:text-xl text-gray-600">
+            <p className="text-lg md:text-xl font-medium text-gray-700 mt-4 md:mt-0">
               {cartCount} {cartCount === 1 ? "Item" : "Items"}
             </p>
           )}
@@ -682,15 +688,15 @@ const Cart = () => {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <p className="text-lg text-gray-600 animate-pulse">
-              Cart is loading...
+              Bag is loading...
             </p>
           </div>
         ) : cartCount === 0 ? (
           /* Empty Cart */
-          <div className="flex flex-col items-center justify-center py-20">
-            <PackageX className="w-32 h-32 text-gray-400 opacity-80" />
+          <div className="flex flex-col items-center justify-center py-12">
+            <img src="/Essential_illustrations_-removebg-preview.png" width={200} height={200} alt="Empty Cart" />
             <p className="mt-6 text-lg text-gray-600">
-              Your cart is empty. Let’s fix that!
+              Looks like your bag is empty. Let’s fill it up!
             </p>
             <button
               onClick={() => router.push("/all-products")}
@@ -744,7 +750,7 @@ const Cart = () => {
                       </div>
 
                       {/* Quantity + Subtotal */}
-                      <div className="flex items-center gap-6 mt-4 md:mt-0">
+                      {/* <div className="flex items-center gap-6 mt-4 md:mt-0">
                         {maxQuantity === 0 ? (
                           <p className="text-red-500 font-semibold">Sold Out</p>
                         ) : (
@@ -794,7 +800,56 @@ const Cart = () => {
                           {currency}
                           {(product.offerPrice * currentQuantity).toFixed(2)}
                         </p>
+                      </div> */}
+
+                      <div className="flex flex-col gap-2 mt-4 md:mt-0">
+                        {maxQuantity === 0 ? (
+                          <p className="text-red-500 font-semibold">Sold Out</p>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() =>
+                                updateCartQuantity(product._id, currentQuantity - 1)
+                              }
+                              disabled={currentQuantity <= 1}
+                              className="px-3 py-1 border rounded-lg hover:bg-gray-100 disabled:opacity-50"
+                            >
+                              −
+                            </button>
+
+                            <input
+                              type="number"
+                              value={currentQuantity}
+                              onChange={(e) => {
+                                const value = Number(e.target.value);
+                                if (value > 0 && value <= maxQuantity) {
+                                  updateCartQuantity(product._id, value);
+                                }
+                              }}
+                              className="w-12 border text-center rounded-lg"
+                            />
+
+                            <button
+                              onClick={() => {
+                                if (currentQuantity < maxQuantity) {
+                                  updateCartQuantity(product._id, currentQuantity + 1);
+                                }
+                              }}
+                              disabled={currentQuantity >= maxQuantity}
+                              className="px-3 py-1 border rounded-lg hover:bg-gray-100 disabled:opacity-50"
+                            >
+                              +
+                            </button>
+                          </div>
+                        )}
+
+                        {/* Price below quantity selector */}
+                        <p className="text-lg font-semibold text-gray-800">
+                          {currency}
+                          {(product.offerPrice * currentQuantity).toFixed(2)}
+                        </p>
                       </div>
+
                     </div>
                   </div>
                 );
