@@ -5,7 +5,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Country, State, City } from "country-state-city";
-
+import { X, User, Phone, Mail, MapPin, Globe, Landmark } from "lucide-react"
 
 
 // ... paymentMethods here
@@ -118,159 +118,6 @@ const OrderSummary = () => {
     }
   };
 
-  // const handlePayment = async () => {
-  //   if (processing) return;
-  //   if (!selectedAddress) return toast.error('Please select an address');
-
-  //   const cartItemsArray = Object.keys(cartItems)
-  //     .map((key) => ({ product: key, quantity: cartItems[key] }))
-  //     .filter((item) => item.quantity > 0);
-
-  //   if (cartItemsArray.length === 0) return toast.error('Cart is empty');
-
-  //   setProcessing(true);
-
-  //   try {
-  //     const token = await getToken();
-
-  //     const orderRes = await axios.post('/api/order/create', {
-  //       address: selectedAddress._id,
-  //       items: cartItemsArray,
-  //       paymentMethod: selected.id,
-  //     }, {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
-
-  //     if (!orderRes.data.success) {
-  //       toast.error(orderRes.data.message);
-  //       return;
-  //     }
-
-  //     // ✅ Stripe dynamic Checkout redirect
-  //     if (selected.id === "stripe") {
-  //       const { data } = await axios.post(
-  //         "/api/checkout/stripe",
-  //         { items: cartItems },
-  //         { headers: { Authorization: `Bearer ${token}` } }
-  //       );
-
-  //       if (!data.url) throw new Error("No Stripe session URL returned");
-
-  //       setCartItems({});
-  //       return (window.location.href = data.url);
-  //     }
-
-  //     // ✅ All other payment methods
-  //     setCartItems({});
-  //     if (selected.url.startsWith("/")) {
-  //       router.push(selected.url);
-  //     } else {
-  //       window.location.href = selected.url;
-  //     }
-
-  //   } catch (error) {
-  //     toast.error(error.message || "Error placing order");
-  //   } finally {
-  //     setProcessing(false);
-  //   }
-  // };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  // const handlePayment = async () => {
-  //   if (processing) return;
-  //   if (!selectedAddress) return toast.error("Please select an address");
-
-  //   const cartItemsArray = Object.keys(cartItems)
-  //     .map((key) => ({ product: key, quantity: cartItems[key] }))
-  //     .filter((item) => item.quantity > 0);
-
-  //   if (cartItemsArray.length === 0) return toast.error("Cart is empty");
-
-  //   setProcessing(true);
-
-  //   try {
-  //     const token = await getToken();
-
-  //     if (selected.id === "stripe") {
-  //       const { data } = await axios.post(
-  //         "/api/checkout/stripe", // ✅ the correct dynamic endpoint
-  //         { items: Object.keys(cartItems).reduce((acc, id) => {
-  //           acc[id] = cartItems[id];
-  //           return acc;
-  //         }, {}),
-  //         address: selectedAddress,          // optional but good
-  //         paymentMethod: selected.id     },
-  //         { headers: { Authorization: `Bearer ${token}` } }
-  //       );
-
-  //       if (!data.url) throw new Error("No Stripe session URL returned");
-
-  //       return (window.location.href = data.url);
-  //     }
-
-  //     // 🔁 Other payment methods (like PayPal, bank transfer, etc.)
-  //     if (selected.url.startsWith("/")) {
-  //       router.push(selected.url);
-  //     } else {
-  //       window.location.href = selected.url;
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.message || "Payment initialization failed");
-  //   } finally {
-  //     setProcessing(false);
-  //   }
-  // };
-  //.......................................................................................................
   const handlePayment = async () => {
     if (processing) return;
     if (!selectedAddress) return toast.error("Please select an address");
@@ -331,71 +178,6 @@ const OrderSummary = () => {
       setProcessing(false);
     }
   };
-  //.......................................................................
-
-
-
-//   const handlePayment = async () => {
-//   if (processing) return;
-//   if (!selectedAddress) return toast.error('Please select an address');
-
-//   const cartItemsArray = Object.keys(cartItems)
-//     .map((key) => ({ product: key, quantity: cartItems[key] }))
-//     .filter((item) => item.quantity > 0);
-
-//   if (cartItemsArray.length === 0) return toast.error('Cart is empty');
-
-//   setProcessing(true);
-
-//   try {
-//     const token = await getToken();
-
-//     const orderPayload = {
-//       address: selectedAddress._id,
-//       items: cartItemsArray,
-//       paymentMethod: selected.id,
-//     };
-
-//     // Only include shippingRate if selectedShipping exists
-//     if (selectedShipping) {
-//       orderPayload.shippingRate = selectedShipping.object_id;
-//     }
-
-//     const orderRes = await axios.post('/api/order/create', orderPayload, {
-//       headers: { Authorization: `Bearer ${token}` },
-//     });
-
-//     if (!orderRes.data.success) {
-//       toast.error(orderRes.data.message);
-//       return;
-//     }
-
-//     // Only book shipment if shippingRate was included
-//     if (orderRes.data.shipmentId && selectedShipping) {
-//       const bookingRes = await axios.post('/api/shipping/book', {
-//         shipmentId: orderRes.data.shipmentId,
-//         rateObjectId: selectedShipping.object_id
-//       });
-
-//       if (bookingRes.data.success) {
-//         toast.success('Shipment booked and label generated. Redirecting to payment...');
-//       }
-//     }
-
-//     setCartItems({});
-
-//     if (selected.url.startsWith('/')) {
-//       router.push(selected.url);
-//     } else {
-//       window.location.href = selected.url;
-//     }
-//   } catch (error) {
-//     toast.error(error.message || "Error placing order");
-//   } finally {
-//     setProcessing(false);
-//   }
-// };
-
 
   useEffect(() => {
     if (user) fetchUserAddresses();
@@ -535,28 +317,6 @@ const OrderSummary = () => {
           </div>
         </div>
 
-        {/* Shipping + Payment + Summary */}
-        {/* Shipping Options */}
-        {/* {shippingOptions.length > 0 && (
-          <div>
-            <label className="text-base font-medium uppercase text-gray-600 block mb-2">Shipping Options</label>
-            <select
-              value={selectedShipping?.object_id}
-              onChange={(e) => {
-                const found = shippingOptions.find((s) => s.object_id === e.target.value);
-                setSelectedShipping(found);
-              }}
-              className="w-full p-2 border text-gray-700"
-            >
-              {shippingOptions.map((option) => (
-                <option key={option.object_id} value={option.object_id}>
-                  {option.provider} {option.servicelevel.name} - ₦{parseFloat(option.amount.amount).toFixed(2)}
-                </option>
-              ))}
-            </select>
-          </div>
-        )} */}
-
         {/* Payment Method */}
         <div className="mt-4 space-y-2">
           <label className="text-base font-medium uppercase text-gray-600 block mb-2">Payment Method</label>
@@ -592,15 +352,25 @@ const OrderSummary = () => {
             <p>{currency}{total.toFixed(2)}</p>
           </div>
         </div>
+        
+        {/*Edit Button*/}
         {showEditModal && selectedAddress && (
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white dark:bg-neutral-900 p-6 rounded-lg shadow max-w-lg w-full overflow-y-auto max-h-[80vh] relative">
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white dark:bg-neutral-900 p-6 md:p-8 rounded-2xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-y-auto relative">
+              
+              {/* Close button */}
               <button
-                className="absolute top-2 right-2 text-red-500"
+                className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition"
                 onClick={() => setShowEditModal(false)}
               >
-                ✕
+                <X className="w-6 h-6" />
               </button>
+
+              {/* Title */}
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-6 flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-orange-500" />
+                Edit Address
+              </h2>
 
               <form
                 onSubmit={async (e) => {
@@ -617,7 +387,6 @@ const OrderSummary = () => {
 
                     if (!res.ok) throw new Error("Failed to update");
 
-                    // 🧠 Update local state so UI reflects changes instantly
                     setUserAddresses(prev =>
                       prev.map(addr =>
                         addr._id === editingAddress._id ? { ...addr, ...updated } : addr
@@ -631,65 +400,149 @@ const OrderSummary = () => {
                     toast.error("Update failed");
                   }
                 }}
-
                 className="space-y-4"
               >
-                <input name="fullName" defaultValue={selectedAddress.fullName} className="input w-full" placeholder="Full Name" />
-                <input name="phoneNumber" defaultValue={selectedAddress.phoneNumber} className="input w-full" placeholder="Phone Number" />
-                <input name="email" defaultValue={selectedAddress.email} className="input w-full" placeholder="Email" />
-                <input name="zipcode" defaultValue={selectedAddress.zipcode} className="input w-full" placeholder="Zip Code" />
-                <select
-                  name="country"
-                  className="input w-full"
-                  value={selectedCountry}
-                  onChange={(e) => {
-                    setSelectedCountry(e.target.value);
-                    setSelectedState("");
-                    setSelectedCity("");
-                  }}
-                >
-                  <option value="">Select Country</option>
-                  {countries.map((country) => (
-                    <option key={country.isoCode} value={country.name}>
-                      {country.name}
-                    </option>
-                  ))}
-                </select>
+                {/* Full Name */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+                    <User className="w-4 h-4 text-orange-500" /> Full Name
+                  </label>
+                  <input
+                    name="fullName"
+                    defaultValue={selectedAddress.fullName}
+                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                    placeholder="Enter full name"
+                  />
+                </div>
 
-                <select
-                  name="state"
-                  className="input w-full"
-                  value={selectedState}
-                  onChange={(e) => {
-                    setSelectedState(e.target.value);
-                    setSelectedCity("");
-                  }}
-                  disabled={!states.length}
-                >
-                  <option value="">Select State</option>
-                  {states.map((state) => (
-                    <option key={state.isoCode} value={state.name}>
-                      {state.name}
-                    </option>
-                  ))}
-                </select>
+                {/* Phone Number */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+                    <Phone className="w-4 h-4 text-orange-500" /> Phone Number
+                  </label>
+                  <input
+                    name="phoneNumber"
+                    defaultValue={selectedAddress.phoneNumber}
+                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                    placeholder="Enter phone number"
+                  />
+                </div>
 
-                <select
-                  name="city"
-                  className="input w-full"
-                  value={selectedCity}
-                  onChange={(e) => setSelectedCity(e.target.value)}
-                  disabled={!cities.length}
+                {/* Email */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+                    <Mail className="w-4 h-4 text-orange-500" /> Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    defaultValue={selectedAddress.email}
+                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                    placeholder="Enter email"
+                  />
+                </div>
+
+                {/* Zip Code */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+                    <MapPin className="w-4 h-4 text-orange-500" /> Zip Code
+                  </label>
+                  <input
+                    name="zipcode"
+                    defaultValue={selectedAddress.zipcode}
+                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                    placeholder="Enter zip code"
+                  />
+                </div>
+
+                {/* Country */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+                    <Globe className="w-4 h-4 text-orange-500" /> Country
+                  </label>
+                  <select
+                    name="country"
+                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                    value={selectedCountry}
+                    onChange={(e) => {
+                      setSelectedCountry(e.target.value);
+                      setSelectedState("");
+                      setSelectedCity("");
+                    }}
+                  >
+                    <option value="">Select Country</option>
+                    {countries.map((country) => (
+                      <option key={country.isoCode} value={country.name}>
+                        {country.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* State */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+                    <MapPin className="w-4 h-4 text-orange-500" /> State
+                  </label>
+                  <select
+                    name="state"
+                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                    value={selectedState}
+                    onChange={(e) => {
+                      setSelectedState(e.target.value);
+                      setSelectedCity("");
+                    }}
+                    disabled={!states.length}
+                  >
+                    <option value="">Select State</option>
+                    {states.map((state) => (
+                      <option key={state.isoCode} value={state.name}>
+                        {state.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* City */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+                    <MapPin className="w-4 h-4 text-orange-500" /> City
+                  </label>
+                  <select
+                    name="city"
+                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                    value={selectedCity}
+                    onChange={(e) => setSelectedCity(e.target.value)}
+                    disabled={!cities.length}
+                  >
+                    <option value="">Select City</option>
+                    {cities.map((city, index) => (
+                      <option key={index} value={city.name}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Address */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+                    <Landmark className="w-4 h-4 text-orange-500" /> Street / Area
+                  </label>
+                  <textarea
+                    name="area"
+                    defaultValue={selectedAddress.area}
+                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                    placeholder="Enter street / area"
+                    rows={3}
+                  />
+                </div>
+
+                {/* Submit */}
+                <button
+                  type="submit"
+                  className="w-full py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition"
                 >
-                  <option value="">Select City</option>
-                  {cities.map((city, index) => (
-                    <option key={index} value={city.name}>
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
-                <textarea name="area" defaultValue={selectedAddress.area} className="input w-full" placeholder="Street / Area" />
-                <button type="submit" className="btn bg-grey-400 btn-primary w-full">
                   Save Changes
                 </button>
               </form>
@@ -697,16 +550,19 @@ const OrderSummary = () => {
           </div>
         )}
 
-
-
         {/* Submit */}
         <button
           onClick={handlePayment}
-          disabled={processing}
-          className={`w-full py-3 mt-5 text-white ${processing ? 'bg-black cursor-not-allowed' : 'bg-black hover:bg-orange-700'}`}
+          disabled={processing || getCartCount() === 0}
+          className={`w-full py-3 mt-5 text-white ${
+            processing || getCartCount() === 0
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-black hover:bg-orange-700"
+          }`}
         >
           {processing ? "Processing..." : "Continue to Payment"}
         </button>
+
       </div>
     </div>
   );

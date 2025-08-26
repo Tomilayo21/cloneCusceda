@@ -17,66 +17,6 @@ export async function GET() {
   const partners = await Partner.find().sort({ position: 1 });
   return NextResponse.json(partners);
 }
-
-// export async function POST(req) {
-//   try {
-//     const { userId } = getAuth(req);
-//     if (!userId || !(await authSeller(userId))) {
-//       return NextResponse.json({ message: "Not authorized" }, { status: 403 });
-//     }
-//     await connectDB();
-
-//     // Parse multipart formData
-//     const formData = await req.formData();
-//     const username = formData.get("username");
-//     const name = formData.get("name");
-//     const comment = formData.get("comment");
-//     const files = formData.getAll("images"); // multiple images input named "images"
-
-//     if (!username || !name || !comment) {
-//       return NextResponse.json({ message: "Missing fields" }, { status: 400 });
-//     }
-
-//     // Filter valid image files
-//     const validFiles = files.filter((file) =>
-//       ["image/jpeg", "image/png", "image/gif", "image/webp"].includes(file.type)
-//     );
-
-//     // Upload to Cloudinary
-//     const uploadedImageUrls = await Promise.all(
-//       validFiles.map(async (file) => {
-//         const arrayBuffer = await file.arrayBuffer();
-//         const buffer = Buffer.from(arrayBuffer);
-
-//         return new Promise((resolve, reject) => {
-//           const stream = cloudinary.uploader.upload_stream(
-//             { resource_type: "image" },
-//             (error, result) => {
-//               if (error) reject(error);
-//               else resolve(result.secure_url);
-//             }
-//           );
-//           stream.end(buffer);
-//         });
-//       })
-//     );
-
-//     const newPartner = new Partner({
-//       username,
-//       name,
-//       comment,
-//       imageUrl: uploadedImageUrls, // save array of image URLs
-//       approved: false,
-//       position: 9999,
-//     });
-
-//     await newPartner.save();
-//     return NextResponse.json(newPartner, { status: 201 });
-//   } catch (error) {
-//     console.error(error);
-//     return NextResponse.json({ message: error.message }, { status: 500 });
-//   }
-// }
 export async function POST(req) {
   try {
     const { userId } = getAuth(req);

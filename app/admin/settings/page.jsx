@@ -19,7 +19,8 @@ import {
   List, 
   Star,
   Mail,
-  PackageSearch
+  PackageSearch,
+  ChevronDown,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 // import InviteAdminPanel from '@/components/admin/settings/users/InviteAdminPanel';
@@ -54,6 +55,7 @@ import PartnerEditor from '@/components/PartnerEditor';
 import ExportUserCSV from '@/components/admin/settings/users/ExportUsersCSV';
 import ExportProductsCSV from '@/components/admin/settings/products/ExportProductsCSV';
 import ExportOrdersCSV from '@/components/admin/settings/orders/ExportOrdersCSV';
+import SecuritySettings from '@/components/admin/SecuritySettings';
 
 
 
@@ -128,6 +130,8 @@ export default function AdminSettings() {
   const [users, setUsers] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [colorOpen, setColorOpen] = useState(false);
+  
 
 
 
@@ -137,8 +141,8 @@ export default function AdminSettings() {
   const [fontVal, setFontVal] = useState(fontSize);
   const [selectedFontSize, setSelectedFontSize] = useState(fontSize);
   const [selectedLayout, setSelectedLayout] = useState(layoutStyle);
-      const [localLayout, setLocalLayout] = useState(layoutStyle);
-    const [localFontSize, setLocalFontSize] = useState(fontSize);
+  const [localLayout, setLocalLayout] = useState(layoutStyle);
+  const [localFontSize, setLocalFontSize] = useState(fontSize);
     
 
 
@@ -147,21 +151,6 @@ export default function AdminSettings() {
 
   // if (!isAdmin) return null;
 
-
-
-  // useEffect(() => {
-  //   const fetchSettings = async () => {
-  //     try {
-  //       const res = await fetch("/api/settings");
-  //       const data = await res.json();
-  //       setLogoPreview(data.logoUrl); // from MongoDB
-  //     } catch (err) {
-  //       console.error("Failed to fetch settings", err);
-  //     }
-  //   };
-
-  //   fetchSettings();
-  // }, []);
 
   useEffect(() => {
     const fetchSiteDetails = async () => {
@@ -1346,9 +1335,24 @@ export default function AdminSettings() {
 
                 {/* Theme Color Picker */}
                 <div>
-                  <h3 className="font-semibold text-lg mb-4">Color Picker</h3>
-{/* #f97316  249 115 22 */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <h3
+                    className="font-semibold text-lg mb-2 cursor-pointer flex items-center justify-between"
+                    onClick={() => setColorOpen(!colorOpen)}
+                  >
+                    Color Picker
+                    <ChevronDown
+                      className={`w-5 h-5 transition-transform duration-300 ${
+                        colorOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </h3>
+
+                  {/* Animated dropdown */}
+                  <div
+                    className={`grid grid-cols-1 sm:grid-cols-3 gap-4 overflow-hidden transition-all duration-500 ease-in-out ${
+                      colorOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                    }`}
+                  >
                     {/* Theme Color */}
                     <div className="space-y-1">
                       <label className="block text-sm font-medium text-gray-700">
@@ -1430,38 +1434,64 @@ export default function AdminSettings() {
                     </button>
                 </div> */}
 
-                <div className="space-y-4">
-                    <h3 className="font-semibold text-lg">Appearance / Theme</h3>
+                <div className="space-y-2">
+                  {/* Toggle header */}
+                  <h3
+                    className="font-semibold text-lg cursor-pointer flex items-center justify-between"
+                    onClick={() => setOpen(!open)}
+                  >
+                    Appearance / Theme
+                    <span
+                      className={`transition-transform duration-300 ${
+                        open ? "rotate-180" : ""
+                      }`}
+                    >
+                      <ChevronDown
+                        className={`w-5 h-5 transition-transform duration-300 ${
+                          open ? "rotate-180" : ""
+                        }`}
+                      />
+                    </span>
+                  </h3>
 
-                    <label className="flex items-center gap-2">
+                  {/* Animated dropdown */}
+                  <div
+                    className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                      open ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                    }`}
+                  >
+                    <div className="space-y-2 mt-2">
+                      <label className="flex items-center gap-2">
                         <input
-                        type="radio"
-                        name="theme"
-                        checked={themeMode === "light"}
-                        onChange={() => setThemeMode("light")}
+                          type="radio"
+                          name="theme"
+                          checked={themeMode === "light"}
+                          onChange={() => setThemeMode("light")}
                         />
                         Light Mode
-                    </label>
+                      </label>
 
-                    <label className="flex items-center gap-2">
+                      <label className="flex items-center gap-2">
                         <input
-                        type="radio"
-                        name="theme"
-                        checked={themeMode === "dark"}
-                        onChange={() => setThemeMode("dark")}
+                          type="radio"
+                          name="theme"
+                          checked={themeMode === "dark"}
+                          onChange={() => setThemeMode("dark")}
                         />
                         Dark Mode
-                    </label>
+                      </label>
 
-                    <label className="flex items-center gap-2">
+                      <label className="flex items-center gap-2">
                         <input
-                        type="radio"
-                        name="theme"
-                        checked={themeMode === "system"}
-                        onChange={() => setThemeMode("system")}
+                          type="radio"
+                          name="theme"
+                          checked={themeMode === "system"}
+                          onChange={() => setThemeMode("system")}
                         />
                         System Preference
-                    </label>
+                      </label>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="space-y-4">
@@ -1491,75 +1521,7 @@ export default function AdminSettings() {
         )}
 
         {activeTab === 'security' && (
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Security Settings</h3>
-
-            {/* Enable 2FA */}
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" />
-              Require 2FA for Admins
-            </label>
-
-            {/* Session Timeout */}
-            <div className="flex flex-col gap-1">
-              <label className="font-medium">Session Timeout (minutes)</label>
-              <input
-                type="number"
-                min="1"
-                className="border px-3 py-1 rounded w-32"
-                placeholder="e.g. 30"
-              />
-            </div>
-
-            {/* Login Alerts */}
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" />
-              Email me on new device login
-            </label>
-
-            {/* Password Expiry */}
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" />
-              Force password change every 90 days
-            </label>
-
-            {/* Restrict Login IP */}
-            <div className="flex flex-col gap-1">
-              <label className="font-medium">Restrict Login by IP</label>
-              <input
-                type="text"
-                className="border px-3 py-1 rounded w-full"
-                placeholder="e.g. 192.168.0.1, 10.0.0.0/24"
-              />
-            </div>
-
-            {/* Restrict Admin Panel Access by Country */}
-            <div className="flex flex-col gap-1">
-              <label className="font-medium">Restrict Admin Panel by Country</label>
-              <input
-                type="text"
-                className="border px-3 py-1 rounded w-full"
-                placeholder="e.g. US, CA, GB"
-              />
-            </div>
-
-            {/* Admin Action Confirmation */}
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" />
-              Require password confirmation for editing/deleting products
-            </label>
-
-            {/* Audit Logging */}
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" />
-              Enable admin activity logging
-            </label>
-
-            {/* Save button */}
-            <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-              Save Security Settings
-            </button>
-          </div>
+          <SecuritySettings />
         )}
         
 
