@@ -95,7 +95,7 @@ export default function FavoritesPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-7xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-7xl">
             {favorites.map(({ _id, productId }) => {
               if (productId.visible === false) return null;
 
