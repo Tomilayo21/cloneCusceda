@@ -197,7 +197,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { assets } from "@/assets/assets"; 
 import { useAppContext } from "@/context/AppContext"; 
-import { Search, Clock, X } from "lucide-react"; // clean SVG icons
+import { Search, Clock, X, History } from "lucide-react"; // clean SVG icons
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function SearchBar() {
@@ -379,7 +379,7 @@ export default function SearchBar() {
                         onClick={() => handleSearch(s)}
                         className="flex items-center gap-2 flex-1"
                       >
-                        <Clock size={14} className="text-gray-400" />
+                        <History size={14} className="text-gray-400" />
                         {s}
                       </span>
                       <button

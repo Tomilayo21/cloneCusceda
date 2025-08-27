@@ -123,113 +123,6 @@ const AllProducts = () => {
   return (
     <>
       <Navbar />
-      {/* <div className="flex flex-col items-start px-6 md:px-16 lg:px-32 pt-8">
-        <div className="flex flex-col items-end pt-12">
-          <p className={`font-semibold ${fontSizeClass}`} style={{ color: secondaryColor }}>All products</p>
-          <div 
-            className="w-16 h-0.5 rounded-full"
-            style={{ backgroundColor: themeColor }}
-          ></div>
-        </div>
-
-        <Filter searchQuery={searchQuery} brand={brand} color={color} />
-
-        {paginatedProducts.length === 0 ? (
-          <div className="w-full text-center mt-16 text-lg text-gray-600">
-            No products found matching your criteria.
-          </div>
-        ) : (
-          <div className={`${productLayoutClass} mt-12 pb-14 w-full`}>
-            {paginatedProducts.map((product, index) => (
-              <ProductCard key={index} product={product} />
-            ))}
-          </div>
-        )}
-
-        {totalPages > 1 && (
-          <div className="w-full flex justify-center mt-10 mb-16">
-            <div className="flex items-center flex-wrap gap-2 px-4 py-3 rounded-lg bg-white shadow border max-w-fit">
-              <button
-                onClick={() => changePage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className={`px-3 py-1 rounded border text-sm font-medium ${
-                  currentPage === 1
-                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-gray-700 hover:bg-orange-100"
-                }`}
-              >
-                Prev
-              </button>
-
-              {[...Array(totalPages)].map((_, index) => {
-                const pageNum = index + 1;
-
-                if (totalPages <= 10) {
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => changePage(pageNum)}
-                      className={`px-3 py-1 rounded border text-sm font-medium ${
-                        pageNum === currentPage
-                          ? "bg-orange-600 text-white"
-                          : "bg-white text-gray-800 hover:bg-orange-100"
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                }
-
-                const isVisible =
-                  pageNum === 1 ||
-                  pageNum === totalPages ||
-                  (pageNum >= currentPage - 1 && pageNum <= currentPage + 1);
-
-                if (isVisible) {
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => changePage(pageNum)}
-                      className={`px-3 py-1 rounded border text-sm font-medium ${
-                        pageNum === currentPage
-                          ? "bg-orange-600 text-white"
-                          : "bg-white text-gray-800 hover:bg-orange-100"
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                }
-
-                if (
-                  (pageNum === 2 && currentPage > 4) ||
-                  (pageNum === totalPages - 1 && currentPage < totalPages - 3)
-                ) {
-                  return (
-                    <span key={pageNum} className="px-2 text-gray-500">
-                      ...
-                    </span>
-                  );
-                }
-
-                return null;
-              })}
-
-              <button
-                onClick={() => changePage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className={`px-3 py-1 rounded border text-sm font-medium ${
-                  currentPage === totalPages
-                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-gray-700 hover:bg-orange-100"
-                }`}
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        )}
-      </div> */}
       <div className="flex flex-col items-start px-6 md:px-16 mt-10 lg:px-32 pt-8">
         {/* Header */}
         <div className="w-full flex items-center justify-between border-b pb-6">
@@ -255,7 +148,7 @@ const AllProducts = () => {
         
         {/* Products / Empty State */}
         {paginatedProducts.length === 0 ? (
-          <div className="w-full flex flex-col items-center justify-center mt-20 text-gray-600">
+          <div className="w-full flex flex-col items-center justify-center mt-20 mb-20 text-gray-600">
             <Frown className="w-14 h-14 text-gray-400 mb-4" />
             <p className="text-lg font-medium">
               No products found matching your criteria.
