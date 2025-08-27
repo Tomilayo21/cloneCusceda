@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from 'axios';
 import toast from "react-hot-toast";
+import { ShoppingCart } from "lucide-react";
 
 export const AppContext = createContext();
 
@@ -251,6 +252,31 @@ export const AppContextProvider = (props) => {
         }
     };
 
+    // const addToCart = async (product) => {
+    //     const itemId = product._id;
+    //     let cartData = structuredClone(cartItems);
+
+    //     if (cartData[itemId]) {
+    //         cartData[itemId] += 1;
+    //     } else {
+    //         cartData[itemId] = 1;
+    //     }
+
+    //     setCartItems(cartData);
+    //     toast.success("Item added to cart");
+
+    //     if (user) {
+    //         try {
+    //             const token = await getToken();
+    //             await axios.post('/api/cart/update', { cartData }, {
+    //                 headers: { Authorization: `Bearer ${token}` }
+    //             });
+    //         } catch (error) {
+    //             toast.error(error.message);
+    //         }
+    //     }
+    // };
+    
     const addToCart = async (product) => {
         const itemId = product._id;
         let cartData = structuredClone(cartItems);
@@ -262,16 +288,32 @@ export const AppContextProvider = (props) => {
         }
 
         setCartItems(cartData);
-        toast.success("Item added to cart");
+
+        // Custom toast
+        toast.custom(
+            (t) => (
+            <div
+                className={`${
+                t.visible ? "animate-enter" : "animate-leave"
+                } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-2 p-4`}
+            >
+                <ShoppingCart className="text-orange-500" size={20} />
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                Item added to cart
+                </p>
+            </div>
+            ),
+            { duration: 2000 }
+        );
 
         if (user) {
             try {
-                const token = await getToken();
-                await axios.post('/api/cart/update', { cartData }, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+            const token = await getToken();
+            await axios.post('/api/cart/update', { cartData }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             } catch (error) {
-                toast.error(error.message);
+            toast.error(error.message);
             }
         }
     };

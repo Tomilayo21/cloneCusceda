@@ -74,27 +74,6 @@ const ProductCard = ({ product }) => {
     checkFavorite();
   }, [user, product._id]);
 
-  // const toggleFavorite = async (e) => {
-  //   e.stopPropagation(); // only here, no need in both places
-  //   if (!user) return openSignIn();
-
-  //   try {
-  //     const res = await fetch("/api/favorites", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ productId: product._id }),
-  //     });
-
-  //     if (!res.ok) throw new Error();
-
-  //     setIsFavorite((prev) => !prev);
-  //     toast.success(
-  //       !isFavorite ? "Added to favorites ❤️" : "Removed from favorites ❌"
-  //     );
-  //   } catch (error) {
-  //     toast.error("Failed to update favorites");
-  //   }
-  // };
   const toggleFavorite = async (e) => {
     e.stopPropagation();
     if (!user) return openSignIn();
@@ -135,6 +114,7 @@ const ProductCard = ({ product }) => {
       toast.error("An error occurred");
     }
   };
+
   const { data: reviews = [] } = useSWR(
     `/api/reviews?productId=${product._id}`,
     fetcher
@@ -150,10 +130,18 @@ const ProductCard = ({ product }) => {
     scrollTo(0, 0);
   };
 
-  const handleAddToCart = (e) => {
-    e.stopPropagation();
+  // const handleAddToCart = (e) => {
+  //   e.stopPropagation();
+  //   if (!user) {
+  //     alert("Please log in to add items to cart.");
+  //     openSignIn();
+  //     return;
+  //   }
+  //   addToCart(product);
+  // };
+  const handleAddToCart = () => {
     if (!user) {
-      alert("Please log in to add items to cart.");
+      alert("Please log in to add items to your cart.");
       openSignIn();
       return;
     }
@@ -224,11 +212,11 @@ const ProductCard = ({ product }) => {
       {/* CTA */}
       <button
         onClick={(e) => {
-          e.stopPropagation();
-          handleAddToCart();
+          e.stopPropagation(); // Prevent parent click (like opening modal/card)
+          handleAddToCart();   // Just call your logic
         }}
         disabled={product.stock === 0}
-        className={`w-full py-3 text-sm font-medium ${
+        className={`w-full py-3 text-sm font-medium rounded-lg ${
           product.stock === 0
             ? "bg-gray-300 text-gray-600 cursor-not-allowed"
             : "bg-orange-600 hover:bg-orange-700 text-white"
@@ -236,6 +224,7 @@ const ProductCard = ({ product }) => {
       >
         {product.stock === 0 ? "Sold Out" : "Add to Cart"}
       </button>
+
 
       {/* Modal */}
       {showModal && (
