@@ -250,109 +250,75 @@ const OrderSummary = () => {
     }
   }, [selectedState, selectedCountry, countries, states]);
 
-  return (
-    <div className="w-full md:w-96 bg-gray-500/5 p-5">
-      <h2 className="text-xl md:text-2xl font-medium text-gray-700">Order Summary</h2>
-      <hr className="border-gray-500/30 my-5" />
+  return (  
+    <div className="w-full md:w-96 bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-6 border border-gray-200">
+      {/* Title */}
+      <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 tracking-tight">
+        Order <span className="text-orange-600">Summary</span>
+      </h2>
+      <hr className="border-gray-200 dark:border-gray-700 my-5" />
 
       <div className="space-y-6">
         {/* Address Dropdown */}
         <div>
-          <label className="text-base font-medium uppercase text-gray-600 block mb-2">Select Address</label>
-          <div className="relative inline-block w-full text-sm border">
-            <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="peer w-full text-left px-4 pr-2 py-2 bg-white text-gray-700">
+          <label className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+            Shipping Address
+          </label>
+          <div className="relative">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="w-full flex justify-between items-center px-4 py-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm hover:ring-1 hover:ring-orange-500 transition"
+            >
               {selectedAddress
-                ? `${selectedAddress.fullName}, ${selectedAddress.country}, ${selectedAddress.state}, ${selectedAddress.city}`
+                ? `${selectedAddress.fullName}, ${selectedAddress.city}, ${selectedAddress.state}`
                 : "Select Address"}
-              <svg className={`w-5 h-5 float-right ${isDropdownOpen ? "rotate-0" : "-rotate-90"}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <svg
+                className={`w-5 h-5 transform transition-transform ${
+                  isDropdownOpen ? "rotate-180" : ""
+                }`}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
+
             {isDropdownOpen && (
-              <div className="relative w-full">
-                <button
-                  onClick={() => setShowAddressDropdown(!showAddressDropdown)}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-left"
-                >
-                  {selectedAddress
-                    ? `${selectedAddress.fullName}, ${selectedAddress.country} ${selectedAddress.state}, ${selectedAddress.city}, ${selectedAddress.area}`
-                    : "Select Address"}
-                </button>
-
-                {showAddressDropdown && (
-                  <ul className="absolute w-full bg-white border shadow-md mt-1 z-10 py-1.5 max-h-60 overflow-y-auto">
-                    {userAddresses.map((address, index) => (
-                      <div key={index} className="border-t py-2 px-4 hover:bg-gray-500/10">
-                        <div
-                          className="cursor-pointer"
-                          onClick={() => {
-                            handleAddressSelect(address);
-                            setSelectedAddressId(address._id); // optional if you're tracking ID
-                            setShowAddressDropdown(false);
-                          }}
-                        >
-                          {address.fullName}, {address.country} {address.state}, {address.city}, {address.area}
-                        </div>
-                        <div className="mt-2 flex justify-end gap-2 text-sm text-blue-600">
-                          <button onClick={() => handleEdit(address)}>Edit</button>
-                          <button onClick={() => handleDelete(address._id)}>Delete</button>
-                        </div>
-                      </div>
-                    ))}
-
+              <ul className="absolute z-20 w-full mt-2 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-64 overflow-y-auto">
+                {userAddresses.map((address, idx) => (
+                  <div>
                     <li
+                      key={idx}
                       onClick={() => {
-                        router.push("/add-address");
+                        handleAddressSelect(address);
                         setShowAddressDropdown(false);
                       }}
-                      className="px-4 py-2 hover:bg-gray-500/10 cursor-pointer text-center text-green-600 font-medium"
+                      className="px-4 py-3 hover:bg-orange-50 dark:hover:bg-neutral-700 cursor-pointer text-sm text-gray-700 dark:text-gray-200"
                     >
-                      + Add New Address
+                      {address.fullName}, {address.city}, {address.state}, {address.country}
                     </li>
-                  </ul>
-                )}
-              </div>
-
+                    <div className="mt-2 flex justify-end gap-2 text-sm text-blue-600">
+                      <button onClick={() => handleEdit(address)}>Edit</button>
+                      <button onClick={() => handleDelete(address._id)}>Delete</button>
+                    </div>
+                  </div>
+                  
+                ))}
+                <li
+                  onClick={() => {
+                    router.push("/add-address");
+                    setShowAddressDropdown(false);
+                  }}
+                  className="px-4 py-3 text-center text-sm font-semibold text-orange-600 hover:bg-orange-50 dark:hover:bg-neutral-700 cursor-pointer"
+                >
+                  + Add New Address
+                </li>
+              </ul>
             )}
           </div>
         </div>
-
-        {/* Payment Method */}
-        <div className="mt-4 space-y-2">
-          <label className="text-base font-medium uppercase text-gray-600 block mb-2">Payment Method</label>
-          <select value={selectedMethod} onChange={(e) => setSelectedMethod(e.target.value)} className="w-full p-2 border text-gray-700">
-            {paymentMethods.map((method) => (
-              <option key={method.id} value={method.id}>
-                {method.label} - Fee: {(method.fee * 100).toFixed(1)}%
-              </option>
-            ))}
-          </select>
-          <p className="text-sm text-gray-600">
-            Transaction Fee: <span className="text-orange-600 font-medium">{currency}{feeAmount.toFixed(2)}</span>
-          </p>
-        </div>
-
-        {/* Cart Summary */}
-        <hr className="border-gray-500/30 my-5" />
-        <div className="space-y-4">
-          <div className="flex justify-between text-base font-medium">
-            <p className="uppercase text-gray-600">Items {getCartCount()}</p>
-            <p className="text-gray-800">{currency}{getCartAmount()}</p>
-          </div>
-          <div className="flex justify-between">
-            <p className="text-gray-600">Shipping Fee</p>
-            <p className="font-medium text-gray-800">{currency}{shippingFee.toFixed(2)}</p>
-          </div>
-          <div className="flex justify-between">
-            <p className="text-gray-600">Tax (2%)</p>
-            <p className="font-medium text-gray-800">{currency}{Math.floor(getCartAmount() * 0.02)}</p>
-          </div>
-          <div className="flex justify-between text-lg md:text-xl font-medium border-t pt-3">
-            <p>Total</p>
-            <p>{currency}{total.toFixed(2)}</p>
-          </div>
-        </div>
-        
         {/*Edit Button*/}
         {showEditModal && selectedAddress && (
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -550,22 +516,66 @@ const OrderSummary = () => {
           </div>
         )}
 
+        {/* Payment Method */}
+        <div>
+          <label className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+            Payment Method
+          </label>
+          <select
+            value={selectedMethod}
+            onChange={(e) => setSelectedMethod(e.target.value)}
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-neutral-800 text-gray-700 dark:text-gray-200 shadow-sm focus:ring-2 focus:ring-orange-500 transition"
+          >
+            {paymentMethods.map((method) => (
+              <option key={method.id} value={method.id}>
+                {method.label} — Fee: {(method.fee * 100).toFixed(1)}%
+              </option>
+            ))}
+          </select>
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            Transaction Fee:{" "}
+            <span className="text-orange-600 font-medium">
+              {currency}{feeAmount.toFixed(2)}
+            </span>
+          </p>
+        </div>
+
+        {/* Cart Summary */}
+        <hr className="border-gray-200 dark:border-gray-700 my-5" />
+        <div className="space-y-4 text-sm md:text-base">
+          <div className="flex justify-between font-medium text-gray-700 dark:text-gray-200">
+            <p>Items ({getCartCount()})</p>
+            <p>{currency}{getCartAmount()}</p>
+          </div>
+          <div className="flex justify-between text-gray-600 dark:text-gray-400">
+            <p>Shipping Fee</p>
+            <p className="font-medium text-gray-800 dark:text-gray-200">{currency}{shippingFee.toFixed(2)}</p>
+          </div>
+          <div className="flex justify-between text-gray-600 dark:text-gray-400">
+            <p>Tax (2%)</p>
+            <p className="font-medium text-gray-800 dark:text-gray-200">{currency}{Math.floor(getCartAmount() * 0.02)}</p>
+          </div>
+          <div className="flex justify-between text-lg font-semibold border-t pt-4 text-gray-900 dark:text-gray-100">
+            <p>Total</p>
+            <p>{currency}{total.toFixed(2)}</p>
+          </div>
+        </div>
+
         {/* Submit */}
         <button
           onClick={handlePayment}
           disabled={processing || getCartCount() === 0}
-          className={`w-full py-3 mt-5 text-white ${
+          className={`w-full py-3 mt-5 rounded-lg text-white font-medium transition ${
             processing || getCartCount() === 0
               ? "bg-gray-400 cursor-not-allowed"
-              : "bg-black hover:bg-orange-700"
+              : "bg-orange-600 hover:bg-orange-700 shadow-md"
           }`}
         >
           {processing ? "Processing..." : "Continue to Payment"}
         </button>
-
       </div>
     </div>
   );
 };
 
-export default OrderSummary;
+export default OrderSummary;       
