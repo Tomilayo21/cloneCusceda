@@ -8,6 +8,8 @@ import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import useSWR from 'swr';
+import { HeartOff, ShoppingCart, Star, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -15,6 +17,7 @@ export default function FavoritesPage() {
   const { addToCart, currency } = useAppContext();
   const { user } = useClerk();
   const [favorites, setFavorites] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -53,6 +56,7 @@ export default function FavoritesPage() {
   };
 
   const handleAddToCart = (product) => addToCart(product);
+  
 
   /* -------- UI -------- */
   return (
@@ -60,71 +64,38 @@ export default function FavoritesPage() {
       <Navbar />
 
       <div className="p-4 flex flex-col items-center pt-14 mt-8 bg-white text-black dark:bg-black dark:text-white min-h-screen px-6 md:px-16 lg:px-32">
-        <div className="flex flex-col items-center mb-4">
-          <p className="text-3xl font-medium">
-            My <span className="text-orange-600">Favorites</span>
+        
+        {/* Header */}
+        <div className="flex flex-col items-center mb-8">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
+            <HeartOff className="w-7 h-7 text-orange-600" />
+            Favorites
+          </h1>
+          <div className="w-28 h-1 rounded-full bg-orange-600 mt-2" />
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+            Save the products you love and access them anytime.
           </p>
-          <div className="w-28 h-0.5 bg-orange-600 mt-2" />
         </div>
+
+        {/* Empty State */}
         {favorites.length === 0 ? (
-          <p className="text-gray-600 dark:text-gray-400">No favorites yet.</p>
+          <div className="flex flex-col items-center justify-center mt-16 text-center">
+            <img src="document.png" alt='favorites' className="w-32 h-32 text-gray-400 opacity-70 mb-4" />
+            <p className="text-lg font-medium text-gray-700 dark:text-gray-300">
+              Your favorites list is empty
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              Browse products and tap the heart to save them here.
+            </p>
+             <button
+              onClick={() => router.push("/all-products")}
+              className="mt-6 bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg shadow-md transition"
+            >
+              Browse Products
+            </button>
+          </div>
         ) : (
-          // <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-7xl">
-          //   {favorites.map(({ _id, productId }) => {
-          //     if (productId.visible === false) return null; 
-
-          //     const pid = productId._id?.toString();
-          //     const rating = ratingsMap[pid] || { avg: 0, count: 0 };
-
-          //     return (
-          //       <div
-          //         key={_id}
-          //         className="border border-gray-300 dark:border-gray-700 p-3 rounded shadow-sm bg-gray-50 dark:bg-neutral-900 mt-8 mb-14"
-          //       >
-          //         {/* -------- clickable area wrapped in Link -------- */}
-          //         <Link href={`/product/${pid}`} className="block">
-          //           <Image
-          //             src={productId.image[0]}
-          //             alt={productId.name}
-          //             width={300}
-          //             height={200}
-          //             className="w-full h-40 object-cover rounded"
-          //           />
-          //           <h2 className="mt-2 font-medium text-lg">{productId.name}</h2>
-          //           <div
-          //             className="text-xs text-gray-500 dark:text-gray-400 w-full line-clamp-1"
-          //             dangerouslySetInnerHTML={{ __html: productId.description }}
-          //           />
-          //           <p className="text-sm mt-1 font-semibold">
-          //             {currency}
-          //             {productId.offerPrice}
-          //           </p>
-          //           <div className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-          //             <p>Average Rating: {rating.avg?.toFixed(1)} ⭐</p>
-          //             <p>{rating.count} Reviews</p>
-          //           </div>
-          //         </Link>
-
-          //         {/* buttons stay outside so they don’t trigger navigation */}
-          //         <div className="flex justify-between mt-2 text-sm">
-          //           <button
-          //             className="px-2 py-1 border rounded hover:bg-gray-100 dark:hover:bg-neutral-800 dark:border-gray-600"
-          //             onClick={() => handleAddToCart(productId)}
-          //           >
-          //             Add to Cart
-          //           </button>
-          //           <button
-          //             className="px-2 py-1 text-red-500 dark:text-red-400 hover:underline"
-          //             onClick={() => removeFavorite(productId._id)}
-          //           >
-          //             Remove
-          //           </button>
-          //         </div>
-          //       </div>
-          //     );
-          //   })}
-          // </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-7xl">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-7xl">
             {favorites.map(({ _id, productId }) => {
               if (productId.visible === false) return null;
 
@@ -134,46 +105,50 @@ export default function FavoritesPage() {
               return (
                 <div
                   key={_id}
-                  className="flex flex-col justify-between border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm overflow-hidden bg-white dark:bg-neutral-900 transition hover:shadow-md duration-200"
+                  className="flex flex-col border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm bg-white dark:bg-neutral-900 transition hover:shadow-lg hover:-translate-y-1 duration-200"
                 >
+                  {/* Product Image */}
                   <Link href={`/product/${pid}`} className="block">
                     <Image
                       src={productId.image[0]}
                       alt={productId.name}
                       width={300}
                       height={200}
-                      className="w-full h-44 object-cover rounded-t-2xl"
+                      className="w-full h-48 object-cover rounded-t-2xl"
                     />
                     <div className="p-4">
-                      <h2 className="text-lg font-semibold text-gray-800 dark:text-white line-clamp-1">
+                      <h2 className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-1">
                         {productId.name}
                       </h2>
-                      <div
-                        className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-1"
+                      <p
+                        className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2"
                         dangerouslySetInnerHTML={{ __html: productId.description }}
                       />
-                      <p className="text-base font-bold text-primary mt-2">
-                        {currency}
-                        {productId.offerPrice}
+                      <p className="text-base font-bold text-orange-600 mt-2">
+                        {currency}{productId.offerPrice}
                       </p>
-                      <div className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-                        <p>Average Rating: {rating.avg?.toFixed(1)} ⭐</p>
-                        <p>{rating.count} Reviews</p>
+                      {/* Rating */}
+                      <div className="mt-2 flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300">
+                        <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                        <span>{rating.avg?.toFixed(1)} ({rating.count} reviews)</span>
                       </div>
                     </div>
                   </Link>
 
-                  <div className="flex justify-between items-center border-t border-gray-100 dark:border-gray-700 px-4 py-2 text-sm">
+                  {/* Actions */}
+                  <div className="flex justify-between items-center border-t border-gray-100 dark:border-gray-700 px-4 py-3 text-sm">
                     <button
-                      className="px-3 py-1 border rounded-lg text-sm font-medium hover:bg-gray-100 dark:hover:bg-neutral-800 dark:border-gray-600"
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-orange-50 text-orange-600 hover:bg-orange-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 transition"
                       onClick={() => handleAddToCart(productId)}
                     >
+                      <ShoppingCart className="w-4 h-4" />
                       Add to Cart
                     </button>
                     <button
-                      className="text-red-500 dark:text-red-400 hover:underline"
+                      className="flex items-center gap-1 text-red-500 dark:text-red-400 hover:text-red-600 transition"
                       onClick={() => removeFavorite(productId._id)}
                     >
+                      <Trash2 className="w-4 h-4" />
                       Remove
                     </button>
                   </div>
@@ -181,10 +156,8 @@ export default function FavoritesPage() {
               );
             })}
           </div>
-
         )}
       </div>
-
       <Footer />
     </>
   );
