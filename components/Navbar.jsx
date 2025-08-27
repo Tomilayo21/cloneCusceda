@@ -7,7 +7,7 @@ import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
 import { useClerk, UserButton } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { Menu, X, Heart, Search } from "lucide-react";
+import { Menu, X, Heart,  ShoppingCart } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { Moon, Sun, ShieldCheck, ShieldAlert } from "lucide-react";
@@ -33,30 +33,6 @@ const Navbar = () => {
   const [lightLogoUrl, setLightLogoUrl] = useState(null);
   const [darkLogoUrl, setDarkLogoUrl] = useState(null);
 
-
-  
-
-  // const handleClick = () => {
-  //   if (!hasAccess) {
-  //     setPromptPassword(true);
-  //   } else {
-  //     // ✅ Redirect to /admin
-  //     router.push('/admin');
-  //   }
-  // };
-  // const handleAdminClick = () => {
-  //   setShowOtpPrompt(true);
-  // };
-
-  // useEffect(() => {
-  //   const fetchLogo = async () => {
-  //     const res = await fetch('/api/settings');
-  //     const data = await res.json();
-  //     setLogoUrl(data.logoUrl);
-  //   };
-
-  //   fetchLogo();
-  // }, []);
 
 
   useEffect(() => {
@@ -124,18 +100,242 @@ const Navbar = () => {
 
 
   return (
+    // <nav
+    //   className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent border-b border-gray-700 shadow-md bg-black ${
+    //     isScrolled
+    //       ? theme === "dark"
+    //         ? "border-b border-gray-700 shadow-md bg-black"
+    //         : "border-b border-transparent shadow-md bg-white"
+    //       : "bg-transparent"
+    //   }`}
+    // >
+    //   {/* <nav
+    //     className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent border-b border-gray-700 shadow-md bg-black`}
+    //   > */}
+    //   <div className="flex items-center justify-between px-4 py-3 md:px-16 lg:px-32">
+    //     {/* Logo */}
+    //     <img
+    //       src={logoSrc}
+    //       alt="logo"
+    //       width={100}
+    //       height={100}
+    //       onClick={() => router.push("/")}
+    //       className="cursor-pointer w-24 md:w-32"
+    //     />
+
+
+    //     {/* Desktop Nav */}
+    //     <div className="hidden md:flex items-center justify-center gap-8 flex-1 px-8">
+    //       <Link href="/" className="hover:bg-[#EBEDED] p-2 rounded">Home</Link>
+    //       <Link href="/all-products" className="hover:bg-[#EBEDED] p-2 rounded">Products</Link>
+    //       {user && <Link href="/my-orders" className="hover:bg-[#EBEDED] p-2 rounded">My Orders</Link>}
+    //     </div>
+
+    //     {/* Right side (Desktop) */}
+    //     <div className="hidden md:flex items-center gap-4">
+    //       {isAdmin && (
+    //         <Tooltip.Provider delayDuration={100}>
+    //           <Tooltip.Root>
+    //             <Tooltip.Trigger asChild>
+    //               <div
+    //                 onClick={handleClick}
+    //                 className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-pointer hover:bg-purple-800 transition"
+    //               >
+    //                 <ShieldAlert className="w-3 h-3 text-yellow-300" />
+    //                 <span>Super Admin</span>
+    //               </div>
+    //             </Tooltip.Trigger>
+    //             <Tooltip.Portal>
+    //               <Tooltip.Content
+    //                 className="bg-black text-white text-xs px-2 py-1 rounded shadow-md z-50"
+    //                 sideOffset={5}
+    //               >
+    //                 You have full access to all admin features.
+    //                 <Tooltip.Arrow className="fill-black" />
+    //               </Tooltip.Content>
+    //             </Tooltip.Portal>
+    //           </Tooltip.Root>
+    //         </Tooltip.Provider>
+    //       )}
+
+          
+    //       {/* Search */}          
+    //       <div className="mt-2 sm:mt-0 w-full sm:w-auto">
+    //         <SearchBar />
+    //       </div>
+
+    //       {/* Favorites */}
+    //       {user && (
+    //         <button onClick={() => router.push("/favorites")} className="relative">
+    //           <Heart className="w-4 h-4 text-gray-700" />
+    //         </button>
+    //       )}
+
+    //       {/* Cart */}
+    //       {user && (
+    //         <button onClick={() => router.push("/cart")} className="relative">
+    //           <CartIcon className="w-4 h-4 text-gray-700" />
+    //           {cartCount > 0 && (
+    //             <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] rounded-full px-1 font-bold">
+    //               {cartCount}
+    //             </span>
+    //           )}
+    //         </button>
+    //       )}
+
+    //       {/* Auth */}
+    //       {user ? (
+    //         <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "w-5 h-5" } }} />
+    //       ) : (
+    //         <button onClick={openSignIn} className="flex items-center gap-2">
+    //           <Image src={assets.user_icon} alt="user" className="w-4 h-4" />
+    //         </button>
+    //       )}
+    //     </div>
+        
+
+
+    //     {/* Mobile Right Side */}
+    //     <div className="flex md:hidden items-center gap-2">
+    //       {/* Search */}
+
+    //       <SearchBar />
+
+    //       {isAdmin && (
+    //         <Tooltip.Provider delayDuration={100}>
+    //           <Tooltip.Root>
+    //             <Tooltip.Trigger asChild>
+    //               <div
+    //                 onClick={handleClick}
+    //                 className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-pointer hover:bg-purple-800 transition"
+    //               >
+    //                 <ShieldAlert className="w-3 h-3 text-yellow-300" />
+    //               </div>
+    //             </Tooltip.Trigger>
+    //             <Tooltip.Portal>
+    //               <Tooltip.Content
+    //                 className="bg-black text-white text-xs px-2 py-1 rounded shadow-md z-50"
+    //                 sideOffset={5}
+    //               >
+    //                 You have full access to all admin features.
+    //                 <Tooltip.Arrow className="fill-black" />
+    //               </Tooltip.Content>
+    //             </Tooltip.Portal>
+    //           </Tooltip.Root>
+    //         </Tooltip.Provider>
+    //       )}
+    //       <button onClick={() => setMobileMenuOpen((prev) => !prev)} aria-label="Toggle Menu">
+    //         {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+    //       </button>
+    //     </div>
+    //   </div>
+
+    //   {mobileMenuOpen && isMobile && (
+    //     <div className="flex flex-col gap-4 px-6 pb-4 md:hidden bg-white dark:bg-black">
+    //       <Link
+    //         href="/"
+    //         onClick={() => setMobileMenuOpen(false)}
+    //         className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1 mt-4"
+    //       >
+    //         Home
+    //       </Link>
+    //       <Link
+    //         href="/all-products"
+    //         onClick={() => setMobileMenuOpen(false)}
+    //         className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+    //       >
+    //         Products
+    //       </Link>
+    //       {/* <Link
+    //         href="/about"
+    //         onClick={() => setMobileMenuOpen(false)}
+    //         className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+    //       >
+    //         About Us
+    //       </Link>
+    //       <Link
+    //         href="/contact"
+    //         onClick={() => setMobileMenuOpen(false)}
+    //         className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+    //       >
+    //         Contact
+    //       </Link> */}
+
+    //       {user && (
+    //         <>
+    //           <Link
+    //             href="/my-orders"
+    //             onClick={() => setMobileMenuOpen(false)}
+    //             className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+    //           >
+    //             My Orders
+    //           </Link>
+    //           <Link
+    //             href="/favorites"
+    //             onClick={() => setMobileMenuOpen(false)}
+    //             className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+    //           >
+    //             Favorites
+    //           </Link>
+    //           <button
+    //             onClick={() => {
+    //               router.push("/cart");
+    //               setMobileMenuOpen(false);
+    //             }}
+    //             className="flex items-center gap-2 hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1 text-gray-700 dark:text-white"
+    //           >
+    //             <CartIcon className="w-4 h-4" />
+    //             Cart ({cartCount})
+    //           </button>
+    //         </>
+    //       )}
+
+    //       {user ? (
+    //         <UserButton
+    //           afterSignOutUrl="/"
+    //           appearance={{ elements: { avatarBox: "w-5 h-5" } }}
+    //         />
+    //       ) : (
+    //         <button
+    //           onClick={() => {
+    //             openSignIn();
+    //             setMobileMenuOpen(false);
+    //           }}
+    //           className="flex items-center gap-2 text-gray-700 dark:text-white hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+    //         >
+    //           <Image src={assets.user_icon} alt="user" className="w-4 h-4" />
+    //           Sign In
+    //         </button>
+    //       )}
+
+    //       {/* <button
+    //         onClick={toggleTheme}
+    //         className="flex items-center gap-2 text-gray-700 dark:text-white hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+    //       >
+    //         {theme === "dark" ? (
+    //           <>
+    //             <Sun className="w-4 h-4 text-yellow-400" />
+    //             Light Mode
+    //           </>
+    //         ) : (
+    //           <>
+    //             <Moon className="w-4 h-4 text-gray-700" />
+    //             Dark Mode
+    //           </>
+    //         )}
+    //       </button> */}
+    //     </div>
+    //   )}
+    // </nav>
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent border-b border-gray-700 shadow-md bg-black ${
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 backdrop-blur-md ${
         isScrolled
           ? theme === "dark"
-            ? "border-b border-gray-700 shadow-md bg-black"
-            : "border-b border-transparent shadow-md bg-white"
-          : "bg-transparent"
+            ? "bg-black/80 border-b border-gray-700 shadow-lg"
+            : "bg-white/80 border-b border-gray-200 shadow-lg"
+          : "bg-transparent border-transparent"
       }`}
     >
-      {/* <nav
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent border-b border-gray-700 shadow-md bg-black`}
-      > */}
       <div className="flex items-center justify-between px-4 py-3 md:px-16 lg:px-32">
         {/* Logo */}
         <img
@@ -144,34 +344,51 @@ const Navbar = () => {
           width={100}
           height={100}
           onClick={() => router.push("/")}
-          className="cursor-pointer w-24 md:w-32"
+          className="cursor-pointer w-24 md:w-32 hover:scale-105 transition-transform duration-200"
         />
-
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center justify-center gap-8 flex-1 px-8">
-          <Link href="/" className="hover:bg-[#EBEDED] p-2 rounded">Home</Link>
-          <Link href="/all-products" className="hover:bg-[#EBEDED] p-2 rounded">Products</Link>
-          {user && <Link href="/my-orders" className="hover:bg-[#EBEDED] p-2 rounded">My Orders</Link>}
+          <Link
+            href="/"
+            className="px-3 py-1.5 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+          >
+            Home
+          </Link>
+          <Link
+            href="/all-products"
+            className="px-3 py-1.5 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+          >
+            Products
+          </Link>
+          {user && (
+            <Link
+              href="/my-orders"
+              className="px-3 py-1.5 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            >
+              My Orders
+            </Link>
+          )}
         </div>
 
         {/* Right side (Desktop) */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-5">
+          {/* Admin Badge */}
           {isAdmin && (
             <Tooltip.Provider delayDuration={100}>
               <Tooltip.Root>
                 <Tooltip.Trigger asChild>
                   <div
                     onClick={handleClick}
-                    className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-pointer hover:bg-purple-800 transition"
+                    className="flex items-center gap-1 bg-gradient-to-r from-purple-600 to-purple-800 text-white text-xs px-3 py-1 rounded-full cursor-pointer hover:scale-105 transition-transform"
                   >
-                    <ShieldAlert className="w-3 h-3 text-yellow-300" />
+                    <ShieldAlert className="w-3.5 h-3.5 text-yellow-300" />
                     <span>Super Admin</span>
                   </div>
                 </Tooltip.Trigger>
                 <Tooltip.Portal>
                   <Tooltip.Content
-                    className="bg-black text-white text-xs px-2 py-1 rounded shadow-md z-50"
+                    className="bg-black text-white text-xs px-3 py-1.5 rounded shadow-lg z-50"
                     sideOffset={5}
                   >
                     You have full access to all admin features.
@@ -182,99 +399,30 @@ const Navbar = () => {
             </Tooltip.Provider>
           )}
 
-          {/* {isAdmin && (
-            <Tooltip.Provider delayDuration={100}>
-              <Tooltip.Root>
-                <Tooltip.Trigger asChild>
-                  <div
-                    onClick={handleClick}
-                    className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-pointer hover:bg-purple-800 transition"
-                  >
-                    <ShieldAlert className="w-3 h-3 text-yellow-300" />
-                    <span>Super Admin</span>
-                  </div>
-                </Tooltip.Trigger>
-                <Tooltip.Portal>
-                  <Tooltip.Content
-                    className="bg-black text-white text-xs px-2 py-1 rounded shadow-md z-50"
-                    sideOffset={5}
-                  >
-                    You have full access to all admin features.
-                    <Tooltip.Arrow className="fill-black" />
-                  </Tooltip.Content>
-                </Tooltip.Portal>
-              </Tooltip.Root>
-            </Tooltip.Provider>
-          )} */}
-
-          {/* {promptPassword && !hasAccess && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <SuperAdminUnlock
-              onSuccess={() => {
-                setHasAccess(true);
-                setPromptPassword(false);
-                router.push('/admin'); // ✅ Optional: auto-redirect after success
-              }}
-              onCancel={() => setPromptPassword(false)}
-            />
-            </div>
-          )} */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{/*           {isAdmin && (
-            <>
-              <div
-                onClick={handleAdminClick}
-                className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-pointer hover:bg-purple-800 transition"
-              >
-                <ShieldAlert className="w-3 h-3 text-yellow-300" />
-                <span>Super Admin</span>
-              </div>
-
-              {showOtpPrompt && (
-                <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
-                  <AdminOtpVerification
-                    email={user.emailAddresses[0].emailAddress}
-                    onCancel={() => setShowOtpPrompt(false)}
-                  />
-                </div>
-              )}
-            </>
-          )} */}
-
-
-          {/* Search */}          
-          <div className="mt-2 sm:mt-0 w-full sm:w-auto">
+          {/* Search */}
+          <div className="w-52">
             <SearchBar />
           </div>
 
           {/* Favorites */}
           {user && (
-            <button onClick={() => router.push("/favorites")} className="relative">
-              <Heart className="w-4 h-4 text-gray-700" />
+            <button
+              onClick={() => router.push("/favorites")}
+              className="relative hover:scale-110 hover:text-orange-600 transition-transform"
+            >
+              <Heart className="w-5 h-5 hover:text-orange-600 text-gray-700 dark:text-gray-300" />
             </button>
           )}
 
           {/* Cart */}
           {user && (
-            <button onClick={() => router.push("/cart")} className="relative">
-              <CartIcon className="w-4 h-4 text-gray-700" />
+            <button
+              onClick={() => router.push("/cart")}
+              className="relative hover:text-orange-600 hover:scale-110 transition-transform"
+            >
+              <ShoppingCart className="w-5 h-5 text-gray-700 hover:text-orange-600 dark:text-gray-300" />
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] rounded-full px-1 font-bold">
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[11px] rounded-full px-1.5 font-bold animate-bounce">
                   {cartCount}
                 </span>
               )}
@@ -283,137 +431,72 @@ const Navbar = () => {
 
           {/* Auth */}
           {user ? (
-            <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "w-5 h-5" } }} />
+            <UserButton
+              afterSignOutUrl="/"
+              appearance={{ elements: { avatarBox: "w-6 h-6" } }}
+            />
           ) : (
-            <button onClick={openSignIn} className="flex items-center gap-2">
-              <Image src={assets.user_icon} alt="user" className="w-4 h-4" />
+            <button
+              onClick={openSignIn}
+              className="flex items-center gap-2 hover:text-orange-500 transition"
+            >
+              <Image src={assets.user_icon} alt="user" className="w-5 h-5" />
+              <span className="hidden sm:inline text-sm font-medium">Sign In</span>
             </button>
           )}
         </div>
-        
-        {/* <button
-          onClick={toggleTheme}
-          className="hidden md:block p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
-        >
-          {theme === "dark" ? (
-            <Sun className="w-4 h-4 text-yellow-400" />
-          ) : (
-            <Moon className="w-4 h-4 text-gray-700" />
-          )}
-        </button> */}
 
         {/* Mobile Right Side */}
-        <div className="flex md:hidden items-center gap-2">
-          {/* Search */}
-
+        <div className="flex md:hidden items-center gap-3">
           <SearchBar />
-
           {isAdmin && (
-            <Tooltip.Provider delayDuration={100}>
-              <Tooltip.Root>
-                <Tooltip.Trigger asChild>
-                  <div
-                    onClick={handleClick}
-                    className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-pointer hover:bg-purple-800 transition"
-                  >
-                    <ShieldAlert className="w-3 h-3 text-yellow-300" />
-                  </div>
-                </Tooltip.Trigger>
-                <Tooltip.Portal>
-                  <Tooltip.Content
-                    className="bg-black text-white text-xs px-2 py-1 rounded shadow-md z-50"
-                    sideOffset={5}
-                  >
-                    You have full access to all admin features.
-                    <Tooltip.Arrow className="fill-black" />
-                  </Tooltip.Content>
-                </Tooltip.Portal>
-              </Tooltip.Root>
-            </Tooltip.Provider>
-          )}
-{/*           {promptPassword && !hasAccess && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <SuperAdminUnlock
-              onSuccess={() => {
-                setHasAccess(true);
-                setPromptPassword(false);
-                router.push('/admin'); // ✅ Optional: auto-redirect after success
-              }}
-              onCancel={() => setPromptPassword(false)}
-            />
+            <div
+              onClick={handleClick}
+              className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-pointer"
+            >
+              <ShieldAlert className="w-3 h-3 text-yellow-300" />
             </div>
-          )} */}
-
-{/*           {isAdmin && (
-            <>
-              <div
-                onClick={handleAdminClick}
-                className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2 py-0.5 rounded-full cursor-pointer hover:bg-purple-800 transition"
-              >
-                <ShieldAlert className="w-3 h-3 text-yellow-300" />
-              </div>
-
-              {showOtpPrompt && (
-                <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
-                  <AdminOtpVerification
-                    email={user.emailAddresses[0].emailAddress}
-                    onCancel={() => setShowOtpPrompt(false)}
-                  />
-                </div>
-              )}
-            </>
           )}
- */}
-          <button onClick={() => setMobileMenuOpen((prev) => !prev)} aria-label="Toggle Menu">
+          <button
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            aria-label="Toggle Menu"
+            className="hover:scale-110 transition-transform"
+          >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {mobileMenuOpen && isMobile && (
-        <div className="flex flex-col gap-4 px-6 pb-4 md:hidden bg-white dark:bg-black">
+        <div className="flex flex-col gap-3 px-6 pb-6 md:hidden bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 animate-slide-down">
           <Link
             href="/"
             onClick={() => setMobileMenuOpen(false)}
-            className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1 mt-4"
+            className="px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             Home
           </Link>
           <Link
             href="/all-products"
             onClick={() => setMobileMenuOpen(false)}
-            className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+            className="px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             Products
           </Link>
-          {/* <Link
-            href="/about"
-            onClick={() => setMobileMenuOpen(false)}
-            className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
-          >
-            About Us
-          </Link>
-          <Link
-            href="/contact"
-            onClick={() => setMobileMenuOpen(false)}
-            className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
-          >
-            Contact
-          </Link> */}
-
           {user && (
             <>
               <Link
                 href="/my-orders"
                 onClick={() => setMobileMenuOpen(false)}
-                className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+                className="px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 My Orders
               </Link>
               <Link
                 href="/favorites"
                 onClick={() => setMobileMenuOpen(false)}
-                className="hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+                className="px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 Favorites
               </Link>
@@ -422,18 +505,17 @@ const Navbar = () => {
                   router.push("/cart");
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center gap-2 hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1 text-gray-700 dark:text-white"
+                className="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-white"
               >
-                <CartIcon className="w-4 h-4" />
+                <ShoppingCart className="w-4 h-4" />
                 Cart ({cartCount})
               </button>
             </>
           )}
-
           {user ? (
             <UserButton
               afterSignOutUrl="/"
-              appearance={{ elements: { avatarBox: "w-5 h-5" } }}
+              appearance={{ elements: { avatarBox: "w-6 h-6" } }}
             />
           ) : (
             <button
@@ -441,29 +523,12 @@ const Navbar = () => {
                 openSignIn();
                 setMobileMenuOpen(false);
               }}
-              className="flex items-center gap-2 text-gray-700 dark:text-white hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
+              className="flex items-center gap-2 px-2 py-2 rounded-md text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
             >
-              <Image src={assets.user_icon} alt="user" className="w-4 h-4" />
+              <Image src={assets.user_icon} alt="user" className="w-5 h-5" />
               Sign In
             </button>
           )}
-
-          {/* <button
-            onClick={toggleTheme}
-            className="flex items-center gap-2 text-gray-700 dark:text-white hover:bg-[#EBEDED] dark:hover:bg-gray-800 rounded px-2 py-1"
-          >
-            {theme === "dark" ? (
-              <>
-                <Sun className="w-4 h-4 text-yellow-400" />
-                Light Mode
-              </>
-            ) : (
-              <>
-                <Moon className="w-4 h-4 text-gray-700" />
-                Dark Mode
-              </>
-            )}
-          </button> */}
         </div>
       )}
     </nav>

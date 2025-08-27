@@ -1,3 +1,4 @@
+
 // "use client";
 
 // import { useEffect, useRef, useState } from "react";
@@ -9,7 +10,6 @@
 // export default function SearchBar() {
 //   const router = useRouter();
 //   const searchRef = useRef(null);
-//   const searchButtonRef = useRef(null);
 //   const containerRef = useRef(null);
 
 //   const [inputValue, setInputValue] = useState("");
@@ -81,32 +81,33 @@
 
 //   return (
 //     <div className="relative flex items-center" ref={containerRef}>
-//       <input
-//         ref={searchRef}
-//         type="text"
-//         placeholder="Search..."
-//         value={inputValue}
-//         onChange={(e) => setInputValue(e.target.value)}
-//         onFocus={() => {
-//           setSearchExpanded(true);
-//           setShowDropdown(true);
-//         }}
-//         onBlur={() => {
-//           setTimeout(() => setShowDropdown(false), 200);
-//         }}
-//         onKeyDown={handleKeyDown}
-//         className={`transition-all duration-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-full px-4 py-1 text-sm text-gray-700 dark:text-gray-100 ${
-//           searchExpanded ? "opacity-100 w-48" : "opacity-0 w-0 px-0"
-//         }`}
-//       />
-//       <button
-//         ref={searchButtonRef}
-//         onClick={() => handleSearch()}
-//         className="ml-1"
-//         aria-label="Search"
-//       >
-//         <Image src={assets.search_icon} alt="search" className="w-4 h-4" />
-//       </button>
+//       <div className="relative">
+//         <input
+//           ref={searchRef}
+//           type="text"
+//           placeholder="Search..."
+//           value={inputValue}
+//           onChange={(e) => setInputValue(e.target.value)}
+//           onFocus={() => {
+//             setSearchExpanded(true);
+//             setShowDropdown(true);
+//           }}
+//           onBlur={() => {
+//             setTimeout(() => setShowDropdown(false), 200);
+//           }}
+//           onKeyDown={handleKeyDown}
+//           className={`transition-all duration-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-full py-1 pr-8 pl-4 text-sm text-gray-700 dark:text-gray-100 ${
+//             searchExpanded ? "opacity-100 w-48" : "opacity-0 w-0 pl-0 pr-0"
+//           }`}
+//         />
+//         <button
+//           onClick={() => handleSearch()}
+//           className="absolute top-1/2 right-2 transform -translate-y-1/2"
+//           aria-label="Search"
+//         >
+//           <Image src={assets.search_icon} alt="search" className="w-4 h-4" />
+//         </button>
+//       </div>
 
 //       {showDropdown && (
 //         <div className="absolute top-full mt-1 w-64 sm:w-72 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md shadow z-50 max-h-80 overflow-auto">
@@ -189,16 +190,15 @@
 
 
 
-
-
-
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { assets } from "@/assets/assets"; // Adjust this path if needed
-import { useAppContext } from "@/context/AppContext"; // For accessing products
+import { assets } from "@/assets/assets"; 
+import { useAppContext } from "@/context/AppContext"; 
+import { Search, Clock, X } from "lucide-react"; // clean SVG icons
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function SearchBar() {
   const router = useRouter();
@@ -209,9 +209,9 @@ export default function SearchBar() {
   const [searchExpanded, setSearchExpanded] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [recentSearches, setRecentSearches] = useState([]);
+  const [highlightIndex, setHighlightIndex] = useState(-1);
 
   const { products } = useAppContext();
-
   const productNames = products?.map((p) => p.name) || [];
 
   const filteredSuggestions = productNames.filter(
@@ -222,9 +222,7 @@ export default function SearchBar() {
 
   useEffect(() => {
     const stored = localStorage.getItem("recentSearches");
-    if (stored) {
-      setRecentSearches(JSON.parse(stored));
-    }
+    if (stored) setRecentSearches(JSON.parse(stored));
   }, []);
 
   const handleSearch = (customValue) => {
@@ -241,18 +239,34 @@ export default function SearchBar() {
       setSearchExpanded(false);
       setShowDropdown(false);
     } else {
-      setSearchExpanded(true); // Expand on empty input click
+      setSearchExpanded(true);
     }
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") handleSearch();
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlightIndex((prev) =>
+        prev < filteredSuggestions.length - 1 ? prev + 1 : 0
+      );
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlightIndex((prev) =>
+        prev > 0 ? prev - 1 : filteredSuggestions.length - 1
+      );
+    } else if (e.key === "Enter") {
+      if (highlightIndex >= 0 && filteredSuggestions[highlightIndex]) {
+        handleSearch(filteredSuggestions[highlightIndex]);
+      } else {
+        handleSearch();
+      }
+    }
   };
 
   const handleClickOutside = (e) => {
     if (containerRef.current && !containerRef.current.contains(e.target)) {
       setShowDropdown(false);
-      setSearchExpanded(false); // Collapse on outside click
+      setSearchExpanded(false);
     }
   };
 
@@ -273,14 +287,18 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="relative flex items-center" ref={containerRef}>
-      <div className="relative">
+    <div className="relative flex items-center w-full max-w-lg" ref={containerRef}>
+      <div className="relative w-full">
+        {/* Input */}
         <input
           ref={searchRef}
           type="text"
-          placeholder="Search..."
+          placeholder="Search products, brands, categories..."
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => {
+            setInputValue(e.target.value);
+            setHighlightIndex(-1);
+          }}
           onFocus={() => {
             setSearchExpanded(true);
             setShowDropdown(true);
@@ -289,82 +307,95 @@ export default function SearchBar() {
             setTimeout(() => setShowDropdown(false), 200);
           }}
           onKeyDown={handleKeyDown}
-          className={`transition-all duration-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-full py-1 pr-8 pl-4 text-sm text-gray-700 dark:text-gray-100 ${
-            searchExpanded ? "opacity-100 w-48" : "opacity-0 w-0 pl-0 pr-0"
+          className={`transition-all duration-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-full py-2 pr-10 pl-4 text-sm text-gray-700 dark:text-gray-100 shadow-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 placeholder-gray-400 ${
+            searchExpanded ? "opacity-100 w-full" : "opacity-0 w-0 pl-0 pr-0"
           }`}
         />
+
+        {/* Search Icon Button */}
         <button
           onClick={() => handleSearch()}
-          className="absolute top-1/2 right-2 transform -translate-y-1/2"
+          className="absolute top-1/2 right-2 hover:scale-110 transform -translate-y-1/2 text-gray-500 hover:text-orange-600 transition"
           aria-label="Search"
         >
-          <Image src={assets.search_icon} alt="search" className="w-4 h-4" />
+          <Search size={18} />
         </button>
       </div>
 
-      {showDropdown && (
-        <div className="absolute top-full mt-1 w-64 sm:w-72 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md shadow z-50 max-h-80 overflow-auto">
-          {inputValue && filteredSuggestions.length > 0 ? (
-            <ul>
-              {filteredSuggestions.map((s, i) => (
-                <li
-                  key={i}
-                  onClick={() => {
-                    const selected = s;
-                    setInputValue(selected);
-                    handleSearch(selected);
-                  }}
-                  className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer text-sm"
-                >
-                  {s}
-                </li>
-              ))}
-            </ul>
-          ) : inputValue ? (
-            <div className="px-4 py-2 text-xs text-gray-400">
-              No suggestions
-            </div>
-          ) : null}
-
-          {!inputValue && recentSearches.length > 0 && (
-            <div>
-              <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 flex justify-between items-center">
-                Recent Searches
-                <button
-                  onClick={clearAll}
-                  className="text-red-500 text-xs hover:underline"
-                >
-                  Clear All
-                </button>
-              </div>
+      {/* Dropdown */}
+      <AnimatePresence>
+        {showDropdown && (
+          <motion.div
+            key="search-dropdown"
+            initial={{ opacity: 0, y: -10, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={{ opacity: 0, y: -10, height: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="absolute top-full mt-2 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 overflow-hidden"
+          >
+            {inputValue && filteredSuggestions.length > 0 ? (
               <ul>
-                {recentSearches.map((s, i) => (
+                {filteredSuggestions.map((s, i) => (
                   <li
                     key={i}
-                    className="px-4 py-2 flex justify-between items-center hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer text-sm"
+                    onClick={() => handleSearch(s)}
+                    className={`px-4 py-2 cursor-pointer text-sm flex items-center gap-2 transition ${
+                      highlightIndex === i
+                        ? "bg-orange-100 dark:bg-gray-800 font-medium"
+                        : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                    }`}
                   >
-                    <span
-                      onClick={() => {
-                        setInputValue(s);
-                        handleSearch(s);
-                      }}
-                      className="flex-1"
-                    >
-                      🕑 {s}
-                    </span>
-                    <button
-                      onClick={() => handleDeleteRecent(s)}
-                      className="text-red-500 text-xs ml-2 hover:scale-105 transition-transform"
-                    >
-                      ❌
-                    </button>
+                    <Search size={14} className="text-gray-400" />
+                    {s}
                   </li>
                 ))}
               </ul>
-            </div>
-          )}
-        </div>
-      )}
+            ) : inputValue ? (
+              <div className="px-4 py-3 text-xs text-gray-400 flex items-center gap-2">
+                <X size={14} className="text-gray-400" />
+                No suggestions
+              </div>
+            ) : null}
+
+            {/* Recent Searches */}
+            {!inputValue && recentSearches.length > 0 && (
+              <div>
+                <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 flex justify-between items-center border-b border-gray-100 dark:border-gray-700">
+                  <span className="font-medium">Recent Searches</span>
+                  <button
+                    onClick={clearAll}
+                    className="text-red-500 text-xs hover:underline"
+                  >
+                    Clear All
+                  </button>
+                </div>
+                <ul>
+                  {recentSearches.map((s, i) => (
+                    <li
+                      key={i}
+                      className="px-4 py-2 flex justify-between items-center hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer text-sm transition"
+                    >
+                      <span
+                        onClick={() => handleSearch(s)}
+                        className="flex items-center gap-2 flex-1"
+                      >
+                        <Clock size={14} className="text-gray-400" />
+                        {s}
+                      </span>
+                      <button
+                        onClick={() => handleDeleteRecent(s)}
+                        className="text-red-500 text-xs ml-2 hover:scale-110 transition-transform"
+                      >
+                        <X size={14} />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
