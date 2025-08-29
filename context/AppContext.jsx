@@ -319,48 +319,48 @@ export const AppContextProvider = (props) => {
     // };
 
     // Load cartItems from localStorage on mount
-const addToCart = async (product) => {
-  const itemId = product._id;
-  let cartData = structuredClone(cartItems);
+    const addToCart = async (product) => {
+        const itemId = product._id;
+        let cartData = structuredClone(cartItems);
 
-  if (cartData[itemId]) {
-    cartData[itemId] += 1;
-  } else {
-    cartData[itemId] = 1;
-  }
+        if (cartData[itemId]) {
+            cartData[itemId] += 1;
+        } else {
+            cartData[itemId] = 1;
+        }
 
-  setCartItems(cartData);
+        setCartItems(cartData);
 
-  // Custom animated toast
-  toast.custom(
-    (t) => (
-      <div
-        className={`
-          max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4
-          transform transition-all duration-300 ease-in-out
-          ${t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"}
-        `}
-      >
-        <ShoppingCart className="text-orange-500" size={20} />
-        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-          Item added to cart
-        </p>
-      </div>
-    ),
-    { duration: 2000, position: "top-right" } // top-right for premium e-commerce feel
-  );
+        // Custom animated toast
+        toast.custom(
+            (t) => (
+            <div
+                className={`
+                max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4
+                transform transition-all duration-300 ease-in-out
+                ${t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"}
+                `}
+            >
+                <ShoppingCart className="text-orange-500" size={20} />
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                Item added to cart
+                </p>
+            </div>
+            ),
+            { duration: 2000, position: "top-right" } // top-right for premium e-commerce feel
+        );
 
-  if (user) {
-    try {
-      const token = await getToken();
-      await axios.post('/api/cart/update', { cartData }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-    } catch (error) {
-      toast.error(error.message);
-    }
-  }
-};
+        if (user) {
+            try {
+            const token = await getToken();
+            await axios.post('/api/cart/update', { cartData }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            } catch (error) {
+            toast.error(error.message);
+            }
+        }
+    };
 
 
     useEffect(() => {
