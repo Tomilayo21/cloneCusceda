@@ -7,6 +7,8 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import toast from "react-hot-toast";
 import { useAppContext } from "@/context/AppContext";
 import Papa from "papaparse";
+import { CreditCard, FileText } from "lucide-react";
+
 
 dayjs.extend(relativeTime);
 
@@ -14,6 +16,7 @@ dayjs.extend(relativeTime);
 export default function TransactionPanel() {
   const [transactions, setTransactions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortKey, setSortKey] = useState("dateDesc"); 
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10);
   const [loading, setLoading] = useState(false);
@@ -165,287 +168,522 @@ export default function TransactionPanel() {
   );
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Transactions</h1>
+//     <div className="container mx-auto p-4">
+//       <h1 className="text-2xl font-bold mb-4">Transactions</h1>
 
-      <input
-        type="text"
-        placeholder="Search by user, order, status..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="mb-4 p-2 border rounded w-full max-w-md"
-      />
-      <div className="flex justify-between items-center mb-4">
-        <button
-          onClick={exportToCSV}
-          className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-gray-700"
-        >
-          Export to CSV
-        </button>
-      </div>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        <div className="bg-green-100 p-4 rounded shadow">
-          <h3 className="text-sm font-semibold text-green-800">Today’s Total</h3>
-          <p className="text-lg font-bold">{currency}{todayTotal.toFixed(2)}</p>
-        </div>
-        <div className="bg-blue-100 p-4 rounded shadow">
-          <h3 className="text-sm font-semibold text-blue-800">Last 7 Days</h3>
-          <p className="text-lg font-bold">{currency}{weekTotal.toFixed(2)}</p>
-        </div>
-        <div className="bg-yellow-100 p-4 rounded shadow">
-          <h3 className="text-sm font-semibold text-yellow-800">Last 30 Days</h3>
-          <p className="text-lg font-bold">{currency}{monthTotal.toFixed(2)}</p>
-        </div>
-      </div>
+//       <input
+//         type="text"
+//         placeholder="Search by user, order, status..."
+//         value={searchTerm}
+//         onChange={(e) => setSearchTerm(e.target.value)}
+//         className="mb-4 p-2 border rounded w-full max-w-md"
+//       />
+//       <div className="flex justify-between items-center mb-4">
+//         <button
+//           onClick={exportToCSV}
+//           className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+//         >
+//           Export to CSV
+//         </button>
+//       </div>
+//       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+//         <div className="bg-green-100 p-4 rounded shadow">
+//           <h3 className="text-sm font-semibold text-green-800">Today’s Total</h3>
+//           <p className="text-lg font-bold">{currency}{todayTotal.toFixed(2)}</p>
+//         </div>
+//         <div className="bg-blue-100 p-4 rounded shadow">
+//           <h3 className="text-sm font-semibold text-blue-800">Last 7 Days</h3>
+//           <p className="text-lg font-bold">{currency}{weekTotal.toFixed(2)}</p>
+//         </div>
+//         <div className="bg-yellow-100 p-4 rounded shadow">
+//           <h3 className="text-sm font-semibold text-yellow-800">Last 30 Days</h3>
+//           <p className="text-lg font-bold">{currency}{monthTotal.toFixed(2)}</p>
+//         </div>
+//       </div>
 
-      {loading ? (
-        <p>Loading transactions...</p>
-      ) : (
-        <>
-          {/* Grouped Tables by Date with Totals and Collapsible Sections */}
-          {Object.entries(
-            sortedTransactions.reduce((groups, txn) => {
-              const dateKey = new Date(txn.date).toLocaleDateString();
-              if (!groups[dateKey]) groups[dateKey] = [];
-              groups[dateKey].push(txn);
-              return groups;
-            }, {})
-          )
-            .sort((a, b) => new Date(b[0]) - new Date(a[0]))
-            .map(([date, transactionsOfDay], index) => {
-              const totalAmount = transactionsOfDay.reduce((sum, txn) => sum + (txn.amount || 0), 0);
-              const isCollapsed = collapsedSections[date] ?? (index !== 0); // First group open by default
+//       {loading ? (
+//         <p>Loading transactions...</p>
+//       ) : (
+//         <>
+//           {/* Grouped Tables by Date with Totals and Collapsible Sections */}
+//           {Object.entries(
+//             sortedTransactions.reduce((groups, txn) => {
+//               const dateKey = new Date(txn.date).toLocaleDateString();
+//               if (!groups[dateKey]) groups[dateKey] = [];
+//               groups[dateKey].push(txn);
+//               return groups;
+//             }, {})
+//           )
+//             .sort((a, b) => new Date(b[0]) - new Date(a[0]))
+//             .map(([date, transactionsOfDay], index) => {
+//               const totalAmount = transactionsOfDay.reduce((sum, txn) => sum + (txn.amount || 0), 0);
+//               const isCollapsed = collapsedSections[date] ?? (index !== 0); // First group open by default
 
-              return (
-                <div key={date} className="mb-8 border rounded shadow">
-                  <div
-                    className="flex justify-between items-center bg-gray-100 p-3 cursor-pointer"
-                    onClick={() => toggleSection(date)}
-                  >
-                    <h2 className="text-lg font-semibold">
-                      {new Date(date).toLocaleDateString("en-GB", {
-                        weekday: "long",
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
-                    </h2>
-                    <div className="text-sm text-gray-700 font-medium">
-                      Total: {currency}{totalAmount.toFixed(2)}
-                      <span className="ml-4 text-blue-600">
-                        {isCollapsed ? "Show ▼" : "Hide ▲"}
-                      </span>
-                    </div>
-                  </div>
+//               return (
+//                 <div key={date} className="mb-8 border rounded shadow">
+//                   <div
+//                     className="flex justify-between items-center bg-gray-100 p-3 cursor-pointer"
+//                     onClick={() => toggleSection(date)}
+//                   >
+//                     <h2 className="text-lg font-semibold">
+//                       {new Date(date).toLocaleDateString("en-GB", {
+//                         weekday: "long",
+//                         day: "2-digit",
+//                         month: "2-digit",
+//                         year: "numeric",
+//                       })}
+//                     </h2>
+//                     <div className="text-sm text-gray-700 font-medium">
+//                       Total: {currency}{totalAmount.toFixed(2)}
+//                       <span className="ml-4 text-blue-600">
+//                         {isCollapsed ? "Show ▼" : "Hide ▲"}
+//                       </span>
+//                     </div>
+//                   </div>
                   
 
-                  {!isCollapsed && (
-                    <>
-                      {/* Desktop Table View */}
-                      <div className="hidden sm:block overflow-x-auto max-w-full">
-                        <table className="min-w-[900px] w-full text-sm border-collapse border border-gray-300">
-                          <thead>
-                            <tr>
-                              <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('_id')}>Order ID</th>
-                              <th className="border px-2 py-1">User ID</th>
-                              <th className="border px-2 py-1">Amount</th>
-                              <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('paymentMethod')}>Payment Method</th>
-                              <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('paymentStatus')}>Payment Status</th>
-                              <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('orderStatus')}>Order Status</th>
-                              <th className="border px-2 py-1">Proof</th>
-                              <th className="border px-2 py-1">Date</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {transactionsOfDay.map((txn) => (
-                              <tr key={txn._id} className="hover:bg-gray-100">
-                                <td className="border px-2 py-1">{txn.orderId}</td>
-                                <td className="border px-2 py-1">{txn.userId}</td>
-                                <td className="border px-2 py-1">{currency}{txn.amount?.toFixed(2)}</td>
-                                <td className="border px-2 py-1">{txn.paymentMethod}</td>
-                                <td className="border px-2 py-1">
-                                  <select
-                                    value={txn.paymentStatus}
-                                    onChange={(e) => updatePaymentStatus(txn._id, e.target.value)}
-                                    className="border text-xs px-2 py-1 rounded"
-                                  >
-                                    <option value="Pending">Pending</option>
-                                    <option value="Successful">Successful</option>
-                                    <option value="Refunded">Refunded</option>
-                                    <option value="Failed">Failed</option>
-                                  </select>
-                                </td>
-                                <td className="border px-2 py-1">
-                                  <select
-                                    value={txn.orderStatus}
-                                    onChange={(e) => updateOrderStatus(txn.orderId, e.target.value)}
-                                    className="border text-xs px-2 py-1 rounded"
-                                  >
-                                    <option value="Pending">Pending</option>
-                                    <option value="Order Placed">Order Placed</option>
-                                    <option value="Processing">Processing</option>
-                                    <option value="Shipped">Shipped</option>
-                                    <option value="Delivered">Delivered</option>
-                                    <option value="Cancelled">Cancelled</option>
-                                  </select>
-                                </td>
-                                <td className="border px-2 py-1 text-center">
-                                  {txn.proofOfPaymentUrl ? (
-                                    <img
-                                      src={txn.proofOfPaymentUrl}
-                                      alt="Proof"
-                                      className="w-12 h-12 object-cover cursor-pointer rounded border"
-                                      onClick={() => setEnlargedImg(txn.proofOfPaymentUrl)}
-                                    />
-                                  ) : (
-                                    <span className="text-gray-500">-</span>
-                                  )}
-                                </td>
-                                <td className="border px-2 py-1 text-xs">
-                                  {new Date(txn.date).toLocaleString()}{" "}
-                                  <span className="text-gray-500 text-[10px] block">{dayjs(txn.date).fromNow()}</span>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+//                   {!isCollapsed && (
+//                     <>
+//                       {/* Desktop Table View */}
+//                       <div className="hidden sm:block overflow-x-auto max-w-full">
+//                         <table className="min-w-[900px] w-full text-sm border-collapse border border-gray-300">
+//                           <thead>
+//                             <tr>
+//                               <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('_id')}>Order ID</th>
+//                               <th className="border px-2 py-1">User ID</th>
+//                               <th className="border px-2 py-1">Amount</th>
+//                               <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('paymentMethod')}>Payment Method</th>
+//                               <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('paymentStatus')}>Payment Status</th>
+//                               <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('orderStatus')}>Order Status</th>
+//                               <th className="border px-2 py-1">Proof</th>
+//                               <th className="border px-2 py-1">Date</th>
+//                             </tr>
+//                           </thead>
+//                           <tbody>
+//                             {transactionsOfDay.map((txn) => (
+//                               <tr key={txn._id} className="hover:bg-gray-100">
+//                                 <td className="border px-2 py-1">{txn.orderId}</td>
+//                                 <td className="border px-2 py-1">{txn.userId}</td>
+//                                 <td className="border px-2 py-1">{currency}{txn.amount?.toFixed(2)}</td>
+//                                 <td className="border px-2 py-1">{txn.paymentMethod}</td>
+//                                 <td className="border px-2 py-1">
+//                                   <select
+//                                     value={txn.paymentStatus}
+//                                     onChange={(e) => updatePaymentStatus(txn._id, e.target.value)}
+//                                     className="border text-xs px-2 py-1 rounded"
+//                                   >
+//                                     <option value="Pending">Pending</option>
+//                                     <option value="Successful">Successful</option>
+//                                     <option value="Refunded">Refunded</option>
+//                                     <option value="Failed">Failed</option>
+//                                   </select>
+//                                 </td>
+//                                 <td className="border px-2 py-1">
+//                                   <select
+//                                     value={txn.orderStatus}
+//                                     onChange={(e) => updateOrderStatus(txn.orderId, e.target.value)}
+//                                     className="border text-xs px-2 py-1 rounded"
+//                                   >
+//                                     <option value="Pending">Pending</option>
+//                                     <option value="Order Placed">Order Placed</option>
+//                                     <option value="Processing">Processing</option>
+//                                     <option value="Shipped">Shipped</option>
+//                                     <option value="Delivered">Delivered</option>
+//                                     <option value="Cancelled">Cancelled</option>
+//                                   </select>
+//                                 </td>
+//                                 <td className="border px-2 py-1 text-center">
+//                                   {txn.proofOfPaymentUrl ? (
+//                                     <img
+//                                       src={txn.proofOfPaymentUrl}
+//                                       alt="Proof"
+//                                       className="w-12 h-12 object-cover cursor-pointer rounded border"
+//                                       onClick={() => setEnlargedImg(txn.proofOfPaymentUrl)}
+//                                     />
+//                                   ) : (
+//                                     <span className="text-gray-500">-</span>
+//                                   )}
+//                                 </td>
+//                                 <td className="border px-2 py-1 text-xs">
+//                                   {new Date(txn.date).toLocaleString()}{" "}
+//                                   <span className="text-gray-500 text-[10px] block">{dayjs(txn.date).fromNow()}</span>
+//                                 </td>
+//                               </tr>
+//                             ))}
+//                           </tbody>
+//                         </table>
+//                       </div>
 
 
-                      {/* Mobile Card View */}
-                      <div className="sm:hidden space-y-4 mt-4">
-                        {transactionsOfDay.map((txn) => (
-                          <div key={txn._id} className="border rounded p-4 shadow">
-                            <p><span className="font-semibold">Order ID:</span> {txn.orderId}</p>
-                            <p><span className="font-semibold">User ID:</span> {txn.userId}</p>
-                            <p><span className="font-semibold">Amount:</span> {currency}{txn.amount?.toFixed(2)}</p>
-                            <p><span className="font-semibold">Payment Method:</span> {txn.paymentMethod}</p>
-                            <p>
-                              <span className="font-semibold">Payment Status:</span>
-                              <select
-                                className="ml-2 mt-1 p-1 text-sm border rounded"
-                                value={txn.paymentStatus}
-                                onChange={(e) => updatePaymentStatus(txn._id, e.target.value)}
-                              >
-                                <option value="Pending">Pending</option>
-                                <option value="Successful">Successful</option>
-                                <option value="Refunded">Refunded</option>
-                                <option value="Failed">Failed</option>
-                              </select>
-                            </p>
-                            <p>
-                              <span className="font-semibold">Order Status:</span>
-                              <select
-                                className="ml-2 mt-1 p-1 text-sm border rounded"
-                                value={txn.orderStatus}
-                                onChange={(e) => updateOrderStatus(txn.orderId, e.target.value)}
-                              >
-                                <option value="Pending">Pending</option>
-                                <option value="Order Placed">Order Placed</option>
-                                <option value="Processing">Processing</option>
-                                <option value="Shipped">Shipped</option>
-                                <option value="Delivered">Delivered</option>
-                                <option value="Cancelled">Cancelled</option>
-                              </select>
-                            </p>
-                            <p className="mt-2">
-                              <span className="font-semibold">Proof of Payment:</span><br />
-                              {txn.proofOfPaymentUrl ? (
-                                <img
-                                  src={txn.proofOfPaymentUrl}
-                                  alt="Proof"
-                                  className="w-24 h-24 object-cover rounded border mt-1"
-                                  onClick={() => setEnlargedImg(txn.proofOfPaymentUrl)}
-                                />
-                              ) : (
-                                <span className="text-gray-500">-</span>
-                              )}
-                            </p>
-                            <p className="text-sm text-gray-500 mt-2">
-                              {new Date(txn.date).toLocaleString()}{" "}
-                              <span className="text-xs text-gray-400">({dayjs(txn.date).fromNow()})</span>
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-              );
-            })}
+//                       {/* Mobile Card View */}
+//                       <div className="sm:hidden space-y-4 mt-4">
+//                         {transactionsOfDay.map((txn) => (
+//                           <div key={txn._id} className="border rounded p-4 shadow">
+//                             <p><span className="font-semibold">Order ID:</span> {txn.orderId}</p>
+//                             <p><span className="font-semibold">User ID:</span> {txn.userId}</p>
+//                             <p><span className="font-semibold">Amount:</span> {currency}{txn.amount?.toFixed(2)}</p>
+//                             <p><span className="font-semibold">Payment Method:</span> {txn.paymentMethod}</p>
+//                             <p>
+//                               <span className="font-semibold">Payment Status:</span>
+//                               <select
+//                                 className="ml-2 mt-1 p-1 text-sm border rounded"
+//                                 value={txn.paymentStatus}
+//                                 onChange={(e) => updatePaymentStatus(txn._id, e.target.value)}
+//                               >
+//                                 <option value="Pending">Pending</option>
+//                                 <option value="Successful">Successful</option>
+//                                 <option value="Refunded">Refunded</option>
+//                                 <option value="Failed">Failed</option>
+//                               </select>
+//                             </p>
+//                             <p>
+//                               <span className="font-semibold">Order Status:</span>
+//                               <select
+//                                 className="ml-2 mt-1 p-1 text-sm border rounded"
+//                                 value={txn.orderStatus}
+//                                 onChange={(e) => updateOrderStatus(txn.orderId, e.target.value)}
+//                               >
+//                                 <option value="Pending">Pending</option>
+//                                 <option value="Order Placed">Order Placed</option>
+//                                 <option value="Processing">Processing</option>
+//                                 <option value="Shipped">Shipped</option>
+//                                 <option value="Delivered">Delivered</option>
+//                                 <option value="Cancelled">Cancelled</option>
+//                               </select>
+//                             </p>
+//                             <p className="mt-2">
+//                               <span className="font-semibold">Proof of Payment:</span><br />
+//                               {txn.proofOfPaymentUrl ? (
+//                                 <img
+//                                   src={txn.proofOfPaymentUrl}
+//                                   alt="Proof"
+//                                   className="w-24 h-24 object-cover rounded border mt-1"
+//                                   onClick={() => setEnlargedImg(txn.proofOfPaymentUrl)}
+//                                 />
+//                               ) : (
+//                                 <span className="text-gray-500">-</span>
+//                               )}
+//                             </p>
+//                             <p className="text-sm text-gray-500 mt-2">
+//                               {new Date(txn.date).toLocaleString()}{" "}
+//                               <span className="text-xs text-gray-400">({dayjs(txn.date).fromNow()})</span>
+//                             </p>
+//                           </div>
+//                         ))}
+//                       </div>
+//                     </>
+//                   )}
+//                 </div>
+//               );
+//             })}
           
-          {/* Pagination */}
-          {/* <div className="flex justify-center mt-4 space-x-4">
-            <button
-              disabled={page === 1}
-              onClick={() => setPage((p) => Math.max(p - 1, 1))}
-              className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-            >
-              Prev
-            </button>
-            <span>Page {page}</span>
-            <button
-              onClick={() => setPage((p) => p + 1)}
-              className="px-3 py-1 bg-gray-200 rounded"
-            >
-              Next
-            </button>
-          </div> */}
-          {totalPages > 1 && (
-  <div className="flex justify-center mt-6 space-x-2 flex-wrap">
-    {[...Array(totalPages)].map((_, index) => {
-      const pageNum = index + 1;
+//           {/* Pagination */}
+//           {/* <div className="flex justify-center mt-4 space-x-4">
+//             <button
+//               disabled={page === 1}
+//               onClick={() => setPage((p) => Math.max(p - 1, 1))}
+//               className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+//             >
+//               Prev
+//             </button>
+//             <span>Page {page}</span>
+//             <button
+//               onClick={() => setPage((p) => p + 1)}
+//               className="px-3 py-1 bg-gray-200 rounded"
+//             >
+//               Next
+//             </button>
+//           </div> */}
+//           {totalPages > 1 && (
+//   <div className="flex justify-center mt-6 space-x-2 flex-wrap">
+//     {[...Array(totalPages)].map((_, index) => {
+//       const pageNum = index + 1;
 
-      if (totalPages <= 10) {
-        // Show all pages if total ≤ 10
-        return (
-          <button
-            key={pageNum}
-            onClick={() => setPage(pageNum)}
-            className={`px-3 py-1 rounded border ${
-              pageNum === page ? "bg-black text-white" : "bg-gray-100 text-black"
-            }`}
+//       if (totalPages <= 10) {
+//         // Show all pages if total ≤ 10
+//         return (
+//           <button
+//             key={pageNum}
+//             onClick={() => setPage(pageNum)}
+//             className={`px-3 py-1 rounded border ${
+//               pageNum === page ? "bg-black text-white" : "bg-gray-100 text-black"
+//             }`}
+//           >
+//             {pageNum}
+//           </button>
+//         );
+//       }
+
+//       const showPage =
+//         pageNum === 1 ||
+//         pageNum === totalPages ||
+//         (pageNum >= page - 1 && pageNum <= page + 1);
+
+//       if (showPage) {
+//         return (
+//           <button
+//             key={pageNum}
+//             onClick={() => setPage(pageNum)}
+//             className={`px-3 py-1 rounded border ${
+//               pageNum === page ? "bg-black text-white" : "bg-gray-100 text-black"
+//             }`}
+//           >
+//             {pageNum}
+//           </button>
+//         );
+//       }
+
+//       if (
+//         (pageNum === 2 && page > 4) ||
+//         (pageNum === totalPages - 1 && page < totalPages - 3)
+//       ) {
+//         return <span key={pageNum} className="px-2">...</span>;
+//       }
+
+//       return null;
+//     })}
+//   </div>
+// )}
+
+//         </>
+//       )}
+
+//       {/* Enlarged image modal */}
+//       {enlargedImg && (
+//         <div
+//           className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 cursor-pointer"
+//           onClick={() => setEnlargedImg(null)}
+//         >
+//           <img
+//             src={enlargedImg}
+//             alt="Enlarged proof"
+//             className="max-w-3xl max-h-full rounded shadow-lg"
+//           />
+//         </div>
+//       )}
+
+//     </div>
+
+    <div className="flex-1 overflow-auto h-screen p-6 bg-gray-50 dark:bg-neutral-900">
+      {/* Header */}
+      <div className="flex flex-col mb-6 gap-4">
+        {/* Header */}
+        <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
+          <CreditCard className="w-6 h-6 text-orange-600" />
+          Transactions
+        </h1>
+
+        {/* Controls: Search, Sorting, Export */}
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:items-center sm:justify-start">
+          {/* Search */}
+          <input
+            type="text"
+            placeholder="Search by user, order, status..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full sm:w-64 p-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:outline-none"
+          />
+
+          {/* Sorting */}
+          <select
+            value={sortKey}
+            onChange={(e) => setSortKey(e.target.value)}
+            className="w-full sm:w-auto p-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:outline-none"
           >
-            {pageNum}
-          </button>
-        );
-      }
+            <option value="dateDesc">Newest</option>
+            <option value="dateAsc">Oldest</option>
+            <option value="amountDesc">Highest Amount</option>
+            <option value="amountAsc">Lowest Amount</option>
+          </select>
 
-      const showPage =
-        pageNum === 1 ||
-        pageNum === totalPages ||
-        (pageNum >= page - 1 && pageNum <= page + 1);
-
-      if (showPage) {
-        return (
+          {/* Export CSV */}
           <button
-            key={pageNum}
-            onClick={() => setPage(pageNum)}
-            className={`px-3 py-1 rounded border ${
-              pageNum === page ? "bg-black text-white" : "bg-gray-100 text-black"
-            }`}
+            onClick={exportToCSV}
+            className="flex items-center gap-1 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded shadow transition"
           >
-            {pageNum}
+            <FileText className="w-4 h-4" /> Export CSV
           </button>
-        );
-      }
+        </div>
+      </div>
 
-      if (
-        (pageNum === 2 && page > 4) ||
-        (pageNum === totalPages - 1 && page < totalPages - 3)
-      ) {
-        return <span key={pageNum} className="px-2">...</span>;
-      }
 
-      return null;
-    })}
-  </div>
-)}
+      {/* Totals Cards */}
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <div className="bg-white dark:bg-neutral-800 p-4 rounded-lg shadow hover:shadow-md transition">
+          <h3 className="text-sm font-semibold text-gray-500">Today's Total</h3>
+          <p className="text-xl font-bold mt-1">{currency}{todayTotal.toFixed(2)}</p>
+        </div>
+        <div className="bg-white dark:bg-neutral-800 p-4 rounded-lg shadow hover:shadow-md transition">
+          <h3 className="text-sm font-semibold text-gray-500">Last 7 Days</h3>
+          <p className="text-xl font-bold mt-1">{currency}{weekTotal.toFixed(2)}</p>
+        </div>
+        <div className="bg-white dark:bg-neutral-800 p-4 rounded-lg shadow hover:shadow-md transition">
+          <h3 className="text-sm font-semibold text-gray-500">Last 30 Days</h3>
+          <p className="text-xl font-bold mt-1">{currency}{monthTotal.toFixed(2)}</p>
+        </div>
+      </div>
 
-        </>
+      {/* Transactions List */}
+      {loading ? (
+        <p className="text-gray-500">Loading transactions...</p>
+      ) : (
+        Object.entries(
+          sortedTransactions.reduce((groups, txn) => {
+            const dateKey = new Date(txn.date).toLocaleDateString();
+            if (!groups[dateKey]) groups[dateKey] = [];
+            groups[dateKey].push(txn);
+            return groups;
+          }, {})
+        )
+          .sort((a, b) => new Date(b[0]) - new Date(a[0]))
+          .map(([date, transactionsOfDay], index) => {
+            const totalAmount = transactionsOfDay.reduce((sum, txn) => sum + (txn.amount || 0), 0);
+            const isCollapsed = collapsedSections[date] ?? (index !== 0);
+
+            return (
+              <div key={date} className="mb-6 border rounded-lg bg-white dark:bg-neutral-800 shadow">
+                {/* Date Header */}
+                <div
+                  className="flex justify-between items-center p-3 bg-gray-100 dark:bg-neutral-700 cursor-pointer rounded-t-lg"
+                  onClick={() => toggleSection(date)}
+                >
+                  <h2 className="font-semibold text-gray-700 dark:text-gray-200">
+                    {new Date(date).toLocaleDateString("en-GB", {
+                      weekday: "long",
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  </h2>
+                  <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">
+                    Total: {currency}{totalAmount.toFixed(2)} • {isCollapsed ? "Show ▼" : "Hide ▲"}
+                  </div>
+                </div>
+
+                {!isCollapsed && (
+                  <>
+                    {/* Desktop Table */}
+                    <div className="hidden sm:block overflow-x-auto">
+                      <table className="min-w-full text-sm border-collapse border border-gray-300 dark:border-neutral-700">
+                        <thead className="bg-gray-50 dark:bg-neutral-700">
+                          <tr>
+                            <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('_id')}>Order ID</th>
+                            <th className="border px-2 py-1">User ID</th>
+                            <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('amount')}>Amount</th>
+                            <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('paymentMethod')}>Payment Method</th>
+                            <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('paymentStatus')}>Payment Status</th>
+                            <th className="border px-2 py-1 cursor-pointer" onClick={() => requestSort('orderStatus')}>Order Status</th>
+                            <th className="border px-2 py-1">Proof</th>
+                            <th className="border px-2 py-1">Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {transactionsOfDay.map((txn) => (
+                            <tr key={txn._id} className="hover:bg-gray-100 dark:hover:bg-neutral-700">
+                              <td className="border px-2 py-1">{txn.orderId}</td>
+                              <td className="border px-2 py-1">{txn.userId}</td>
+                              <td className="border px-2 py-1">{currency}{txn.amount?.toFixed(2)}</td>
+                              <td className="border px-2 py-1">{txn.paymentMethod}</td>
+                              <td className="border px-2 py-1">
+                                <select
+                                  value={txn.paymentStatus}
+                                  onChange={(e) => updatePaymentStatus(txn._id, e.target.value)}
+                                  className="border text-xs px-2 py-1 rounded"
+                                >
+                                  <option value="Pending">Pending</option>
+                                  <option value="Successful">Successful</option>
+                                  <option value="Refunded">Refunded</option>
+                                  <option value="Failed">Failed</option>
+                                </select>
+                              </td>
+                              <td className="border px-2 py-1">
+                                <select
+                                  value={txn.orderStatus}
+                                  onChange={(e) => updateOrderStatus(txn.orderId, e.target.value)}
+                                  className="border text-xs px-2 py-1 rounded"
+                                >
+                                  <option value="Pending">Pending</option>
+                                  <option value="Order Placed">Order Placed</option>
+                                  <option value="Processing">Processing</option>
+                                  <option value="Shipped">Shipped</option>
+                                  <option value="Delivered">Delivered</option>
+                                  <option value="Cancelled">Cancelled</option>
+                                </select>
+                              </td>
+                              <td className="border px-2 py-1 text-center">
+                                {txn.proofOfPaymentUrl ? (
+                                  <img
+                                    src={txn.proofOfPaymentUrl}
+                                    alt="Proof"
+                                    className="w-12 h-12 object-cover rounded border cursor-pointer"
+                                    onClick={() => setEnlargedImg(txn.proofOfPaymentUrl)}
+                                  />
+                                ) : (
+                                  <span className="text-gray-400">-</span>
+                                )}
+                              </td>
+                              <td className="border px-2 py-1 text-xs">{new Date(txn.date).toLocaleString()}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Mobile Cards */}
+                    <div className="sm:hidden flex flex-col gap-3 mt-3">
+                      {transactionsOfDay.map((txn) => (
+                        <div key={txn._id} className="border rounded-lg bg-white dark:bg-neutral-800 p-4 shadow hover:shadow-md transition">
+                          <p><span className="font-semibold">Order ID:</span> {txn.orderId}</p>
+                          <p><span className="font-semibold">User ID:</span> {txn.userId}</p>
+                          <p><span className="font-semibold">Amount:</span> {currency}{txn.amount?.toFixed(2)}</p>
+                          <p><span className="font-semibold">Payment Method:</span> {txn.paymentMethod}</p>
+                          <p>
+                            <span className="font-semibold">Payment Status:</span>
+                            <select
+                              className="ml-2 mt-1 p-1 text-sm border rounded"
+                              value={txn.paymentStatus}
+                              onChange={(e) => updatePaymentStatus(txn._id, e.target.value)}
+                            >
+                              <option value="Pending">Pending</option>
+                              <option value="Successful">Successful</option>
+                              <option value="Refunded">Refunded</option>
+                              <option value="Failed">Failed</option>
+                            </select>
+                          </p>
+                          <p>
+                            <span className="font-semibold">Order Status:</span>
+                            <select
+                              className="ml-2 mt-1 p-1 text-sm border rounded"
+                              value={txn.orderStatus}
+                              onChange={(e) => updateOrderStatus(txn.orderId, e.target.value)}
+                            >
+                              <option value="Pending">Pending</option>
+                              <option value="Order Placed">Order Placed</option>
+                              <option value="Processing">Processing</option>
+                              <option value="Shipped">Shipped</option>
+                              <option value="Delivered">Delivered</option>
+                              <option value="Cancelled">Cancelled</option>
+                            </select>
+                          </p>
+                          {txn.proofOfPaymentUrl && (
+                            <img
+                              src={txn.proofOfPaymentUrl}
+                              alt="Proof"
+                              className="w-24 h-24 object-cover rounded mt-2 cursor-pointer"
+                              onClick={() => setEnlargedImg(txn.proofOfPaymentUrl)}
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })
       )}
 
-      {/* Enlarged image modal */}
+      {/* Enlarged proof modal */}
       {enlargedImg && (
         <div
           className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 cursor-pointer"
@@ -458,8 +696,8 @@ export default function TransactionPanel() {
           />
         </div>
       )}
-
     </div>
+
   );
 
 }
