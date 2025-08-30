@@ -1,17 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { assets } from "@/assets/assets";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { ImagePlus } from "lucide-react";
-import Footer from "@/components/admin/Footer";
 import TiptapEditor from "@/components/TiptapEditor";
-import AdminPage from "@/components/admin/AdminPage";
-
+import { CheckCircle, XCircle } from "lucide-react";
 
 
 const AddProduct = () => {
@@ -55,326 +51,328 @@ const AddProduct = () => {
     setUploadDone(false);
 
     const formData = new FormData();
-    formData.append('name', name);
-    formData.append('description', description);
-    formData.append('category', category);
-    formData.append('price', price);
-    formData.append('offerPrice', offerPrice);
-    formData.append('color', color);
-    formData.append('brand', brand);
-    formData.append('stock', stock);
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("price", price);
+    formData.append("offerPrice", offerPrice);
+    formData.append("color", color);
+    formData.append("brand", brand);
+    formData.append("stock", stock);
 
     for (let i = 0; i < files.length; i++) {
-      if (files[i]) formData.append('images', files[i]);
+      if (files[i]) formData.append("images", files[i]);
     }
 
     try {
       const token = await getToken();
 
-      await axios.post('/api/product/add', formData, {
-        headers: { Authorization: `Bearer ${token}` }
+      await axios.post("/api/product/add", formData, {
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      toast.success("Product added successfully!");
+      // ✅ Custom success toast
+      toast.custom(
+        (t) => (
+          <div
+            className={`
+              max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4
+              transform transition-all duration-300 ease-in-out
+              ${t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"}
+            `}
+          >
+            <CheckCircle className="text-orange-500" size={22} />
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Product added successfully!
+            </p>
+          </div>
+        ),
+        { duration: 3500, position: "top-right" }
+      );
 
+      // Reset form
       setFiles([]);
-      setName('');
-      setDescription('');
-      setCategory('Earphone');
-      setColor('');
-      setBrand('');
-      setPrice('');
-      setOfferPrice('');
-      setStock('');
+      setName("");
+      setDescription("");
+      setCategory("Earphone");
+      setColor("");
+      setBrand("");
+      setPrice("");
+      setOfferPrice("");
+      setStock("");
       setUploadDone(true);
 
-      // Redirect to Stripe checkout for payment (optional)
-      const res = await axios.post('/api/stripe/checkout', {
-        items: [
-          {
-            name: name,
-            description: description,
-            image: "", // optional: you can pass one of the uploaded image URLs here
-            price: parseFloat(price),
-            quantity: 1,
-          }
-        ]
-      });
-
-      if (res.data.url) {
-        window.location.href = res.data.url;
-      }
-
     } catch (error) {
-      toast.error(error.response?.data?.message || error.message || "Upload failed");
+      // ❌ Custom error toast
+      toast.custom(
+        (t) => (
+          <div
+            className={`
+              max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4
+              transform transition-all duration-300 ease-in-out
+              ${t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"}
+            `}
+          >
+            <XCircle className="text-red-500" size={22} />
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              {error.response?.data?.message || error.message || "Upload failed"}
+            </p>
+          </div>
+        ),
+        { duration: 3000, position: "top-right" }
+      );
     } finally {
       setUploading(false);
     }
   };
 
   return (
-    <div className="flex-1 min-h-screen flex flex-col justify-between">
-      <form onSubmit={handleSubmit} className="md:p-10 p-4 space-y-5 max-w-lg">
-        <h1 className="text-xl md:text-2xl font-bold mb-4">Add Products</h1>
-        
-        {/* Image Upload */}
-        {/* <div>
-          <p className="text-base font-medium">Product Image</p>
-          <div className="flex flex-wrap items-center gap-3 mt-2">
-            {[...Array(4)].map((_, index) => (
-              <label
-              key={index}
-              htmlFor={`image${index}`}
-              className="relative w-24 h-24 border border-gray-300 rounded cursor-pointer flex items-center justify-center overflow-hidden"
-            >
-              <input
-                onChange={(e) => {
-                  const updatedFiles = [...files];
-                  updatedFiles[index] = e.target.files[0];
-                  setFiles(updatedFiles);
-                }}
-                type="file"
-                id={`image${index}`}
-                hidden
-              />
+    <div className="flex-1 min-h-screen flex flex-col bg-gray-50">
+      <form
+        onSubmit={handleSubmit}
+        className="p-6 md:p-10 max-w-4xl mx-auto space-y-8"
+      >
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+          Add New Product
+        </h1>
 
-              {files[index] ? (
+        {/* Product Images */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-3">
+            Product Images
+          </h2>
+          <p className="text-sm text-gray-500 mb-4">
+            Upload up to 10 images. The first image will be the primary.
+          </p>
+          <div className="flex flex-wrap items-start gap-4">
+            {files.map((file, index) => (
+              <div
+                key={index}
+                className="relative w-28 h-28 rounded-lg overflow-hidden shadow-sm group"
+              >
                 <Image
-                  src={URL.createObjectURL(files[index])}
+                  src={URL.createObjectURL(file)}
                   alt={`preview-${index}`}
-                  width={96}
-                  height={96}
+                  width={112}
+                  height={112}
                   className="object-cover w-full h-full"
                 />
-              ) : (
-                <ImagePlus className="w-6 h-6 text-gray-500" />
-              )}
-            </label>
-            ))}
-          </div>
-        </div> */}
-        <div>
-          <p className="text-base font-medium">Product Images</p>
-          <div className="flex flex-wrap items-start gap-3 mt-2">
-            {files.map((file, index) => (
-              <div key={index} className="relative w-24 h-24 flex-shrink-0">
-                <div className="w-24 h-24 border border-gray-300 rounded overflow-hidden relative">
-                  <Image
-                    src={URL.createObjectURL(file)}
-                    alt={`preview-${index}`}
-                    width={96}
-                    height={96}
-                    className="object-cover w-full h-full"
-                  />
 
-                  {/* Make Primary */}
-                  <button
-                    onClick={() => {
-                      const reordered = [file, ...files.filter((_, i) => i !== index)];
-                      setFiles(reordered);
-                    }}
-                    className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs py-1 text-center hover:bg-black"
-                  >
-                    {index === 0 ? "Primary" : "Make Primary"}
-                  </button>
+                {/* Primary Badge */}
+                <span className={`absolute top-1 left-1 px-2 py-0.5 text-xs rounded-full 
+                  ${index === 0 ? "bg-green-600 text-white" : "bg-gray-700 text-white opacity-70"}`}>
+                  {index === 0 ? "Primary" : "Secondary"}
+                </span>
 
-                  {/* Remove */}
+                {/* Actions on hover */}
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex flex-col justify-center items-center gap-2 transition">
+                  {index !== 0 && (
+                    <button
+                      onClick={() => {
+                        const reordered = [file, ...files.filter((_, i) => i !== index)];
+                        setFiles(reordered);
+                      }}
+                      className="text-white text-xs bg-purple-600 px-3 py-1 rounded hover:bg-purple-700"
+                    >
+                      Make Primary
+                    </button>
+                  )}
                   <button
                     onClick={() => {
                       const updatedFiles = [...files];
                       updatedFiles.splice(index, 1);
                       setFiles(updatedFiles);
                     }}
-                    className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold hover:bg-red-800"
-                    title="Remove"
+                    className="text-white text-xs bg-red-600 px-3 py-1 rounded hover:bg-red-700"
                   >
-                    –
+                    Remove
                   </button>
                 </div>
               </div>
             ))}
 
-            {/* Add New Image */}
-            {files.length < 10 && ( // limit max uploads if needed
-              <label className="w-24 h-24 border border-gray-300 rounded cursor-pointer flex items-center justify-center overflow-hidden">
+            {/* Upload New */}
+            {files.length < 10 && (
+              <label className="w-28 h-28 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:border-orange-500 hover:text-orange-500 transition">
                 <input
                   type="file"
                   hidden
                   accept="image/*"
                   onChange={(e) => {
                     const file = e.target.files[0];
-                    if (file) {
-                      setFiles([...files, file]);
-                    }
+                    if (file) setFiles([...files, file]);
                   }}
                 />
-                <ImagePlus className="w-6 h-6 text-gray-500" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 mb-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                <span className="text-xs font-medium">Add Image</span>
               </label>
             )}
           </div>
         </div>
 
+        {/* Product Info */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-6">
+          <h2 className="text-lg font-semibold text-gray-800">Product Details</h2>
 
-        {/* Name */}
-        <div className="flex flex-col gap-1 max-w-md">
-          <label className="text-base font-medium" htmlFor="product-name">Product Name</label>
-          <input
-            id="product-name"
-            type="text"
-            placeholder="Type here"
-            className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-            required
-          />
-        </div>
-        {/* <div className="flex flex-col gap-1 max-w-md">
-          <label className="text-base font-medium">Product Name</label>
-          <TiptapEditor description={name} setDescription={setName} />
-        </div> */}
-
-
-        {/* Description */}
-        {/* <div className="flex flex-col gap-1 max-w-md">
-          <label className="text-base font-medium" htmlFor="product-description">Product Description</label>
-          <textarea
-            id="product-description"
-            rows={4}
-            className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40 resize-none"
-            placeholder="Type here"
-            onChange={(e) => setDescription(e.target.value)}
-            value={description}
-            required
-          />
-        </div> */}
-        <div className="flex flex-col gap-1 max-w-md">
-          <label className="text-base font-medium">Product Description</label>
-          <TiptapEditor description={description} setDescription={setDescription} />
-        </div>
-
-        {/* Options */}
-        <div className="flex items-center gap-5 flex-wrap">
-          <div className="flex flex-col gap-1 w-32">
-            <label className="text-base font-medium" htmlFor="category">Category</label>
-            <select
-              id="category"
-              className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-              onChange={(e) => setCategory(e.target.value)}
-              value={category}
-            >
-              <option value="Earphone">Earphone</option>
-              <option value="Headphone">Headphone</option>
-              <option value="Watch">Watch</option>
-              <option value="Smartphone">Smartphone</option>
-              <option value="Laptop">Laptop</option>
-              <option value="Camera">Camera</option>
-              <option value="Accessories">Accessories</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col gap-1 w-32">
-            <label className="text-base font-medium" htmlFor="color">Color</label>
-            <select
-              id="color"
-              className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-              onChange={(e) => setColor(e.target.value)}
-              value={color}
-            >
-              <option value="">Select</option>
-              <option value="Red">Red</option>
-              <option value="Black">Black</option>
-              <option value="Blue">Blue</option>
-              <option value="White">White</option>
-              <option value="Gray">Gray</option>
-              <option value="Green">Green</option>
-              <option value="Yellow">Yellow</option>
-              <option value="Purple">Purple</option>
-              <option value="Pink">Pink</option>
-              <option value="Gold">Gold</option>
-              <option value="Silver">Silver</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col gap-1 w-32">
-            <label className="text-base font-medium" htmlFor="brand">Brand</label>
-            <select
-              id="brand"
-              className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-              onChange={(e) => setBrand(e.target.value)}
-              value={brand}
-              required
-            >
-              <option value="Apple">Apple</option>
-              <option value="Samsung">Samsung</option>
-              <option value="Sony">Sony</option>
-              <option value="Huawei">Huawei</option>
-              <option value="Bose">Bose</option>
-              <option value="Infinix">Infinix</option>
-              <option value="Xiaomi">Xiaomi</option>
-              <option value="Tecno">Tecno</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col gap-1 w-32">
-            <label className="text-base font-medium" htmlFor="product-price">Original Price</label>
+          {/* Name */}
+          <div className="flex flex-col gap-1">
+            <label htmlFor="product-name" className="text-sm font-medium text-gray-700">
+              Product Name
+            </label>
             <input
-              id="product-price"
-              type="number"
-              placeholder="0"
-              className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-              onChange={(e) => setPrice(e.target.value)}
-              value={price}
+              id="product-name"
+              type="text"
+              placeholder="Type here"
+              className="outline-none py-2.5 px-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
               required
             />
           </div>
 
-          <div className="flex flex-col gap-1 w-32">
-            <label className="text-base font-medium" htmlFor="offer-price">Discount Price</label>
-            <input
-              id="offer-price"
-              type="number"
-              placeholder="0"
-              className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-              onChange={(e) => setOfferPrice(e.target.value)}
-              value={offerPrice}
-              required
-            />
-          </div>
-
-          <div className="flex flex-col gap-1 w-32">
-            <label className="text-base font-medium" htmlFor="stock">Stock</label>
-            <input
-              id="stock"
-              type="number"
-              placeholder="0"
-              className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-              onChange={(e) => setStock(e.target.value)}
-              value={stock}
-              required
-            />
+          {/* Description */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-700">Product Description</label>
+            <TiptapEditor description={description} setDescription={setDescription} />
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="px-8 py-2.5 bg-orange-600 text-white font-medium rounded disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={uploading}
-        >
-          ADD
-        </button>
+        {/* Options Grid */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Product Options</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* Category */}
+            <div>
+              <label htmlFor="category" className="text-sm font-medium text-gray-700">Category</label>
+              <select
+                id="category"
+                className="w-full mt-1 py-2.5 px-3 rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-orange-500"
+                onChange={(e) => setCategory(e.target.value)}
+                value={category}
+              >
+                <option value="Earphone">Earphone</option>
+                <option value="Headphone">Headphone</option>
+                <option value="Watch">Watch</option>
+                <option value="Smartphone">Smartphone</option>
+                <option value="Laptop">Laptop</option>
+                <option value="Camera">Camera</option>
+                <option value="Accessories">Accessories</option>
+              </select>
+            </div>
 
-        {uploading && <p className="mt-3 text-gray-700 font-medium">Please wait while upload is going on...</p>}
-        {uploadDone && !uploading && (
-          <p className="mt-3 text-green-600 font-semibold">Product uploaded successfully!</p>
-        )}
+            {/* Color */}
+            <div>
+              <label htmlFor="color" className="text-sm font-medium text-gray-700">Color</label>
+              <select
+                id="color"
+                className="w-full mt-1 py-2.5 px-3 rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-orange-500"
+                onChange={(e) => setColor(e.target.value)}
+                value={color}
+              >
+                <option value="">Select</option>
+                <option value="Red">Red</option>
+                <option value="Black">Black</option>
+                <option value="Blue">Blue</option>
+                <option value="White">White</option>
+                <option value="Gray">Gray</option>
+                <option value="Green">Green</option>
+                <option value="Yellow">Yellow</option>
+                <option value="Purple">Purple</option>
+                <option value="Pink">Pink</option>
+                <option value="Gold">Gold</option>
+                <option value="Silver">Silver</option>
+              </select>
+            </div>
+
+            {/* Brand */}
+            <div>
+              <label htmlFor="brand" className="text-sm font-medium text-gray-700">Brand</label>
+              <select
+                id="brand"
+                className="w-full mt-1 py-2.5 px-3 rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-orange-500"
+                onChange={(e) => setBrand(e.target.value)}
+                value={brand}
+                required
+              >
+                <option value="Apple">Apple</option>
+                <option value="Samsung">Samsung</option>
+                <option value="Sony">Sony</option>
+                <option value="Huawei">Huawei</option>
+                <option value="Bose">Bose</option>
+                <option value="Infinix">Infinix</option>
+                <option value="Xiaomi">Xiaomi</option>
+                <option value="Tecno">Tecno</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            {/* Prices + Stock */}
+            <div>
+              <label htmlFor="product-price" className="text-sm font-medium text-gray-700">Original Price</label>
+              <input
+                id="product-price"
+                type="number"
+                placeholder="0"
+                className="w-full mt-1 py-2.5 px-3 rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-orange-500"
+                onChange={(e) => setPrice(e.target.value)}
+                value={price}
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="offer-price" className="text-sm font-medium text-gray-700">Discount Price</label>
+              <input
+                id="offer-price"
+                type="number"
+                placeholder="0"
+                className="w-full mt-1 py-2.5 px-3 rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-orange-500"
+                onChange={(e) => setOfferPrice(e.target.value)}
+                value={offerPrice}
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="stock" className="text-sm font-medium text-gray-700">Stock</label>
+              <input
+                id="stock"
+                type="number"
+                placeholder="0"
+                className="w-full mt-1 py-2.5 px-3 rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-orange-500"
+                onChange={(e) => setStock(e.target.value)}
+                value={stock}
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Submit */}
+        <div className="flex items-center gap-4">
+          <button
+            type="submit"
+            className="px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={uploading}
+          >
+            {uploading ? "Uploading..." : "Add Product"}
+          </button>
+          {uploadDone && !uploading && (
+            <p className="text-orange-600 font-semibold"> <CheckCircle className="text-orange-500" size={22}/> Product uploaded successfully!</p>
+          )}
+        </div>
       </form>
-      <div className='mt-12'>
-        <Footer />
-      </div>
-      <AdminPage/>
     </div>
   );
+
 };
 
 export default AddProduct;
