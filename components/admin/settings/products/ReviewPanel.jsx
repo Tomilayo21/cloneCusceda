@@ -5,7 +5,8 @@ import { useUser } from '@clerk/nextjs';
 // import Loading from '@/components/Loading';
 import { toast } from 'react-hot-toast';
 import { saveAs } from 'file-saver';
-import Footer from '@/components/admin/Footer';
+import { Trash2, FileDown, CheckCircle, Star, Search } from "lucide-react";
+
 
 const ReviewsPanel = () => {
   const { user, isLoaded } = useUser();
@@ -138,65 +139,283 @@ const ReviewsPanel = () => {
   const totalPages = Math.ceil(filteredReviews.length / reviewsPerPage);
 
   return (
-    <div className="p-2 max-w-4xl flex-1 overflow-scroll flex flex-col mx-4 mt-4">
-      {/* flex-1 overflow-scroll h-screen text-sm flex flex-col justify-between */}
-      <h1 className="text-xl md:text-2xl font-bold mb-4">Manage Reviews</h1>
+    // <div className="p-2 max-w-4xl flex-1 overflow-scroll flex flex-col mx-4 mt-4">
+    //   {/* flex-1 overflow-scroll h-screen text-sm flex flex-col justify-between */}
+    //   <h1 className="text-xl md:text-2xl font-bold mb-4">Manage Reviews</h1>
 
-      <div className="flex flex-wrap gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Search by user, product, or comment"
-          className="border p-2 rounded flex-grow min-w-[180px]"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
-        <select value={ratingFilter} onChange={e => setRatingFilter(e.target.value)} className="border p-2 rounded">
+    //   <div className="flex flex-wrap gap-4 mb-6">
+    //     <input
+    //       type="text"
+    //       placeholder="Search by user, product, or comment"
+    //       className="border p-2 rounded flex-grow min-w-[180px]"
+    //       value={search}
+    //       onChange={e => setSearch(e.target.value)}
+    //     />
+    //     <select value={ratingFilter} onChange={e => setRatingFilter(e.target.value)} className="border p-2 rounded">
+    //       <option value="">All Ratings</option>
+    //       {[1, 2, 3, 4, 5].map(r => <option key={r} value={r}>{r} Stars</option>)}
+    //     </select>
+    //     <select value={sortField} onChange={e => setSortField(e.target.value)} className="border p-2 rounded">
+    //       <option value="createdAt">Date</option>
+    //       <option value="username">User</option>
+    //       <option value="productId">Product Name</option>
+    //     </select>
+    //     <select value={sortOrder} onChange={e => setSortOrder(e.target.value)} className="border p-2 rounded">
+    //       <option value="asc">Ascending</option>
+    //       <option value="desc">Descending</option>
+    //     </select>
+    //     <button onClick={exportToCSV} className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-blue-700 whitespace-nowrap">
+    //       Export CSV
+    //     </button>
+    //     <button onClick={approveAll} className="bg-black text-white px-4 py-2 rounded hover:bg-green-700 whitespace-nowrap">
+    //       Approve All
+    //     </button>
+    //   </div>
+
+    //   {filteredReviews.length === 0 ? (
+    //     <p>No reviews found.</p>
+    //   ) : (
+    //     <>
+    //       {/* Desktop Table */}
+    //       <div className="hidden md:block">
+    //         <table className="w-full border-collapse border border-gray-300 text-sm">
+    //           <thead>
+    //             <tr className="bg-gray-100">
+    //               <th className="border border-gray-300 px-4 py-2">User</th>
+    //               <th className="border border-gray-300 px-4 py-2">Product ID</th>
+    //               <th className="border border-gray-300 px-4 py-2">Rating</th>
+    //               <th className="border border-gray-300 px-4 py-2">Comment</th>
+    //               <th className="border border-gray-300 px-4 py-2">Approved</th>
+    //               <th className="border border-gray-300 px-4 py-2">Date</th>
+    //               <th className="border border-gray-300 px-4 py-2">Actions</th>
+    //             </tr>
+    //           </thead>
+    //           <tbody>
+    //             {paginatedReviews.map(rev => (
+    //               <tr key={rev._id}>
+    //                 <td className="border border-gray-300 px-4 py-2">{rev.username}</td>
+    //                 <td className="border border-gray-300 px-4 py-2">{rev.productId?.name || 'N/A'}</td>
+    //                 <td className="border border-gray-300 px-4 py-2">{rev.rating}</td>
+    //                 <td className="border border-gray-300 px-4 py-2">{rev.comment}</td>
+    //                 <td className="border border-gray-300 px-4 py-2 text-center">
+    //                   <input
+    //                     type="checkbox"
+    //                     checked={rev.approved}
+    //                     onChange={() => toggleApproval(rev._id, !rev.approved)}
+    //                     className="w-5 h-5 cursor-pointer accent-orange-600"
+    //                   />
+    //                 </td>
+    //                 <td className="border border-gray-300 px-4 py-2">{new Date(rev.createdAt).toLocaleString()}</td>
+    //                 <td className="border border-gray-300 px-4 py-2 text-center">
+    //                   <button onClick={() => deleteReview(rev._id)} className="text-red-600 hover:underline">
+    //                     Delete
+    //                   </button>
+    //                 </td>
+    //               </tr>
+    //             ))}
+    //           </tbody>
+    //         </table>
+    //       </div>
+
+    //       {/* Mobile Cards */}
+    //       <div className="md:hidden space-y-4 mx-4">
+    //         {paginatedReviews.map(rev => (
+    //           <div key={rev._id} className="border border-gray-300 rounded p-4 shadow-sm bg-white">
+    //             <div className="mb-2"><strong>User:</strong> {rev.username}</div>
+    //             <div className="mb-2"><strong>Product Name:</strong> {rev.productId?.name || 'N/A'}</div>
+    //             <div className="mb-2"><strong>Rating:</strong> {rev.rating} ⭐</div>
+    //             <div className="mb-2"><strong>Comment:</strong> {rev.comment}</div>
+    //             <div className="mb-2 flex items-center">
+    //               <strong className="mr-2">Approved:</strong>
+    //               <input
+    //                 type="checkbox"
+    //                 checked={rev.approved}
+    //                 onChange={() => toggleApproval(rev._id, !rev.approved)}
+    //                 className="w-6 h-6 cursor-pointer accent-orange-600"
+    //               />
+    //             </div>
+    //             <div className="mb-2"><strong>Date:</strong> {new Date(rev.createdAt).toLocaleString()}</div>
+    //             <button
+    //               onClick={() => deleteReview(rev._id)}
+    //               className="text-red-600 hover:underline mt-2 block"
+    //             >
+    //               Delete
+    //             </button>
+    //           </div>
+    //         ))}
+    //       </div>
+
+    //       {/* Pagination */}
+    //       {totalPages > 1 && (
+    //         <div className="mt-4 flex justify-center items-center">
+    //           <div className="space-x-2 flex items-center">
+    //             {/* Prev Button */}
+    //             <button
+    //               disabled={page === 1}
+    //               onClick={() => setPage(p => Math.max(p - 1, 1))}
+    //               className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+    //             >
+    //               Prev
+    //             </button>
+
+    //             {/* Page Numbers with Ellipsis */}
+    //             {(() => {
+    //               const range = [];
+    //               const start = Math.max(1, page - 2);
+    //               const end = Math.min(totalPages, page + 2);
+
+    //               if (start > 1) {
+    //                 range.push(1);
+    //                 if (start > 2) range.push("ellipsis-start");
+    //               }
+
+    //               for (let i = start; i <= end; i++) {
+    //                 range.push(i);
+    //               }
+
+    //               if (end < totalPages) {
+    //                 if (end < totalPages - 1) range.push("ellipsis-end");
+    //                 range.push(totalPages);
+    //               }
+
+    //               return range.map((item, index) =>
+    //                 item === "ellipsis-start" || item === "ellipsis-end" ? (
+    //                   <span key={index} className="px-1">...</span>
+    //                 ) : (
+    //                   <button
+    //                     key={item}
+    //                     onClick={() => setPage(item)}
+    //                     className={`px-3 py-1 rounded border ${
+    //                       page === item ? "bg-black text-white" : "bg-white"
+    //                     }`}
+    //                   >
+    //                     {item}
+    //                   </button>
+    //                 )
+    //               );
+    //             })()}
+
+    //             {/* Next Button */}
+    //             <button
+    //               disabled={page === totalPages}
+    //               onClick={() => setPage(p => Math.min(p + 1, totalPages))}
+    //               className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+    //             >
+    //               Next
+    //             </button>
+    //           </div>
+    //         </div>
+    //       )}
+
+    //     </>
+    //   )}
+    // </div>
+
+
+    <div className="p-4 max-w-6xl flex-1 overflow-y-auto mx-auto">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
+        Manage Reviews
+      </h1>
+
+      {/* Filters */}
+      <div className="flex flex-wrap gap-3 mb-6 items-center">
+        <div className="relative w-full sm:w-60">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search by user, product, or comment"
+            className="border border-gray-300 pl-9 pr-3 py-2 rounded-lg text-sm w-full focus:ring-2 focus:ring-orange-500 outline-none shadow-sm"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        <select
+          value={ratingFilter}
+          onChange={(e) => setRatingFilter(e.target.value)}
+          className="border border-gray-300 px-3 py-2 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none shadow-sm"
+        >
           <option value="">All Ratings</option>
-          {[1, 2, 3, 4, 5].map(r => <option key={r} value={r}>{r} Stars</option>)}
+          {[1, 2, 3, 4, 5].map((r) => (
+            <option key={r} value={r}>
+              {r} Stars
+            </option>
+          ))}
         </select>
-        <select value={sortField} onChange={e => setSortField(e.target.value)} className="border p-2 rounded">
+        <select
+          value={sortField}
+          onChange={(e) => setSortField(e.target.value)}
+          className="border border-gray-300 px-3 py-2 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none shadow-sm"
+        >
           <option value="createdAt">Date</option>
           <option value="username">User</option>
           <option value="productId">Product Name</option>
         </select>
-        <select value={sortOrder} onChange={e => setSortOrder(e.target.value)} className="border p-2 rounded">
+        <select
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+          className="border border-gray-300 px-3 py-2 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none shadow-sm"
+        >
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
-        <button onClick={exportToCSV} className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-blue-700 whitespace-nowrap">
-          Export CSV
+
+        <button
+          onClick={exportToCSV}
+          className="flex items-center gap-2 bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition shadow-sm"
+        >
+          <FileDown size={16} /> Export CSV
         </button>
-        <button onClick={approveAll} className="bg-black text-white px-4 py-2 rounded hover:bg-green-700 whitespace-nowrap">
-          Approve All
+        <button
+          onClick={approveAll}
+          className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition shadow-sm"
+        >
+          <CheckCircle size={16} /> Approve All
         </button>
       </div>
 
       {filteredReviews.length === 0 ? (
-        <p>No reviews found.</p>
+        <p className="text-gray-500 italic">No reviews found.</p>
       ) : (
         <>
           {/* Desktop Table */}
-          <div className="hidden md:block">
-            <table className="w-full border-collapse border border-gray-300 text-sm">
+          <div className="hidden md:block overflow-x-auto rounded-lg shadow">
+            <table className="w-full text-sm border-collapse">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="border border-gray-300 px-4 py-2">User</th>
-                  <th className="border border-gray-300 px-4 py-2">Product ID</th>
-                  <th className="border border-gray-300 px-4 py-2">Rating</th>
-                  <th className="border border-gray-300 px-4 py-2">Comment</th>
-                  <th className="border border-gray-300 px-4 py-2">Approved</th>
-                  <th className="border border-gray-300 px-4 py-2">Date</th>
-                  <th className="border border-gray-300 px-4 py-2">Actions</th>
+                <tr className="bg-gray-100 text-gray-700 text-left">
+                  <th className="px-4 py-3 font-semibold">User</th>
+                  <th className="px-4 py-3 font-semibold">Product</th>
+                  <th className="px-4 py-3 font-semibold">Rating</th>
+                  <th className="px-4 py-3 font-semibold">Comment</th>
+                  <th className="px-4 py-3 font-semibold text-center">Approved</th>
+                  <th className="px-4 py-3 font-semibold">Date</th>
+                  <th className="px-4 py-3 font-semibold text-center">Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                {paginatedReviews.map(rev => (
-                  <tr key={rev._id}>
-                    <td className="border border-gray-300 px-4 py-2">{rev.username}</td>
-                    <td className="border border-gray-300 px-4 py-2">{rev.productId?.name || 'N/A'}</td>
-                    <td className="border border-gray-300 px-4 py-2">{rev.rating}</td>
-                    <td className="border border-gray-300 px-4 py-2">{rev.comment}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">
+              <tbody className="divide-y divide-gray-200">
+                {paginatedReviews.map((rev, i) => (
+                  <tr
+                    key={rev._id}
+                    className={`hover:bg-gray-50 transition ${
+                      i % 2 === 0 ? "bg-white" : "bg-gray-50/70"
+                    }`}
+                  >
+                    <td className="px-4 py-3">{rev.username}</td>
+                    <td className="px-4 py-3">{rev.productId?.name || "N/A"}</td>
+                    <td className="px-4 py-3 text-yellow-600 font-medium">
+                      <div className="flex items-center gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < rev.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-gray-700">{rev.comment}</td>
+                    <td className="px-4 py-3 text-center">
                       <input
                         type="checkbox"
                         checked={rev.approved}
@@ -204,10 +423,15 @@ const ReviewsPanel = () => {
                         className="w-5 h-5 cursor-pointer accent-orange-600"
                       />
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">{new Date(rev.createdAt).toLocaleString()}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">
-                      <button onClick={() => deleteReview(rev._id)} className="text-red-600 hover:underline">
-                        Delete
+                    <td className="px-4 py-3 text-gray-500">
+                      {new Date(rev.createdAt).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <button
+                        onClick={() => deleteReview(rev._id)}
+                        className="text-red-600 hover:text-red-800 transition"
+                      >
+                        <Trash2 size={18} />
                       </button>
                     </td>
                   </tr>
@@ -217,15 +441,38 @@ const ReviewsPanel = () => {
           </div>
 
           {/* Mobile Cards */}
-          <div className="md:hidden space-y-4 mx-4">
-            {paginatedReviews.map(rev => (
-              <div key={rev._id} className="border border-gray-300 rounded p-4 shadow-sm bg-white">
-                <div className="mb-2"><strong>User:</strong> {rev.username}</div>
-                <div className="mb-2"><strong>Product Name:</strong> {rev.productId?.name || 'N/A'}</div>
-                <div className="mb-2"><strong>Rating:</strong> {rev.rating} ⭐</div>
-                <div className="mb-2"><strong>Comment:</strong> {rev.comment}</div>
+          <div className="md:hidden space-y-4">
+            {paginatedReviews.map((rev) => (
+              <div
+                key={rev._id}
+                className="border border-gray-200 rounded-xl p-4 shadow-sm bg-white"
+              >
+                <div className="mb-2 text-gray-800">
+                  <span className="font-medium">User:</span> {rev.username}
+                </div>
+                <div className="mb-2 text-gray-800">
+                  <span className="font-medium">Product:</span>{" "}
+                  {rev.productId?.name || "N/A"}
+                </div>
+                <div className="mb-2 text-yellow-600 font-medium flex items-center gap-1">
+                  <span>Rating:</span>
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${
+                          i < rev.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="ml-1">{rev.rating}</span>
+                </div>
+                <div className="mb-2 text-gray-700">
+                  <span className="font-medium">Comment:</span> {rev.comment}
+                </div>
                 <div className="mb-2 flex items-center">
-                  <strong className="mr-2">Approved:</strong>
+                  <span className="font-medium mr-2">Approved:</span>
                   <input
                     type="checkbox"
                     checked={rev.approved}
@@ -233,12 +480,15 @@ const ReviewsPanel = () => {
                     className="w-6 h-6 cursor-pointer accent-orange-600"
                   />
                 </div>
-                <div className="mb-2"><strong>Date:</strong> {new Date(rev.createdAt).toLocaleString()}</div>
+                <div className="mb-2 text-gray-500">
+                  <span className="font-medium">Date:</span>{" "}
+                  {new Date(rev.createdAt).toLocaleString()}
+                </div>
                 <button
                   onClick={() => deleteReview(rev._id)}
-                  className="text-red-600 hover:underline mt-2 block"
+                  className="flex items-center gap-1 text-red-600 hover:text-red-800 transition mt-2"
                 >
-                  Delete
+                  <Trash2 size={16} /> Delete
                 </button>
               </div>
             ))}
@@ -246,74 +496,62 @@ const ReviewsPanel = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="mt-4 flex justify-center items-center">
-              <div className="space-x-2 flex items-center">
-                {/* Prev Button */}
+            <div className="mt-6 flex justify-center">
+              <div className="flex items-center gap-2">
                 <button
                   disabled={page === 1}
-                  onClick={() => setPage(p => Math.max(p - 1, 1))}
-                  className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                  onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                  className="px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
                 >
                   Prev
                 </button>
-
-                {/* Page Numbers with Ellipsis */}
                 {(() => {
                   const range = [];
                   const start = Math.max(1, page - 2);
                   const end = Math.min(totalPages, page + 2);
-
                   if (start > 1) {
                     range.push(1);
                     if (start > 2) range.push("ellipsis-start");
                   }
-
-                  for (let i = start; i <= end; i++) {
-                    range.push(i);
-                  }
-
+                  for (let i = start; i <= end; i++) range.push(i);
                   if (end < totalPages) {
                     if (end < totalPages - 1) range.push("ellipsis-end");
                     range.push(totalPages);
                   }
-
-                  return range.map((item, index) =>
-                    item === "ellipsis-start" || item === "ellipsis-end" ? (
-                      <span key={index} className="px-1">...</span>
-                    ) : (
+                  return range.map((item, idx) =>
+                    typeof item === "number" ? (
                       <button
                         key={item}
                         onClick={() => setPage(item)}
-                        className={`px-3 py-1 rounded border ${
-                          page === item ? "bg-black text-white" : "bg-white"
+                        className={`px-3 py-1 rounded-full border text-sm ${
+                          page === item
+                            ? "bg-black text-white"
+                            : "bg-white hover:bg-gray-100"
                         }`}
                       >
                         {item}
                       </button>
+                    ) : (
+                      <span key={idx} className="px-2">
+                        ...
+                      </span>
                     )
                   );
                 })()}
-
-                {/* Next Button */}
                 <button
                   disabled={page === totalPages}
-                  onClick={() => setPage(p => Math.min(p + 1, totalPages))}
-                  className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                  onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                  className="px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
                 >
                   Next
                 </button>
               </div>
             </div>
           )}
-
-
-
         </>
       )}
-      <div className='mt-12'>
-        <Footer />
-      </div>
     </div>
+
   );
 };
 
