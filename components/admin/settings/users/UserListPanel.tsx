@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { Shield, User, Trash2, AlertCircle, CheckCircle2, Search  } from "lucide-react";
 
 interface ClerkUser {
   id: string;
@@ -108,7 +109,27 @@ export default function UserListPanel() {
 
       if (!res.ok) throw new Error("Failed to update role");
 
-      toast.success(`Role changed to ${selectedRole.toUpperCase()}`);
+      // ✅ Custom Success Toast
+      toast.custom(
+        (t) => (
+          <div
+            className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4
+              transform transition-all duration-300 ease-in-out
+              ${t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"}`}
+          >
+            {selectedRole === "admin" ? (
+              <Shield className="text-orange-500" size={20} />
+            ) : (
+              <User className="text-blue-500" size={20} />
+            )}
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Role changed to <span className="font-semibold">{selectedRole.toUpperCase()}</span>
+            </p>
+          </div>
+        ),
+        { duration: 2500, position: "top-right" }
+      );
+
       setUsers((prev) =>
         prev.map((user) =>
           user.id === userId ? { ...user, public_metadata: { role: selectedRole } } : user
@@ -116,7 +137,22 @@ export default function UserListPanel() {
       );
       await logActivity("Role Change", `Changed role of user ${userId} to ${selectedRole}`);
     } catch (err: any) {
-      toast.error("Error: " + err.message);
+      // ❌ Error Toast
+      toast.custom(
+        (t) => (
+          <div
+            className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4
+              transform transition-all duration-300 ease-in-out
+              ${t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"}`}
+          >
+            <AlertCircle className="text-red-500" size={20} />
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Error: {err.message}
+            </p>
+          </div>
+        ),
+        { duration: 3000, position: "top-right" }
+      );
     }
   };
 
@@ -127,11 +163,42 @@ export default function UserListPanel() {
       const res = await fetch(`/api/clerk-users/${userId}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete user");
 
-      toast.success("User deleted");
+      // ✅ Success Toast
+      toast.custom(
+        (t) => (
+          <div
+            className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4
+              transform transition-all duration-300 ease-in-out
+              ${t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"}`}
+          >
+            <Trash2 className="text-red-600" size={20} />
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              User deleted successfully
+            </p>
+          </div>
+        ),
+        { duration: 2500, position: "top-right" }
+      );
+
       setUsers((prev) => prev.filter((user) => user.id !== userId));
       await logActivity("User Deletion", `Deleted user ${userId}`);
     } catch (err: any) {
-      toast.error("Error: " + err.message);
+      // ❌ Error Toast
+      toast.custom(
+        (t) => (
+          <div
+            className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4
+              transform transition-all duration-300 ease-in-out
+              ${t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"}`}
+          >
+            <AlertCircle className="text-red-500" size={20} />
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Error: {err.message}
+            </p>
+          </div>
+        ),
+        { duration: 3000, position: "top-right" }
+      );
     }
   };
 
@@ -156,292 +223,619 @@ export default function UserListPanel() {
   if (error) return <p className="p-4 text-red-600">Error: {error}</p>;
 
   return (
-  <div className="p-2 max-w-4xl flex-1  flex flex-col mx-4 mt-4">
-    <h2 className="text-xl md:text-2xl font-bold mb-4">Manage Roles</h2>
+  // <div className="p-2 max-w-4xl flex-1  flex flex-col mx-4 mt-4">
+  //   <h2 className="text-xl md:text-2xl font-bold mb-4">Manage Roles</h2>
 
-    {/* Search + Export */}
-    <div className="mb-4 flex flex-col md:flex-row justify-between gap-2">
-      <input
-        type="text"
-        placeholder="Search by name, email..."
-        className="px-4 py-2 border rounded w-full md:w-1/3"
-        value={searchTerm}
-        onChange={(e) => {
-          setSearchTerm(e.target.value);
-          setCurrentPage(1);
-        }}
-      />
-      <button
-        onClick={exportToCSV}
-        className="bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-black transition"
-      >
-        Export to CSV
-      </button>
-    </div>
+  //   {/* Search + Export */}
+  //   <div className="mb-4 flex flex-col md:flex-row justify-between gap-2">
+  //     <input
+  //       type="text"
+  //       placeholder="Search by name, email..."
+  //       className="px-4 py-2 border rounded w-full md:w-1/3"
+  //       value={searchTerm}
+  //       onChange={(e) => {
+  //         setSearchTerm(e.target.value);
+  //         setCurrentPage(1);
+  //       }}
+  //     />
+  //     <button
+  //       onClick={exportToCSV}
+  //       className="bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-black transition"
+  //     >
+  //       Export to CSV
+  //     </button>
+  //   </div>
 
-    {/* === Table View === */}
-    <div className="hidden md:block overflow-x-auto rounded border">
-      {/* Admins Section */}
-      <h3 className="text-lg font-semibold bg-gray-100 px-4 py-2">Admins</h3>
-      <table className="min-w-full table-auto text-sm">
-        <thead className="bg-gray-100 text-xs md:text-sm">
-          <tr>
-            <th className="px-2 py-2 border">Photo</th>
-            <th className="px-2 py-2 border">First Name</th>
-            <th className="px-2 py-2 border">Email</th>
-            <th className="px-2 py-2 border">Signed Up With</th>
-            <th className="px-2 py-2 border">Username</th>
-            <th className="px-2 py-2 border">Created</th>
-            <th className="px-2 py-2 border">Updated</th>
-            <th className="px-2 py-2 border">Role</th>
-            <th className="px-2 py-2 border">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedUsers
-            .filter((user) => (user.public_metadata?.role ?? "user") === "admin")
-            .map((user) => {
-              const role = user.public_metadata?.role ?? "user";
-              const signupMethod =
-                user.external_accounts?.[0]?.provider === "oauth_google" ? "Google" : "Email";
-              return (
-                <tr key={user.id} className="border-t hover:bg-gray-50">
-                  <td className="px-2 py-2 border">
-                    <img src={user.profile_image_url} alt="profile" className="w-10 h-10 rounded-full object-cover" />
-                  </td>
-                  <td className="px-2 py-2 border font-medium">{user.first_name ?? "N/A"}</td>
-                  <td className="px-2 py-2 border text-xs">{user.email_addresses[0]?.email_address}</td>
-                  <td className="px-2 py-2 border">{signupMethod}</td>
-                  <td className="px-2 py-2 border text-xs">{user.username ?? "N/A"}</td>
-                  <td className="px-2 py-2 border text-xs">{dayjs(user.created_at).fromNow()}</td>
-                  <td className="px-2 py-2 border text-xs">{dayjs(user.updated_at).fromNow()}</td>
-                  <td className="px-2 py-2 border">
-                    <select
-                      value={role}
-                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        updateRole(user.id, e.target.value as "admin" | "user")
-                      }
+  //   {/* === Table View === */}
+  //   <div className="hidden md:block overflow-x-auto rounded border">
+  //     {/* Admins Section */}
+  //     <h3 className="text-lg font-semibold bg-gray-100 px-4 py-2">Admins</h3>
+  //     <table className="min-w-full table-auto text-sm">
+  //       <thead className="bg-gray-100 text-xs md:text-sm">
+  //         <tr>
+  //           <th className="px-2 py-2 border">Photo</th>
+  //           <th className="px-2 py-2 border">First Name</th>
+  //           <th className="px-2 py-2 border">Email</th>
+  //           <th className="px-2 py-2 border">Signed Up With</th>
+  //           <th className="px-2 py-2 border">Username</th>
+  //           <th className="px-2 py-2 border">Created</th>
+  //           <th className="px-2 py-2 border">Updated</th>
+  //           <th className="px-2 py-2 border">Role</th>
+  //           <th className="px-2 py-2 border">Actions</th>
+  //         </tr>
+  //       </thead>
+  //       <tbody>
+  //         {paginatedUsers
+  //           .filter((user) => (user.public_metadata?.role ?? "user") === "admin")
+  //           .map((user) => {
+  //             const role = user.public_metadata?.role ?? "user";
+  //             const signupMethod =
+  //               user.external_accounts?.[0]?.provider === "oauth_google" ? "Google" : "Email";
+  //             return (
+  //               <tr key={user.id} className="border-t hover:bg-gray-50">
+  //                 <td className="px-2 py-2 border">
+  //                   <img src={user.profile_image_url} alt="profile" className="w-10 h-10 rounded-full object-cover" />
+  //                 </td>
+  //                 <td className="px-2 py-2 border font-medium">{user.first_name ?? "N/A"}</td>
+  //                 <td className="px-2 py-2 border text-xs">{user.email_addresses[0]?.email_address}</td>
+  //                 <td className="px-2 py-2 border">{signupMethod}</td>
+  //                 <td className="px-2 py-2 border text-xs">{user.username ?? "N/A"}</td>
+  //                 <td className="px-2 py-2 border text-xs">{dayjs(user.created_at).fromNow()}</td>
+  //                 <td className="px-2 py-2 border text-xs">{dayjs(user.updated_at).fromNow()}</td>
+  //                 <td className="px-2 py-2 border">
+  //                   <select
+  //                     value={role}
+  //                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+  //                       updateRole(user.id, e.target.value as "admin" | "user")
+  //                     }
 
 
-                      className="border rounded px-1 py-1 text-sm"
-                    >
-                      <option value="user">User</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  </td>
-                  <td className="px-2 py-2 border">
-                    <button onClick={() => deleteUser(user.id)} className="text-red-600 hover:underline text-xs">
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
+  //                     className="border rounded px-1 py-1 text-sm"
+  //                   >
+  //                     <option value="user">User</option>
+  //                     <option value="admin">Admin</option>
+  //                   </select>
+  //                 </td>
+  //                 <td className="px-2 py-2 border">
+  //                   <button onClick={() => deleteUser(user.id)} className="text-red-600 hover:underline text-xs">
+  //                     Delete
+  //                   </button>
+  //                 </td>
+  //               </tr>
+  //             );
+  //           })}
+  //       </tbody>
+  //     </table>
 
-      {/* Users Section */}
-      <h3 className="text-lg font-semibold bg-gray-100 px-4 py-2 mt-6">Users</h3>
-      <table className="min-w-full table-auto text-sm">
-        <thead className="bg-gray-100 text-xs md:text-sm">
-          <tr>
-            <th className="px-2 py-2 border">Photo</th>
-            <th className="px-2 py-2 border">First Name</th>
-            <th className="px-2 py-2 border">Email</th>
-            <th className="px-2 py-2 border">Signed Up With</th>
-            <th className="px-2 py-2 border">Username</th>
-            <th className="px-2 py-2 border">Created</th>
-            <th className="px-2 py-2 border">Updated</th>
-            <th className="px-2 py-2 border">Role</th>
-            <th className="px-2 py-2 border">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedUsers
-            .filter((user) => (user.public_metadata?.role ?? "user") === "user")
-            .map((user) => {
-              const role = user.public_metadata?.role ?? "user";
-              const signupMethod =
-                user.external_accounts?.[0]?.provider === "oauth_google" ? "Google" : "Email";
-              return (
-                <tr key={user.id} className="border-t hover:bg-gray-50">
-                  <td className="px-2 py-2 border">
-                    <img src={user.profile_image_url} alt="profile" className="w-10 h-10 rounded-full object-cover" />
-                  </td>
-                  <td className="px-2 py-2 border font-medium">{user.first_name ?? "N/A"}</td>
-                  <td className="px-2 py-2 border text-xs">{user.email_addresses[0]?.email_address}</td>
-                  <td className="px-2 py-2 border">{signupMethod}</td>
-                  <td className="px-2 py-2 border text-xs">{user.username ?? "N/A"}</td>
-                  <td className="px-2 py-2 border text-xs">{dayjs(user.created_at).fromNow()}</td>
-                  <td className="px-2 py-2 border text-xs">{dayjs(user.updated_at).fromNow()}</td>
-                  <td className="px-2 py-2 border">
-                    <select
-                      value={role}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        updateRole(user.id, e.target.value as "admin" | "user")
-                      }
+  //     {/* Users Section */}
+  //     <h3 className="text-lg font-semibold bg-gray-100 px-4 py-2 mt-6">Users</h3>
+  //     <table className="min-w-full table-auto text-sm">
+  //       <thead className="bg-gray-100 text-xs md:text-sm">
+  //         <tr>
+  //           <th className="px-2 py-2 border">Photo</th>
+  //           <th className="px-2 py-2 border">First Name</th>
+  //           <th className="px-2 py-2 border">Email</th>
+  //           <th className="px-2 py-2 border">Signed Up With</th>
+  //           <th className="px-2 py-2 border">Username</th>
+  //           <th className="px-2 py-2 border">Created</th>
+  //           <th className="px-2 py-2 border">Updated</th>
+  //           <th className="px-2 py-2 border">Role</th>
+  //           <th className="px-2 py-2 border">Actions</th>
+  //         </tr>
+  //       </thead>
+  //       <tbody>
+  //         {paginatedUsers
+  //           .filter((user) => (user.public_metadata?.role ?? "user") === "user")
+  //           .map((user) => {
+  //             const role = user.public_metadata?.role ?? "user";
+  //             const signupMethod =
+  //               user.external_accounts?.[0]?.provider === "oauth_google" ? "Google" : "Email";
+  //             return (
+  //               <tr key={user.id} className="border-t hover:bg-gray-50">
+  //                 <td className="px-2 py-2 border">
+  //                   <img src={user.profile_image_url} alt="profile" className="w-10 h-10 rounded-full object-cover" />
+  //                 </td>
+  //                 <td className="px-2 py-2 border font-medium">{user.first_name ?? "N/A"}</td>
+  //                 <td className="px-2 py-2 border text-xs">{user.email_addresses[0]?.email_address}</td>
+  //                 <td className="px-2 py-2 border">{signupMethod}</td>
+  //                 <td className="px-2 py-2 border text-xs">{user.username ?? "N/A"}</td>
+  //                 <td className="px-2 py-2 border text-xs">{dayjs(user.created_at).fromNow()}</td>
+  //                 <td className="px-2 py-2 border text-xs">{dayjs(user.updated_at).fromNow()}</td>
+  //                 <td className="px-2 py-2 border">
+  //                   <select
+  //                     value={role}
+  //                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+  //                       updateRole(user.id, e.target.value as "admin" | "user")
+  //                     }
 
-                      className="border rounded px-1 py-1 text-sm"
-                    >
-                      <option value="user">User</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  </td>
-                  <td className="px-2 py-2 border">
-                    <button onClick={() => deleteUser(user.id)} className="text-red-600 hover:underline text-xs">
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
-    </div>
+  //                     className="border rounded px-1 py-1 text-sm"
+  //                   >
+  //                     <option value="user">User</option>
+  //                     <option value="admin">Admin</option>
+  //                   </select>
+  //                 </td>
+  //                 <td className="px-2 py-2 border">
+  //                   <button onClick={() => deleteUser(user.id)} className="text-red-600 hover:underline text-xs">
+  //                     Delete
+  //                   </button>
+  //                 </td>
+  //               </tr>
+  //             );
+  //           })}
+  //       </tbody>
+  //     </table>
+  //   </div>
 
-    {/* === Mobile Cards === */}
-    <div className="md:hidden space-y-4">
-      {/* Admins */}
-      <h3 className="text-lg font-semibold mt-6">Admins</h3>
-      {paginatedUsers
-        .filter((user) => (user.public_metadata?.role ?? "user") === "admin")
-        .map((user) => {
-          const role = user.public_metadata?.role ?? "user";
-          const signupMethod =
-            user.external_accounts?.[0]?.provider === "oauth_google" ? "Google" : "Email";
-          return (
-            <div key={user.id} className="border rounded p-4 shadow-sm">
-              <div className="flex items-center gap-3 mb-3">
-                <img src={user.profile_image_url} alt="profile" className="w-10 h-10 rounded-full object-cover" />
-                <div>
-                  <p className="font-semibold">{user.first_name ?? "N/A"}</p>
-                  <p className="text-xs text-gray-600">{user.email_addresses[0]?.email_address}</p>
-                </div>
-              </div>
-              <p className="text-xs"><span className="font-medium">Username:</span> {user.username ?? "N/A"}</p>
-              <p className="text-xs"><span className="font-medium">Signed Up With:</span> {signupMethod}</p>
-              <p className="text-xs"><span className="font-medium">Created:</span> {dayjs(user.created_at).fromNow()}</p>
-              <p className="text-xs"><span className="font-medium">Updated:</span> {dayjs(user.updated_at).fromNow()}</p>
-              <div className="flex items-center justify-between mt-3">
-                <select
-                  value={role}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                    updateRole(user.id, e.target.value as "admin" | "user")
-                  }
+  //   {/* === Mobile Cards === */}
+  //   <div className="md:hidden space-y-4">
+  //     {/* Admins */}
+  //     <h3 className="text-lg font-semibold mt-6">Admins</h3>
+  //     {paginatedUsers
+  //       .filter((user) => (user.public_metadata?.role ?? "user") === "admin")
+  //       .map((user) => {
+  //         const role = user.public_metadata?.role ?? "user";
+  //         const signupMethod =
+  //           user.external_accounts?.[0]?.provider === "oauth_google" ? "Google" : "Email";
+  //         return (
+  //           <div key={user.id} className="border rounded p-4 shadow-sm">
+  //             <div className="flex items-center gap-3 mb-3">
+  //               <img src={user.profile_image_url} alt="profile" className="w-10 h-10 rounded-full object-cover" />
+  //               <div>
+  //                 <p className="font-semibold">{user.first_name ?? "N/A"}</p>
+  //                 <p className="text-xs text-gray-600">{user.email_addresses[0]?.email_address}</p>
+  //               </div>
+  //             </div>
+  //             <p className="text-xs"><span className="font-medium">Username:</span> {user.username ?? "N/A"}</p>
+  //             <p className="text-xs"><span className="font-medium">Signed Up With:</span> {signupMethod}</p>
+  //             <p className="text-xs"><span className="font-medium">Created:</span> {dayjs(user.created_at).fromNow()}</p>
+  //             <p className="text-xs"><span className="font-medium">Updated:</span> {dayjs(user.updated_at).fromNow()}</p>
+  //             <div className="flex items-center justify-between mt-3">
+  //               <select
+  //                 value={role}
+  //                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+  //                   updateRole(user.id, e.target.value as "admin" | "user")
+  //                 }
 
-                  className="border rounded px-2 py-1 text-sm"
-                >
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </select>
-                <button onClick={() => deleteUser(user.id)} className="text-red-600 text-xs underline">Delete</button>
-              </div>
-            </div>
-          );
-        })}
+  //                 className="border rounded px-2 py-1 text-sm"
+  //               >
+  //                 <option value="user">User</option>
+  //                 <option value="admin">Admin</option>
+  //               </select>
+  //               <button onClick={() => deleteUser(user.id)} className="text-red-600 text-xs underline">Delete</button>
+  //             </div>
+  //           </div>
+  //         );
+  //       })}
 
-      {/* Users */}
-      <h3 className="text-lg font-semibold mt-6">Users</h3>
-      {paginatedUsers
-        .filter((user) => (user.public_metadata?.role ?? "user") === "user")
-        .map((user) => {
-          const role = user.public_metadata?.role ?? "user";
-          const signupMethod =
-            user.external_accounts?.[0]?.provider === "oauth_google" ? "Google" : "Email";
-          return (
-            <div key={user.id} className="border rounded p-4 shadow-sm">
-              <div className="flex items-center gap-3 mb-3">
-                <img src={user.profile_image_url} alt="profile" className="w-10 h-10 rounded-full object-cover" />
-                <div>
-                  <p className="font-semibold">{user.first_name ?? "N/A"}</p>
-                  <p className="text-xs text-gray-600">{user.email_addresses[0]?.email_address}</p>
-                </div>
-              </div>
-              <p className="text-xs"><span className="font-medium">Username:</span> {user.username ?? "N/A"}</p>
-              <p className="text-xs"><span className="font-medium">Signed Up With:</span> {signupMethod}</p>
-              <p className="text-xs"><span className="font-medium">Created:</span> {dayjs(user.created_at).fromNow()}</p>
-              <p className="text-xs"><span className="font-medium">Updated:</span> {dayjs(user.updated_at).fromNow()}</p>
-              <div className="flex items-center justify-between mt-3">
-                <select
-                  value={role}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                    updateRole(user.id, e.target.value as "admin" | "user")
-                  }
+  //     {/* Users */}
+  //     <h3 className="text-lg font-semibold mt-6">Users</h3>
+  //     {paginatedUsers
+  //       .filter((user) => (user.public_metadata?.role ?? "user") === "user")
+  //       .map((user) => {
+  //         const role = user.public_metadata?.role ?? "user";
+  //         const signupMethod =
+  //           user.external_accounts?.[0]?.provider === "oauth_google" ? "Google" : "Email";
+  //         return (
+  //           <div key={user.id} className="border rounded p-4 shadow-sm">
+  //             <div className="flex items-center gap-3 mb-3">
+  //               <img src={user.profile_image_url} alt="profile" className="w-10 h-10 rounded-full object-cover" />
+  //               <div>
+  //                 <p className="font-semibold">{user.first_name ?? "N/A"}</p>
+  //                 <p className="text-xs text-gray-600">{user.email_addresses[0]?.email_address}</p>
+  //               </div>
+  //             </div>
+  //             <p className="text-xs"><span className="font-medium">Username:</span> {user.username ?? "N/A"}</p>
+  //             <p className="text-xs"><span className="font-medium">Signed Up With:</span> {signupMethod}</p>
+  //             <p className="text-xs"><span className="font-medium">Created:</span> {dayjs(user.created_at).fromNow()}</p>
+  //             <p className="text-xs"><span className="font-medium">Updated:</span> {dayjs(user.updated_at).fromNow()}</p>
+  //             <div className="flex items-center justify-between mt-3">
+  //               <select
+  //                 value={role}
+  //                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+  //                   updateRole(user.id, e.target.value as "admin" | "user")
+  //                 }
 
-                  className="border rounded px-2 py-1 text-sm"
-                >
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </select>
-                <button onClick={() => deleteUser(user.id)} className="text-red-600 text-xs underline">Delete</button>
-              </div>
-            </div>
-          );
-        })}
-    </div>
+  //                 className="border rounded px-2 py-1 text-sm"
+  //               >
+  //                 <option value="user">User</option>
+  //                 <option value="admin">Admin</option>
+  //               </select>
+  //               <button onClick={() => deleteUser(user.id)} className="text-red-600 text-xs underline">Delete</button>
+  //             </div>
+  //           </div>
+  //         );
+  //       })}
+  //   </div>
 
-    {/* === Pagination and Footer === */}
-    <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-6 mb-8">
-      <div className="flex items-center gap-2 flex-wrap">
+  //   {/* === Pagination and Footer === */}
+  //   <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-6 mb-8">
+  //     <div className="flex items-center gap-2 flex-wrap">
+  //       <button
+  //         onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+  //         disabled={currentPage === 1}
+  //         className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+  //       >
+  //         Prev
+  //       </button>
+
+  //       {(() => {
+  //         const range = [];
+  //         const start = Math.max(1, currentPage - 2);
+  //         const end = Math.min(totalPages, currentPage + 2);
+
+  //         if (start > 1) {
+  //           range.push(1);
+  //           if (start > 2) range.push("ellipsis-start");
+  //         }
+
+  //         for (let i = start; i <= end; i++) {
+  //           range.push(i);
+  //         }
+
+  //         if (end < totalPages) {
+  //           if (end < totalPages - 1) range.push("ellipsis-end");
+  //           range.push(totalPages);
+  //         }
+
+  //         return range.map((item, index) =>
+  //           typeof item === "string" ? (
+  //             <span key={index} className="text-sm px-1">...</span>
+  //           ) : (
+  //             <button
+  //               key={item}
+  //               onClick={() => setCurrentPage(item)}
+  //               className={`px-3 py-1 rounded text-sm ${
+  //                 currentPage === item ? "bg-black text-white" : "bg-gray-200"
+  //               }`}
+  //             >
+  //               {item}
+  //             </button>
+  //           )
+  //         );
+  //       })()}
+
+  //       <button
+  //         onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+  //         disabled={currentPage === totalPages}
+  //         className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+  //       >
+  //         Next
+  //       </button>
+  //     </div>
+
+  //     <Link href="/activity-log" className="text-orange hover:underline text-sm">
+  //       View Activity Log
+  //     </Link>
+  //   </div>
+
+  // </div>
+    <div className="p-4 max-w-6xl flex-1 flex flex-col mx-auto mt-6">
+      {/* Header */}
+      <h2 className="text-2xl md:text-3xl font-bold mb-6">Manage Roles</h2>
+
+      {/* Search + Export */}
+      <div className="mb-6 flex flex-col md:flex-row justify-between gap-3">
+        <div className="relative w-full md:w-1/3">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search by name, email..."
+            className="pl-9 pr-3 py-2 w-full border rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-orange-500 outline-none"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+          />
+        </div>
         <button
-          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          onClick={exportToCSV}
+          className="bg-orange-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-black transition-colors shadow-sm"
         >
-          Prev
-        </button>
-
-        {(() => {
-          const range = [];
-          const start = Math.max(1, currentPage - 2);
-          const end = Math.min(totalPages, currentPage + 2);
-
-          if (start > 1) {
-            range.push(1);
-            if (start > 2) range.push("ellipsis-start");
-          }
-
-          for (let i = start; i <= end; i++) {
-            range.push(i);
-          }
-
-          if (end < totalPages) {
-            if (end < totalPages - 1) range.push("ellipsis-end");
-            range.push(totalPages);
-          }
-
-          return range.map((item, index) =>
-            typeof item === "string" ? (
-              <span key={index} className="text-sm px-1">...</span>
-            ) : (
-              <button
-                key={item}
-                onClick={() => setCurrentPage(item)}
-                className={`px-3 py-1 rounded text-sm ${
-                  currentPage === item ? "bg-black text-white" : "bg-gray-200"
-                }`}
-              >
-                {item}
-              </button>
-            )
-          );
-        })()}
-
-        <button
-          onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-        >
-          Next
+          Export CSV
         </button>
       </div>
 
-      <Link href="/activity-log" className="text-orange hover:underline text-sm">
-        View Activity Log
-      </Link>
-    </div>
+      {/* === Table View (Desktop) === */}
+      <div className="hidden md:block border rounded-lg shadow-sm bg-white">
+        {/* Admins */}
+        <h3 className="text-lg font-semibold bg-gray-50 px-4 py-3 border-b">
+          Admins
+        </h3>
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm">
+            <thead className="bg-gray-100 text-xs uppercase text-gray-600">
+              <tr>
+                {[
+                  "Photo",
+                  "First Name",
+                  "Email",
+                  "Signed Up With",
+                  "Username",
+                  "Created",
+                  // "Updated",
+                  "Role",
+                  "Actions",
+                ].map((header) => (
+                  <th
+                    key={header}
+                    className="px-3 py-2 border text-left whitespace-nowrap"
+                  >
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedUsers
+                .filter((u) => (u.public_metadata?.role ?? "user") === "admin")
+                .map((user) => {
+                  const role = user.public_metadata?.role ?? "user";
+                  const signupMethod =
+                    user.external_accounts?.[0]?.provider === "oauth_google"
+                      ? "Google"
+                      : "Email";
+                  return (
+                    <tr
+                      key={user.id}
+                      className="border-t hover:bg-gray-50 transition"
+                    >
+                      <td className="px-3 py-2 border">
+                        <img
+                          src={user.profile_image_url}
+                          alt="profile"
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                      </td>
+                      <td className="px-3 py-2 border font-medium whitespace-nowrap">
+                        {user.first_name ?? "N/A"}
+                      </td>
+                      <td className="px-3 py-2 border text-xs whitespace-nowrap">
+                        {user.email_addresses[0]?.email_address}
+                      </td>
+                      <td className="px-3 py-2 border whitespace-nowrap">
+                        {signupMethod}
+                      </td>
+                      <td className="px-3 py-2 border text-xs whitespace-nowrap">
+                        {user.username ?? "N/A"}
+                      </td>
+                      <td className="px-3 py-2 border text-xs whitespace-nowrap">
+                        {dayjs(user.created_at).fromNow()}
+                      </td>
+                      {/* <td className="px-3 py-2 border text-xs whitespace-nowrap">
+                        {dayjs(user.updated_at).fromNow()}
+                      </td> */}
+                      <td className="px-3 py-2 border whitespace-nowrap">
+                        <select
+                          value={role}
+                          onChange={(e) =>
+                            updateRole(user.id, e.target.value as "admin" | "user")
+                          }
+                          className="border rounded px-2 py-1 text-sm focus:ring-2 focus:ring-orange-500"
+                        >
+                          <option value="user">User</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                      </td>
+                      <td className="px-3 py-2 border text-center">
+                        <button
+                          onClick={() => deleteUser(user.id)}
+                          className="text-red-600 hover:underline text-xs"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
 
-  </div>
+        {/* Users */}
+        <h3 className="text-lg font-semibold bg-gray-50 px-4 py-3 mt-6 border-t">
+          Users
+        </h3>
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm">
+            <thead className="bg-gray-100 text-xs uppercase text-gray-600">
+              <tr>
+                {[
+                  "Photo",
+                  "First Name",
+                  "Email",
+                  "Signed Up With",
+                  "Username",
+                  "Created",
+                  // "Updated",
+                  "Role",
+                  "Actions",
+                ].map((header) => (
+                  <th
+                    key={header}
+                    className="px-3 py-2 border text-left whitespace-nowrap"
+                  >
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedUsers
+                .filter((u) => (u.public_metadata?.role ?? "user") === "user")
+                .map((user) => {
+                  const role = user.public_metadata?.role ?? "user";
+                  const signupMethod =
+                    user.external_accounts?.[0]?.provider === "oauth_google"
+                      ? "Google"
+                      : "Email";
+                  return (
+                    <tr
+                      key={user.id}
+                      className="border-t hover:bg-gray-50 transition"
+                    >
+                      <td className="px-3 py-2 border">
+                        <img
+                          src={user.profile_image_url}
+                          alt="profile"
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                      </td>
+                      <td className="px-3 py-2 border font-medium whitespace-nowrap">
+                        {user.first_name ?? "N/A"}
+                      </td>
+                      <td className="px-3 py-2 border text-xs whitespace-nowrap">
+                        {user.email_addresses[0]?.email_address}
+                      </td>
+                      <td className="px-3 py-2 border whitespace-nowrap">
+                        {signupMethod}
+                      </td>
+                      <td className="px-3 py-2 border text-xs whitespace-nowrap">
+                        {user.username ?? "N/A"}
+                      </td>
+                      <td className="px-3 py-2 border text-xs whitespace-nowrap">
+                        {dayjs(user.created_at).fromNow()}
+                      </td>
+                      {/* <td className="px-3 py-2 border text-xs whitespace-nowrap">
+                        {dayjs(user.updated_at).fromNow()}
+                      </td> */}
+                      <td className="px-3 py-2 border whitespace-nowrap">
+                        <select
+                          value={role}
+                          onChange={(e) =>
+                            updateRole(user.id, e.target.value as "admin" | "user")
+                          }
+                          className="border rounded px-2 py-1 text-sm focus:ring-2 focus:ring-orange-500"
+                        >
+                          <option value="user">User</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                      </td>
+                      <td className="px-3 py-2 border text-center">
+                        <button
+                          onClick={() => deleteUser(user.id)}
+                          className="text-red-600 hover:underline text-xs"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+      {/* === Mobile Cards === */}
+      <div className="md:hidden space-y-5 mt-6">
+        {["admin", "user"].map((roleGroup) => (
+          <div key={roleGroup}>
+            <h3 className="text-lg font-semibold mb-3 capitalize">{roleGroup}s</h3>
+            {paginatedUsers
+              .filter((u) => (u.public_metadata?.role ?? "user") === roleGroup)
+              .map((user) => {
+                const role = user.public_metadata?.role ?? "user";
+                const signupMethod =
+                  user.external_accounts?.[0]?.provider === "oauth_google" ? "Google" : "Email";
+                return (
+                  <div key={user.id} className="border rounded-lg p-4 shadow-sm bg-white">
+                    <div className="flex items-center gap-3 mb-3">
+                      <img src={user.profile_image_url} alt="profile" className="w-10 h-10 rounded-full object-cover" />
+                      <div>
+                        <p className="font-semibold">{user.first_name ?? "N/A"}</p>
+                        <p className="text-xs text-gray-600">{user.email_addresses[0]?.email_address}</p>
+                      </div>
+                    </div>
+                    <p className="text-xs"><span className="font-medium">Username:</span> {user.username ?? "N/A"}</p>
+                    <p className="text-xs"><span className="font-medium">Signed Up:</span> {signupMethod}</p>
+                    <p className="text-xs"><span className="font-medium">Created:</span> {dayjs(user.created_at).fromNow()}</p>
+                    <p className="text-xs"><span className="font-medium">Updated:</span> {dayjs(user.updated_at).fromNow()}</p>
+                    <div className="flex items-center justify-between mt-3">
+                      <select
+                        value={role}
+                        onChange={(e) => updateRole(user.id, e.target.value as "admin" | "user")}
+                        className="border rounded px-2 py-1 text-sm focus:ring-2 focus:ring-orange-500"
+                      >
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                      <button
+                        onClick={() => deleteUser(user.id)}
+                        className="text-red-600 text-xs underline"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        ))}
+      </div>
+
+      {/* === Pagination & Footer === */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-8 mb-12">
+        {/* Pagination */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Prev
+          </button>
+          {(() => {
+            const range: (number | string)[] = [];
+            const start = Math.max(1, currentPage - 2);
+            const end = Math.min(totalPages, currentPage + 2);
+
+            if (start > 1) {
+              range.push(1);
+              if (start > 2) range.push("ellipsis-start");
+            }
+
+            for (let i = start; i <= end; i++) {
+              range.push(i);
+            }
+
+            if (end < totalPages) {
+              if (end < totalPages - 1) range.push("ellipsis-end");
+              range.push(totalPages);
+            }
+
+            return range.map((item, idx) =>
+              typeof item === "string" ? (
+                <span key={idx} className="px-1">...</span>
+              ) : (
+                <button
+                  key={item}
+                  onClick={() => setCurrentPage(item)}
+                  className={`px-3 py-1 rounded text-sm ${
+                    currentPage === item ? "bg-black text-white" : "bg-gray-200"
+                  }`}
+                >
+                  {item}
+                </button>
+              )
+            );
+          })()}
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+
+        {/* Footer link */}
+        <Link href="/activity-log" className="text-orange-600 hover:underline text-sm">
+          View Activity Log
+        </Link>
+      </div>
+    </div>
 );
 
 }

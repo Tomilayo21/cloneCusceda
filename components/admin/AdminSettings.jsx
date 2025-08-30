@@ -897,7 +897,7 @@ export default function AdminSettings({
                   <ArrowLeft className="w-4 h-4 mr-1" /> Back
                 </button>
                 <button onClick={() => setUserPanel("broadcast")} className="bg-orange-600 text-white px-4 py-2 rounded">
-                  View Broadcast History
+                  View Broadcast Historys
                 </button>
                 <SubscribersPage />
               </motion.div>
