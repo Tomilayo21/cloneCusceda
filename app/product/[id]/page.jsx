@@ -5,7 +5,9 @@ import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import ProductCard from '@/components/ProductCard';
+import RelatedProducts from '@/components/RelatedProducts';
+
+
 import Loading from '@/components/Loading';
 import { useAppContext } from '@/context/AppContext';
 import { useUser } from '@clerk/nextjs';
@@ -330,7 +332,7 @@ export default function ProductPage() {
               </div>
 
               {/* Like + Likes Info */}
-              <div className="flex items-center gap-2 mb-6">
+              {/* <div className="flex items-center gap-2 mb-6">
                 <button
                   onClick={toggleLike}
                   className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition ${
@@ -357,7 +359,42 @@ export default function ProductPage() {
                     )}
                   </span>
                 )}
+              </div> */}
+              <div className="flex items-center gap-2 mb-6">
+                <button
+                  onClick={toggleLike}
+                  className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition ${
+                    liked
+                      ? "bg-red-500 text-white"
+                      : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white"
+                  }`}
+                >
+                  <Heart size={16} className={liked ? "fill-white" : ""} />
+                  {liked ? "Liked" : "Like"}
+                </button>
+
+                {/* ✅ Only show like count if > 0 */}
+                {likeCount > 0 && (
+                  <span className="text-gray-600 dark:text-gray-300 text-sm">
+                    {likeCount} like{likeCount !== 1 && "s"}
+                  </span>
+                )}
+
+                {/* ✅ Only show usernames if there are likes */}
+                {likeUsers.length > 0 && (
+                  <span className="text-xs text-gray-500">
+                    {likeUsers.length === 1 ? (
+                      <>Liked by {likeUsers[0].username || "Anonymous"}</>
+                    ) : (
+                      <>
+                        Liked by {likeUsers[0].username || "Anonymous"} and{" "}
+                        {likeUsers.length - 1} others
+                      </>
+                    )}
+                  </span>
+                )}
               </div>
+
 
               {/* CTA Buttons */}
               <div className="flex gap-4 mb-10">
@@ -451,135 +488,144 @@ export default function ProductPage() {
 
             {/* Reviews List */}
             <div className="space-y-6">
-              {[...currentReviews]
-                .sort((a, b) => b.rating - a.rating)
-                .map((r) => {
-                  const foundHelpful = r.helpful?.includes(user?.id);
-
-                  return (
-                    <div
-                      key={r._id}
-                      className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-900 transition hover:shadow-md"
-                    >
-                      {/* User + Date */}
-                      <div className="flex items-center justify-between mb-2">
-                        <p className="font-semibold text-gray-900 dark:text-white">
-                          {r.username}
-                        </p>
-                        <span className="text-xs text-gray-500">
-                          {new Date(r.createdAt).toLocaleDateString("en-GB")}
-                        </span>
-                      </div>
-
-                      {/* Rating */}
-                      <div className="flex items-center gap-1 mb-2">
-                        {renderStars(r.rating)}
-                      </div>
-
-                      {/* Comment */}
-                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                        {r.comment}
-                      </p>
-
-                      {/* Helpful Button */}
-                      <div className="flex items-center gap-3 mt-3">
-                        <button
-                          onClick={() => handleHelpfulClick(r._id)}
-                          className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition ${
-                            foundHelpful
-                              ? "bg-orange-500 text-white shadow-sm"
-                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-orange-50"
-                          }`}
-                        >
-                          <ThumbsUp size={16} />
-                          {foundHelpful ? "Helpful" : "Mark as Helpful"}
-                        </button>
-                        <span className="text-sm text-gray-500">
-                          {r.helpful?.length === 1
-                            ? "1 person found this helpful"
-                            : `${r.helpful?.length || 0} people found this helpful`}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-
-              {/* Pagination (unchanged) */}
-              {totalPages > 1 && (
-                <div className="flex justify-center mt-8">
-                  <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-white dark:bg-gray-800 shadow border">
-                    {/* Prev */}
-                    <button
-                      onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                      disabled={page === 1}
-                      className={`px-3 py-1 rounded-md text-sm font-medium transition ${
-                        page === 1
-                          ? "bg-gray-200 text-gray-400 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed"
-                          : "bg-white dark:bg-gray-900 text-gray-800 dark:text-white hover:bg-orange-50"
-                      }`}
-                    >
-                      Prev
-                    </button>
-
-                    {[...Array(totalPages)].map((_, index) => {
-                      const pageNum = index + 1;
-                      const isActive = page === pageNum;
-
-                      const shouldShow =
-                        totalPages <= 7 ||
-                        pageNum === 1 ||
-                        pageNum === totalPages ||
-                        (pageNum >= page - 1 && pageNum <= page + 1);
-
-                      if (!shouldShow && totalPages > 7) {
-                        if (
-                          (pageNum === 2 && page > 4) ||
-                          (pageNum === totalPages - 1 && page < totalPages - 3)
-                        ) {
-                          return (
-                            <span
-                              key={pageNum}
-                              className="px-2 text-gray-400 dark:text-gray-500"
-                            >
-                              ...
-                            </span>
-                          );
-                        }
-                        return null;
-                      }
+              {currentReviews.length === 0 ? (
+                <p className="text-center text-gray-500 dark:text-gray-400 text-sm py-8 border rounded-xl bg-gray-50 dark:bg-gray-900/40">
+                  No reviews yet. Be the first to review this product!
+                </p>
+              ) : (
+                <>
+                  {[...currentReviews]
+                    .sort((a, b) => b.rating - a.rating)
+                    .map((r) => {
+                      const foundHelpful = r.helpful?.includes(user?.id);
 
                       return (
-                        <button
-                          key={pageNum}
-                          onClick={() => setPage(pageNum)}
-                          className={`px-3 py-1 rounded-md text-sm font-medium transition ${
-                            isActive
-                              ? "bg-orange-600 text-white shadow"
-                              : "bg-white dark:bg-gray-900 text-gray-800 dark:text-white hover:bg-orange-50"
-                          }`}
+                        <div
+                          key={r._id}
+                          className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-900 transition hover:shadow-md"
                         >
-                          {pageNum}
-                        </button>
+                          {/* User + Date */}
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="font-semibold text-gray-900 dark:text-white">
+                              {r.username}
+                            </p>
+                            <span className="text-xs text-gray-500">
+                              {new Date(r.createdAt).toLocaleDateString("en-GB")}
+                            </span>
+                          </div>
+
+                          {/* Rating */}
+                          <div className="flex items-center gap-1 mb-2">
+                            {renderStars(r.rating)}
+                          </div>
+
+                          {/* Comment */}
+                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                            {r.comment}
+                          </p>
+
+                          {/* Helpful Button */}
+                          <div className="flex items-center gap-3 mt-3">
+                            <button
+                              onClick={() => handleHelpfulClick(r._id)}
+                              className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition ${
+                                foundHelpful
+                                  ? "bg-orange-500 text-white shadow-sm"
+                                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-orange-50"
+                              }`}
+                            >
+                              <ThumbsUp size={16} />
+                              {foundHelpful ? "Helpful" : "Mark as Helpful"}
+                            </button>
+                            <span className="text-sm text-gray-500">
+                              {r.helpful?.length === 1
+                                ? "1 person found this helpful"
+                                : `${r.helpful?.length || 0} people found this helpful`}
+                            </span>
+                          </div>
+                        </div>
                       );
                     })}
 
-                    {/* Next */}
-                    <button
-                      onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-                      disabled={page === totalPages}
-                      className={`px-3 py-1 rounded-md text-sm font-medium transition ${
-                        page === totalPages
-                          ? "bg-gray-200 text-gray-400 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed"
-                          : "bg-white dark:bg-gray-900 text-gray-800 dark:text-white hover:bg-orange-50"
-                      }`}
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="flex justify-center mt-8">
+                      <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-white dark:bg-gray-800 shadow border">
+                        {/* Prev */}
+                        <button
+                          onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                          disabled={page === 1}
+                          className={`px-3 py-1 rounded-md text-sm font-medium transition ${
+                            page === 1
+                              ? "bg-gray-200 text-gray-400 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed"
+                              : "bg-white dark:bg-gray-900 text-gray-800 dark:text-white hover:bg-orange-50"
+                          }`}
+                        >
+                          Prev
+                        </button>
+
+                        {[...Array(totalPages)].map((_, index) => {
+                          const pageNum = index + 1;
+                          const isActive = page === pageNum;
+
+                          const shouldShow =
+                            totalPages <= 7 ||
+                            pageNum === 1 ||
+                            pageNum === totalPages ||
+                            (pageNum >= page - 1 && pageNum <= page + 1);
+
+                          if (!shouldShow && totalPages > 7) {
+                            if (
+                              (pageNum === 2 && page > 4) ||
+                              (pageNum === totalPages - 1 && page < totalPages - 3)
+                            ) {
+                              return (
+                                <span
+                                  key={pageNum}
+                                  className="px-2 text-gray-400 dark:text-gray-500"
+                                >
+                                  ...
+                                </span>
+                              );
+                            }
+                            return null;
+                          }
+
+                          return (
+                            <button
+                              key={pageNum}
+                              onClick={() => setPage(pageNum)}
+                              className={`px-3 py-1 rounded-md text-sm font-medium transition ${
+                                isActive
+                                  ? "bg-orange-600 text-white shadow"
+                                  : "bg-white dark:bg-gray-900 text-gray-800 dark:text-white hover:bg-orange-50"
+                              }`}
+                            >
+                              {pageNum}
+                            </button>
+                          );
+                        })}
+
+                        {/* Next */}
+                        <button
+                          onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                          disabled={page === totalPages}
+                          className={`px-3 py-1 rounded-md text-sm font-medium transition ${
+                            page === totalPages
+                              ? "bg-gray-200 text-gray-400 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed"
+                              : "bg-white dark:bg-gray-900 text-gray-800 dark:text-white hover:bg-orange-50"
+                          }`}
+                        >
+                          Next
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
+
 
 
           {/* Related Products */}
@@ -594,13 +640,13 @@ export default function ProductPage() {
                 </span> */}
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {visibleRelatedProducts.map((p) => (
                   <div
                     key={p._id}
                     className="transition-transform hover:scale-[1.02] duration-200"
                   >
-                    <ProductCard product={p} />
+                    <RelatedProducts product={p} />
                   </div>
                 ))}
               </div>
