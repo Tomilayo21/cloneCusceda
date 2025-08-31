@@ -44,44 +44,51 @@ const HeaderSlider = () => {
   };
 
   return (
-    // <div className="overflow-hidden relative w-full">
+    // <div className="relative w-full overflow-hidden">
+    //   {/* Slider Wrapper */}
     //   <div
     //     className="flex transition-transform duration-700 ease-in-out"
-    //     style={{
-    //       transform: `translateX(-${currentSlide * 100}%)`,
-    //     }}
+    //     style={{ transform: `translateX(-${currentSlide * 100}%)` }}
     //   >
     //     {sliderData.map((slide, index) => (
     //       <div
     //         key={slide.id}
-    //         className={`
+    //         className="
     //           flex flex-col-reverse md:flex-row items-center justify-between
-    //           py-8 md:px-14 px-5 mt-6 rounded-xl min-w-full
-    //           bg-[#E6E9F2] dark:bg-transparent dark:border dark:border-gray-700
-    //         `}
+    //           py-12 md:px-16 px-6 min-w-full rounded-2xl
+    //           bg-gradient-to-r from-[#F8F9FB] to-[#E6E9F2]
+    //           dark:from-gray-900 dark:to-gray-800 shadow-md
+    //         "
     //       >
-    //         <div className="md:pl-8 mt-10 md:mt-0">
-    //           <p className="md:text-base text-orange-600 pb-1">{slide.offer}</p>
-    //           <h1 className="max-w-lg md:text-[40px] md:leading-[48px] text-2xl font-semibold">
+    //         {/* Text Section */}
+    //         <div className="md:pl-8 mt-10 md:mt-0 max-w-xl">
+    //           <p className="uppercase tracking-wide text-sm text-orange-600 font-semibold mb-2">
+    //             {slide.offer}
+    //           </p>
+    //           <h1 className="text-3xl md:text-[42px] font-bold leading-snug text-gray-900 dark:text-white">
     //             {slide.title}
     //           </h1>
-    //           <div className="flex items-center mt-4 md:mt-6 ">
-    //             <button className="md:px-10 px-7 md:py-2.5 py-2 bg-orange-600 rounded-full text-white font-medium">
+
+    //           {/* Buttons */}
+    //           <div className="flex items-center gap-4 mt-6">
+    //             <button className="px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-full shadow-md transition">
     //               {slide.buttonText1}
     //             </button>
-    //             <button className="group flex items-center gap-2 px-6 py-2.5 font-medium">
+    //             <button className="group flex items-center gap-2 px-6 py-3 text-gray-800 dark:text-white font-medium hover:text-orange-600 transition">
     //               {slide.buttonText2}
     //               <Image
-    //                 className="group-hover:translate-x-1 transition"
+    //                 className="w-4 h-4 group-hover:translate-x-1 transition-transform"
     //                 src={assets.arrow_icon}
     //                 alt="arrow_icon"
     //               />
     //             </button>
     //           </div>
     //         </div>
+
+    //         {/* Image Section */}
     //         <div className="flex items-center flex-1 justify-center">
     //           <Image
-    //             className="md:w-72 w-48"
+    //             className="md:w-80 w-52 drop-shadow-lg"
     //             src={slide.imgSrc}
     //             alt={`Slide ${index + 1}`}
     //           />
@@ -90,86 +97,93 @@ const HeaderSlider = () => {
     //     ))}
     //   </div>
 
-    //   <div className="flex items-center justify-center gap-2 mt-8">
+    //   {/* Dots / Indicators */}
+    //   <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3">
     //     {sliderData.map((_, index) => (
-    //       <div
+    //       <button
     //         key={index}
     //         onClick={() => handleSlideChange(index)}
-    //         className={`h-2 w-2 rounded-full cursor-pointer ${
-    //           currentSlide === index ? "bg-orange-600" : "bg-gray-500/30"
+    //         className={`h-3 w-3 rounded-full transition-all ${
+    //           currentSlide === index
+    //             ? "bg-orange-600 scale-110 shadow-md"
+    //             : "bg-gray-400/40 hover:bg-gray-500/60"
     //         }`}
-    //       ></div>
+    //       />
     //     ))}
     //   </div>
     // </div>
-    <div className="relative w-full overflow-hidden">
-      {/* Slider Wrapper */}
+
+<div className="relative w-full overflow-hidden">
+  {/* Slider Wrapper */}
+  <div
+    className="flex transition-transform duration-700 ease-in-out"
+    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+  >
+    {sliderData.map((slide, index) => (
       <div
-        className="flex transition-transform duration-700 ease-in-out"
-        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+        key={slide.id}
+        className="
+          flex flex-col md:flex-row items-center justify-center
+          py-8 md:py-12 md:px-16 px-4 min-w-full rounded-2xl
+          bg-gradient-to-r from-[#F8F9FB] to-[#E6E9F2]
+          dark:from-gray-900 dark:to-gray-800 shadow-md
+          gap-6 md:gap-12
+        "
       >
-        {sliderData.map((slide, index) => (
-          <div
-            key={slide.id}
-            className="
-              flex flex-col-reverse md:flex-row items-center justify-between
-              py-12 md:px-16 px-6 min-w-full rounded-2xl
-              bg-gradient-to-r from-[#F8F9FB] to-[#E6E9F2]
-              dark:from-gray-900 dark:to-gray-800 shadow-md
-            "
-          >
-            {/* Text Section */}
-            <div className="md:pl-8 mt-10 md:mt-0 max-w-xl">
-              <p className="uppercase tracking-wide text-sm text-orange-600 font-semibold mb-2">
-                {slide.offer}
-              </p>
-              <h1 className="text-3xl md:text-[42px] font-bold leading-snug text-gray-900 dark:text-white">
-                {slide.title}
-              </h1>
+        {/* Text Section */}
+        <div className="text-center md:text-left md:pl-8 max-w-xl">
+          <p className="uppercase tracking-wide text-sm text-orange-600 font-semibold mb-2">
+            {slide.offer}
+          </p>
+          <h1 className="text-2xl md:text-[42px] font-bold leading-snug text-gray-900 dark:text-white">
+            {slide.title}
+          </h1>
 
-              {/* Buttons */}
-              <div className="flex items-center gap-4 mt-6">
-                <button className="px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-full shadow-md transition">
-                  {slide.buttonText1}
-                </button>
-                <button className="group flex items-center gap-2 px-6 py-3 text-gray-800 dark:text-white font-medium hover:text-orange-600 transition">
-                  {slide.buttonText2}
-                  <Image
-                    className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                    src={assets.arrow_icon}
-                    alt="arrow_icon"
-                  />
-                </button>
-              </div>
-            </div>
-
-            {/* Image Section */}
-            <div className="flex items-center flex-1 justify-center">
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-start gap-3 mt-6">
+            <button className="px-6 md:px-8 py-3 md:py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-full shadow-md transition w-full sm:w-auto">
+              {slide.buttonText1}
+            </button>
+            <button className="group flex items-center justify-center sm:justify-start gap-2 px-6 py-3 text-gray-800 dark:text-white font-medium hover:text-orange-600 transition w-full sm:w-auto">
+              {slide.buttonText2}
               <Image
-                className="md:w-80 w-52 drop-shadow-lg"
-                src={slide.imgSrc}
-                alt={`Slide ${index + 1}`}
+                className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                src={assets.arrow_icon}
+                alt="arrow_icon"
               />
-            </div>
+            </button>
           </div>
-        ))}
-      </div>
+        </div>
 
-      {/* Dots / Indicators */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3">
-        {sliderData.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handleSlideChange(index)}
-            className={`h-3 w-3 rounded-full transition-all ${
-              currentSlide === index
-                ? "bg-orange-600 scale-110 shadow-md"
-                : "bg-gray-400/40 hover:bg-gray-500/60"
-            }`}
+        {/* Image Section */}
+        <div className="flex items-center justify-center md:flex-1">
+          <Image
+            className="max-w-full h-auto md:w-80 drop-shadow-lg"
+            src={slide.imgSrc}
+            alt={`Slide ${index + 1}`}
           />
-        ))}
+        </div>
       </div>
-    </div>
+    ))}
+  </div>
+
+  {/* Dots / Indicators */}
+  <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3">
+    {sliderData.map((_, index) => (
+      <button
+        key={index}
+        onClick={() => handleSlideChange(index)}
+        className={`h-3 w-3 rounded-full transition-all ${
+          currentSlide === index
+            ? "bg-orange-600 scale-110 shadow-md"
+            : "bg-gray-400/40 hover:bg-gray-500/60"
+        }`}
+      />
+    ))}
+  </div>
+</div>
+
+
 
   );
 };
