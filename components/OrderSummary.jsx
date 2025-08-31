@@ -251,31 +251,354 @@ const OrderSummary = () => {
   }, [selectedState, selectedCountry, countries, states]);
 
   return (  
-    <div className="w-full md:w-96 bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-6 border border-gray-200">
+    // <div className="w-full md:w-96 bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-6 border border-gray-200">
+    //   {/* Title */}
+    //   <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 tracking-tight">
+    //     Order <span className="text-orange-600">Summary</span>
+    //   </h2>
+    //   <hr className="border-gray-200 dark:border-gray-700 my-5" />
+
+    //   <div className="space-y-6">
+    //     {/* Address Dropdown */}
+    //     <div>
+    //       <label className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+    //         Shipping Address
+    //       </label>
+    //       <div className="relative">
+    //         <button
+    //           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+    //           className="w-full flex justify-between items-center px-4 py-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm hover:ring-1 hover:ring-orange-500 transition"
+    //         >
+    //           {selectedAddress
+    //             ? `${selectedAddress.fullName}, ${selectedAddress.city}, ${selectedAddress.state}`
+    //             : "Select Address"}
+    //           <svg
+    //             className={`w-5 h-5 transform transition-transform ${
+    //               isDropdownOpen ? "rotate-180" : ""
+    //             }`}
+    //             xmlns="http://www.w3.org/2000/svg"
+    //             fill="none"
+    //             viewBox="0 0 24 24"
+    //             stroke="currentColor"
+    //           >
+    //             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+    //           </svg>
+    //         </button>
+
+    //         {isDropdownOpen && (
+    //           <ul className="absolute z-20 w-full mt-2 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-64 overflow-y-auto">
+    //             {userAddresses.map((address, idx) => (
+    //               <div>
+    //                 <li
+    //                   key={idx}
+    //                   onClick={() => {
+    //                     handleAddressSelect(address);
+    //                     setShowAddressDropdown(false);
+    //                   }}
+    //                   className="px-4 py-3 hover:bg-orange-50 dark:hover:bg-neutral-700 cursor-pointer text-sm text-gray-700 dark:text-gray-200"
+    //                 >
+    //                   {address.fullName}, {address.city}, {address.state}, {address.country}
+    //                 </li>
+    //                 <div className="mt-2 flex justify-end gap-2 text-sm text-blue-600">
+    //                   <button onClick={() => handleEdit(address)}>Edit</button>
+    //                   <button onClick={() => handleDelete(address._id)}>Delete</button>
+    //                 </div>
+    //               </div>
+                  
+    //             ))}
+    //             <li
+    //               onClick={() => {
+    //                 router.push("/add-address");
+    //                 setShowAddressDropdown(false);
+    //               }}
+    //               className="px-4 py-3 text-center text-sm font-semibold text-orange-600 hover:bg-orange-50 dark:hover:bg-neutral-700 cursor-pointer"
+    //             >
+    //               + Add New Address
+    //             </li>
+    //           </ul>
+    //         )}
+    //       </div>
+    //     </div>
+    //     {/*Edit Button*/}
+    //     {showEditModal && selectedAddress && (
+    //       <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    //         <div className="bg-white dark:bg-neutral-900 p-6 md:p-8 rounded-2xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-y-auto relative">
+              
+    //           {/* Close button */}
+    //           <button
+    //             className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition"
+    //             onClick={() => setShowEditModal(false)}
+    //           >
+    //             <X className="w-6 h-6" />
+    //           </button>
+
+    //           {/* Title */}
+    //           <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-6 flex items-center gap-2">
+    //             <MapPin className="w-5 h-5 text-orange-500" />
+    //             Edit Address
+    //           </h2>
+
+    //           <form
+    //             onSubmit={async (e) => {
+    //               e.preventDefault();
+    //               const formData = new FormData(e.target);
+    //               const updated = Object.fromEntries(formData.entries());
+
+    //               try {
+    //                 const res = await fetch(`/api/user/add-address/${editingAddress._id}`, {
+    //                   method: "PUT",
+    //                   headers: { "Content-Type": "application/json" },
+    //                   body: JSON.stringify(updated),
+    //                 });
+
+    //                 if (!res.ok) throw new Error("Failed to update");
+
+    //                 setUserAddresses(prev =>
+    //                   prev.map(addr =>
+    //                     addr._id === editingAddress._id ? { ...addr, ...updated } : addr
+    //                   )
+    //                 );
+
+    //                 toast.success("Address updated");
+    //                 setShowEditModal(false);
+    //                 setEditingAddress(null);
+    //               } catch (err) {
+    //                 toast.error("Update failed");
+    //               }
+    //             }}
+    //             className="space-y-4"
+    //           >
+    //             {/* Full Name */}
+    //             <div>
+    //               <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+    //                 <User className="w-4 h-4 text-orange-500" /> Full Name
+    //               </label>
+    //               <input
+    //                 name="fullName"
+    //                 defaultValue={selectedAddress.fullName}
+    //                 className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+    //                 placeholder="Enter full name"
+    //               />
+    //             </div>
+
+    //             {/* Phone Number */}
+    //             <div>
+    //               <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+    //                 <Phone className="w-4 h-4 text-orange-500" /> Phone Number
+    //               </label>
+    //               <input
+    //                 name="phoneNumber"
+    //                 defaultValue={selectedAddress.phoneNumber}
+    //                 className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+    //                 placeholder="Enter phone number"
+    //               />
+    //             </div>
+
+    //             {/* Email */}
+    //             <div>
+    //               <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+    //                 <Mail className="w-4 h-4 text-orange-500" /> Email
+    //               </label>
+    //               <input
+    //                 type="email"
+    //                 name="email"
+    //                 defaultValue={selectedAddress.email}
+    //                 className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+    //                 placeholder="Enter email"
+    //               />
+    //             </div>
+
+    //             {/* Zip Code */}
+    //             <div>
+    //               <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+    //                 <MapPin className="w-4 h-4 text-orange-500" /> Zip Code
+    //               </label>
+    //               <input
+    //                 name="zipcode"
+    //                 defaultValue={selectedAddress.zipcode}
+    //                 className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+    //                 placeholder="Enter zip code"
+    //               />
+    //             </div>
+
+    //             {/* Country */}
+    //             <div>
+    //               <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+    //                 <Globe className="w-4 h-4 text-orange-500" /> Country
+    //               </label>
+    //               <select
+    //                 name="country"
+    //                 className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+    //                 value={selectedCountry}
+    //                 onChange={(e) => {
+    //                   setSelectedCountry(e.target.value);
+    //                   setSelectedState("");
+    //                   setSelectedCity("");
+    //                 }}
+    //               >
+    //                 <option value="">Select Country</option>
+    //                 {countries.map((country) => (
+    //                   <option key={country.isoCode} value={country.name}>
+    //                     {country.name}
+    //                   </option>
+    //                 ))}
+    //               </select>
+    //             </div>
+
+    //             {/* State */}
+    //             <div>
+    //               <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+    //                 <MapPin className="w-4 h-4 text-orange-500" /> State
+    //               </label>
+    //               <select
+    //                 name="state"
+    //                 className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+    //                 value={selectedState}
+    //                 onChange={(e) => {
+    //                   setSelectedState(e.target.value);
+    //                   setSelectedCity("");
+    //                 }}
+    //                 disabled={!states.length}
+    //               >
+    //                 <option value="">Select State</option>
+    //                 {states.map((state) => (
+    //                   <option key={state.isoCode} value={state.name}>
+    //                     {state.name}
+    //                   </option>
+    //                 ))}
+    //               </select>
+    //             </div>
+
+    //             {/* City */}
+    //             <div>
+    //               <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+    //                 <MapPin className="w-4 h-4 text-orange-500" /> City
+    //               </label>
+    //               <select
+    //                 name="city"
+    //                 className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+    //                 value={selectedCity}
+    //                 onChange={(e) => setSelectedCity(e.target.value)}
+    //                 disabled={!cities.length}
+    //               >
+    //                 <option value="">Select City</option>
+    //                 {cities.map((city, index) => (
+    //                   <option key={index} value={city.name}>
+    //                     {city.name}
+    //                   </option>
+    //                 ))}
+    //               </select>
+    //             </div>
+
+    //             {/* Address */}
+    //             <div>
+    //               <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+    //                 <Landmark className="w-4 h-4 text-orange-500" /> Street / Area
+    //               </label>
+    //               <textarea
+    //                 name="area"
+    //                 defaultValue={selectedAddress.area}
+    //                 className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+    //                 placeholder="Enter street / area"
+    //                 rows={3}
+    //               />
+    //             </div>
+
+    //             {/* Submit */}
+    //             <button
+    //               type="submit"
+    //               className="w-full py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition"
+    //             >
+    //               Save Changes
+    //             </button>
+    //           </form>
+    //         </div>
+    //       </div>
+    //     )}
+
+    //     {/* Payment Method */}
+    //     <div>
+    //       <label className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+    //         Payment Method
+    //       </label>
+    //       <select
+    //         value={selectedMethod}
+    //         onChange={(e) => setSelectedMethod(e.target.value)}
+    //         className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-neutral-800 text-gray-700 dark:text-gray-200 shadow-sm focus:ring-2 focus:ring-orange-500 transition"
+    //       >
+    //         {paymentMethods.map((method) => (
+    //           <option key={method.id} value={method.id}>
+    //             {method.label} — Fee: {(method.fee * 100).toFixed(1)}%
+    //           </option>
+    //         ))}
+    //       </select>
+    //       <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+    //         Transaction Fee:{" "}
+    //         <span className="text-orange-600 font-medium">
+    //           {currency}{feeAmount.toFixed(2)}
+    //         </span>
+    //       </p>
+    //     </div>
+
+    //     {/* Cart Summary */}
+    //     <hr className="border-gray-200 dark:border-gray-700 my-5" />
+    //     <div className="space-y-4 text-sm md:text-base">
+    //       <div className="flex justify-between font-medium text-gray-700 dark:text-gray-200">
+    //         <p>Items ({getCartCount()})</p>
+    //         <p>{currency}{getCartAmount()}</p>
+    //       </div>
+    //       <div className="flex justify-between text-gray-600 dark:text-gray-400">
+    //         <p>Shipping Fee</p>
+    //         <p className="font-medium text-gray-800 dark:text-gray-200">{currency}{shippingFee.toFixed(2)}</p>
+    //       </div>
+    //       <div className="flex justify-between text-gray-600 dark:text-gray-400">
+    //         <p>Tax (2%)</p>
+    //         <p className="font-medium text-gray-800 dark:text-gray-200">{currency}{Math.floor(getCartAmount() * 0.02)}</p>
+    //       </div>
+    //       <div className="flex justify-between text-lg font-semibold border-t pt-4 text-gray-900 dark:text-gray-100">
+    //         <p>Total</p>
+    //         <p>{currency}{total.toFixed(2)}</p>
+    //       </div>
+    //     </div>
+
+    //     {/* Submit */}
+    //     <button
+    //       onClick={handlePayment}
+    //       disabled={processing || getCartCount() === 0}
+    //       className={`w-full py-3 mt-5 rounded-lg text-white font-medium transition ${
+    //         processing || getCartCount() === 0
+    //           ? "bg-gray-400 cursor-not-allowed"
+    //           : "bg-orange-600 hover:bg-orange-700 shadow-md"
+    //       }`}
+    //     >
+    //       {processing ? "Processing..." : "Continue to Payment"}
+    //     </button>
+    //   </div>
+    // </div>
+
+    <div className="w-full md:w-96 bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-4 md:p-6 border border-gray-200 dark:border-gray-700">
       {/* Title */}
-      <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 tracking-tight">
+      <h2 className="text-xl md:text-2xl font-semibold text-gray-900 dark:text-gray-100 tracking-tight">
         Order <span className="text-orange-600">Summary</span>
       </h2>
-      <hr className="border-gray-200 dark:border-gray-700 my-5" />
+      <hr className="border-gray-200 dark:border-gray-700 my-4 md:my-5" />
 
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         {/* Address Dropdown */}
         <div>
-          <label className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+          <label className="block mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
             Shipping Address
           </label>
           <div className="relative">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-full flex justify-between items-center px-4 py-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm hover:ring-1 hover:ring-orange-500 transition"
+              className="w-full flex justify-between items-center px-3 py-2.5 md:px-4 md:py-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm hover:ring-1 hover:ring-orange-500 transition"
             >
               {selectedAddress
                 ? `${selectedAddress.fullName}, ${selectedAddress.city}, ${selectedAddress.state}`
                 : "Select Address"}
               <svg
-                className={`w-5 h-5 transform transition-transform ${
-                  isDropdownOpen ? "rotate-180" : ""
-                }`}
+                className={`w-5 h-5 transform transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -286,245 +609,229 @@ const OrderSummary = () => {
             </button>
 
             {isDropdownOpen && (
-              <ul className="absolute z-20 w-full mt-2 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-64 overflow-y-auto">
+              <ul className="absolute z-20 w-full mt-2 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                 {userAddresses.map((address, idx) => (
-                  <div>
+                  <div key={idx} className="mb-2">
                     <li
-                      key={idx}
                       onClick={() => {
                         handleAddressSelect(address);
                         setShowAddressDropdown(false);
                       }}
-                      className="px-4 py-3 hover:bg-orange-50 dark:hover:bg-neutral-700 cursor-pointer text-sm text-gray-700 dark:text-gray-200"
+                      className="px-3 py-2 hover:bg-orange-50 dark:hover:bg-neutral-700 cursor-pointer text-sm text-gray-700 dark:text-gray-200"
                     >
                       {address.fullName}, {address.city}, {address.state}, {address.country}
                     </li>
-                    <div className="mt-2 flex justify-end gap-2 text-sm text-blue-600">
+                    <div className="flex justify-end gap-2 px-3 text-sm text-blue-600">
                       <button onClick={() => handleEdit(address)}>Edit</button>
                       <button onClick={() => handleDelete(address._id)}>Delete</button>
                     </div>
                   </div>
-                  
                 ))}
                 <li
                   onClick={() => {
                     router.push("/add-address");
                     setShowAddressDropdown(false);
                   }}
-                  className="px-4 py-3 text-center text-sm font-semibold text-orange-600 hover:bg-orange-50 dark:hover:bg-neutral-700 cursor-pointer"
+                  className="px-3 py-2 text-center text-sm font-semibold text-orange-600 hover:bg-orange-50 dark:hover:bg-neutral-700 cursor-pointer"
                 >
                   + Add New Address
                 </li>
               </ul>
             )}
+            
+            {showEditModal && selectedAddress && (
+              <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-2 md:p-4">
+                <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-xl w-full max-w-lg max-h-[85vh] overflow-y-auto p-4 md:p-6 relative">
+                  
+                  {/* Close button */}
+                  <button
+                    className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition"
+                    onClick={() => setShowEditModal(false)}
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+
+                  {/* Title */}
+                  <h2 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4 md:mb-6 flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-orange-500" />
+                    Edit Address
+                  </h2>
+
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      const formData = new FormData(e.target);
+                      const updated = Object.fromEntries(formData.entries());
+
+                      try {
+                        const res = await fetch(`/api/user/add-address/${editingAddress._id}`, {
+                          method: "PUT",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify(updated),
+                        });
+
+                        if (!res.ok) throw new Error("Failed to update");
+
+                        setUserAddresses(prev =>
+                          prev.map(addr =>
+                            addr._id === editingAddress._id ? { ...addr, ...updated } : addr
+                          )
+                        );
+
+                        toast.success("Address updated");
+                        setShowEditModal(false);
+                        setEditingAddress(null);
+                      } catch (err) {
+                        toast.error("Update failed");
+                      }
+                    }}
+                    className="space-y-3 md:space-y-4"
+                  >
+                    {/* Full Name */}
+                    <div>
+                      <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+                        <User className="w-4 h-4 text-orange-500" /> Full Name
+                      </label>
+                      <input
+                        name="fullName"
+                        defaultValue={selectedAddress.fullName}
+                        className="w-full px-3 py-2 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                        placeholder="Enter full name"
+                      />
+                    </div>
+
+                    {/* Phone Number */}
+                    <div>
+                      <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+                        <Phone className="w-4 h-4 text-orange-500" /> Phone Number
+                      </label>
+                      <input
+                        name="phoneNumber"
+                        defaultValue={selectedAddress.phoneNumber}
+                        className="w-full px-3 py-2 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                        placeholder="Enter phone number"
+                      />
+                    </div>
+
+                    {/* Email */}
+                    <div>
+                      <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+                        <Mail className="w-4 h-4 text-orange-500" /> Email
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        defaultValue={selectedAddress.email}
+                        className="w-full px-3 py-2 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                        placeholder="Enter email"
+                      />
+                    </div>
+
+                    {/* Zip Code */}
+                    <div>
+                      <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+                        <MapPin className="w-4 h-4 text-orange-500" /> Zip Code
+                      </label>
+                      <input
+                        name="zipcode"
+                        defaultValue={selectedAddress.zipcode}
+                        className="w-full px-3 py-2 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                        placeholder="Enter zip code"
+                      />
+                    </div>
+
+                    {/* Country / State / City */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                      <select
+                        name="country"
+                        value={selectedCountry}
+                        onChange={(e) => {
+                          setSelectedCountry(e.target.value);
+                          setSelectedState("");
+                          setSelectedCity("");
+                        }}
+                        className="w-full px-3 py-2 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                      >
+                        <option value="">Select Country</option>
+                        {countries.map((country) => (
+                          <option key={country.isoCode} value={country.name}>
+                            {country.name}
+                          </option>
+                        ))}
+                      </select>
+
+                      <select
+                        name="state"
+                        value={selectedState}
+                        onChange={(e) => {
+                          setSelectedState(e.target.value);
+                          setSelectedCity("");
+                        }}
+                        disabled={!states.length}
+                        className="w-full px-3 py-2 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                      >
+                        <option value="">Select State</option>
+                        {states.map((state) => (
+                          <option key={state.isoCode} value={state.name}>
+                            {state.name}
+                          </option>
+                        ))}
+                      </select>
+
+                      <select
+                        name="city"
+                        value={selectedCity}
+                        onChange={(e) => setSelectedCity(e.target.value)}
+                        disabled={!cities.length}
+                        className="w-full px-3 py-2 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                      >
+                        <option value="">Select City</option>
+                        {cities.map((city, index) => (
+                          <option key={index} value={city.name}>
+                            {city.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Street / Area */}
+                    <div>
+                      <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
+                        <Landmark className="w-4 h-4 text-orange-500" /> Street / Area
+                      </label>
+                      <textarea
+                        name="area"
+                        defaultValue={selectedAddress.area}
+                        className="w-full px-3 py-2 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
+                        placeholder="Enter street / area"
+                        rows={3}
+                      />
+                    </div>
+
+                    {/* Submit */}
+                    <button
+                      type="submit"
+                      className="w-full py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition"
+                    >
+                      Save Changes
+                    </button>
+                  </form>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
-        {/*Edit Button*/}
-        {showEditModal && selectedAddress && (
-          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white dark:bg-neutral-900 p-6 md:p-8 rounded-2xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-y-auto relative">
-              
-              {/* Close button */}
-              <button
-                className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition"
-                onClick={() => setShowEditModal(false)}
-              >
-                <X className="w-6 h-6" />
-              </button>
-
-              {/* Title */}
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-6 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-orange-500" />
-                Edit Address
-              </h2>
-
-              <form
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  const formData = new FormData(e.target);
-                  const updated = Object.fromEntries(formData.entries());
-
-                  try {
-                    const res = await fetch(`/api/user/add-address/${editingAddress._id}`, {
-                      method: "PUT",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify(updated),
-                    });
-
-                    if (!res.ok) throw new Error("Failed to update");
-
-                    setUserAddresses(prev =>
-                      prev.map(addr =>
-                        addr._id === editingAddress._id ? { ...addr, ...updated } : addr
-                      )
-                    );
-
-                    toast.success("Address updated");
-                    setShowEditModal(false);
-                    setEditingAddress(null);
-                  } catch (err) {
-                    toast.error("Update failed");
-                  }
-                }}
-                className="space-y-4"
-              >
-                {/* Full Name */}
-                <div>
-                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
-                    <User className="w-4 h-4 text-orange-500" /> Full Name
-                  </label>
-                  <input
-                    name="fullName"
-                    defaultValue={selectedAddress.fullName}
-                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
-                    placeholder="Enter full name"
-                  />
-                </div>
-
-                {/* Phone Number */}
-                <div>
-                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
-                    <Phone className="w-4 h-4 text-orange-500" /> Phone Number
-                  </label>
-                  <input
-                    name="phoneNumber"
-                    defaultValue={selectedAddress.phoneNumber}
-                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
-                    placeholder="Enter phone number"
-                  />
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
-                    <Mail className="w-4 h-4 text-orange-500" /> Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    defaultValue={selectedAddress.email}
-                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
-                    placeholder="Enter email"
-                  />
-                </div>
-
-                {/* Zip Code */}
-                <div>
-                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
-                    <MapPin className="w-4 h-4 text-orange-500" /> Zip Code
-                  </label>
-                  <input
-                    name="zipcode"
-                    defaultValue={selectedAddress.zipcode}
-                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
-                    placeholder="Enter zip code"
-                  />
-                </div>
-
-                {/* Country */}
-                <div>
-                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
-                    <Globe className="w-4 h-4 text-orange-500" /> Country
-                  </label>
-                  <select
-                    name="country"
-                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
-                    value={selectedCountry}
-                    onChange={(e) => {
-                      setSelectedCountry(e.target.value);
-                      setSelectedState("");
-                      setSelectedCity("");
-                    }}
-                  >
-                    <option value="">Select Country</option>
-                    {countries.map((country) => (
-                      <option key={country.isoCode} value={country.name}>
-                        {country.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* State */}
-                <div>
-                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
-                    <MapPin className="w-4 h-4 text-orange-500" /> State
-                  </label>
-                  <select
-                    name="state"
-                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
-                    value={selectedState}
-                    onChange={(e) => {
-                      setSelectedState(e.target.value);
-                      setSelectedCity("");
-                    }}
-                    disabled={!states.length}
-                  >
-                    <option value="">Select State</option>
-                    {states.map((state) => (
-                      <option key={state.isoCode} value={state.name}>
-                        {state.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* City */}
-                <div>
-                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
-                    <MapPin className="w-4 h-4 text-orange-500" /> City
-                  </label>
-                  <select
-                    name="city"
-                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
-                    value={selectedCity}
-                    onChange={(e) => setSelectedCity(e.target.value)}
-                    disabled={!cities.length}
-                  >
-                    <option value="">Select City</option>
-                    {cities.map((city, index) => (
-                      <option key={index} value={city.name}>
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Address */}
-                <div>
-                  <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-1">
-                    <Landmark className="w-4 h-4 text-orange-500" /> Street / Area
-                  </label>
-                  <textarea
-                    name="area"
-                    defaultValue={selectedAddress.area}
-                    className="w-full px-3 py-2.5 border rounded-lg text-gray-700 dark:text-gray-200 dark:bg-neutral-800 focus:ring-2 focus:ring-orange-500 outline-none"
-                    placeholder="Enter street / area"
-                    rows={3}
-                  />
-                </div>
-
-                {/* Submit */}
-                <button
-                  type="submit"
-                  className="w-full py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition"
-                >
-                  Save Changes
-                </button>
-              </form>
-            </div>
-          </div>
-        )}
 
         {/* Payment Method */}
         <div>
-          <label className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+          <label className="block mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
             Payment Method
           </label>
           <select
             value={selectedMethod}
             onChange={(e) => setSelectedMethod(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-neutral-800 text-gray-700 dark:text-gray-200 shadow-sm focus:ring-2 focus:ring-orange-500 transition"
+            className="w-full px-3 py-2.5 md:px-4 md:py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-neutral-800 text-gray-700 dark:text-gray-200 shadow-sm focus:ring-2 focus:ring-orange-500 transition"
           >
             {paymentMethods.map((method) => (
               <option key={method.id} value={method.id}>
@@ -534,15 +841,13 @@ const OrderSummary = () => {
           </select>
           <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
             Transaction Fee:{" "}
-            <span className="text-orange-600 font-medium">
-              {currency}{feeAmount.toFixed(2)}
-            </span>
+            <span className="text-orange-600 font-medium">{currency}{feeAmount.toFixed(2)}</span>
           </p>
         </div>
 
         {/* Cart Summary */}
-        <hr className="border-gray-200 dark:border-gray-700 my-5" />
-        <div className="space-y-4 text-sm md:text-base">
+        <hr className="border-gray-200 dark:border-gray-700 my-4 md:my-5" />
+        <div className="space-y-2 md:space-y-4 text-sm md:text-base">
           <div className="flex justify-between font-medium text-gray-700 dark:text-gray-200">
             <p>Items ({getCartCount()})</p>
             <p>{currency}{getCartAmount()}</p>
@@ -555,17 +860,17 @@ const OrderSummary = () => {
             <p>Tax (2%)</p>
             <p className="font-medium text-gray-800 dark:text-gray-200">{currency}{Math.floor(getCartAmount() * 0.02)}</p>
           </div>
-          <div className="flex justify-between text-lg font-semibold border-t pt-4 text-gray-900 dark:text-gray-100">
+          <div className="flex justify-between text-lg font-semibold border-t pt-3 text-gray-900 dark:text-gray-100">
             <p>Total</p>
             <p>{currency}{total.toFixed(2)}</p>
           </div>
         </div>
 
-        {/* Submit */}
+        {/* Continue to Payment Button */}
         <button
           onClick={handlePayment}
           disabled={processing || getCartCount() === 0}
-          className={`w-full py-3 mt-5 rounded-lg text-white font-medium transition ${
+          className={`w-full py-3 mt-4 md:mt-5 rounded-lg text-white font-medium transition ${
             processing || getCartCount() === 0
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-orange-600 hover:bg-orange-700 shadow-md"
@@ -575,6 +880,7 @@ const OrderSummary = () => {
         </button>
       </div>
     </div>
+
   );
 };
 
