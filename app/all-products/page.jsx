@@ -106,7 +106,7 @@ const AllProducts = () => {
   const productLayoutClass =
     effectiveLayout === "list"
       ? "flex flex-col gap-6"
-      : "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6";
+      : "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4";
 
   if (loading) {
     return (

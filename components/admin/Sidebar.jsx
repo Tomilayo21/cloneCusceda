@@ -414,16 +414,21 @@ const SideBar = () => {
   };
 
   const SidebarContent = (
-    <div className="h-full w-64 bg-white border-r border-gray-200 flex flex-col">
-      <div className="px-6 py-4 border-b">
-        <div className="flex items-center space-x-2">
-          <Monitor className="w-6 h-6 text-black" />
-          <h2 className="text-lg font-semibold text-black-600">Admin Panel</h2>
+    <div className="h-full w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm">
+      {/* Header */}
+      <div className="px-6 py-5 border-b">
+        <div className="flex items-center gap-2">
+          <div className="p-2 bg-orange-100 rounded-md">
+            <Monitor className="w-5 h-5 text-orange-600" />
+          </div>
+          <h2 className="text-lg font-bold text-gray-800 tracking-tight">
+            Admin Panel
+          </h2>
         </div>
-        <p className="text-sm text-gray-500 ml-8">System Management</p>
+        <p className="text-xs text-gray-500 ml-1 mt-1">System Management</p>
       </div>
 
-
+      {/* Navigation */}
       <nav className="flex-1 overflow-y-auto py-4">
         <ul className="space-y-1">
           {menuItems.map((item) => {
@@ -432,13 +437,19 @@ const SideBar = () => {
               <li key={item.name}>
                 <Link href={item.path}>
                   <div
-                    className={`flex items-center gap-3 px-5 py-3 text-sm font-medium rounded-md cursor-pointer transition ${
+                    className={`flex items-center gap-3 px-5 py-3 text-sm font-medium rounded-md transition-all duration-200 ${
                       active
-                        ? 'bg-orange-100 text-black-700'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        ? "bg-orange-50 text-orange-700 border-l-4 border-orange-600"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                     }`}
                   >
-                    {item.icon}
+                    <span
+                      className={`w-5 h-5 ${
+                        active ? "text-orange-600" : "text-gray-400"
+                      }`}
+                    >
+                      {item.icon}
+                    </span>
                     <span>{item.name}</span>
                   </div>
                 </Link>
@@ -448,56 +459,50 @@ const SideBar = () => {
         </ul>
       </nav>
 
-      <div className="px-4 py-3 border-t">
+      {/* Footer / User Section */}
+      <div className="px-4 py-4 border-t space-y-3">
         {user ? (
-          <div className="flex items-center gap-3 mb-3 relative">
+          <div className="flex items-center gap-3">
             <UserButton afterSignOutUrl="/" />
-            <div className="absolute inset-0 z-10 cursor-default"></div>
-            <div className="text-sm font-medium">
-              {user.fullName || user.primaryEmailAddress?.emailAddress}
+            <div className="text-sm">
+              <p className="font-medium text-gray-800">
+                {user.fullName || user.primaryEmailAddress?.emailAddress}
+              </p>
+              <p className="text-xs text-gray-500">Signed in</p>
             </div>
           </div>
         ) : (
           <button
             onClick={() => openSignIn()}
-            className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 w-full px-4 py-2 rounded-md"
+            className="flex items-center gap-2 text-gray-700 hover:bg-gray-50 w-full px-4 py-2 rounded-md border border-gray-200 transition"
           >
-            <Users className="w-4 h-4" />
-            <span>Sign In</span>
+            <Users className="w-4 h-4 text-gray-500" />
+            <span className="text-sm font-medium">Sign In</span>
           </button>
         )}
 
         <Link
           href="/"
-          className="flex items-center gap-3 text-sm text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md"
+          className="flex items-center gap-3 text-sm text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-md transition"
         >
-          <Home className="w-5 h-5" />
+          <Home className="w-5 h-5 text-gray-500" />
           <span>Home</span>
         </Link>
 
-        {/* <button
-          onClick={handleLogout}
-          className="flex items-center gap-3 text-sm text-red-600 hover:bg-red-100 px-4 py-2 rounded-md mt-2 w-full"
+        <button
+          onClick={handleLogoutClick}
+          className="flex items-center gap-3 text-sm text-red-600 hover:bg-red-50 px-4 py-2 rounded-md transition w-full"
         >
           <LogOut className="w-5 h-5" />
           <span>Logout</span>
-        </button> */}
-        <>
-          <button
-            onClick={handleLogoutClick}
-            className="flex items-center gap-3 text-sm text-red-600 hover:bg-red-100 px-4 py-2 rounded-md mt-2 w-full"
-          >
-            <LogOut className="w-5 h-5" />
-            <span>Logout</span>
-          </button>
+        </button>
 
-          {showPopup && (
-            <PasswordConfirmPopup
-              onClose={() => setShowPopup(false)}
-              onConfirm={confirmLogout}
-            />
-          )}
-        </>
+        {showPopup && (
+          <PasswordConfirmPopup
+            onClose={() => setShowPopup(false)}
+            onConfirm={confirmLogout}
+          />
+        )}
       </div>
     </div>
   );

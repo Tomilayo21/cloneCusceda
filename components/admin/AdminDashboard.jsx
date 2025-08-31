@@ -222,102 +222,96 @@ export default function AdminDashboard({
   ];
 
   return (
-    <div className="min-h-screen w-full flex bg-gray-100">
+    <div className="min-h-screen w-full flex bg-gray-50">
       <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 py-6">
         <AdminHeader />
+
+        {/* Icon Toggle */}
         <button
           onClick={() => setShowIcons(!showIcons)}
-          className="bg-black text-white px-3 py-1 mb-2 rounded hover:bg-blue-600 transition text-sm flex items-center gap-1"
+          className="mb-4 inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-100 transition"
         >
           {showIcons ? (
             <>
-              <EyeOff className="w-4 h-4" />
+              <EyeOff className="w-4 h-4 text-gray-500" />
               <span>Hide Icons</span>
             </>
           ) : (
             <>
-              <Eye className="w-4 h-4" />
+              <Eye className="w-4 h-4 text-gray-500" />
               <span>Show Icons</span>
             </>
           )}
         </button>
 
+        {/* Top Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
           {stats.slice(0, 3).map((item, idx) => (
             <div
               key={idx}
               onClick={item.onClick}
-              className={`bg-white p-4 rounded-lg shadow hover:shadow-lg transition h-40 ${
+              className={`group bg-white p-5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border border-gray-100 ${
                 item.onClick ? "cursor-pointer" : ""
               }`}
             >
-              <div className="flex items-center justify-between mb-2">
-                {showIcons && <span className="text-xl">{item.icon}</span>}
-                <span className="text-sm text-orange-600">{item.change}</span>
+              <div className="flex items-center justify-between mb-3">
+                {showIcons && (
+                  <span className="text-2xl text-gray-600 group-hover:text-blue-600 transition">
+                    {item.icon}
+                  </span>
+                )}
+                <span className="text-xs font-semibold text-orange-600">
+                  {item.change}
+                </span>
               </div>
-              <h3 className="text-sm text-gray-500">{item.title}</h3>
-              <p className="text-xl font-bold">{item.value}</p>
+              <h3 className="text-sm font-medium text-gray-500">{item.title}</h3>
+              <p className="text-2xl font-bold text-gray-800">{item.value}</p>
             </div>
           ))}
         </div>
 
+        {/* Bottom Stats with Chart */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {stats.slice(3).map((item, idx) => (
             <div
               key={idx}
               onClick={item.onClick}
-              className={`bg-white p-4 rounded-lg shadow hover:shadow-lg transition h-40 ${
+              className={`group bg-white p-5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border border-gray-100 ${
                 idx === 0 ? "sm:col-span-2" : "sm:col-span-1"
               } ${item.onClick ? "cursor-pointer" : ""}`}
             >
-              <div className="flex items-center justify-between mb-2">
-                {showIcons && <span className="text-xl">{item.icon}</span>}
-                <span className="text-sm text-orange-600">{item.change}</span>
+              <div className="flex items-center justify-between mb-3">
+                {showIcons && (
+                  <span className="text-2xl text-gray-600 group-hover:text-blue-600 transition">
+                    {item.icon}
+                  </span>
+                )}
+                <span className="text-xs font-semibold text-orange-600">
+                  {item.change}
+                </span>
               </div>
               <div>
-                <h3 className="text-sm text-gray-500">{item.title}</h3>
-                <p className="text-xl font-bold">{item.value}</p>
-                {item.chart && <MiniChart data={dailyTrendData} />}
+                <h3 className="text-sm font-medium text-gray-500">{item.title}</h3>
+                <p className="text-2xl font-bold text-gray-800">{item.value}</p>
+                {item.chart && (
+                  <div className="mt-3">
+                    <MiniChart data={dailyTrendData} />
+                  </div>
+                )}
               </div>
             </div>
           ))}
         </div>
 
-        {/* <div className="mt-6 bg-white p-4 rounded-lg shadow">
-          <DashboardChart
-            dailyTrend={dailyTrendData}
-            monthlyTrend={monthlyTrendData}
-          />
-        </div> */}
-        {/* <div>
+        {/* Expandable Chart */}
+        <div className="mt-8 bg-white p-5 rounded-xl shadow-md border border-gray-100">
           <button
             onClick={() => setShowChart((prev) => !prev)}
-            className="px-4 py-2 mt-2 bg-orange-600 text-white rounded-md"
+            className="inline-flex items-center gap-2 rounded-md bg-orange-500 px-4 py-2 text-sm font-medium text-white shadow hover:bg-orange-600 transition"
           >
             {showChart ? "Hide Chart" : "Show Chart"}
           </button>
 
-          {showChart && (
-            <div className="mt-6 bg-white p-4 rounded-lg shadow">
-              <DashboardChart
-                dailyTrend={dailyTrendData}
-                monthlyTrend={monthlyTrendData}
-              />
-            </div>
-          )}
-        </div> */}
-
-
-        <div className="mt-6 p-4 rounded-lg shadow">
-          {/* Toggle Button */}
-          <button
-            onClick={() => setShowChart((prev) => !prev)}
-            className="px-3 py-1 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition"
-          >
-            {showChart ? "Hide Chart" : "Show Chart"}
-          </button>
-
-          {/* Animated Chart */}
           <AnimatePresence>
             {showChart && (
               <motion.div
@@ -328,7 +322,7 @@ export default function AdminDashboard({
                 transition={{ duration: 0.4, ease: "easeInOut" }}
                 className="overflow-hidden"
               >
-                <div className="mt-4">
+                <div className="mt-6">
                   <DashboardChart
                     dailyTrend={dailyTrendData}
                     monthlyTrend={monthlyTrendData}
@@ -337,8 +331,9 @@ export default function AdminDashboard({
               </motion.div>
             )}
           </AnimatePresence>
-        </div>        
+        </div>
       </main>
     </div>
+
   );
 }

@@ -23,5 +23,10 @@ export default {
       highcontrastText: '#FFD700', // gold or yellow for text
     },
   },
+   extend: {
+      animation: {
+        'spin-slow': 'spin 6s linear infinite', // slower spin
+      },
+    },
   plugins: [],
 };

@@ -6,7 +6,7 @@ import { useAppContext } from "@/context/AppContext";
 import { useClerk } from "@clerk/nextjs";
 import useSWR from "swr";
 import toast from "react-hot-toast";
-import { Heart, Star, XCircle} from "lucide-react"; 
+import { Heart, Star, XCircle, ShoppingCart} from "lucide-react"; 
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -130,15 +130,6 @@ const ProductCard = ({ product }) => {
     scrollTo(0, 0);
   };
 
-  // const handleAddToCart = (e) => {
-  //   e.stopPropagation();
-  //   if (!user) {
-  //     alert("Please log in to add items to cart.");
-  //     openSignIn();
-  //     return;
-  //   }
-  //   addToCart(product);
-  // };
   const handleAddToCart = () => {
     if (!user) {
       alert("Please log in to add items to your cart.");
@@ -149,6 +140,9 @@ const ProductCard = ({ product }) => {
   };
 
   return (
+
+
+
     <div
       onClick={handleCardClick}
       onMouseDown={handleLongPressStart}
@@ -156,110 +150,82 @@ const ProductCard = ({ product }) => {
       onMouseUp={handleLongPressEnd}
       onMouseLeave={handleLongPressEnd}
       onTouchEnd={handleLongPressEnd}
-      className="group flex flex-col max-w-[220px] w-full cursor-pointer rounded-2xl shadow-md bg-white dark:bg-gray-900 transition-all hover:shadow-lg hover:scale-[1.02] overflow-hidden"
+      className="group flex flex-col max-w-[180px] w-full cursor-pointer rounded-xl shadow-md bg-white dark:bg-gray-900 transition-all hover:shadow-lg hover:scale-[1.02] overflow-hidden"
     >
       {/* Image */}
-      <div className="relative h-48 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+      <div className="relative h-36 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
         <Image
           src={product.image[0]}
           alt={product.name}
-          width={400}
-          height={400}
+          width={300}
+          height={300}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
 
         {/* Favorite */}
-
         <button
           onClick={toggleFavorite}
-          className="absolute top-2 right-2 bg-white/90 dark:bg-gray-700/90 p-2 rounded-full shadow-md hover:scale-110 transition"
+          className="absolute top-2 right-2 bg-white/90 dark:bg-gray-700/90 p-1.5 rounded-full shadow-md hover:scale-110 transition"
           aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
         >
           <Heart
-            size={16}
+            size={14}
             className={isFavorite ? "text-red-500 fill-red-500" : "text-gray-500"}
           />
         </button>
-
       </div>
 
       {/* Details */}
-      <div className="p-4 flex flex-col flex-1 text-gray-900 dark:text-white">
-        <h3 className="text-base font-semibold truncate">{product.name}</h3>
+      <div className="p-3 flex flex-col flex-1 text-gray-900 dark:text-white">
+        <h3 className="text-sm font-semibold truncate">{product.name}</h3>
         <div
-          className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2"
+          className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-1.5"
           dangerouslySetInnerHTML={{ __html: product.description }}
         />
 
+        {/* Price / Rating / Cart */}
         <div className="flex items-center justify-between mt-auto">
-          <p className="text-lg font-bold text-orange-600">
-            {currency}
-            {product.offerPrice}
-          </p>
-          <div className="flex items-center gap-1 text-sm text-yellow-500">
-            <Star className="w-4 h-4 fill-yellow-500" />
-            {avgRating.toFixed(1)}
-          </div>
-        </div>
-
-        {product.stock <= 10 && product.stock > 0 && (
-          <p className="text-xs text-orange-600 font-medium mt-1">
-            Only {product.stock} left!
-          </p>
-        )}
-      </div>
-
-      {/* CTA */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation(); // Prevent parent click (like opening modal/card)
-          handleAddToCart();   // Just call your logic
-        }}
-        disabled={product.stock === 0}
-        className={`w-full py-3 text-sm font-medium rounded-lg ${
-          product.stock === 0
-            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-            : "bg-orange-600 hover:bg-orange-700 text-white"
-        } transition-colors`}
-      >
-        {product.stock === 0 ? "Sold Out" : "Add to Cart"}
-      </button>
-
-
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center px-4">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-md w-full shadow-xl overflow-y-auto max-h-[90vh]">
-            <h2 className="text-xl font-semibold mb-3">{product.name}</h2>
-
-            <Image
-              src={product.image[0]}
-              alt={product.name}
-              width={500}
-              height={500}
-              className="object-cover rounded-lg mb-4 w-full"
-            />
-
-            <div
-              className="text-sm text-gray-700 dark:text-gray-300 mb-4"
-              dangerouslySetInnerHTML={{ __html: product.description }}
-            />
-
-            <p className="text-base font-semibold text-orange-600 mb-2">
-              Price: {currency}
+          <div>
+            <p className="text-base font-bold text-orange-600">
+              {currency}
               {product.offerPrice}
             </p>
-
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">
-              Likes: {likes.length}
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              Rating: {avgRating.toFixed(1)} ⭐
-            </p>
+            <div className="flex items-center gap-1 text-xs text-yellow-500">
+              <Star className="w-3 h-3 fill-yellow-500" />
+              {avgRating.toFixed(1)}
+            </div>
+            {product.stock <= 10 && product.stock > 0 && (
+              <p className="text-[10px] text-orange-600 font-medium mt-1">
+                Only {product.stock} left!
+              </p>
+            )}
           </div>
+
+          {/* Cart Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddToCart();
+            }}
+            disabled={product.stock === 0}
+            className={`p-1.5 rounded-full shadow-md transition-colors flex items-center justify-center ${
+              product.stock === 0
+                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                : "bg-orange-600 hover:bg-orange-700 text-white"
+            }`}
+            aria-label={product.stock === 0 ? "Sold Out" : "Add to Cart"}
+          >
+            {product.stock === 0 ? (
+              <span className="text-[10px] font-medium">Sold</span>
+            ) : (
+              <ShoppingCart size={14} />
+            )}
+          </button>
         </div>
-      )}
+      </div>
     </div>
+
+
   );
 
 };

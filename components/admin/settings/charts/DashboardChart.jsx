@@ -1,117 +1,3 @@
-// "use client";
-
-// import { useState } from "react";
-// import {
-//   LineChart,
-//   Line,
-//   XAxis,
-//   YAxis,
-//   Tooltip,
-//   ResponsiveContainer,
-//   CartesianGrid,
-// } from "recharts";
-// import moment from "moment"; // Ensure moment is installed
-
-// export default function DashboardChart({ dailyTrend = [], monthlyTrend = []  }) {
-//   const [view, setView] = useState("daily");
-
-//   // Convert dailyTrend to show day names
-//   const formattedDaily = dailyTrend.map((entry) => ({
-//     date: moment(entry._id).format("ddd"), // e.g., "Mon", "Tue"
-//     total: entry.total,
-//   }));
-
-//   // Convert monthlyStats to show month names
-//   const formattedMonthly = monthlyTrend.map((entry) => {
-//     if (entry._id && typeof entry._id.year === "number" && typeof entry._id.month === "number") {
-//         return {
-//         date: moment(`${entry._id.year}-${entry._id.month}-01`).format("MMM"),
-//         total: entry.total,
-//         };
-//     } else {
-//         return {
-//         date: "N/A",
-//         total: entry.total || 0,
-//         };
-//     }
-//     });
-
-
-
-//   const data = view === "daily" ? formattedDaily : formattedMonthly;
-
-//   return (
-//     <div className="w-full bg-white p-4 rounded-xl shadow-md">
-//       <div className="flex justify-between items-center mb-4">
-//         <h2 className="text-lg font-bold">
-//           Deposit Trend – {view === "daily" ? "This Week" : "This Month"}
-//         </h2>
-//         <div className="flex space-x-2">
-//           <button
-//             className={`px-4 py-1 rounded ${
-//               view === "daily" ? "bg-orange-600 text-white" : "bg-gray-200"
-//             }`}
-//             onClick={() => setView("daily")}
-//           >
-//             This Week
-//           </button>
-//           <button
-//             className={`px-4 py-1 rounded ${
-//               view === "monthly" ? "bg-orange-600 text-white" : "bg-gray-200"
-//             }`}
-//             onClick={() => setView("monthly")}
-//           >
-//             This Month
-//           </button>
-//         </div>
-//       </div>
-
-//       <ResponsiveContainer width="100%" height={300}>
-//         <LineChart data={data}>
-//           <CartesianGrid strokeDasharray="3 3" />
-//           <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-//           <YAxis
-//             tickFormatter={(value) => `₦${value.toLocaleString()}`}
-//             tick={{ fontSize: 12 }}
-//           />
-//           <Tooltip
-//             formatter={(value) => `₦${value.toLocaleString()}`}
-//             labelFormatter={(label) =>
-//               view === "daily" ? `Day: ${label}` : `Month: ${label}`
-//             }
-//           />
-//           <Line
-//             type="monotone"
-//             dataKey="total"
-//             stroke="#EA580C"
-//             strokeWidth={3}
-//             dot={{ r: 5 }}
-//             activeDot={{ r: 8 }}
-//             animationDuration={500}
-//           />
-//         </LineChart>
-//       </ResponsiveContainer>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 "use client";
 
 import { useState } from "react";
@@ -161,24 +47,31 @@ export default function DashboardChart({ dailyTrend = [], monthlyTrend = [] }) {
   const data = view === "daily" ? formattedDaily : formattedMonthly;
 
   return (
-    <div className="w-full bg-white p-4 rounded-xl shadow-md">
+    <div className="w-full bg-white p-6 rounded-2xl shadow-lg">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold">
-          Deposit Trend – {view === "daily" ? "This Week" : "This Month"}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold text-gray-800">
+          Deposit Trend —{" "}
+          <span className="text-orange-600">
+            {view === "daily" ? "This Week" : "This Month"}
+          </span>
         </h2>
         <div className="flex space-x-2">
           <button
-            className={`px-4 py-1 rounded ${
-              view === "daily" ? "bg-orange-600 text-white" : "bg-gray-200"
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+              view === "daily"
+                ? "bg-orange-600 text-white shadow-sm"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
             onClick={() => setView("daily")}
           >
             This Week
           </button>
           <button
-            className={`px-4 py-1 rounded ${
-              view === "monthly" ? "bg-orange-600 text-white" : "bg-gray-200"
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+              view === "monthly"
+                ? "bg-orange-600 text-white shadow-sm"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
             onClick={() => setView("monthly")}
           >
@@ -188,39 +81,54 @@ export default function DashboardChart({ dailyTrend = [], monthlyTrend = [] }) {
       </div>
 
       {/* Chart */}
-      <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-          <YAxis
-            tickFormatter={(value) =>
-              `₦${Number(value).toLocaleString(undefined, {
-                minimumFractionDigits: 0,
-              })}`
-            }
-            tick={{ fontSize: 12 }}
-          />
-          <Tooltip
-            formatter={(value) =>
-              `₦${Number(value).toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              })}`
-            }
-            labelFormatter={(label) =>
-              view === "daily" ? `Day: ${label}` : `Month: ${label}`
-            }
-          />
-          <Line
-            type="monotone"
-            dataKey="total"
-            stroke="#EA580C"
-            strokeWidth={3}
-            dot={{ r: 5 }}
-            activeDot={{ r: 8 }}
-            animationDuration={500}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      <div className="h-[320px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+            <XAxis
+              dataKey="date"
+              tick={{ fontSize: 12, fill: "#6B7280" }}
+              axisLine={false}
+              tickLine={false}
+            />
+            <YAxis
+              tickFormatter={(value) =>
+                `₦${Number(value).toLocaleString(undefined, {
+                  minimumFractionDigits: 0,
+                })}`
+              }
+              tick={{ fontSize: 12, fill: "#6B7280" }}
+              axisLine={false}
+              tickLine={false}
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "white",
+                borderRadius: "8px",
+                border: "1px solid #E5E7EB",
+                boxShadow: "0px 4px 12px rgba(0,0,0,0.1)",
+              }}
+              formatter={(value) =>
+                `₦${Number(value).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                })}`
+              }
+              labelFormatter={(label) =>
+                view === "daily" ? `Day: ${label}` : `Month: ${label}`
+              }
+            />
+            <Line
+              type="monotone"
+              dataKey="total"
+              stroke="#EA580C"
+              strokeWidth={3}
+              dot={{ r: 5, strokeWidth: 2, fill: "#fff", stroke: "#EA580C" }}
+              activeDot={{ r: 7, strokeWidth: 2, stroke: "#EA580C", fill: "#fff" }}
+              animationDuration={800}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
