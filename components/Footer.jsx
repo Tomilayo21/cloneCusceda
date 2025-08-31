@@ -334,7 +334,7 @@ export default function Footer() {
   return (
     <footer className="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-400">
       {/* Top Section */}
-      <div className="flex flex-col md:flex-row items-start justify-between px-6 md:px-16 lg:px-32 gap-12 py-8 md:py-16 border-b border-gray-200/70 dark:border-gray-800/70">
+      <div className="flex flex-col md:flex-row items-start justify-between px-6 md:px-16 lg:px-32 gap-6 md:gap-12 py-12 md:py-16 border-b border-gray-200/70 dark:border-gray-800/70">
         {/* Logo & Description */}
         <div className="w-full md:w-1/3 space-y-6">
           {logoUrl && (
