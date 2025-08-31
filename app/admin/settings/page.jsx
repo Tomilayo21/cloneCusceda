@@ -379,7 +379,7 @@ export default function AdminSettings() {
       <h2 className="text-2xl font-bold text-gray-800">Settings</h2>
 
       {/* Tab Header */}
-      <div className="flex flex-wrap gap-2 border-b pb-2">
+      {/* <div className="flex flex-wrap gap-2 border-b pb-2">
         {settingsTabs.map((tab) => (
             <button
                 key={tab.key}
@@ -399,6 +399,30 @@ export default function AdminSettings() {
                 {tab.icon}
                 {tab.label}
             </button>
+        ))}
+      </div> */}
+
+      <div className="flex flex-wrap gap-2 border-b pb-2">
+        {settingsTabs.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => {
+              setActiveTab(tab.key);
+              setProductSubTab(null);
+              if (tab.key === "product") setProductPanel(null);
+              if (tab.key === "users") setUserPanel("main");
+              if (tab.key === "orders") setOrderPanel(null);
+            }}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+              ${
+                activeTab === tab.key
+                  ? "bg-orange-500 text-white shadow-md"
+                  : "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+              }`}
+          >
+            <span className="w-4 h-4">{tab.icon}</span>
+            <span>{tab.label}</span>
+          </button>
         ))}
       </div>
 
@@ -938,126 +962,126 @@ export default function AdminSettings() {
         )}
 
         {activeTab === "users" && (
-        <div className="relative overflow-hidden">
-          <AnimatePresence mode="wait">
-            {userPanel === "main" && (
-              <motion.div
-                key="user-main"
-                initial={{ x: 300, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -300, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-4"
-              >
-                <h3 className="font-semibold text-lg">Users & Subscribers</h3>
-                <p className="text-sm text-gray-600">
-                  Role assignments, user lists, and subscriber communication tools.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                  <button
-                    onClick={() => setUserPanel("list")}
-                    className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <Users className="w-5 h-5" />
-                      <span className="font-semibold">View Users</span>
-                    </div>
-                    <p className="text-xs text-left">
-                      Browse and manage all registered users, including profile info and activity.
-                    </p>
-                  </button>
+          <div className="relative overflow-hidden">
+            <AnimatePresence mode="wait">
+              {userPanel === "main" && (
+                <motion.div
+                  key="user-main"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <h3 className="font-semibold text-lg">Users & Subscribers</h3>
+                  <p className="text-sm text-gray-600">
+                    Role assignments, user lists, and subscriber communication tools.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <button
+                      onClick={() => setUserPanel("list")}
+                      className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <Users className="w-5 h-5" />
+                        <span className="font-semibold">View Users</span>
+                      </div>
+                      <p className="text-xs text-left">
+                        Browse and manage all registered users, including profile info and activity.
+                      </p>
+                    </button>
+
+                      <button
+                      onClick={() => setUserPanel("subscribers")}
+                      className="flex flex-col items-start bg-green-100 hover:bg-green-200 text-green-800 p-4 rounded-xl shadow"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <Mail className="w-5 h-5" />
+                        <span className="font-semibold">Subscribers</span>
+                      </div>
+                      <p className="text-xs text-left">
+                        View and export newsletter subscribers and manage email outreach.
+                      </p>
+                    </button>
 
                     <button
-                    onClick={() => setUserPanel("subscribers")}
-                    className="flex flex-col items-start bg-green-100 hover:bg-green-200 text-green-800 p-4 rounded-xl shadow"
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <Mail className="w-5 h-5" />
-                      <span className="font-semibold">Subscribers</span>
-                    </div>
-                    <p className="text-xs text-left">
-                      View and export newsletter subscribers and manage email outreach.
-                    </p>
+                      onClick={() => setUserPanel("roles")}
+                      className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <ShieldCheck className="w-5 h-5" />
+                        <span className="font-semibold">Roles & Permissions</span>
+                      </div>
+                      <p className="text-xs text-left">
+                        Assign roles to users, configure access levels, and manage permissions.
+                      </p>
+                    </button>
+                  </div>
+                </motion.div>
+                )}
+                {userPanel === "list" && (
+                <motion.div
+                  key="user-list"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
                   </button>
-
-                  <button
-                    onClick={() => setUserPanel("roles")}
-                    className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow"
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <ShieldCheck className="w-5 h-5" />
-                      <span className="font-semibold">Roles & Permissions</span>
-                    </div>
-                    <p className="text-xs text-left">
-                      Assign roles to users, configure access levels, and manage permissions.
-                    </p>
+                  <RegUsers />
+                </motion.div>
+                )}
+                {userPanel === "subscribers" && (
+                <motion.div
+                  key="user-subscribers"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
                   </button>
-                </div>
-              </motion.div>
+                  <button onClick={() => setUserPanel("broadcast")} className="bg-orange-600 text-white px-4 py-2 rounded">
+                    View Broadcast History
+                  </button>
+                  <SubscribersPage />
+                </motion.div>
+                )}
+                {userPanel === "broadcast" && (
+                <motion.div
+                  key="user-broadcast"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setUserPanel("subscribers")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+                  <ViewBroadcastButton />
+                </motion.div>
+                )}
+                {userPanel === "roles" && (
+                <motion.div
+                  key="user-subscribers"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                  </button>
+                  <UserListPanel />
+                </motion.div>
               )}
-              {userPanel === "list" && (
-              <motion.div
-                key="user-list"
-                initial={{ x: 300, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -300, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-4"
-              >
-                <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
-                  <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                </button>
-                <RegUsers />
-              </motion.div>
-              )}
-              {userPanel === "subscribers" && (
-              <motion.div
-                key="user-subscribers"
-                initial={{ x: 300, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -300, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-4"
-              >
-                <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
-                  <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                </button>
-                <button onClick={() => setUserPanel("broadcast")} className="bg-orange-600 text-white px-4 py-2 rounded">
-                  View Broadcast History
-                </button>
-                <SubscribersPage />
-              </motion.div>
-              )}
-              {userPanel === "broadcast" && (
-              <motion.div
-                key="user-broadcast"
-                initial={{ x: 300, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -300, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-4"
-              >
-                <button onClick={() => setUserPanel("subscribers")} className="flex items-center text-sm text-gray-600 hover:text-black">
-                  <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                </button>
-                <ViewBroadcastButton />
-              </motion.div>
-              )}
-              {userPanel === "roles" && (
-              <motion.div
-                key="user-subscribers"
-                initial={{ x: 300, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -300, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-4"
-              >
-                <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
-                  <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                </button>
-                <UserListPanel />
-              </motion.div>
-            )}
             </AnimatePresence>
           </div>
         )}
