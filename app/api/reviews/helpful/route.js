@@ -1,27 +1,27 @@
 // app/api/reviews/helpful/route.js
-import { NextResponse } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server'; // ✅ use getAuth here
-import connectDB from '@/config/db';
-import Review from '@/models/Review';
+import { NextResponse } from "next/server";
+import connectDB from "@/config/db";
+import Review from "@/models/Review";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/authOptions";
 
 export async function PATCH(req) {
   try {
     await connectDB();
 
-    const { reviewId } = await req.json();
-
-    // ✅ Use getAuth to extract userId in app router
-    const { userId } = getAuth(req);
-
-    if (!userId) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+
+    const { reviewId } = await req.json();
 
     const review = await Review.findById(reviewId);
     if (!review) {
-      return NextResponse.json({ message: 'Review not found' }, { status: 404 });
+      return NextResponse.json({ message: "Review not found" }, { status: 404 });
     }
 
+    const userId = session.user.id;
     const hasLiked = review.helpful.includes(userId);
 
     if (hasLiked) {
@@ -33,10 +33,10 @@ export async function PATCH(req) {
     await review.save();
 
     return NextResponse.json({ helpful: review.helpful }, { status: 200 });
-
   } catch (error) {
+    console.error("Helpful Review Error:", error);
     return NextResponse.json(
-      { message: 'Server error', error: error.message },
+      { message: "Server error", error: error.message },
       { status: 500 }
     );
   }
