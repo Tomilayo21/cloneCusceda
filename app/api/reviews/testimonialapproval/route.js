@@ -1,9 +1,10 @@
-
 // app/api/reviews/testimonialapproval/route.js
 import { NextResponse } from "next/server";
 import connectDB from "@/config/db";
 import Review from "@/models/Review";
-import { currentUser } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth/next";
+import authAdmin from "@/lib/authAdmin";
+import { authOptions } from "@/lib/authOptions";
 
 export async function PATCH(req) {
   try {
@@ -17,8 +18,13 @@ export async function PATCH(req) {
       );
     }
 
-    const user = await currentUser();
-    if (!user || user.publicMetadata?.role !== "admin") {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+    }
+
+    const isAdmin = await authAdmin(session.user.id);
+    if (!isAdmin) {
       return NextResponse.json({ message: "Not authorized" }, { status: 403 });
     }
 
@@ -26,8 +32,8 @@ export async function PATCH(req) {
     const bulkOps = order.map(({ id, position }) => ({
       updateOne: {
         filter: { _id: id },
-        update: { $set: { position } }
-      }
+        update: { $set: { position } },
+      },
     }));
 
     if (bulkOps.length > 0) {
@@ -43,23 +49,3 @@ export async function PATCH(req) {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
