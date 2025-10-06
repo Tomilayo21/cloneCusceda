@@ -3,46 +3,39 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/context/AppContext';
-import { useClerk, useUser } from '@clerk/nextjs';
+import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import Loading from '@/components/Loading';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-
 const BankTransferPage = () => {
   const router = useRouter();
-  const { getToken, currency } = useAppContext();
-  const { isLoaded, isSignedIn } = useUser();
-  const { openSignIn } = useClerk();
+  const { currency } = useAppContext();
+  const { data: session, status } = useSession();
 
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [proofFile, setProofFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [uploadUrl, setUploadUrl] = useState('');
   const fileInputRef = useRef(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-
-
+  // Redirect if not logged in
   useEffect(() => {
-    if (!isLoaded) return;
-
-    if (!isSignedIn) {
-      router.push('/');
-      setTimeout(() => openSignIn(), 100);
-      return;
+    if (status === "unauthenticated") {
+      router.push("/login");
     }
+  }, [status, router]);
+
+  // Fetch latest order
+  useEffect(() => {
+    if (status !== "authenticated") return;
 
     const fetchLatestOrder = async () => {
       try {
-        const token = await getToken();
-        const { data } = await axios.get('/api/order/list', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
+        const { data } = await axios.get('/api/order/list');
         if (data.success && data.orders.length > 0) {
           const latestOrder = data.orders.reverse()[0];
           setOrder(latestOrder);
@@ -57,21 +50,19 @@ const BankTransferPage = () => {
     };
 
     fetchLatestOrder();
-  }, [isLoaded, isSignedIn, getToken, openSignIn, router]);
+  }, [status]);
 
-  const handleBackToMyOrders = () => {
-    router.push('/my-orders');
-  };
+  const handleBackToMyOrders = () => router.push('/my-orders');
 
- 
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!proofFile) return toast.error("Please select a file to upload.");
     setUploading(true);
+
     try {
       const formData = new FormData();
       formData.append('proof', proofFile);
-      formData.append('orderId', order.orderId);  // <-- ADD THIS LINE to send orderId
+      formData.append('orderId', order.orderId);
 
       const { data } = await axios.post('/api/upload-proof', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -79,11 +70,8 @@ const BankTransferPage = () => {
 
       if (data.success) {
         toast.success(data.message || 'Upload successful');
-        setProofFile(null); // clear state
-        if (fileInputRef.current) {
-          fileInputRef.current.value = ''; // clear input
-        }
-        setUploadUrl('');
+        setProofFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
         setShowConfirmation(true);
       } else {
         toast.error(data.message || 'Upload failed');
@@ -95,8 +83,7 @@ const BankTransferPage = () => {
     }
   };
 
-
-  if (!isLoaded || loading) return <Loading />;
+  if (loading || status === "loading") return <Loading />;
 
   if (!order) {
     return (
@@ -124,9 +111,12 @@ const BankTransferPage = () => {
 
       <main className="flex-grow flex flex-col mt-16 justify-center items-center px-4 bg-gray-50 dark:bg-black text-gray-800 dark:text-white py-12">
         <div className="max-w-2xl w-full bg-white dark:bg-gray-800 shadow-xl rounded p-8 space-y-8">
-
-          <h1 className="text-3xl font-bold text-orange-600 text-center">Bank Transfer Payment</h1>
-          <p className="text-lg text-center">Your order has been placed successfully!</p>
+          <h1 className="text-3xl font-bold text-orange-600 text-center">
+            Bank Transfer Payment
+          </h1>
+          <p className="text-lg text-center">
+            Your order has been placed successfully!
+          </p>
 
           {/* Bank Info */}
           <section className="bg-gray-50 dark:bg-gray-700 p-4 rounded shadow">
@@ -144,7 +134,7 @@ const BankTransferPage = () => {
           <section className="bg-gray-50 dark:bg-gray-700 p-4 rounded shadow">
             <h2 className="font-semibold mb-2">Transfer Details</h2>
             <p><strong>Amount:</strong> {currency}{total.toFixed(2)}</p>
-            <p><strong>currency:</strong> NGN</p>
+            <p><strong>Currency:</strong> NGN</p>
             <p className="text-sm mt-2">
               Use your <strong>Order ID</strong> as the transfer reference:{" "}
               <span className="font-mono bg-white px-2 py-1 rounded border border-dashed border-gray-400 dark:bg-black dark:text-white">
@@ -189,7 +179,6 @@ const BankTransferPage = () => {
                 ✅ Payment proof received. We will confirm your payment within a few hours.
               </div>
             )}
-
           </section>
 
           <div className="flex justify-center pt-4">
