@@ -146,7 +146,7 @@ const Navbar = () => {
                 className="flex items-center gap-1 bg-purple-700 text-white text-xs px-3 py-1 rounded-full cursor-pointer"
               >
                 <ShieldAlert className="w-3.5 h-3.5 text-yellow-300" />
-                <span>Super Admin</span>
+                {/* <span>Super Admin</span> */}
               </div>
             )}
 
@@ -192,7 +192,18 @@ const Navbar = () => {
 
           {/* Mobile Menu */}
           <div className="flex md:hidden items-center gap-3">
+            {mounted && user?.role === "admin" && (
+              <div
+                onClick={handleAdminClick}
+                className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2.5 py-1 rounded-full cursor-pointer"
+              >
+                <ShieldAlert className="w-3.5 h-3.5 text-yellow-300" />
+                {/* <span>Super Admin</span> */}
+              </div>
+            )}
+
             <SearchBar />
+
             <button
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               aria-label="Toggle Menu"
@@ -201,6 +212,7 @@ const Navbar = () => {
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
+
         </div>
 
         {/* Mobile Menu */}
