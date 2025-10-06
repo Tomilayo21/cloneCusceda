@@ -96,72 +96,141 @@
 
 
 
+// import connectDB from "@/config/db";
+// import Order from "@/models/Order";
+// import Address from "@/models/Address";
+
+// const shippo = require("shippo")(process.env.SHIPPO_API_KEY);
+
+// export async function POST(req) {
+//   await connectDB();
+
+//   try {
+//     const body = await req.json();
+//     const { orderId } = body;
+
+//     if (!orderId) {
+//       return new Response(JSON.stringify({ error: "orderId is required" }), { status: 400 });
+//     }
+
+//     const order = await Order.findOne({ orderId }).populate("address");
+//     if (!order) {
+//       return new Response(JSON.stringify({ error: "Order not found" }), { status: 404 });
+//     }
+
+//     const address = await Address.findById(order.address);
+//     if (!address) {
+//       return new Response(JSON.stringify({ error: "Address not found" }), { status: 404 });
+//     }
+
+//     const fromAddress = {
+//       name: "Your Store",
+//       street1: "123 Main St",
+//       city: "New York",
+//       state: "NY",
+//       zip: "10001",
+//       country: "US",
+//       phone: "5551234567",
+//       email: "support@yourstore.com",
+//     };
+
+//     const toAddress = {
+//       name: address.fullName,
+//       street1: address.area,
+//       city: address.city,
+//       state: address.state,
+//       zip: address.zipcode,
+//       country: address.country || "US",
+//       phone: address.phoneNumber,
+//       email: address.email,
+//     };
+
+//     const parcel = {
+//       length: "10",
+//       width: "7",
+//       height: "4",
+//       distance_unit: "in",
+//       weight: "2",
+//       mass_unit: "lb",
+//     };
+
+//     const shipment = await shippo.shipment.create({
+//       address_from: fromAddress,
+//       address_to: toAddress,
+//       parcels: [parcel],
+//       async: false,
+//     });
+
+//     return new Response(JSON.stringify({ rates: shipment.rates, shipmentId: shipment.object_id }), { status: 200 });
+//   } catch (error) {
+//     console.error("Error creating shipment:", error);
+//     return new Response(JSON.stringify({ error: "Failed to create shipment" }), { status: 500 });
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import connectDB from "@/config/db";
 import Order from "@/models/Order";
-import Address from "@/models/Address";
-
-const shippo = require("shippo")(process.env.SHIPPO_API_KEY);
 
 export async function POST(req) {
   await connectDB();
 
   try {
-    const body = await req.json();
-    const { orderId } = body;
+    const Shippo = (await import("shippo")).default;
+    const shippo = Shippo(process.env.SHIPPO_API_KEY);
 
-    if (!orderId) {
-      return new Response(JSON.stringify({ error: "orderId is required" }), { status: 400 });
+    const body = await req.json();
+    const { orderId, shipmentData } = body;
+
+    if (!orderId || !shipmentData) {
+      return new Response(JSON.stringify({ error: "orderId and shipmentData are required" }), { status: 400 });
     }
 
-    const order = await Order.findOne({ orderId }).populate("address");
+    const order = await Order.findOne({ orderId });
     if (!order) {
       return new Response(JSON.stringify({ error: "Order not found" }), { status: 404 });
     }
 
-    const address = await Address.findById(order.address);
-    if (!address) {
-      return new Response(JSON.stringify({ error: "Address not found" }), { status: 404 });
-    }
-
-    const fromAddress = {
-      name: "Your Store",
-      street1: "123 Main St",
-      city: "New York",
-      state: "NY",
-      zip: "10001",
-      country: "US",
-      phone: "5551234567",
-      email: "support@yourstore.com",
-    };
-
-    const toAddress = {
-      name: address.fullName,
-      street1: address.area,
-      city: address.city,
-      state: address.state,
-      zip: address.zipcode,
-      country: address.country || "US",
-      phone: address.phoneNumber,
-      email: address.email,
-    };
-
-    const parcel = {
-      length: "10",
-      width: "7",
-      height: "4",
-      distance_unit: "in",
-      weight: "2",
-      mass_unit: "lb",
-    };
-
+    // Create a shipment
     const shipment = await shippo.shipment.create({
-      address_from: fromAddress,
-      address_to: toAddress,
-      parcels: [parcel],
+      address_from: shipmentData.address_from,
+      address_to: shipmentData.address_to,
+      parcels: shipmentData.parcels,
       async: false,
     });
 
-    return new Response(JSON.stringify({ rates: shipment.rates, shipmentId: shipment.object_id }), { status: 200 });
+    // Save the shipment ID
+    order.shipping = {
+      ...order.shipping,
+      shipmentId: shipment.object_id,
+    };
+
+    await order.save();
+
+    return new Response(
+      JSON.stringify({ success: true, shipment }),
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error creating shipment:", error);
     return new Response(JSON.stringify({ error: "Failed to create shipment" }), { status: 500 });

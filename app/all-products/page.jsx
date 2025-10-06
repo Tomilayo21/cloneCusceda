@@ -18,8 +18,9 @@ const PRODUCTS_PER_PAGE = 25;
 
 export default function Page() {
   return (
-
+    <Suspense fallback={<div>Loading products...</div>}>
       <AllProducts />
+    </Suspense>  
   );
 }
 
