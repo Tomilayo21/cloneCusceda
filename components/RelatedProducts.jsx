@@ -3,10 +3,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
-import { useClerk } from "@clerk/nextjs";
 import useSWR from "swr";
 import toast from "react-hot-toast";
-import { Heart, Star, XCircle, ShoppingCart, Tag, Package} from "lucide-react"; 
+import { Heart, Star, XCircle, ShoppingCart, Tag, Package } from "lucide-react";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -14,69 +13,75 @@ const ProductCard = ({ product }) => {
   if (product.visible === false) return null;
 
   const { currency, router, addToCart, user } = useAppContext();
-  const { openSignIn } = useClerk();
   const [isFavorite, setIsFavorite] = useState(false);
   const [likes, setLikes] = useState(product.likes || []);
   const [loading, setLoading] = useState(false);
   const liked = user && likes.includes(user.id);
 
   const [showModal, setShowModal] = useState(false);
-
   const pressTimer = useRef(null);
 
+  // Long press
   const handleLongPressStart = () => {
-    pressTimer.current = setTimeout(() => {
-      setShowModal(true);
-    }, 500); // 500ms for long press
+    pressTimer.current = setTimeout(() => setShowModal(true), 500);
   };
-
   const handleLongPressEnd = () => {
     clearTimeout(pressTimer.current);
     setShowModal(false);
   };
 
-
-
+  // Toggle Like
   const toggleLike = async () => {
-    if (!user) return;
+    if (!user) {
+      toast.error("Please log in to like products.");
+      router.push("/login");
+      return;
+    }
 
     setLoading(true);
     try {
-      const res = await fetch('/api/likes', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/likes", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productId: product._id, userId: user.id }),
       });
       const data = await res.json();
 
-      if (data.liked) {
-        setLikes(prev => [...prev, user.id]);
-      } else {
-        setLikes(prev => prev.filter(id => id !== user.id));
-      }
-    } catch (error) {
-      console.error('Like error:', error);
+      if (data.liked) setLikes((prev) => [...prev, user.id]);
+      else setLikes((prev) => prev.filter((id) => id !== user.id));
+    } catch (err) {
+      console.error("Like error:", err);
     } finally {
       setLoading(false);
     }
   };
 
+  // Fetch favorites
   useEffect(() => {
     const checkFavorite = async () => {
       if (!user) return;
 
-      const res = await fetch("/api/favorites");
-      const data = await res.json();
-      const found = data.find((f) => f.productId._id === product._id);
-      setIsFavorite(!!found);
+      try {
+        const res = await fetch("/api/favorites");
+        if (!res.ok) return;
+        const data = await res.json();
+        const found = data.find((f) => f.productId._id === product._id);
+        setIsFavorite(!!found);
+      } catch (err) {
+        console.error("Favorite fetch failed:", err);
+      }
     };
-
     checkFavorite();
   }, [user, product._id]);
 
+  // Toggle favorite
   const toggleFavorite = async (e) => {
     e.stopPropagation();
-    if (!user) return openSignIn();
+    if (!user) {
+      toast.error("Please log in to add to favorites.");
+      router.push("/login");
+      return;
+    }
 
     try {
       const res = await fetch("/api/favorites", {
@@ -107,10 +112,8 @@ const ProductCard = ({ product }) => {
           ),
           { duration: 2000 }
         );
-      } else {
-        toast.error("Failed to update favorites");
-      }
-    } catch (error) {
+      } else toast.error("Failed to update favorites");
+    } catch (err) {
       toast.error("An error occurred");
     }
   };
@@ -132,95 +135,91 @@ const ProductCard = ({ product }) => {
 
   const handleAddToCart = () => {
     if (!user) {
-      alert("Please log in to add items to your cart.");
-      openSignIn();
+      toast.error("Please log in to add items to your cart.");
+      router.push("/login");
       return;
     }
     addToCart(product);
   };
 
   return (
-
     <div
-    onClick={handleCardClick}
-    onMouseDown={handleLongPressStart}
-    onTouchStart={handleLongPressStart}
-    onMouseUp={handleLongPressEnd}
-    onMouseLeave={handleLongPressEnd}
-    onTouchEnd={handleLongPressEnd}
-    className="group flex flex-col w-[160px] cursor-pointer rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:shadow-md hover:scale-[1.02] transition-all overflow-hidden"
+      onClick={handleCardClick}
+      onMouseDown={handleLongPressStart}
+      onTouchStart={handleLongPressStart}
+      onMouseUp={handleLongPressEnd}
+      onMouseLeave={handleLongPressEnd}
+      onTouchEnd={handleLongPressEnd}
+      className="group flex flex-col w-[160px] cursor-pointer rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:shadow-md hover:scale-[1.02] transition-all overflow-hidden"
     >
-    {/* Image */}
-    <div className="relative h-28 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+      {/* Image */}
+      <div className="relative h-28 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
         <Image
-        src={product.image[0]}
-        alt={product.name}
-        width={250}
-        height={250}
-        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          src={product.image[0]}
+          alt={product.name}
+          width={250}
+          height={250}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
 
         {/* Favorite */}
         <button
-        onClick={toggleFavorite}
-        className="absolute top-2 right-2 bg-white/90 dark:bg-gray-700/90 p-1 rounded-full shadow-md hover:scale-110 transition"
-        aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          onClick={toggleFavorite}
+          className="absolute top-2 right-2 bg-white/90 dark:bg-gray-700/90 p-1 rounded-full shadow-md hover:scale-110 transition"
+          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
         >
-        <Heart
+          <Heart
             size={14}
             className={isFavorite ? "text-red-500 fill-red-500" : "text-gray-500"}
-        />
+          />
         </button>
-    </div>
+      </div>
 
-    {/* Details */}
-    <div className="p-2 flex flex-col flex-1 text-gray-900 dark:text-white">
-        {/* <h3 className="text-xs font-medium truncate">{product.name}</h3> */}
+      {/* Details */}
+      <div className="p-2 flex flex-col flex-1 text-gray-900 dark:text-white">
         <h3 className="text-xs font-medium truncate flex items-center gap-1">
-        <Package className="w-3 h-3 text-gray-500 dark:text-gray-300" />
-        {product.name}
+          <Package className="w-3 h-3 text-gray-500 dark:text-gray-300" />
+          {product.name}
         </h3>
 
         {/* Price & Rating */}
         <div className="mt-1 flex items-center justify-between">
-        <p className="flex items-center gap-1 text-sm font-bold text-orange-600">
+          <p className="flex items-center gap-1 text-sm font-bold text-orange-600">
             <Tag size={12} className="text-orange-500" />
             {currency}
             {product.offerPrice}
-        </p>
-        <div className="flex items-center gap-0.5 text-[10px] text-yellow-500">
+          </p>
+          <div className="flex items-center gap-0.5 text-[10px] text-yellow-500">
             <Star className="w-3 h-3 fill-yellow-500" />
             {avgRating.toFixed(1)}
-        </div>
+          </div>
         </div>
 
         {/* Cart Button */}
         <button
-        onClick={(e) => {
+          onClick={(e) => {
             e.stopPropagation();
             handleAddToCart();
-        }}
-        disabled={product.stock === 0}
-        className={`mt-2 flex items-center justify-center gap-1 py-1 rounded-lg text-xs font-medium transition-colors ${
+          }}
+          disabled={product.stock === 0}
+          className={`mt-2 flex items-center justify-center gap-1 py-1 rounded-lg text-xs font-medium transition-colors ${
             product.stock === 0
-            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-            : "bg-orange-600 hover:bg-orange-700 text-white"
-        }`}
-        aria-label={product.stock === 0 ? "Sold Out" : "Add to Cart"}
+              ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+              : "bg-orange-600 hover:bg-orange-700 text-white"
+          }`}
+          aria-label={product.stock === 0 ? "Sold Out" : "Add to Cart"}
         >
-        {product.stock === 0 ? (
+          {product.stock === 0 ? (
             "Sold Out"
-        ) : (
+          ) : (
             <>
-            <ShoppingCart size={12} /> Add to Cart
+              <ShoppingCart size={12} /> Add to Cart
             </>
-        )}
+          )}
         </button>
+      </div>
     </div>
-    </div>
-
   );
-
 };
 
 export default ProductCard;

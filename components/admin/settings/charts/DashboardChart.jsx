@@ -1,134 +1,211 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
   XAxis,
   YAxis,
+  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  CartesianGrid,
+  Legend,
 } from "recharts";
 import moment from "moment";
+import axios from "axios";
+import { useAppContext } from "@/context/AppContext";
+import { toast } from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
-export default function DashboardChart({ dailyTrend = [], monthlyTrend = [] }) {
-  const [view, setView] = useState("daily");
+const FILTERS = [
+  { label: "Today", value: "1" },
+  { label: "This Week", value: "7" },
+  { label: "This Month", value: "30" },
+];
 
-  // Format daily data with day names
-  const formattedDaily = Array.isArray(dailyTrend)
-    ? dailyTrend.map((entry) => ({
-        date: entry?._id ? moment(entry._id).format("ddd") : "N/A",
-        total: typeof entry?.total === "number" ? entry.total : 0,
-      }))
-    : [];
+export default function SalesDashboard() {
+  const { data: session } = useSession();
+  const token = session?.user?.accessToken || session?.user?.token;
 
-  // Format monthly data with month names
-  const formattedMonthly = Array.isArray(monthlyTrend)
-    ? monthlyTrend.map((entry) => {
-        if (
-          entry?._id &&
-          typeof entry._id.year === "number" &&
-          typeof entry._id.month === "number"
-        ) {
-          return {
-            date: moment(`${entry._id.year}-${entry._id.month}-01`).format("MMM"),
-            total: typeof entry.total === "number" ? entry.total : 0,
-          };
+  const [stats, setStats] = useState({
+    totalOrders: 0,
+    totalRevenue: 0,
+    dailyOrders: [],
+    dailyRevenue: [],
+  });
+  const [loading, setLoading] = useState(false);
+  const [range, setRange] = useState("7");
+  const [mode, setMode] = useState("comparison"); // orders | revenue | comparison
+  const [showMore, setShowMore] = useState(true); // set true so chart shows initially
+
+  const { currency } = useAppContext();
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        console.log(`📅 Fetching stats for range: ${range}`);
+        const res = await axios.get(`/api/order/transactions?range=${range}`);
+        console.log("📊 API Response:", res.data);
+
+        if (res.data.success) {
+          setStats({
+            totalOrders: res.data.totalOrders,
+            totalRevenue: res.data.totalRevenue,
+            dailyOrders: res.data.dailyOrders,
+            dailyRevenue: res.data.dailyRevenue,
+          });
         } else {
-          return {
-            date: "N/A",
-            total: typeof entry?.total === "number" ? entry.total : 0,
-          };
+          toast.error("Failed to load stats");
         }
-      })
-    : [];
+      } catch (err) {
+        console.error("❌ Fetch Stats Error:", err);
+        toast.error("Error fetching stats");
+      }
+    };
 
-  const data = view === "daily" ? formattedDaily : formattedMonthly;
+    fetchStats();
+  }, [range]);
+
+
+  // 🧮 Combine dailyOrders + dailyRevenue
+  const combinedData = stats.dailyOrders.map((o) => {
+    const rev = stats.dailyRevenue.find((r) => r.date === o.date);
+    return {
+      date: o.date,
+      label: moment(o.date).format("MMM D"),
+      orders: o.count,
+      revenue: rev ? rev.total : 0,
+    };
+  });
 
   return (
-    <div className="w-full bg-white p-6 rounded-2xl shadow-lg">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">
-          Deposit Trend —{" "}
-          <span className="text-orange-600">
-            {view === "daily" ? "This Week" : "This Month"}
-          </span>
-        </h2>
-        <div className="flex space-x-2">
+    <div className="mt-2 space-y-6">
+      {/* Top Stats */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <StatCard label="Total Orders" value={stats.totalOrders} color="orange" />
+        <StatCard
+          label="Total Revenue"
+          value={`${currency}${Number(stats.totalRevenue).toLocaleString()}`}
+          color="blue"
+        />
+      </div>
+
+      {/* Filter Buttons */}
+      <div className="flex flex-wrap justify-center gap-2 mt-4">
+        {FILTERS.map((f) => (
           <button
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
-              view === "daily"
-                ? "bg-orange-600 text-white shadow-sm"
+            key={f.value}
+            onClick={() => setRange(f.value)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+              range === f.value
+                ? "bg-orange-500 text-white shadow"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
-            onClick={() => setView("daily")}
           >
-            This Week
+            {f.label}
           </button>
-          <button
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
-              view === "monthly"
-                ? "bg-orange-600 text-white shadow-sm"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
-            onClick={() => setView("monthly")}
-          >
-            This Month
-          </button>
-        </div>
+        ))}
       </div>
 
       {/* Chart */}
-      <div className="h-[320px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-            <XAxis
-              dataKey="date"
-              tick={{ fontSize: 12, fill: "#6B7280" }}
-              axisLine={false}
-              tickLine={false}
-            />
-            <YAxis
-              tickFormatter={(value) =>
-                `₦${Number(value).toLocaleString(undefined, {
-                  minimumFractionDigits: 0,
-                })}`
-              }
-              tick={{ fontSize: 12, fill: "#6B7280" }}
-              axisLine={false}
-              tickLine={false}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "white",
-                borderRadius: "8px",
-                border: "1px solid #E5E7EB",
-                boxShadow: "0px 4px 12px rgba(0,0,0,0.1)",
-              }}
-              formatter={(value) =>
-                `₦${Number(value).toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                })}`
-              }
-              labelFormatter={(label) =>
-                view === "daily" ? `Day: ${label}` : `Month: ${label}`
-              }
-            />
-            <Line
-              type="monotone"
-              dataKey="total"
-              stroke="#EA580C"
-              strokeWidth={3}
-              dot={{ r: 5, strokeWidth: 2, fill: "#fff", stroke: "#EA580C" }}
-              activeDot={{ r: 7, strokeWidth: 2, stroke: "#EA580C", fill: "#fff" }}
-              animationDuration={800}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+      <SalesChart
+        combinedData={combinedData}
+        stats={stats}
+        mode={mode}
+        setMode={setMode}
+        loading={loading}
+        currency={currency}
+      />
     </div>
   );
 }
+
+const StatCard = ({ label, value, color }) => (
+  <div className="bg-white shadow rounded-2xl p-6 border border-gray-100">
+    <h3 className="text-sm font-medium text-gray-500">{label}</h3>
+    <p className={`text-3xl font-bold text-${color}-500 mt-2`}>{value}</p>
+  </div>
+);
+
+const SalesChart = ({ combinedData, stats, mode, setMode, loading, currency }) => (
+  <div className="bg-white shadow rounded-2xl p-4 sm:p-6 border border-gray-100 mt-4">
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
+      <div>
+        <h3 className="text-base sm:text-lg font-semibold text-gray-700">
+          Orders & Revenue Trend
+        </h3>
+        <p className="text-xs sm:text-sm text-gray-500">
+          Track total orders and total revenue over the selected period.
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <span className="px-3 py-1 rounded-full text-xs bg-orange-100 text-orange-700">
+          Orders: {stats.totalOrders}
+        </span>
+        <span className="px-3 py-1 rounded-full text-xs bg-blue-100 text-blue-700">
+          Revenue: {`${ currency }${Number(stats.totalRevenue).toLocaleString()}`}
+        </span>
+      </div>
+    </div>
+
+    <div className="flex gap-2 mb-4">
+      <ChartToggle label="Orders" active={mode === "orders"} onClick={() => setMode("orders")} />
+      <ChartToggle label="Revenue" active={mode === "revenue"} onClick={() => setMode("revenue")} />
+      <ChartToggle
+        label="Comparison"
+        active={mode === "comparison"}
+        onClick={() => setMode("comparison")}
+      />
+    </div>
+
+    {loading ? (
+      <p className="text-center text-gray-500 mt-10">Loading chart...</p>
+    ) : combinedData.length === 0 ? (
+      <p className="text-center text-gray-500 mt-10">No data available</p>
+    ) : (
+      <div className="w-full h-64 sm:h-72 md:h-80">
+        <ResponsiveContainer>
+          <LineChart data={combinedData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#6b7280" }} />
+            <YAxis tick={{ fontSize: 10, fill: "#6b7280" }} />
+            <Tooltip />
+            <Legend />
+            {(mode === "orders" || mode === "comparison") && (
+              <Line
+                type="monotone"
+                dataKey="orders"
+                stroke="#f97316"
+                strokeWidth={2}
+                dot={{ r: 2 }}
+                activeDot={{ r: 4 }}
+              />
+            )}
+            {(mode === "revenue" || mode === "comparison") && (
+              <Line
+                type="monotone"
+                dataKey="revenue"
+                stroke="#3b82f6"
+                strokeWidth={2}
+                dot={{ r: 2 }}
+                activeDot={{ r: 4 }}
+              />
+            )}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    )}
+  </div>
+);
+
+const ChartToggle = ({ label, active, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`px-3 py-1 rounded text-sm ${
+      active ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-700"
+    }`}
+  >
+    {label}
+  </button>
+);

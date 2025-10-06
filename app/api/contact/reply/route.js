@@ -26,13 +26,6 @@ export async function POST(req) {
   });
 
   try {
-    // await transporter.sendMail({
-    //   from: `"Cusceda NG" <${process.env.EMAIL_USER}>`,
-    //   to,
-    //   cc,
-    //   subject,
-    //   text: message,
-    // });
     await transporter.sendMail({
     from: `"Cusceda NG Support" <${process.env.EMAIL_USER}>`,
     to,

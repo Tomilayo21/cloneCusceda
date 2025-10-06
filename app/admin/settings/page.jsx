@@ -36,7 +36,7 @@ import SubscribersPage from "@/components/admin/settings/users/SubscribersPage";
 import RegUsers from "@/components/admin/RegUsers";
 import toast from "react-hot-toast";
 import FormatDatabase from '@/components/admin/FormatDatabase';
-import { useUser } from '@clerk/nextjs';
+// import { useUser } from '@clerk/nextjs';
 import BackupModal from '@/components/admin/BackupModal';
 import AdminRestore from '@/components/admin/AdminRestore';
 import RestoreModal from '@/components/admin/RestoreModal';
@@ -79,6 +79,7 @@ const settingsTabs = [
 
 export default function AdminSettings() {
   const { 
+    currentUser,
     currency, 
     setCurrency, 
     themeColor, 
@@ -119,7 +120,7 @@ export default function AdminSettings() {
   const [supportEmail, setSupportEmail] = useState("");
   const [settingsPanel, setSettingsPanel] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user } = useUser();
+  // const { user } = useUser();
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [legalPanel, setLegalPanel] = useState("main");
@@ -379,29 +380,6 @@ export default function AdminSettings() {
       <h2 className="text-2xl font-bold text-gray-800">Settings</h2>
 
       {/* Tab Header */}
-      {/* <div className="flex flex-wrap gap-2 border-b pb-2">
-        {settingsTabs.map((tab) => (
-            <button
-                key={tab.key}
-                onClick={() => {
-                setActiveTab(tab.key);
-                setProductSubTab(null);
-                if (tab.key === "product") setProductPanel(null);
-                if (tab.key === "users") setUserPanel("main"); // ✅ Fix here
-                if (tab.key === "orders") setOrderPanel(null);
-                }}
-                className={`flex items-center gap-2 px-4 py-2 rounded text-sm font-medium transition-all ${
-                activeTab === tab.key
-                    ? 'bg-orange-100 text-orange-600 font-semibold'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-            >
-                {tab.icon}
-                {tab.label}
-            </button>
-        ))}
-      </div> */}
-
       <div className="flex flex-wrap gap-2 border-b pb-2">
         {settingsTabs.map((tab) => (
           <button
@@ -884,7 +862,6 @@ export default function AdminSettings() {
           </div>
         )}
 
-
         {activeTab === 'product' && (
             <div className="relative overflow-hidden">
                 <AnimatePresence mode="wait">
@@ -1087,50 +1064,68 @@ export default function AdminSettings() {
         )}
 
         {activeTab === 'notifications' && (
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Notifications</h3>
+          <div className="space-y-6">
+            <h3 className="font-semibold text-lg text-gray-800">Notification Preferences</h3>
+            <p className="text-sm text-gray-500">
+              Choose which updates you’d like to receive by email. You can update these settings anytime.
+            </p>
 
             {/* Orders */}
-            <p className="text-sm font-medium text-gray-600">Orders</p>
-            <label className="flex items-center gap-2">
-              <input type="checkbox" defaultChecked className="accent-orange-600" /> Email on New Order
-            </label>
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" /> Email on Order Shipped
-            </label>
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" /> Email on Order Delivered
-            </label>
+            <div>
+              <h4 className="text-sm font-semibold text-gray-700 mb-2">Orders</h4>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" defaultChecked className="accent-orange-600" /> Email on New Order
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" className="accent-orange-600" /> Email on Order Shipped
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" className="accent-orange-600" /> Email on Order Delivered
+                </label>
+              </div>
+            </div>
 
             {/* Reviews */}
-            <p className="text-sm font-medium text-gray-600">Reviews</p>
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" /> Email on New Review
-            </label>
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" /> Email on Review Approval
-            </label>
+            <div>
+              <h4 className="text-sm font-semibold text-gray-700 mb-2">Reviews</h4>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" className="accent-orange-600" /> Email on New Review
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" className="accent-orange-600" /> Email on Review Approval
+                </label>
+              </div>
+            </div>
 
             {/* Stock Alerts */}
-            <p className="text-sm font-medium text-gray-600">Stock Alerts</p>
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" /> Email on Low Stock
-            </label>
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" /> Email on Out-of-Stock Product
-            </label>
+            <div>
+              <h4 className="text-sm font-semibold text-gray-700 mb-2">Stock Alerts</h4>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" className="accent-orange-600" /> Email on Low Stock
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" className="accent-orange-600" /> Email on Out-of-Stock Product
+                </label>
+              </div>
+            </div>
 
             {/* Marketing */}
-            <p className="text-sm font-medium text-gray-600">Marketing</p>
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" /> Receive Newsletter
-            </label>
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-orange-600" /> Receive Promotional Offers
-            </label>
+            <div>
+              <h4 className="text-sm font-semibold text-gray-700 mb-2">Marketing</h4>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" className="accent-orange-600" /> Receive Newsletter
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" className="accent-orange-600" /> Receive Promotional Offers
+                </label>
+              </div>
+            </div>
           </div>
         )}
-
 
         {activeTab === 'orders' && (
             <div className="relative overflow-hidden">
@@ -1352,7 +1347,6 @@ export default function AdminSettings() {
                 </div>
             </div>
         )}
-
 
         {activeTab === 'appearance' && (
             <div className="space-y-4">

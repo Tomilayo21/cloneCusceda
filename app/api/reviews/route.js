@@ -1,40 +1,7 @@
-// import connectDB from '@/config/db';
-// import Review from '@/models/Review';
-// import authSeller from '@/lib/authAdmin';
-// import { getAuth } from '@clerk/nextjs/server';
-// import { NextResponse } from 'next/server';
-
-// // Unified reviews route with GET, POST, PATCH, DELETE
-// export async function GET(request) {
-//   try {
-//     const { userId } = getAuth(request);
-//     await connectDB();
-
-//     const url = new URL(request.url);
-//     const productId = url.searchParams.get('productId');
-
-//     if (productId) {
-//       // Public: only approved reviews
-//       const reviews = await Review.find({ productId, approved: true }).populate('productId', 'name').sort({ createdAt: -1 });
-//       return NextResponse.json(reviews, { status: 200 });
-//     }
-
-//     // Admin: all reviews
-//     if (!userId || !(await authSeller(userId))) {
-//       return NextResponse.json({ message: 'Not authorized' }, { status: 403 });
-//     }
-
-//     const reviews = await Review.find().populate('productId', 'name').sort({ createdAt: -1 });
-
-//     return NextResponse.json({ success: true, reviews }, { status: 200 });
-//   } catch (error) {
-//     return NextResponse.json({ message: error.message }, { status: 500 });
-//   }
-// }
 import connectDB from '@/config/db';
 import Review from '@/models/Review';
 import User from '@/models/User';
-import authSeller from '@/lib/authAdmin';
+import { requireAdmin } from '@/lib/authAdmin';
 import { getAuth, clerkClient } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
@@ -54,9 +21,13 @@ export async function GET(request) {
         .sort({ createdAt: -1 });
     } else {
       // Admin: all reviews
-      if (!userId || !(await authSeller(userId))) {
+      // if (!userId || !(await authSeller(userId))) {
+      //   return NextResponse.json({ message: 'Not authorized' }, { status: 403 });
+      // }
+      if (!userId || !(await requireAdmin(userId))) {
         return NextResponse.json({ message: 'Not authorized' }, { status: 403 });
       }
+
       reviews = await Review.find()
         .populate('productId', 'name')
         .sort({ createdAt: -1 });

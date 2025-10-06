@@ -29,7 +29,6 @@ import SubscribersPage from "@/components/admin/settings/users/SubscribersPage";
 import ViewBroadcastButton from "@/components/admin/settings/users/ViewBroadcastButton";
 import OrderPanel from "@/components/admin/settings/orders/OrderPanel";
 import TransactionPanel from "@/components/admin/settings/orders/TransactionPanel";
-import { useUser } from '@clerk/nextjs';
 import FormatDatabase from '@/components/admin/FormatDatabase';
 import BackupModal from '@/components/admin/BackupModal';
 import RegUsers from "@/components/admin/RegUsers";
@@ -79,6 +78,7 @@ export default function AdminSettings({
 }) {
 
   const { 
+    currentUser,
     currency, 
     setCurrency, 
     themeColor, 
@@ -119,7 +119,6 @@ export default function AdminSettings({
   const [settingsPanel, setSettingsPanel] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { user } = useUser();
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [colorOpen, setColorOpen] = useState(false);
@@ -132,6 +131,7 @@ export default function AdminSettings({
   const [users, setUsers] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+  
 
 
 
@@ -144,20 +144,6 @@ export default function AdminSettings({
   const [localLayout, setLocalLayout] = useState(layoutStyle);
   const [localFontSize, setLocalFontSize] = useState(fontSize);
 
-  
-  // useEffect(() => {
-  //   const fetchSettings = async () => {
-  //     try {
-  //       const res = await fetch("/api/settings");
-  //       const data = await res.json();
-  //       setLogoPreview(data.logoUrl); // from MongoDB
-  //     } catch (err) {
-  //       console.error("Failed to fetch settings", err);
-  //     }
-  //   };
-
-  //   fetchSettings();
-  // }, []);
 
   useEffect(() => {
     const fetchSiteDetails = async () => {
@@ -183,41 +169,7 @@ export default function AdminSettings({
     fetchSiteDetails();
   }, []);
 
-  // const handleLogoChange = async (e) => {
-  //   const file = e.target.files[0];
-  //   if (!file) return;
 
-  //   setLogoPreview(URL.createObjectURL(file));
-  //   setUploading(true);
-
-  //   const formData = new FormData();
-  //   formData.append("file", file);
-
-  //   const res = await fetch("/api/upload-logo", {
-  //     method: "POST",
-  //     body: formData,
-  //   });
-
-  //   const result = await res.json();
-  //   setUploading(false);
-
-  //   if (res.ok) {
-  //     toast.success("Logo uploaded");
-  //   } else {
-  //     toast.error(result.error || "Upload failed");
-  //   }
-  // };
-
-  // const handleRemoveLogo = async () => {
-  //   try {
-  //     const res = await fetch("/api/settings/logo", { method: "DELETE" });
-  //     if (!res.ok) throw new Error("Failed to delete logo");
-  //     toast.success("Logo removed");
-  //     setLogoPreview(null);
-  //   } catch (err) {
-  //     toast.error("Error removing logo");
-  //   }
-  // };
   const handleLightLogoChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -425,21 +377,27 @@ export default function AdminSettings({
 
     </div>
 
-
       {/* Tab Header */}
       <div className="flex flex-wrap gap-2 border-b pb-2">
         {settingsTabs.map((tab) => (
           <button
             key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            className={`flex items-center gap-2 px-4 py-2 rounded text-sm font-medium transition-all ${
-              activeTab === tab.key
-                ? "bg-orange-100 text-orange-600 font-semibold"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
+            onClick={() => {
+              setActiveTab(tab.key);
+              setProductSubTab(null);
+              if (tab.key === "product") setProductPanel(null);
+              if (tab.key === "users") setUserPanel("main");
+              if (tab.key === "orders") setOrderPanel(null);
+            }}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+              ${
+                activeTab === tab.key
+                  ? "bg-orange-500 text-white shadow-md"
+                  : "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+              }`}
           >
-            {tab.icon}
-            {tab.label}
+            <span className="w-4 h-4">{tab.icon}</span>
+            <span>{tab.label}</span>
           </button>
         ))}
       </div>
@@ -525,14 +483,15 @@ export default function AdminSettings({
                         />
                       </div>
 
+
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Upload Logo</label>
-                        {logoPreview ? (
+                        <label className="text-sm font-medium">Upload Light Mode Logo</label>
+                        {lightLogoPreview ? (
                           <div className="flex items-center gap-4">
-                            <img src={logoPreview} alt="Logo" className="w-20 h-20 object-contain border rounded" />
+                            <img src={lightLogoPreview} alt="Light Logo" className="w-20 h-20 object-contain border rounded" />
                             <button
                               type="button"
-                              onClick={handleRemoveLogo}
+                              onClick={handleRemoveLightLogo}
                               className="text-red-500 text-sm hover:underline"
                             >
                               Remove
@@ -542,11 +501,35 @@ export default function AdminSettings({
                           <input
                             type="file"
                             accept="image/*"
-                            onChange={handleLogoChange}
+                            onChange={handleLightLogoChange}
                             className="w-full p-2 border rounded bg-white text-gray-700"
                           />
                         )}
                       </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Upload Dark Mode Logo</label>
+                        {darkLogoPreview ? (
+                          <div className="flex items-center gap-4">
+                            <img src={darkLogoPreview} alt="Dark Logo" className="w-20 h-20 object-contain border rounded" />
+                            <button
+                              type="button"
+                              onClick={handleRemoveDarkLogo}
+                              className="text-red-500 text-sm hover:underline"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ) : (
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleDarkLogoChange}
+                            className="w-full p-2 border rounded bg-white text-gray-700"
+                          />
+                        )}
+                      </div>
+
 
                       <button
                         type="submit"
@@ -561,35 +544,174 @@ export default function AdminSettings({
                   {settingsPanel === 'footer' && (
                     <form onSubmit={handleSubmit} className="space-y-4">
                       <h3 className="text-lg font-semibold">Footer Settings</h3>
+                    
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Footer Description</label>
+                        <textarea
+                          value={footerDescription}
+                          onChange={(e) => setFooterDescription(e.target.value)}
+                          placeholder="Footer Description"
+                          className="w-full p-2 border rounded"
+                        />
+                      </div>
 
-                      <textarea
-                        value={footerDescription}
-                        onChange={(e) => setFooterDescription(e.target.value)}
-                        placeholder="Footer Description"
-                        className="w-full p-2 border rounded"
-                      />
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Footer Contact Number</label>
+                        <input
+                          value={footerPhone}
+                          onChange={(e) => setFooterPhone(e.target.value)}
+                          placeholder="Footer Phone"
+                          className="w-full p-2 border rounded"
+                        />
+                      </div>
 
-                      <input
-                        value={footerPhone}
-                        onChange={(e) => setFooterPhone(e.target.value)}
-                        placeholder="Footer Phone"
-                        className="w-full p-2 border rounded"
-                      />
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Footer Contact Email</label>
+                        <input
+                          value={footerEmail}
+                          onChange={(e) => setFooterEmail(e.target.value)}
+                          placeholder="Footer Email"
+                          type="email"
+                          className="w-full p-2 border rounded"
+                        />
+                      </div>
 
-                      <input
-                        value={footerEmail}
-                        onChange={(e) => setFooterEmail(e.target.value)}
-                        placeholder="Footer Email"
-                        type="email"
-                        className="w-full p-2 border rounded"
-                      />
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Footer Name i.e. "copyright @Footer_Name"</label>
+                        <input
+                          value={footerName}
+                          onChange={(e) => setFooterName(e.target.value)}
+                          placeholder="Footer Name"
+                          className="w-full p-2 border rounded"
+                        />
+                      </div>
 
-                      <input
-                        value={footerName}
-                        onChange={(e) => setFooterName(e.target.value)}
-                        placeholder="Footer Name"
-                        className="w-full p-2 border rounded"
-                      />
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Social Media Links</label>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                          {socialLinks.map((link, index) => (
+                            <div key={index} className="flex flex-col gap-2 border p-3 rounded">
+                              {/* Platform Name */}
+                              <input
+                                value={link.platform}
+                                onChange={(e) => {
+                                  const updated = [...socialLinks];
+                                  updated[index].platform = e.target.value;
+                                  setSocialLinks(updated);
+                                }}
+                                placeholder="Platform Name"
+                                className="p-2 border rounded"
+                              />
+
+                              {/* Profile URL */}
+                              <input
+                                value={link.url}
+                                onChange={(e) => {
+                                  const updated = [...socialLinks];
+                                  updated[index].url = e.target.value;
+                                  setSocialLinks(updated);
+                                }}
+                                placeholder="Profile URL"
+                                className="p-2 border rounded"
+                              />
+
+                              {/* If icon exists, show preview + remove/replace */}
+                              {link.iconUrl ? (
+                                <div className="flex items-center gap-3">
+                                  <img
+                                    src={link.iconUrl}
+                                    alt={link.platform}
+                                    className="w-10 h-10 object-contain"
+                                  />
+                                  <button
+                                    type="button"
+                                    className="text-blue-600"
+                                    onClick={() => {
+                                      const updated = [...socialLinks];
+                                      updated[index].iconUrl = ""; // clear image so file input reappears
+                                      setSocialLinks(updated);
+                                    }}
+                                  >
+                                    🔄 Replace Icon
+                                  </button>
+                                </div>
+                              ) : (
+                                <input
+                                  type="file"
+                                  onChange={async (e) => {
+                                    const file = e.target.files[0];
+                                    if (!file) return;
+
+                                    const { platform, url } = socialLinks[index];
+                                    if (!platform || !url) {
+                                      alert(
+                                        "Please enter the platform name and profile URL before uploading an icon."
+                                      );
+                                      e.target.value = "";
+                                      return;
+                                    }
+
+                                    const formData = new FormData();
+                                    formData.append("file", file);
+                                    formData.append("platform", platform);
+                                    formData.append("url", url);
+
+                                    const res = await fetch("/api/settings/social-icon-upload", {
+                                      method: "POST",
+                                      body: formData,
+                                    });
+
+                                    const data = await res.json();
+                                    if (data.success) {
+                                      const updated = [...socialLinks];
+                                      updated[index].iconUrl = data.socialLinks.find(
+                                        (sl) => sl.platform === platform
+                                      )?.iconUrl;
+                                      setSocialLinks(updated);
+                                    }
+                                  }}
+                                />
+                              )}
+
+                              {/* Remove social link */}
+                              <button
+                                type="button"
+                                onClick={async () => {
+                                  const platform = socialLinks[index].platform;
+
+                                  // Delete from DB
+                                  const res = await fetch("/api/settings/social-icon-upload", {
+                                    method: "DELETE",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ platform }),
+                                  });
+
+                                  const data = await res.json();
+                                  if (data.success) {
+                                    setSocialLinks(data.socialLinks); // Update from server
+                                  } else {
+                                    alert(data.error || "Failed to delete social link");
+                                  }
+                                }}
+                                className="text-red-500"
+                              >
+                                ✖ Remove
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setSocialLinks([...socialLinks, { platform: "", iconUrl: "", url: "" }])
+                          }
+                          className="text-blue-600"
+                        >
+                          ➕ Add Social Link
+                        </button>
+                      </div>
 
                       <button
                         type="submit"
@@ -598,8 +720,11 @@ export default function AdminSettings({
                       >
                         {isSubmitting ? "Saving..." : "Save Changes"}
                       </button>
+                      
+
 
                     </form>
+                    
                   )}
                 </motion.div>
               )}
@@ -897,7 +1022,7 @@ export default function AdminSettings({
                   <ArrowLeft className="w-4 h-4 mr-1" /> Back
                 </button>
                 <button onClick={() => setUserPanel("broadcast")} className="bg-orange-600 text-white px-4 py-2 rounded">
-                  View Broadcast Historys
+                  View Broadcast History
                 </button>
                 <SubscribersPage />
               </motion.div>

@@ -8,6 +8,7 @@ import FeaturedProduct from "@/components/FeaturedProduct";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Loading from "@/components/Loading";
+import LandingPage from "@/components/LandingPage";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -69,7 +70,7 @@ const Home = () => {
     return (
       <div className="flex flex-col justify-center items-center h-[70vh] space-y-4">
         <Loading />
-        <p className="text-gray-700 text-lg font-medium">Please wait while loading...</p>
+        {/* <p className="text-gray-700 text-lg font-medium">Please wait while loading...</p> */}
       </div>
     );
   }
@@ -92,6 +93,7 @@ const Home = () => {
         <FeaturedProduct />
         <Banner />
         <NewsLetter />
+        {/* <LandingPage /> */}
       </div>
 
       <Footer />
