@@ -127,6 +127,34 @@ export async function POST(req) {
   }
 }
 
+export async function DELETE(req) {
+  try {
+    await connectDB();
+
+    // ✅ Extract from URL
+    const { searchParams } = new URL(req.url);
+    const productId = searchParams.get("productId");
+    const userId = searchParams.get("userId"); // optional if included
+
+    if (!productId) {
+      return new Response(JSON.stringify({ error: "Missing productId" }), {
+        status: 400,
+      });
+    }
+
+    // ✅ You should identify user either from session or token
+    await Favorite.findOneAndDelete({ productId, userId });
+
+    return new Response(JSON.stringify({ success: true }), { status: 200 });
+  } catch (error) {
+    console.error("DELETE favorite failed:", error);
+    return new Response(
+      JSON.stringify({ error: "Failed to remove favorite" }),
+      { status: 500 }
+    );
+  }
+}
+
 
 
 
