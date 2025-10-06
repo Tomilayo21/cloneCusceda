@@ -2,9 +2,25 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 
-export default function ActivityLogs({ logs }) {
+export default function ActivityLogsPage() {
+  const [logs, setLogs] = useState([]);
   const [search, setSearch] = useState("");
   const [filteredLogs, setFilteredLogs] = useState([]);
+
+  useEffect(() => {
+    // Fetch logs from your API route
+    const fetchLogs = async () => {
+      try {
+        const res = await fetch("/api/activity-logs");
+        const data = await res.json();
+        setLogs(data);
+      } catch (err) {
+        console.error("Error fetching logs:", err);
+      }
+    };
+
+    fetchLogs();
+  }, []);
 
   useEffect(() => {
     if (!logs) return;
