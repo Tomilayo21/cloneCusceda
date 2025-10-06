@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useUser } from "@clerk/nextjs";
+// import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
@@ -10,7 +11,10 @@ import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 const AdminMessagesDashboard = () => {
-  const { user } = useUser();
+  // const { user } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
+
   const router = useRouter();
   const [messages, setMessages] = useState([]);
   const [view, setView] = useState("inbox");
@@ -78,15 +82,23 @@ const AdminMessagesDashboard = () => {
   }, [view]); 
 
 
+  // useEffect(() => {
+  //   if (!user) return;
+  //   if (user.publicMetadata?.role !== "admin") {
+  //     router.push("/");
+  //   } else {
+  //     fetchMessages();
+  //   }
+  // }, [user]);
   useEffect(() => {
     if (!user) return;
-    if (user.publicMetadata?.role !== "admin") {
+    if (user.role !== "admin") {
       router.push("/");
     } else {
       fetchMessages();
     }
   }, [user]);
-
+  
   const fetchMessages = async () => {
     setLoading(true);
     try {
