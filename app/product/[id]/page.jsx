@@ -18,7 +18,7 @@ export default function ProductPage() {
   const userId = session?.user?.id;
   const { id } = useParams();
   const router = useRouter();
-  const { products, addToCart, currency, currentUser } = useAppContext();
+  const { products, addToCart, currency } = useAppContext();
   
   const [productData, setProductData] = useState(null);
   const [mainImage, setMainImage] = useState(null);
@@ -64,12 +64,22 @@ export default function ProductPage() {
   }, [productData]);
 
   // Load reviews
+  // useEffect(() => {
+  //   if (!id) return;
+  //   fetch(`/api/reviews?productId=${id}`)
+  //     .then((res) => res.json())
+  //     .then((data) => setReviews(data));
+  // }, [id]);
+  
+  // Load reviews
   useEffect(() => {
     if (!id) return;
     fetch(`/api/reviews?productId=${id}`)
       .then((res) => res.json())
-      .then((data) => setReviews(data));
+      .then((data) => setReviews(Array.isArray(data) ? data : []))
+      .catch(() => setReviews([]));
   }, [id]);
+
 
  
   // Toggle Like
@@ -300,9 +310,12 @@ export default function ProductPage() {
 
   if (!productData) return <Loading />;
 
-  const totalPages = Math.ceil(reviews.length / reviewsPerPage);
+
+  const safeReviews = Array.isArray(reviews) ? reviews : [];
+  const totalPages = Math.ceil(safeReviews.length / reviewsPerPage);
   const start = (page - 1) * reviewsPerPage;
-  const currentReviews = reviews.slice(start, start + reviewsPerPage);
+  const currentReviews = safeReviews.slice(start, start + reviewsPerPage);
+
 
   const relatedProducts = products
     .filter((p) => p.category === productData.category && p._id !== id)
