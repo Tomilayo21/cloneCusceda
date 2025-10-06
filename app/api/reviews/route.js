@@ -6,12 +6,53 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/authAdmin";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
+import * as mongoose from "mongoose";
+
 
 /**
  * GET: Fetch reviews
  * - If productId query param exists → public, only approved reviews
  * - If no productId → admin only, all reviews
  */
+// export async function GET(request) {
+//   try {
+//     await connectDB();
+
+//     const url = new URL(request.url);
+//     const productId = url.searchParams.get("productId");
+
+//     let reviews;
+//     if (productId) {
+//       // Public: only approved reviews
+//       reviews = await Review.find({ productId, approved: true })
+//         .populate("productId", "name")
+//         .sort({ createdAt: -1 });
+//     } else {
+//       // Admin: all reviews
+//       const admin = await requireAdmin(request);
+//       if (admin instanceof NextResponse) return admin;
+
+//       reviews = await Review.find()
+//         .populate("productId", "name")
+//         .sort({ createdAt: -1 });
+//     }
+
+//     const reviewsWithImages = await Promise.all(
+//       reviews.map(async (review) => {
+//         const dbUser = await User.findById(review.userId);
+//         return {
+//           ...review.toObject(),
+//           imageUrl: dbUser?.imageUrl || null,
+//         };
+//       })
+//     );
+
+//     // Always return an array
+//     return NextResponse.json(reviewsWithImages, { status: 200 });
+//   } catch (error) {
+//     return NextResponse.json({ message: error.message }, { status: 500 });
+//   }
+// }
 export async function GET(request) {
   try {
     await connectDB();
@@ -20,13 +61,18 @@ export async function GET(request) {
     const productId = url.searchParams.get("productId");
 
     let reviews;
+
     if (productId) {
-      // Public: only approved reviews
+      // validate ObjectId before querying
+      if (!mongoose.Types.ObjectId.isValid(productId)) {
+        return NextResponse.json([], { status: 200 });
+      }
+
       reviews = await Review.find({ productId, approved: true })
         .populate("productId", "name")
         .sort({ createdAt: -1 });
     } else {
-      // Admin: all reviews
+      // admin access
       const admin = await requireAdmin(request);
       if (admin instanceof NextResponse) return admin;
 
@@ -35,6 +81,7 @@ export async function GET(request) {
         .sort({ createdAt: -1 });
     }
 
+    // enrich with user image
     const reviewsWithImages = await Promise.all(
       reviews.map(async (review) => {
         const dbUser = await User.findById(review.userId);
@@ -45,9 +92,9 @@ export async function GET(request) {
       })
     );
 
-    // Always return an array
     return NextResponse.json(reviewsWithImages, { status: 200 });
   } catch (error) {
+    console.error("Error fetching reviews:", error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
