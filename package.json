@@ -65,7 +65,7 @@
     "next-i18next": "^15.4.2",
     "node-cron": "^4.1.1",
     "node-fetch": "^3.3.2",
-    "nodemailer": "^7.0.5",
+    "nodemailer": "^6.9.0",
     "papaparse": "^5.5.3",
     "path": "^0.12.7",
     "paystack-api": "^2.0.6",
