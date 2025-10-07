@@ -1,15 +1,16 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useUser } from '@clerk/nextjs';
-// import Loading from '@/components/Loading';
+import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 import { saveAs } from 'file-saver';
-import { Trash2, FileDown, CheckCircle, Star, Search } from "lucide-react";
+import { Trash2, FileDown, CheckCircle, Star, Search, XCircle } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 
 const ReviewsPanel = () => {
-  const { user, isLoaded } = useUser();
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [reviews, setReviews] = useState([]);
   const [filteredReviews, setFilteredReviews] = useState([]);
   const [search, setSearch] = useState('');
@@ -20,7 +21,7 @@ const ReviewsPanel = () => {
   const [loading, setLoading] = useState(true);
 
   const reviewsPerPage = 10;
-  const isAdmin = user?.publicMetadata?.role === 'admin';
+  const isAdmin = session?.user?.role === 'admin';
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -28,9 +29,16 @@ const ReviewsPanel = () => {
 
 
   useEffect(() => {
-    if (!isLoaded || !isAdmin) return;
+    if (status === 'authenticated' && !isAdmin) {
+      router.replace('/'); // redirect non-admin users
+    }
+  }, [status, isAdmin, router]);
+
+  useEffect(() => {
+    if (status !== 'authenticated' || !isAdmin) return;
     fetchReviews();
-  }, [isLoaded, isAdmin]);
+  }, [status, isAdmin]);
+
 
   useEffect(() => {
     let updated = [...reviews];
@@ -61,51 +69,163 @@ const ReviewsPanel = () => {
 
   async function fetchReviews() {
     setLoading(true);
-    const res = await fetch('/api/reviews');
-    const data = await res.json();
-    if (data.success) {
-      setReviews(data.reviews);
+    try {
+      const res = await fetch('/api/reviews');
+      const data = await res.json();
+      // data is an array, not { success, reviews }
+      if (Array.isArray(data)) setReviews(data);
+      else toast.error('Unexpected response');
+    } catch (error) {
+      toast.error('Failed to fetch reviews');
     }
     setLoading(false);
   }
 
   async function toggleApproval(reviewId, approved) {
     try {
-      const res = await fetch('/api/reviews', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/reviews", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reviewId, approved }),
       });
+
       if (res.ok) {
-        toast.success(`Review ${approved ? 'approved' : 'disapproved'}`);
+        toast.custom(
+          (t) => (
+            <div
+              className={`${
+                t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+              } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 transition-all`}
+            >
+              <CheckCircle className="text-orange-500" size={22} />
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                Review {approved ? "approved" : "disapproved"}!
+              </p>
+            </div>
+          ),
+          { duration: 3500, position: "top-right" }
+        );
         fetchReviews();
       } else {
         const err = await res.json();
-        toast.error(err.message || 'Error toggling approval');
+        toast.custom(
+          (t) => (
+            <div
+              className={`${
+                t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+              } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 transition-all`}
+            >
+              <XCircle className="text-red-500" size={22} />
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                {err.message || "Error toggling approval"}
+              </p>
+            </div>
+          ),
+          { duration: 3500, position: "top-right" }
+        );
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.custom(
+        (t) => (
+          <div
+            className={`${
+              t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+            } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 transition-all`}
+          >
+            <XCircle className="text-red-500" size={22} />
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              {error.message}
+            </p>
+          </div>
+        ),
+        { duration: 3500, position: "top-right" }
+      );
     }
   }
 
   async function deleteReview(reviewId) {
-    if (!confirm('Are you sure you want to delete this review?')) return;
+    if (!confirm("Are you sure you want to delete this review?")) return;
     try {
-      const res = await fetch('/api/reviews', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/reviews", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reviewId }),
       });
+
       if (res.ok) {
-        toast.success('Review deleted');
+        toast.custom(
+          (t) => (
+            <div
+              className={`${
+                t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+              } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 transition-all`}
+            >
+              <CheckCircle className="text-orange-500" size={22} />
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                Review deleted!
+              </p>
+            </div>
+          ),
+          { duration: 3500, position: "top-right" }
+        );
         fetchReviews();
       } else {
         const err = await res.json();
-        toast.error(err.message || 'Error deleting review');
+        toast.custom(
+          (t) => (
+            <div
+              className={`${
+                t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+              } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 transition-all`}
+            >
+              <XCircle className="text-red-500" size={22} />
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                {err.message || "Error deleting review"}
+              </p>
+            </div>
+          ),
+          { duration: 3500, position: "top-right" }
+        );
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.custom(
+        (t) => (
+          <div
+            className={`${
+              t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+            } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 transition-all`}
+          >
+            <XCircle className="text-red-500" size={22} />
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              {error.message}
+            </p>
+          </div>
+        ),
+        { duration: 3500, position: "top-right" }
+      );
     }
+  }
+
+  async function approveAll() {
+    const unapprovedIds = filteredReviews.filter(r => !r.approved).map(r => r._id);
+    for (const id of unapprovedIds) {
+      await toggleApproval(id, true);
+    }
+    toast.custom(
+      (t) => (
+        <div
+          className={`${
+            t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+          } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 transition-all`}
+        >
+          <CheckCircle className="text-orange-500" size={22} />
+          <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            All reviews approved!
+          </p>
+        </div>
+      ),
+      { duration: 3500, position: "top-right" }
+    );
   }
 
   function exportToCSV() {
@@ -123,195 +243,14 @@ const ReviewsPanel = () => {
     saveAs(blob, 'reviews.csv');
   }
 
-  async function approveAll() {
-    const unapprovedIds = filteredReviews.filter(r => !r.approved).map(r => r._id);
-    for (const id of unapprovedIds) {
-      await toggleApproval(id, true);
-    }
-    toast.success('All reviews approved');
-  }
 
-  // if (!isLoaded) return <Loading />;
+  if (status === 'loading') return <p>Loading...</p>;
   if (!isAdmin) return <p className="p-8 text-center text-red-500">Access denied. You are not an admin.</p>;
-  // if (loading) return <Loading />;
 
   const paginatedReviews = filteredReviews.slice((page - 1) * reviewsPerPage, page * reviewsPerPage);
   const totalPages = Math.ceil(filteredReviews.length / reviewsPerPage);
 
   return (
-    // <div className="p-2 max-w-4xl flex-1 overflow-scroll flex flex-col mx-4 mt-4">
-    //   {/* flex-1 overflow-scroll h-screen text-sm flex flex-col justify-between */}
-    //   <h1 className="text-xl md:text-2xl font-bold mb-4">Manage Reviews</h1>
-
-    //   <div className="flex flex-wrap gap-4 mb-6">
-    //     <input
-    //       type="text"
-    //       placeholder="Search by user, product, or comment"
-    //       className="border p-2 rounded flex-grow min-w-[180px]"
-    //       value={search}
-    //       onChange={e => setSearch(e.target.value)}
-    //     />
-    //     <select value={ratingFilter} onChange={e => setRatingFilter(e.target.value)} className="border p-2 rounded">
-    //       <option value="">All Ratings</option>
-    //       {[1, 2, 3, 4, 5].map(r => <option key={r} value={r}>{r} Stars</option>)}
-    //     </select>
-    //     <select value={sortField} onChange={e => setSortField(e.target.value)} className="border p-2 rounded">
-    //       <option value="createdAt">Date</option>
-    //       <option value="username">User</option>
-    //       <option value="productId">Product Name</option>
-    //     </select>
-    //     <select value={sortOrder} onChange={e => setSortOrder(e.target.value)} className="border p-2 rounded">
-    //       <option value="asc">Ascending</option>
-    //       <option value="desc">Descending</option>
-    //     </select>
-    //     <button onClick={exportToCSV} className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-blue-700 whitespace-nowrap">
-    //       Export CSV
-    //     </button>
-    //     <button onClick={approveAll} className="bg-black text-white px-4 py-2 rounded hover:bg-green-700 whitespace-nowrap">
-    //       Approve All
-    //     </button>
-    //   </div>
-
-    //   {filteredReviews.length === 0 ? (
-    //     <p>No reviews found.</p>
-    //   ) : (
-    //     <>
-    //       {/* Desktop Table */}
-    //       <div className="hidden md:block">
-    //         <table className="w-full border-collapse border border-gray-300 text-sm">
-    //           <thead>
-    //             <tr className="bg-gray-100">
-    //               <th className="border border-gray-300 px-4 py-2">User</th>
-    //               <th className="border border-gray-300 px-4 py-2">Product ID</th>
-    //               <th className="border border-gray-300 px-4 py-2">Rating</th>
-    //               <th className="border border-gray-300 px-4 py-2">Comment</th>
-    //               <th className="border border-gray-300 px-4 py-2">Approved</th>
-    //               <th className="border border-gray-300 px-4 py-2">Date</th>
-    //               <th className="border border-gray-300 px-4 py-2">Actions</th>
-    //             </tr>
-    //           </thead>
-    //           <tbody>
-    //             {paginatedReviews.map(rev => (
-    //               <tr key={rev._id}>
-    //                 <td className="border border-gray-300 px-4 py-2">{rev.username}</td>
-    //                 <td className="border border-gray-300 px-4 py-2">{rev.productId?.name || 'N/A'}</td>
-    //                 <td className="border border-gray-300 px-4 py-2">{rev.rating}</td>
-    //                 <td className="border border-gray-300 px-4 py-2">{rev.comment}</td>
-    //                 <td className="border border-gray-300 px-4 py-2 text-center">
-    //                   <input
-    //                     type="checkbox"
-    //                     checked={rev.approved}
-    //                     onChange={() => toggleApproval(rev._id, !rev.approved)}
-    //                     className="w-5 h-5 cursor-pointer accent-orange-600"
-    //                   />
-    //                 </td>
-    //                 <td className="border border-gray-300 px-4 py-2">{new Date(rev.createdAt).toLocaleString()}</td>
-    //                 <td className="border border-gray-300 px-4 py-2 text-center">
-    //                   <button onClick={() => deleteReview(rev._id)} className="text-red-600 hover:underline">
-    //                     Delete
-    //                   </button>
-    //                 </td>
-    //               </tr>
-    //             ))}
-    //           </tbody>
-    //         </table>
-    //       </div>
-
-    //       {/* Mobile Cards */}
-    //       <div className="md:hidden space-y-4 mx-4">
-    //         {paginatedReviews.map(rev => (
-    //           <div key={rev._id} className="border border-gray-300 rounded p-4 shadow-sm bg-white">
-    //             <div className="mb-2"><strong>User:</strong> {rev.username}</div>
-    //             <div className="mb-2"><strong>Product Name:</strong> {rev.productId?.name || 'N/A'}</div>
-    //             <div className="mb-2"><strong>Rating:</strong> {rev.rating} ⭐</div>
-    //             <div className="mb-2"><strong>Comment:</strong> {rev.comment}</div>
-    //             <div className="mb-2 flex items-center">
-    //               <strong className="mr-2">Approved:</strong>
-    //               <input
-    //                 type="checkbox"
-    //                 checked={rev.approved}
-    //                 onChange={() => toggleApproval(rev._id, !rev.approved)}
-    //                 className="w-6 h-6 cursor-pointer accent-orange-600"
-    //               />
-    //             </div>
-    //             <div className="mb-2"><strong>Date:</strong> {new Date(rev.createdAt).toLocaleString()}</div>
-    //             <button
-    //               onClick={() => deleteReview(rev._id)}
-    //               className="text-red-600 hover:underline mt-2 block"
-    //             >
-    //               Delete
-    //             </button>
-    //           </div>
-    //         ))}
-    //       </div>
-
-    //       {/* Pagination */}
-    //       {totalPages > 1 && (
-    //         <div className="mt-4 flex justify-center items-center">
-    //           <div className="space-x-2 flex items-center">
-    //             {/* Prev Button */}
-    //             <button
-    //               disabled={page === 1}
-    //               onClick={() => setPage(p => Math.max(p - 1, 1))}
-    //               className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-    //             >
-    //               Prev
-    //             </button>
-
-    //             {/* Page Numbers with Ellipsis */}
-    //             {(() => {
-    //               const range = [];
-    //               const start = Math.max(1, page - 2);
-    //               const end = Math.min(totalPages, page + 2);
-
-    //               if (start > 1) {
-    //                 range.push(1);
-    //                 if (start > 2) range.push("ellipsis-start");
-    //               }
-
-    //               for (let i = start; i <= end; i++) {
-    //                 range.push(i);
-    //               }
-
-    //               if (end < totalPages) {
-    //                 if (end < totalPages - 1) range.push("ellipsis-end");
-    //                 range.push(totalPages);
-    //               }
-
-    //               return range.map((item, index) =>
-    //                 item === "ellipsis-start" || item === "ellipsis-end" ? (
-    //                   <span key={index} className="px-1">...</span>
-    //                 ) : (
-    //                   <button
-    //                     key={item}
-    //                     onClick={() => setPage(item)}
-    //                     className={`px-3 py-1 rounded border ${
-    //                       page === item ? "bg-black text-white" : "bg-white"
-    //                     }`}
-    //                   >
-    //                     {item}
-    //                   </button>
-    //                 )
-    //               );
-    //             })()}
-
-    //             {/* Next Button */}
-    //             <button
-    //               disabled={page === totalPages}
-    //               onClick={() => setPage(p => Math.min(p + 1, totalPages))}
-    //               className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-    //             >
-    //               Next
-    //             </button>
-    //           </div>
-    //         </div>
-    //       )}
-
-    //     </>
-    //   )}
-    // </div>
-
-
     <div className="p-4 max-w-6xl flex-1 overflow-y-auto mx-auto">
       <h1 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
         Manage Reviews
