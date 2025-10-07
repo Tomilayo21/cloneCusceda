@@ -4,7 +4,7 @@ import { requireAdmin } from "@/lib/authAdmin";
 import { v2 as cloudinary } from "cloudinary";
 import { NextResponse } from "next/server";
 
-// Configure Cloudinary
+// ✅ Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -13,15 +13,20 @@ cloudinary.config({
 
 export async function POST(request) {
   try {
-    // ✅ Check admin using NextAuth
+    // ✅ Verify admin
     const adminUser = await requireAdmin(request);
-    if (!adminUser || adminUser instanceof NextResponse) {
-      // If requireAdmin returned a NextResponse (403 or 401), forward it
+
+    // If requireAdmin returned a NextResponse (forbidden/unauthorized)
+    if (adminUser instanceof NextResponse) {
       return adminUser;
     }
 
-    const formData = await request.formData();
+    // If no user found at all
+    if (!adminUser) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
+    const formData = await request.formData();
     const name = formData.get("name");
     const description = formData.get("description");
     const category = formData.get("category");
@@ -30,19 +35,24 @@ export async function POST(request) {
     const price = formData.get("price");
     const offerPrice = formData.get("offerPrice");
     const stock = formData.get("stock");
-
     const files = formData.getAll("images");
 
     if (!files || files.length === 0) {
-      return NextResponse.json({ success: false, message: "No Files Uploaded!" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, message: "No files uploaded!" },
+        { status: 400 }
+      );
     }
 
     if (!stock || isNaN(Number(stock)) || Number(stock) < 0) {
-      return NextResponse.json({ success: false, message: "Invalid stock value" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, message: "Invalid stock value" },
+        { status: 400 }
+      );
     }
 
     // ✅ Upload images to Cloudinary
-    const result = await Promise.all(
+    const uploadResults = await Promise.all(
       files.map(async (file) => {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
@@ -60,31 +70,34 @@ export async function POST(request) {
       })
     );
 
-    const image = result.map((res) => res.secure_url);
+    const imageUrls = uploadResults.map((res) => res.secure_url);
 
     await connectDB();
 
     const newProduct = await Product.create({
-      userId: adminUser.id, // ✅ Use NextAuth admin user ID
+      userId: adminUser.id, // ✅ NextAuth admin ID
       name,
       description,
       category,
+      color,
+      brand,
       price: Number(price),
       offerPrice: Number(offerPrice),
       stock: Number(stock),
-      color,
-      image,
-      brand,
+      image: imageUrls,
       date: Date.now(),
     });
 
     return NextResponse.json({
       success: true,
-      message: "Upload successful",
-      newProduct,
+      message: "Product uploaded successfully!",
+      product: newProduct,
     });
   } catch (error) {
     console.error("[PRODUCT_UPLOAD_ERROR]", error);
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: error.message },
+      { status: 500 }
+    );
   }
 }
