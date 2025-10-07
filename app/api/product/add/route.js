@@ -1,7 +1,6 @@
 import connectDB from "@/config/db";
-import authSeller from "@/lib/authAdmin";
 import Product from "@/models/Product";
-import { getAuth } from "@clerk/nextjs/server";
+import { requireAdmin } from "@/lib/authAdmin";
 import { v2 as cloudinary } from "cloudinary";
 import { NextResponse } from "next/server";
 
@@ -14,11 +13,11 @@ cloudinary.config({
 
 export async function POST(request) {
   try {
-    const { userId } = getAuth(request);
-
-    const isAdmin = await authSeller(userId);
-    if (!isAdmin) {
-      return NextResponse.json({ success: false, message: "Not authorized" }, { status: 403 });
+    // ✅ Check admin using NextAuth
+    const adminUser = await requireAdmin(request);
+    if (!adminUser || adminUser instanceof NextResponse) {
+      // If requireAdmin returned a NextResponse (403 or 401), forward it
+      return adminUser;
     }
 
     const formData = await request.formData();
@@ -42,6 +41,7 @@ export async function POST(request) {
       return NextResponse.json({ success: false, message: "Invalid stock value" }, { status: 400 });
     }
 
+    // ✅ Upload images to Cloudinary
     const result = await Promise.all(
       files.map(async (file) => {
         const arrayBuffer = await file.arrayBuffer();
@@ -51,11 +51,8 @@ export async function POST(request) {
           const stream = cloudinary.uploader.upload_stream(
             { resource_type: "auto" },
             (error, result) => {
-              if (error) {
-                reject(error);
-              } else {
-                resolve(result);
-              }
+              if (error) reject(error);
+              else resolve(result);
             }
           );
           stream.end(buffer);
@@ -68,7 +65,7 @@ export async function POST(request) {
     await connectDB();
 
     const newProduct = await Product.create({
-      userId,
+      userId: adminUser.id, // ✅ Use NextAuth admin user ID
       name,
       description,
       category,
@@ -87,6 +84,7 @@ export async function POST(request) {
       newProduct,
     });
   } catch (error) {
+    console.error("[PRODUCT_UPLOAD_ERROR]", error);
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }
