@@ -143,7 +143,7 @@ const Navbar = () => {
             {mounted && user?.role === "admin" && (
               <div
                 onClick={handleAdminClick}
-                className="flex items-center gap-1 bg-purple-700 text-white text-xs px-3 py-1 rounded-full cursor-pointer"
+                className="flex items-center gap-1 bg-orange-600 text-white text-xs px-3 py-1 rounded-full cursor-pointer"
               >
                 <ShieldAlert className="w-3.5 h-3.5 text-yellow-300" />
                 {/* <span>Super Admin</span> */}
@@ -195,7 +195,7 @@ const Navbar = () => {
             {mounted && user?.role === "admin" && (
               <div
                 onClick={handleAdminClick}
-                className="flex items-center gap-1 bg-purple-700 text-white text-xs px-2.5 py-1 rounded-full cursor-pointer"
+                className="flex items-center gap-1 bg-orange-600 text-white text-xs px-2.5 py-1 rounded-full cursor-pointer"
               >
                 <ShieldAlert className="w-3.5 h-3.5 text-yellow-300" />
                 {/* <span>Super Admin</span> */}
