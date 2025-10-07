@@ -1,85 +1,14 @@
-// "use client";
-// import { useState } from "react";
-// import AdminDashboard from "@/components/admin/AdminDashboard";
-// import AdminSettings from "@/components/admin/AdminSettings";
-
-// export default function AdminPage() {
-//   const [activeView, setActiveView] = useState("dashboard");
-//   const [activeTab, setActiveTab] = useState("general");
-//   const [userPanel, setUserPanel] = useState("main");
-//   const [orderPanel, setOrderPanel] = useState(null);
-
-//   return (
-//     <>
-//       {activeView === "dashboard" && (
-//         <AdminDashboard
-//           setActiveView={setActiveView}
-//           setActiveTab={setActiveTab}
-//           setUserPanel={setUserPanel}
-//           setOrderPanel={setOrderPanel}
-//         />
-//       )}
-
-//       {activeView === "settings" && (
-//         <AdminSettings
-//           activeTab={activeTab}
-//           setActiveTab={setActiveTab}
-//           userPanel={userPanel}
-//           setUserPanel={setUserPanel}
-//           orderPanel={orderPanel}
-//           setOrderPanel={setOrderPanel}
-//           setActiveView={setActiveView} // optional if you want to go back to dashboard
-//         />
-//       )}
-//     </>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // "use client";
 
 // import { useEffect, useState } from "react";
 // import AdminDashboard from "@/components/admin/AdminDashboard";
 // import AdminSettings from "@/components/admin/AdminSettings";
-// import AdminOtpVerification from "@/components/admin/AdminOtpVerification"; // Make sure path is correct
-// import { useUser } from "@clerk/nextjs";
+// import AdminOtpVerification from "@/components/admin/AdminOtpVerification";
+// import { useAppContext } from "@/context/AppContext"; // 🔥 custom auth
 
 // export default function AdminPage() {
-//   const { user } = useUser();
+//   const { currentUser } = useAppContext(); // instead of Clerk’s useUser
 
 //   const [isVerified, setIsVerified] = useState(false);
 //   const [showOtpPrompt, setShowOtpPrompt] = useState(false);
@@ -108,7 +37,7 @@
 //     return (
 //       <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
 //         <AdminOtpVerification
-//           email={user?.emailAddresses[0]?.emailAddress}
+//           email={currentUser?.email} // now comes from your custom user
 //           onCancel={() => {}}
 //           onSuccess={handleOtpSuccess}
 //         />
@@ -168,51 +97,17 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react"; // ✅ from NextAuth
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import AdminSettings from "@/components/admin/AdminSettings";
 import AdminOtpVerification from "@/components/admin/AdminOtpVerification";
-import { useAppContext } from "@/context/AppContext"; // 🔥 custom auth
 
 export default function AdminPage() {
-  const { currentUser } = useAppContext(); // instead of Clerk’s useUser
+  const { data: session, status } = useSession();
+  const userEmail = session?.user?.email;
 
   const [isVerified, setIsVerified] = useState(false);
   const [showOtpPrompt, setShowOtpPrompt] = useState(false);
@@ -222,14 +117,18 @@ export default function AdminPage() {
   const [userPanel, setUserPanel] = useState("main");
   const [orderPanel, setOrderPanel] = useState(null);
 
+  // ✅ Wait for NextAuth session to load
   useEffect(() => {
+    if (status === "loading") return; // don't run yet
+
     const otpVerified = sessionStorage.getItem("adminOtpVerified");
+
     if (!otpVerified) {
       setShowOtpPrompt(true);
     } else {
       setIsVerified(true);
     }
-  }, []);
+  }, [status]);
 
   const handleOtpSuccess = () => {
     sessionStorage.setItem("adminOtpVerified", "true");
@@ -237,11 +136,23 @@ export default function AdminPage() {
     setShowOtpPrompt(false);
   };
 
+  // ✅ Don't render anything until session is ready
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-gray-700">
+        Loading admin session...
+      </div>
+    );
+  }
+
+  // ✅ Show OTP modal only when email is available
   if (showOtpPrompt) {
+    if (!userEmail) return null; // Wait for session to have an email
+
     return (
       <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
         <AdminOtpVerification
-          email={currentUser?.email} // now comes from your custom user
+          email={userEmail}
           onCancel={() => {}}
           onSuccess={handleOtpSuccess}
         />
