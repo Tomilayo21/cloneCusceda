@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Country, State, City } from "country-state-city";
-import { X, User, Phone, Mail, MapPin, Landmark, Trash2 } from "lucide-react";
+import { X, AlertCircle, CheckCircle, ShoppingCart, LogIn, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 // Payment methods
@@ -145,48 +145,71 @@ const OrderSummary = () => {
     setIsDropdownOpen(false);
   };
 
-  // const handlePayment = async () => {
-  //   if (!selectedAddress) return toast.error("Please select an address");
-  //   if (!currentUser || !currentUser._id) return toast.error("Login required");
 
-  //   if (processing) return;
-  //   setProcessing(true);
-
-  //   const cartArray = Object.keys(cartItems).map(id => ({ product: id, quantity: cartItems[id] })).filter(i => i.quantity > 0);
-  //   if (cartArray.length === 0) return toast.error("Cart is empty");
-
-  //   try {
-  //     if (selectedMethod === "stripe") {
-  //       const { data } = await axios.post("/api/checkout/stripe", { items: cartItems, address: selectedAddress, userId: currentUser._id });
-  //       if (!data.url) throw new Error("No Stripe URL returned");
-  //       sessionStorage.setItem("pendingOrder", JSON.stringify({ addressId: selectedAddress._id, items: cartArray, paymentMethod: "stripe" }));
-  //       window.location.href = data.url;
-  //     } else if (selectedMethod === "paystack") {
-  //       const { data } = await axios.post("/api/checkout/paystack", { items: cartItems, address: selectedAddress, userId: currentUser._id });
-  //       if (!data.success) throw new Error("Paystack init failed");
-  //       sessionStorage.setItem("pendingOrder", JSON.stringify({ addressId: selectedAddress._id, items: cartItems, paymentMethod: "paystack" }));
-  //       window.location.href = data.authorizationUrl;
-  //     }
-  //   } catch (err) {
-  //     toast.error(err.message || "Payment failed");
-  //   } finally {
-  //     setProcessing(false);
-  //   }
-  // };
-  
   const handlePayment = async () => {
-    if (!selectedAddress) return toast.error("Please select an address");
-    if (status !== "authenticated") return toast.error("Login required");
+    if (!selectedAddress) {
+      toast.custom(
+        (t) => (
+          <div
+            className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
+              t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+            }`}
+          >
+            <AlertCircle className="text-red-500" size={20} />
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Please select an address
+            </p>
+          </div>
+        ),
+        { duration: 2500, position: "top-right" }
+      );
+      return;
+    }
+
+    if (status !== "authenticated") {
+      toast.custom(
+        (t) => (
+          <div
+            className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
+              t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+            }`}
+          >
+            <LogIn className="text-red-500" size={20} />
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Login required
+            </p>
+          </div>
+        ),
+        { duration: 2500, position: "top-right" }
+      );
+      return;
+    }
 
     if (processing) return;
     setProcessing(true);
 
     const cartArray = Object.keys(cartItems)
-      .map(id => ({ product: id, quantity: cartItems[id] }))
-      .filter(i => i.quantity > 0);
+      .map((id) => ({ product: id, quantity: cartItems[id] }))
+      .filter((i) => i.quantity > 0);
+
     if (cartArray.length === 0) {
       setProcessing(false);
-      return toast.error("Cart is empty");
+      toast.custom(
+        (t) => (
+          <div
+            className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
+              t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+            }`}
+          >
+            <ShoppingCart className="text-red-500" size={20} />
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Cart is empty
+            </p>
+          </div>
+        ),
+        { duration: 2500, position: "top-right" }
+      );
+      return;
     }
 
     try {
@@ -209,8 +232,24 @@ const OrderSummary = () => {
             paymentMethod: "stripe",
           })
         );
-        window.location.href = data.url;
 
+        toast.custom(
+          (t) => (
+            <div
+              className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
+                t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+              }`}
+            >
+              <CheckCircle className="text-green-500" size={20} />
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                Redirecting to Stripe...
+              </p>
+            </div>
+          ),
+          { duration: 2000, position: "top-right" }
+        );
+
+        window.location.href = data.url;
       } else if (selectedMethod === "paystack") {
         const { data } = await axios.post("/api/checkout/paystack", {
           items: cartItems,
@@ -228,27 +267,45 @@ const OrderSummary = () => {
             paymentMethod: "paystack",
           })
         );
+
+        toast.custom(
+          (t) => (
+            <div
+              className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
+                t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+              }`}
+            >
+              <CheckCircle className="text-green-500" size={20} />
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                Redirecting to Paystack...
+              </p>
+            </div>
+          ),
+          { duration: 2000, position: "top-right" }
+        );
+
         window.location.href = data.authorizationUrl;
       }
-
     } catch (err) {
-      toast.error(err.message || "Payment failed");
+      toast.custom(
+        (t) => (
+          <div
+            className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
+              t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+            }`}
+          >
+            <AlertCircle className="text-red-500" size={20} />
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              {err.message || "Payment failed"}
+            </p>
+          </div>
+        ),
+        { duration: 2500, position: "top-right" }
+      );
     } finally {
       setProcessing(false);
     }
-  };
-
-  // const handleDelete = async (id) => {
-  //   if (!confirm("Delete this address?")) return;
-  //   try {
-  //     const res = await fetch(`/api/user/add-address/${id}`, { method: "DELETE" });
-  //     if (!res.ok) throw new Error("Failed to delete");
-  //     toast.success("Address deleted");
-  //     setUserAddresses(prev => prev.filter(addr => addr._id !== id));
-  //   } catch {
-  //     toast.error("Delete failed");
-  //   }
-  // };
+  };  
 
   const handleDelete = async (id) => {
     if (!confirm("Delete this address?")) return;
@@ -293,7 +350,7 @@ const OrderSummary = () => {
       );
     }
   };
-  
+
   const handleEdit = (addr) => {
     setEditingAddress(addr);
     setShowEditModal(true);
