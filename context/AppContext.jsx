@@ -124,11 +124,13 @@ export const AppContextProvider = ({ children }) => {
   useEffect(() => localStorage.setItem("secondaryColor", secondaryColor), [secondaryColor]);
   useEffect(() => localStorage.setItem("tertiaryColor", tertiaryColor), [tertiaryColor]);
 
+  // Load saved theme from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem("themeMode") || "system";
     setThemeMode(saved);
   }, []);
 
+  // Apply theme whenever themeMode changes
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -142,6 +144,9 @@ export const AppContextProvider = ({ children }) => {
 
     applyTheme();
 
+    // Save current theme to localStorage ✅
+    localStorage.setItem("themeMode", themeMode);
+
     if (themeMode === "system") {
       mq.addEventListener("change", applyTheme);
       return () => mq.removeEventListener("change", applyTheme);
@@ -149,6 +154,7 @@ export const AppContextProvider = ({ children }) => {
 
     return () => {};
   }, [themeMode]);
+
 
   useEffect(() => {
     const saved = localStorage.getItem("contrastMode") === "true";
