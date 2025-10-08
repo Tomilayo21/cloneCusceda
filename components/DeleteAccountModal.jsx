@@ -10,6 +10,7 @@ export default function DeleteAccountModal({ triggerButtonClass = "", triggerTex
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+
   async function handleDelete() {
     setLoading(true);
     try {
@@ -19,7 +20,9 @@ export default function DeleteAccountModal({ triggerButtonClass = "", triggerTex
         alert(j.error || "Failed to delete");
         return;
       }
-      signOut({ callbackUrl: "/" });
+
+      // 🚀 Force cookie removal + redirect
+      await signOut({ redirect: true, callbackUrl: "/" });
     } finally {
       setLoading(false);
       setIsOpen(false);
