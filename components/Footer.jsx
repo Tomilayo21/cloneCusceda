@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useTheme } from "@/context/ThemeContext";
+// import { useTheme } from "@/context/ThemeContext";
+import { useAppContext } from "@/context/AppContext";
 import { Phone, Mail, ChevronDown } from "lucide-react";
 
 // ✅ Reusable Section with Accordion
@@ -40,7 +41,7 @@ const FooterSection = ({ title, children }) => {
 };
 
 export default function Footer() {
-  const { theme } = useTheme();
+  const { themeMode } = ( useAppContext );
   const [logoUrl, setLogoUrl] = useState(null);
   const [lightLogoUrl, setLightLogoUrl] = useState(null);
   const [darkLogoUrl, setDarkLogoUrl] = useState(null);
@@ -70,12 +71,12 @@ export default function Footer() {
 
   // Select logo based on theme
   useEffect(() => {
-    if (theme === "dark") {
+    if (themeMode === "dark") {
       setLogoUrl(darkLogoUrl || lightLogoUrl);
     } else {
       setLogoUrl(lightLogoUrl || darkLogoUrl);
     }
-  }, [theme, lightLogoUrl, darkLogoUrl]);
+  }, [themeMode, lightLogoUrl, darkLogoUrl]);
 
   // Fetch footer content
   useEffect(() => {

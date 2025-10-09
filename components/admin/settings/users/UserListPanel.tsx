@@ -203,7 +203,7 @@ export default function UserListPanel() {
               >
                 <td className="px-3 py-2 border">
                   <img
-                    src={user.imageUrl || "/default-avatar.png"}
+                    src={user.imageUrl || "/user.png"}
                     alt="profile"
                     className="w-10 h-10 rounded-full object-cover"
                   />
@@ -251,7 +251,7 @@ export default function UserListPanel() {
           >
             <div className="flex items-center gap-3 mb-3">
               <img
-                src={user.imageUrl || "/default-avatar.png"}
+                src={user.imageUrl || "/user.png"}
                 alt="profile"
                 className="w-10 h-10 rounded-full object-cover"
               />

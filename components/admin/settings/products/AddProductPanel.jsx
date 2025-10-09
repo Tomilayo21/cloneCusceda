@@ -8,11 +8,14 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import TiptapEditor from "@/components/TiptapEditor";
 import { CheckCircle, XCircle } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 
 const AddProduct = () => {
-  const { getToken, isAdmin, user } = useAppContext();
+  const { getToken, user } = useAppContext();
+  const { data: session, status } = useSession();
   const router = useRouter();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [files, setFiles] = useState([]);
   const [name, setName] = useState('');
@@ -28,10 +31,16 @@ const AddProduct = () => {
 
 
   useEffect(() => {
-    if (!user || !isAdmin) {
-      router.replace("/");
+    if (status === "authenticated") {
+      if (session.user.role === "admin") {
+        setIsAdmin(true);
+      } else {
+        router.replace("/"); // Not admin → redirect
+      }
+    } else if (status === "unauthenticated") {
+      router.replace("/"); // Not logged in → redirect
     }
-  }, [user, isAdmin, router]);
+  }, [session, status, router]);
 
   useEffect(() => {
     if (uploadDone) {
@@ -40,46 +49,73 @@ const AddProduct = () => {
     }
   }, [uploadDone]);
 
-  if (!user || !isAdmin) {
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
+
+  // Redirect if user is not admin
+  if (status === "unauthenticated" || (status === "authenticated" && session.user.role !== "admin")) {
+    router.replace("/");
     return <p>Redirecting...</p>;
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setUploading(true);
     setUploadDone(false);
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("category", category);
-    formData.append("price", price);
-    formData.append("offerPrice", offerPrice);
-    formData.append("color", color);
-    formData.append("brand", brand);
-    formData.append("stock", stock);
-
-    for (let i = 0; i < files.length; i++) {
-      if (files[i]) formData.append("images", files[i]);
-    }
-
     try {
-      const token = await getToken();
+      if (!session?.user) {
+        toast.custom(
+          (t) => (
+            <div
+              className={`${
+                t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+              } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 transition-all`}
+            >
+              <XCircle className="text-red-500" size={22} />
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                You must be logged in
+              </p>
+            </div>
+          ),
+          { duration: 3500, position: "top-right" }
+        );
+        return;
+      }
+
+      if (session.user.role !== "admin") {
+        toast.error("You are not authorized to perform this action");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("category", category);
+      formData.append("price", price);
+      formData.append("offerPrice", offerPrice);
+      formData.append("color", color);
+      formData.append("brand", brand);
+      formData.append("stock", stock);
+
+      for (let i = 0; i < files.length; i++) {
+        if (files[i]) formData.append("images", files[i]);
+      }
 
       await axios.post("/api/product/add", formData, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          // Send session token (optional, only if your route uses it)
+          Authorization: `Bearer ${session?.accessToken || ""}`,
+        },
       });
 
-      // ✅ Custom success toast
       toast.custom(
         (t) => (
           <div
-            className={`
-              max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4
-              transform transition-all duration-300 ease-in-out
-              ${t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"}
-            `}
+            className={`${
+              t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+            } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 transition-all`}
           >
             <CheckCircle className="text-orange-500" size={22} />
             <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -90,7 +126,6 @@ const AddProduct = () => {
         { duration: 3500, position: "top-right" }
       );
 
-      // Reset form
       setFiles([]);
       setName("");
       setDescription("");
@@ -101,17 +136,13 @@ const AddProduct = () => {
       setOfferPrice("");
       setStock("");
       setUploadDone(true);
-
     } catch (error) {
-      // ❌ Custom error toast
       toast.custom(
         (t) => (
           <div
-            className={`
-              max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4
-              transform transition-all duration-300 ease-in-out
-              ${t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"}
-            `}
+            className={`${
+              t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+            } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 transition-all`}
           >
             <XCircle className="text-red-500" size={22} />
             <p className="text-sm font-medium text-gray-900 dark:text-gray-100">

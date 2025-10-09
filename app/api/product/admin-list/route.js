@@ -1,26 +1,23 @@
 import connectDB from "@/config/db";
-import authSeller from "@/lib/authAdmin";
 import Product from "@/models/Product";
-import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-
+import { requireAdmin } from "@/lib/authAdmin";
 
 export async function GET(request) {
-    try {
-        const { userId } = getAuth(request)
+  try {
+    // Authenticate and ensure admin access
+    const adminUser = await requireAdmin(request);
+    if (adminUser instanceof NextResponse) return adminUser; // return if unauthorized
 
-        const isAdmin = authSeller(userId)
+    await connectDB();
 
-        if (!isAdmin) {
-            return NextResponse.json({ success : false, message : "Not Authorized!" });
-        }
-
-        await connectDB()
-
-        const products = await Product.find({})
-        return NextResponse.json({ success : true, products })
-        
-    } catch (error) {
-        return NextResponse.json({ success: false, message : error.message})
-    }
+    const products = await Product.find({});
+    return NextResponse.json({ success: true, products });
+  } catch (error) {
+    console.error("[ADMIN_PRODUCTS_ERROR]", error);
+    return NextResponse.json(
+      { success: false, message: error.message },
+      { status: 500 }
+    );
+  }
 }

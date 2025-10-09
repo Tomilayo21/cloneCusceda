@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react';
 import { useAppContext } from '@/context/AppContext';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { CheckCircle, PartyPopper } from 'lucide-react';
+import { CheckCircle, PartyPopper,  XCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
 const OrderPlaced = () => {
-  const { currentUser, setCartItems } = useAppContext();
+  const { setCartItems } = useAppContext();
   const { data: session, status } = useSession();
   const router = useRouter();
   const [finalizing, setFinalizing] = useState(true);
@@ -18,13 +18,41 @@ const OrderPlaced = () => {
     const finalizeOrder = async () => {
       const pending = sessionStorage.getItem('pendingOrder');
       if (!pending) {
-        toast.error('No pending order data found');
+        toast.custom(
+          (t) => (
+            <div
+              className={`${
+                t.visible ? "animate-enter" : "animate-leave"
+              } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4`}
+            >
+              <XCircle className="text-red-500" size={20} />
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                No pending order data found
+              </p>
+            </div>
+          ),
+          { duration: 2500, position: "top-right" }
+        );
         setFinalizing(false);
         return;
       }
 
-      if (status !== 'authenticated') {
-        toast.error('You must be logged in to finalize order');
+      if (status !== "authenticated") {
+        toast.custom(
+          (t) => (
+            <div
+              className={`${
+                t.visible ? "animate-enter" : "animate-leave"
+              } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4`}
+            >
+              <XCircle className="text-red-500" size={20} />
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                You must be logged in to finalize order
+              </p>
+            </div>
+          ),
+          { duration: 2500, position: "top-right" }
+        );
         setFinalizing(false);
         return;
       }

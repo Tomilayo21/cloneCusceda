@@ -7,8 +7,7 @@ import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Menu, X, Heart, ShoppingCart, ShieldAlert } from "lucide-react";
-import { useTheme } from "@/context/ThemeContext";
-import { useSession, signOut } from "next-auth/react"; // ✅ NextAuth hook
+import { useSession, signOut } from "next-auth/react"; 
 
 import Signup from "@/components/Signup";
 import SearchBar from "./Searchbar";
@@ -16,13 +15,11 @@ import AvatarMenu from "./AvatarMenu";
 
 const Navbar = () => {
   const { getCartCount } = useAppContext();
-  // const { user, logout } = useAuth(); // 👈 get current user + logout
+
   const { data: session, status } = useSession();
   const user = session?.user;
-
   const router = useRouter();
-  const { theme } = useTheme();
-
+  const { themeMode, setThemeMode } = useAppContext();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -66,7 +63,7 @@ const Navbar = () => {
   }, []);
 
   const logoSrc =
-    theme === "dark" ? darkLogoUrl || lightLogoUrl : lightLogoUrl || darkLogoUrl;
+    themeMode === "dark" ? darkLogoUrl || lightLogoUrl : lightLogoUrl || darkLogoUrl;
 
   const handleAdminClick = () => router.push("/admin");
 
@@ -97,7 +94,7 @@ const Navbar = () => {
       <nav
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 backdrop-blur-md ${
           isScrolled
-            ? theme === "dark"
+            ? themeMode === "dark"
               ? "bg-black/80 border-b border-gray-700 shadow-lg"
               : "bg-white/80 border-b border-gray-200 shadow-lg"
             : "bg-transparent border-transparent"
@@ -143,10 +140,10 @@ const Navbar = () => {
             {mounted && user?.role === "admin" && (
               <div
                 onClick={handleAdminClick}
-                className="flex items-center gap-1 bg-purple-700 text-white text-xs px-3 py-1 rounded-full cursor-pointer"
+                className="flex items-center gap-1 bg-orange-600 text-white text-xs px-3 py-1 rounded-full cursor-pointer"
               >
                 <ShieldAlert className="w-3.5 h-3.5 text-yellow-300" />
-                <span>Super Admin</span>
+                {/* <span>Super Admin</span> */}
               </div>
             )}
 
@@ -192,7 +189,18 @@ const Navbar = () => {
 
           {/* Mobile Menu */}
           <div className="flex md:hidden items-center gap-3">
+            {mounted && user?.role === "admin" && (
+              <div
+                onClick={handleAdminClick}
+                className="flex items-center gap-1 bg-orange-600 text-white text-xs px-2.5 py-1 rounded-full cursor-pointer"
+              >
+                <ShieldAlert className="w-3.5 h-3.5 text-yellow-300" />
+                {/* <span>Super Admin</span> */}
+              </div>
+            )}
+
             <SearchBar />
+
             <button
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               aria-label="Toggle Menu"
@@ -201,6 +209,7 @@ const Navbar = () => {
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
+
         </div>
 
         {/* Mobile Menu */}

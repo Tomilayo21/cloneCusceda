@@ -69,15 +69,16 @@ export default function AvatarMenu() {
   });
 
   useEffect(() => {
-      const fetchFooter = async () => {
-        const res = await fetch("/api/settings/footerdetails");
-        const data = await res.json();
-        setFooterData({
-          footerName: data.footerName,
-        });
-      };
-      fetchFooter();
-    }, []);
+    const fetchFooter = async () => {
+      const res = await fetch("/api/settings/footerdetails");
+      const data = await res.json();
+      setFooterData({
+        footerName: data.footerName,
+      });
+    };
+    fetchFooter();
+  }, []);
+
   function fileToDataUrl(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -186,28 +187,24 @@ export default function AvatarMenu() {
   return (
     <div className="relative" ref={menuRef}>
       {/* Avatar button */}
-     <button
-      onClick={() => {
-        if (window.innerWidth >= 768) {
-          // Desktop
-          setDesktopMenuOpen(!desktopMenuOpen);
-        } else {
-          // Mobile
-          setMobileMenuOpen(true);
-        }
-      }}
-      className="w-9 h-9 rounded-full overflow-hidden bg-gradient-to-r from-orange-500 to-pink-500 flex items-center justify-center text-white font-bold"
-    >
-      {user?.image ? (
-        <img
-          src={user.image}
-          alt={user.name || "User"}
-          className="w-full h-full object-cover"
-        />
-      ) : (
-        <span>{user?.name?.[0] || "U"}</span>
-      )}
-    </button>
+      <button
+        onClick={() => {
+          if (window.innerWidth >= 768) setDesktopMenuOpen(!desktopMenuOpen);
+          else setMobileMenuOpen(true);
+        }}
+        className="w-9 h-9 rounded-full overflow-hidden bg-zinc-800 flex items-center justify-center text-gray-300"
+      >
+        {user?.image ? (
+          <img
+            src={user.image}
+            alt={user.name || "User"}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <User className="w-5 h-5" />
+        )}
+      </button>
+
 
 
       {/* ================= DESKTOP DROPDOWN ================= */}
@@ -215,20 +212,26 @@ export default function AvatarMenu() {
         <div className="hidden md:block absolute left-1/2 top-16 transform -translate-x-1/2 w-72 bg-white dark:bg-neutral-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
           {/* Profile Header */}
           <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-neutral-800 border-b border-gray-200 dark:border-gray-700">
-            {user.image ? (
-              <img src={user.image} alt={user.name} className="w-12 h-12 rounded-full object-cover" />
+            {user?.image ? (
+              <img
+                src={user.image}
+                alt={user.name || "User"}
+                className="w-12 h-12 rounded-full object-cover"
+              />
             ) : (
-              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-lg font-semibold text-white">
-                {user.name?.[0] || "U"}
+              <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center">
+                <User className="w-6 h-6 text-white" />
               </div>
             )}
+
             <div>
-              <p className="font-semibold text-gray-900 dark:text-white">{user.name}</p>
+              <p className="font-semibold text-gray-900 dark:text-white">{user?.name}</p>
               <p className="text-sm text-gray-500 dark:text-gray-400 break-words max-w-[180px]">
-                {user.email}
+                {user?.email}
               </p>
             </div>
           </div>
+
 
           {/* Actions */}
           <div className="flex flex-col py-2">
@@ -296,22 +299,25 @@ export default function AvatarMenu() {
             <Dialog.Panel className="relative z-50 w-full max-w-md mx-auto rounded-2xl bg-white dark:bg-neutral-900 shadow-2xl overflow-hidden">
               {/* Profile Header */}
               <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-neutral-800 border-b">
-                {user.image ? (
+                {user?.image ? (
                   <img
                     src={user.image}
-                    alt={user.name}
+                    alt={user.name || "User"}
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-lg font-semibold text-white">
-                    {user.name?.[0] || "U"}
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center">
+                    <User className="w-6 h-6 text-white" />
                   </div>
                 )}
+
                 <div>
-                  <p className="font-semibold text-gray-900 dark:text-white">{user.name}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                  <p className="font-semibold text-gray-900 dark:text-white">{user?.name}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{user?.email}</p>
                 </div>
               </div>
+
+
 
               {/* Actions */}
               <div className="flex flex-col py-2">
@@ -383,18 +389,38 @@ export default function AvatarMenu() {
                   <div className="flex flex-col sm:flex-row items-center gap-3">
                     <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
                       {imagePreview ? (
-                        <img src={imagePreview} alt="avatar" className="w-full h-full object-cover" />
+                        <img
+                          src={imagePreview}
+                          alt="avatar"
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
-                        <div className="text-lg font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-500 w-full h-full flex items-center justify-center">
-                          {localName?.[0] || "U"}
+                        <div className="bg-black w-full h-full flex items-center justify-center">
+                          <User className="w-8 h-8 text-white" />
                         </div>
                       )}
                     </div>
+
                     <div className="flex-1 w-full">
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Change avatar</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                        Change avatar
+                      </label>
                       <div className="flex flex-wrap items-center gap-2 mt-1">
-                        <input type="file" accept="image/*" onChange={handleFileChange} className="text-sm" />
-                        <button type="button" onClick={handleRemoveImage} className="text-sm text-red-600 hover:underline">
+                        <label className="inline-block cursor-pointer bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+                          Choose File
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            className="hidden"
+                          />
+                        </label>
+
+                        <button
+                          type="button"
+                          onClick={handleRemoveImage}
+                          className="text-sm text-red-600 hover:underline"
+                        >
                           Remove
                         </button>
                       </div>
@@ -403,7 +429,9 @@ export default function AvatarMenu() {
 
                   {/* Name & Username */}
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <p className="font-semibold text-gray-800 dark:text-gray-200 w-full sm:w-1/3">Full Name</p>
+                    <p className="font-semibold text-gray-800 dark:text-gray-200 w-full sm:w-1/3">
+                      Full Name
+                    </p>
                     <input
                       value={localName}
                       onChange={(e) => setLocalName(e.target.value)}
@@ -412,7 +440,9 @@ export default function AvatarMenu() {
                   </div>
 
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <p className="font-semibold text-gray-800 dark:text-gray-200 w-full sm:w-1/3">Username</p>
+                    <p className="font-semibold text-gray-800 dark:text-gray-200 w-full sm:w-1/3">
+                      Username
+                    </p>
                     <input
                       value={localUsername}
                       onChange={(e) => setLocalUsername(e.target.value)}
@@ -422,8 +452,12 @@ export default function AvatarMenu() {
 
                   {/* Email */}
                   <div>
-                    <p className="font-semibold text-gray-800 dark:text-gray-200">Email Address</p>
-                    <p className="text-gray-500 dark:text-gray-400 break-all text-sm">{user?.email}</p>
+                    <p className="font-semibold text-gray-800 dark:text-gray-200">
+                      Email Address
+                    </p>
+                    <p className="text-gray-500 dark:text-gray-400 break-all text-sm">
+                      {user?.email}
+                    </p>
                   </div>
 
                   {/* Buttons */}
@@ -436,13 +470,17 @@ export default function AvatarMenu() {
                       {savingProfile ? "Saving..." : "Save changes"}
                     </button>
                     <button
-                      onClick={() => { setModalOpen(false); setTab("profile"); }}
+                      onClick={() => {
+                        setModalOpen(false);
+                        setTab("profile");
+                      }}
                       className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
                     >
                       Cancel
                     </button>
                   </div>
                 </div>
+
               )}
 
               {/* Security */}
@@ -506,19 +544,7 @@ export default function AvatarMenu() {
                   </div>
 
                  <div className="mt-2 flex flex-col gap-1">
-                    {/* <button
-                      onClick={handleDeleteAccount}
-                      className="text-red-600 dark:text-red-400 text-sm hover:underline flex items-center gap-1"
-                    >
-                      <Trash className="w-4 h-4" />
-                      Delete account
-                    </button> */}
                     <DeleteAccountModal />
-
-                    {/* <p className="text-xs text-red-600 dark:text-red-400 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      This action is permanent and cannot be undone.
-                    </p> */}
                   </div>
                 </div>
               )}

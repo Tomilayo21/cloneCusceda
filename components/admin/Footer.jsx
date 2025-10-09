@@ -1,13 +1,14 @@
 import React from "react";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
-import { useTheme } from "@/context/ThemeContext";
+// import { useTheme } from "@/context/ThemeContext";
+import { useAppContext } from "@/context/AppContext";
 
 const Footer = () => {
-  const { theme } = useTheme();
+  const { themeMode } = useTheme();
 
   // Select logo based on theme
-  const logoSrc = theme === "dark" ? "/cusceda___.png" : "/cusceda__.png";
+  const logoSrc = themeMode === "dark" ? "/cusceda___.png" : "/cusceda__.png";
 
   // Get current year dynamically
   const currentYear = new Date().getFullYear();

@@ -73,7 +73,6 @@ export default function AdminDashboard({
     fetchUserCounts();
   }, []);
 
-
   // === Subscribers ===
   useEffect(() => {
     const fetchSubscribers = async () => {
@@ -406,8 +405,9 @@ export default function AdminDashboard({
                       <div>
                         <p className="text-sm text-gray-500">Customer</p>
                         <p className="font-medium text-gray-800">
-                          {order.address?.fullName || "N/A"}
+                          {order.address?.fullName || order.fullName || "N/A"}
                         </p>
+
                       </div>
 
                       <div>

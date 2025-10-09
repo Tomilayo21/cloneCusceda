@@ -4,7 +4,6 @@ import { Outfit } from 'next/font/google';
 import './globals.css';
 import { AppContextProvider } from '@/context/AppContext';
 import { Toaster } from 'react-hot-toast';
-import { ThemeProvider } from '@/context/ThemeContext';
 import LayoutWrapper from '@/components/LayoutWrapper';
 import AnalyticsTracker from '@/components/admin/AnalyticsTracker';
 import { AuthProvider } from "@/context/AuthContext";
@@ -22,16 +21,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`antialiased ${mounted ? outfit.className : ""}`}>
-        <ThemeProvider>
-            <SessionProvider>  {/* 👈 wrap here */}
-              <AppContextProvider>
-                <Toaster position="top-right" />
-                <AnalyticsTracker>
-                  <LayoutWrapper>{children}</LayoutWrapper>
-                </AnalyticsTracker>
-              </AppContextProvider>
-            </SessionProvider>
-        </ThemeProvider>
+          <SessionProvider>  {/* 👈 wrap here */}
+            <AppContextProvider>
+              <Toaster position="top-right" />
+              <AnalyticsTracker>
+                <LayoutWrapper>{children}</LayoutWrapper>
+              </AnalyticsTracker>
+            </AppContextProvider>
+          </SessionProvider>
       </body>
     </html>
   );

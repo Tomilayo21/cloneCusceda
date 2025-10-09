@@ -1,11 +1,10 @@
 import connectDB from "@/config/db";
-import authSeller from "@/lib/authAdmin";
 import Product from "@/models/Product";
-import { getAuth } from "@clerk/nextjs/server";
+import { requireAdmin } from "@/lib/authAdmin";
 import { v2 as cloudinary } from "cloudinary";
 import { NextResponse } from "next/server";
 
-// Configure Cloudinary
+// ✅ Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -14,15 +13,20 @@ cloudinary.config({
 
 export async function POST(request) {
   try {
-    const { userId } = getAuth(request);
+    // ✅ Verify admin
+    const adminUser = await requireAdmin(request);
 
-    const isAdmin = await authSeller(userId);
-    if (!isAdmin) {
-      return NextResponse.json({ success: false, message: "Not authorized" }, { status: 403 });
+    // If requireAdmin returned a NextResponse (forbidden/unauthorized)
+    if (adminUser instanceof NextResponse) {
+      return adminUser;
+    }
+
+    // If no user found at all
+    if (!adminUser) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const formData = await request.formData();
-
     const name = formData.get("name");
     const description = formData.get("description");
     const category = formData.get("category");
@@ -31,18 +35,24 @@ export async function POST(request) {
     const price = formData.get("price");
     const offerPrice = formData.get("offerPrice");
     const stock = formData.get("stock");
-
     const files = formData.getAll("images");
 
     if (!files || files.length === 0) {
-      return NextResponse.json({ success: false, message: "No Files Uploaded!" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, message: "No files uploaded!" },
+        { status: 400 }
+      );
     }
 
     if (!stock || isNaN(Number(stock)) || Number(stock) < 0) {
-      return NextResponse.json({ success: false, message: "Invalid stock value" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, message: "Invalid stock value" },
+        { status: 400 }
+      );
     }
 
-    const result = await Promise.all(
+    // ✅ Upload images to Cloudinary
+    const uploadResults = await Promise.all(
       files.map(async (file) => {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
@@ -51,11 +61,8 @@ export async function POST(request) {
           const stream = cloudinary.uploader.upload_stream(
             { resource_type: "auto" },
             (error, result) => {
-              if (error) {
-                reject(error);
-              } else {
-                resolve(result);
-              }
+              if (error) reject(error);
+              else resolve(result);
             }
           );
           stream.end(buffer);
@@ -63,30 +70,34 @@ export async function POST(request) {
       })
     );
 
-    const image = result.map((res) => res.secure_url);
+    const imageUrls = uploadResults.map((res) => res.secure_url);
 
     await connectDB();
 
     const newProduct = await Product.create({
-      userId,
+      userId: adminUser.id, // ✅ NextAuth admin ID
       name,
       description,
       category,
+      color,
+      brand,
       price: Number(price),
       offerPrice: Number(offerPrice),
       stock: Number(stock),
-      color,
-      image,
-      brand,
+      image: imageUrls,
       date: Date.now(),
     });
 
     return NextResponse.json({
       success: true,
-      message: "Upload successful",
-      newProduct,
+      message: "Product uploaded successfully!",
+      product: newProduct,
     });
   } catch (error) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    console.error("[PRODUCT_UPLOAD_ERROR]", error);
+    return NextResponse.json(
+      { success: false, message: error.message },
+      { status: 500 }
+    );
   }
 }

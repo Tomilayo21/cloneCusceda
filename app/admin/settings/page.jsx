@@ -1,5 +1,4 @@
 "use client"
-
 import { useState, useEffect } from 'react';
 import {
   Cog,
@@ -23,8 +22,6 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-// import InviteAdminPanel from '@/components/admin/settings/users/InviteAdminPanel';
-// import RolesPanel from '@/components/admin/settings/users/RolesPanel';
 import ViewBroadcastButton from '@/components/admin/settings/users/ViewBroadcastButton';
 import OrderPanel from '@/components/admin/settings/orders/OrderPanel';
 import TransactionPanel from '@/components/admin/settings/orders/TransactionPanel';
@@ -36,7 +33,6 @@ import SubscribersPage from "@/components/admin/settings/users/SubscribersPage";
 import RegUsers from "@/components/admin/RegUsers";
 import toast from "react-hot-toast";
 import FormatDatabase from '@/components/admin/FormatDatabase';
-// import { useUser } from '@clerk/nextjs';
 import BackupModal from '@/components/admin/BackupModal';
 import AdminRestore from '@/components/admin/AdminRestore';
 import RestoreModal from '@/components/admin/RestoreModal';
@@ -56,12 +52,6 @@ import ExportUserCSV from '@/components/admin/settings/users/ExportUsersCSV';
 import ExportProductsCSV from '@/components/admin/settings/products/ExportProductsCSV';
 import ExportOrdersCSV from '@/components/admin/settings/orders/ExportOrdersCSV';
 import SecuritySettings from '@/components/admin/SecuritySettings';
-
-
-
-
-
-
 
 const settingsTabs = [
   { key: 'general', label: 'General', icon: <Cog className="w-4 h-4" /> },
@@ -120,7 +110,6 @@ export default function AdminSettings() {
   const [supportEmail, setSupportEmail] = useState("");
   const [settingsPanel, setSettingsPanel] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // const { user } = useUser();
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [legalPanel, setLegalPanel] = useState("main");
@@ -132,27 +121,14 @@ export default function AdminSettings() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [colorOpen, setColorOpen] = useState(false);
-  
-
-
-
-
-
   const [layoutVal, setLayoutVal] = useState(layout);
   const [fontVal, setFontVal] = useState(fontSize);
   const [selectedFontSize, setSelectedFontSize] = useState(fontSize);
   const [selectedLayout, setSelectedLayout] = useState(layoutStyle);
   const [localLayout, setLocalLayout] = useState(layoutStyle);
   const [localFontSize, setLocalFontSize] = useState(fontSize);
+  
     
-
-
-
-  // const isAdmin = user?.publicMetadata?.role === 'admin';
-
-  // if (!isAdmin) return null;
-
-
   useEffect(() => {
     const fetchSiteDetails = async () => {
       try {
@@ -203,33 +179,31 @@ export default function AdminSettings() {
     }
   };
 
-  // Dark logo upload
   const handleDarkLogoChange = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+    const file = e.target.files[0];
+    if (!file) return;
 
-  setUploading(true);
+    setUploading(true);
 
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("type", "dark");
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", "dark");
 
-  const res = await fetch("/api/upload-logo", {
-    method: "POST",
-    body: formData,
-  });
+    const res = await fetch("/api/upload-logo", {
+      method: "POST",
+      body: formData,
+    });
 
-  const result = await res.json();
-  setUploading(false);
+    const result = await res.json();
+    setUploading(false);
 
-  if (res.ok) {
-    setDarkLogoPreview(result.darkLogoUrl); 
-    toast.success("Dark mode logo uploaded");
-  } else {
-    toast.error(result.error || "Upload failed");
-  }
-};
-
+    if (res.ok) {
+      setDarkLogoPreview(result.darkLogoUrl); 
+      toast.success("Dark mode logo uploaded");
+    } else {
+      toast.error(result.error || "Upload failed");
+    }
+  };
 
   const handleRemoveLightLogo = async () => {
     try {
@@ -267,7 +241,6 @@ export default function AdminSettings() {
 
     fetchSettings();
   }, []);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -324,8 +297,8 @@ export default function AdminSettings() {
     }
   };
 
-
   const router = useRouter();
+
   const changeLanguage = (e) => {
     const lang = e.target.value;
     Cookies.set('lang', lang, { expires: 30 });
@@ -343,8 +316,6 @@ export default function AdminSettings() {
     await savePreferences(localFontSize, localLayout);
   };
 
-  //Exports CSVs
-  //Users
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -369,18 +340,13 @@ export default function AdminSettings() {
       body: JSON.stringify({ action, detail }),
     });
   };
-
-  //Products
-
-
-
-
+  
   return (
-    <div className="max-w-5xl mx-auto p-4 space-y-6">
-      <h2 className="text-2xl font-bold text-gray-800">Settings</h2>
+    <div className="max-w-5xl mx-auto p-4 space-y-6 text-gray-700 dark:text-gray-300 dark:bg-black">
+      <h2 className="text-2xl font-bold text-gray-800 text-gray-700 dark:text-gray-300 dark:bg-black">Settings</h2>
 
       {/* Tab Header */}
-      <div className="flex flex-wrap gap-2 border-b pb-2">
+      <div className="flex flex-wrap gap-2 border-b pb-2 text-gray-700 dark:text-gray-300">
         {settingsTabs.map((tab) => (
           <button
             key={tab.key}
@@ -405,10 +371,10 @@ export default function AdminSettings() {
       </div>
 
       {/* Content Area */}
-      <div className="bg-white p-6 rounded shadow border">
+      <div className="bg-white p-6 rounded shadow border dark:text-gray-300 dark:bg-black">
 
         {activeTab === 'general' && (
-          <div className="relative overflow-hidden">
+          <div className="relative overflow-hidden dark:text-gray-300 dark:bg-black">
             <AnimatePresence mode="wait">
               {!settingsPanel && (
                 <motion.div
@@ -419,26 +385,39 @@ export default function AdminSettings() {
                   transition={{ duration: 0.3 }}
                   className="space-y-4"
                 >
-                  <h3 className="font-semibold text-lg">Site Settings</h3>
+                  <h3 className="font-semibold text-lg dark:text-gray-300 dark:bg-black">Site Settings</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                     <button
                       onClick={() => setSettingsPanel('site')}
-                      className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow"
+                      className="
+                        flex flex-col items-start
+                        bg-orange-100 hover:bg-orange-200 text-orange-800
+                        dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg
+                        p-4 rounded-xl shadow-sm
+                        transition-all duration-300 ease-in-out
+                        border border-transparent 
+                      "
                     >
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold">Site Metadata</span>
+                        <span className="">Site Metadata</span>
                       </div>
-                      <p className="text-xs text-left">
+                      <p className="text-xs text-left text-gray-700 dark:text-gray-300">
                         Edit your site’s title, description, support email and logo.
                       </p>
                     </button>
 
+
                     <button
                       onClick={() => setSettingsPanel('footer')}
-                      className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
+                      className="flex flex-col items-start 
+                      bg-blue-100 hover:bg-blue-200 text-blue-800 
+                      p-4 rounded-xl shadow 
+                      dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                      dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                     >
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold">Footer Settings</span>
+                        <span className="">Footer Settings</span>
                       </div>
                       <p className="text-xs text-left">
                         Customize footer content such as contact info and branding.
@@ -1348,195 +1327,151 @@ export default function AdminSettings() {
             </div>
         )}
 
-        {activeTab === 'appearance' && (
-            <div className="space-y-4">
+        {activeTab === "appearance" && (
+          <div className="space-y-4 text-gray-800 dark:text-gray-100">
+            {/* Theme Color Picker */}
+            <div>
+              <h3
+                className="font-semibold text-lg mb-2 cursor-pointer flex items-center justify-between text-gray-800 dark:text-gray-100"
+                onClick={() => setColorOpen(!colorOpen)}
+              >
+                Color Picker
+                <ChevronDown
+                  className={`w-5 h-5 transition-transform duration-300 ${
+                    colorOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </h3>
 
-                {/* Theme Color Picker */}
-                <div>
-                  <h3
-                    className="font-semibold text-lg mb-2 cursor-pointer flex items-center justify-between"
-                    onClick={() => setColorOpen(!colorOpen)}
-                  >
-                    Color Picker
-                    <ChevronDown
-                      className={`w-5 h-5 transition-transform duration-300 ${
-                        colorOpen ? "rotate-180" : ""
-                      }`}
-                    />
-                  </h3>
-
-                  {/* Animated dropdown */}
-                  <div
-                    className={`grid grid-cols-1 sm:grid-cols-3 gap-4 overflow-hidden transition-all duration-500 ease-in-out ${
-                      colorOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                    }`}
-                  >
-                    {/* Theme Color */}
-                    <div className="space-y-1">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Theme Color
-                      </label>
-                      <input
-                        type="color"
-                        value={themeColor}
-                        onChange={(e) => setThemeColor(e.target.value)}
-                        className="w-12 h-8 border rounded"
-                      />
-                    </div>
-
-                    {/* Secondary Color */}
-                    <div className="space-y-1">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Secondary Color
-                      </label>
-                      <input
-                        type="color"
-                        value={secondaryColor}
-                        onChange={(e) => setSecondaryColor(e.target.value)}
-                        className="w-12 h-8 border rounded"
-                      />
-                    </div>
-
-                    {/* Tertiary Color */}
-                    <div className="space-y-1">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Tertiary Color
-                      </label>
-                      <input
-                        type="color"
-                        value={tertiaryColor}
-                        onChange={(e) => setTertiaryColor(e.target.value)}
-                        className="w-12 h-8 border rounded"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Font Size Selector */}
-
-                {/* <div className="p-4 space-y-4">
-                    <div>
-                        <label className="block mb-1">Font Size</label>
-                        <select
-                        value={localFontSize}
-                        onChange={(e) => setLocalFontSize(e.target.value)}
-                        className="p-2 border rounded w-full"
-                        >
-                        <option value="small">Small</option>
-                        <option value="medium">Medium</option>
-                        <option value="large">Large</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block mb-1">Layout</label>
-                        <select
-                        value={localLayout}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setSelectedLayout(value);
-                            saveLayoutStyle(value); // ✅ make sure this comes from context
-                        }}
-                        className="p-2 border rounded w-full"
-                        >
-                        <option value="grid">Grid</option>
-                        <option value="list">List</option>
-                        </select>
-                    </div>
-
-                    <button
-                        onClick={handleSave}
-                        className="px-4 py-2 bg-black text-white rounded"
-                    >
-                        Save Preferences
-                    </button>
-                </div> */}
-
-                <div className="space-y-2">
-                  {/* Toggle header */}
-                  <h3
-                    className="font-semibold text-lg cursor-pointer flex items-center justify-between"
-                    onClick={() => setOpen(!open)}
-                  >
-                    Appearance / Theme
-                    <span
-                      className={`transition-transform duration-300 ${
-                        open ? "rotate-180" : ""
-                      }`}
-                    >
-                      <ChevronDown
-                        className={`w-5 h-5 transition-transform duration-300 ${
-                          open ? "rotate-180" : ""
-                        }`}
-                      />
-                    </span>
-                  </h3>
-
-                  {/* Animated dropdown */}
-                  <div
-                    className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                      open ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-                    }`}
-                  >
-                    <div className="space-y-2 mt-2">
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="radio"
-                          name="theme"
-                          checked={themeMode === "light"}
-                          onChange={() => setThemeMode("light")}
-                        />
-                        Light Mode
-                      </label>
-
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="radio"
-                          name="theme"
-                          checked={themeMode === "dark"}
-                          onChange={() => setThemeMode("dark")}
-                        />
-                        Dark Mode
-                      </label>
-
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="radio"
-                          name="theme"
-                          checked={themeMode === "system"}
-                          onChange={() => setThemeMode("system")}
-                        />
-                        System Preference
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                    <h3 className="font-semibold text-lg">High Contrast</h3>
-
-                    <label className="flex items-center gap-2">
-                        <input
-                        type="checkbox"
-                        checked={contrastMode}
-                        onChange={(e) => setContrastMode(e.target.checked)}
-                        />
-                        Enable High Contrast Mode (Accessibility)
-                    </label>
-                </div>
-
-                {/* Layout Style */}
+              <div
+                className={`grid grid-cols-1 sm:grid-cols-3 gap-4 overflow-hidden transition-all duration-500 ease-in-out ${
+                  colorOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                }`}
+              >
+                {/* Theme Color */}
                 <div className="space-y-1">
-                    <LayoutStyleSelector />
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Theme Color
+                  </label>
+                  <input
+                    type="color"
+                    value={themeColor}
+                    onChange={(e) => setThemeColor(e.target.value)}
+                    className="w-12 h-8 border border-gray-300 dark:border-gray-600 rounded bg-transparent cursor-pointer"
+                  />
                 </div>
 
-                {/* Rounded Corners */}
-                <label className="flex items-center gap-2">
-                <input type="checkbox" className="accent-orange-600" />
-                Use Rounded Corners
-                </label>
+                {/* Secondary Color */}
+                <div className="space-y-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Secondary Color
+                  </label>
+                  <input
+                    type="color"
+                    value={secondaryColor}
+                    onChange={(e) => setSecondaryColor(e.target.value)}
+                    className="w-12 h-8 border border-gray-300 dark:border-gray-600 rounded bg-transparent cursor-pointer"
+                  />
+                </div>
+
+                {/* Tertiary Color */}
+                <div className="space-y-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Tertiary Color
+                  </label>
+                  <input
+                    type="color"
+                    value={tertiaryColor}
+                    onChange={(e) => setTertiaryColor(e.target.value)}
+                    className="w-12 h-8 border border-gray-300 dark:border-gray-600 rounded bg-transparent cursor-pointer"
+                  />
+                </div>
+              </div>
             </div>
+
+            {/* Appearance / Theme Toggle */}
+            <div className="space-y-2">
+              <h3
+                className="font-semibold text-lg cursor-pointer flex items-center justify-between text-gray-800 dark:text-gray-100"
+                onClick={() => setOpen(!open)}
+              >
+                Appearance / Theme
+                <ChevronDown
+                  className={`w-5 h-5 transition-transform duration-300 ${
+                    open ? "rotate-180" : ""
+                  }`}
+                />
+              </h3>
+
+              <div
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                  open ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                }`}
+              >
+                <div className="space-y-2 mt-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="theme"
+                      checked={themeMode === "light"}
+                      onChange={() => setThemeMode("light")}
+                    />
+                    <span>Light Mode</span>
+                  </label>
+
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="theme"
+                      checked={themeMode === "dark"}
+                      onChange={() => setThemeMode("dark")}
+                    />
+                    <span>Dark Mode</span>
+                  </label>
+
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="theme"
+                      checked={themeMode === "system"}
+                      onChange={() => setThemeMode("system")}
+                    />
+                    <span>System Preference</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* High Contrast Mode */}
+            <div className="space-y-4">
+              <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-100">
+                High Contrast
+              </h3>
+
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={contrastMode}
+                  onChange={(e) => setContrastMode(e.target.checked)}
+                  className="accent-orange-600"
+                />
+                <span>Enable High Contrast Mode (Accessibility)</span>
+              </label>
+            </div>
+
+            {/* Layout Style */}
+            <div className="space-y-1">
+              <LayoutStyleSelector />
+            </div>
+
+            {/* Rounded Corners */}
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" className="accent-orange-600" />
+              <span>Use Rounded Corners</span>
+            </label>
+          </div>
         )}
+
 
         {activeTab === 'security' && (
           <SecuritySettings />

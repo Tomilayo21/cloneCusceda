@@ -6,9 +6,12 @@ import toast from "react-hot-toast";
 import { useAppContext } from "@/context/AppContext";
 import { ShoppingCart } from "lucide-react";
 import { assets } from "@/assets/assets";
+import { useSession, getSession } from "next-auth/react";
+
 
 const OrderPanel = () => {
   const { currency, getToken, user } = useAppContext();
+   const { data: session, status } = useSession();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [collapsedGroups, setCollapsedGroups] = useState({});
@@ -20,26 +23,34 @@ const OrderPanel = () => {
   const [showModal, setShowModal] = useState(false);
 
   const fetchAdminOrders = async () => {
+    if (!session?.user) {
+      showErrorToast("You must be logged in");
+      return;
+    }
+
     try {
-      const token = await getToken();
+      const token = session.accessToken; 
       const { data } = await axios.get("/api/order/admin-orders", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (data.success) {
         setOrders(data.orders);
       } else {
-        toast.error(data.message);
+        showErrorToast(data.message);
       }
     } catch (error) {
-      toast.error(error.message);
+      showErrorToast(error.message || "Failed to fetch orders");
     } finally {
       setLoading(false);
     }
-  };
+  };  
+
 
   useEffect(() => {
-    if (user) fetchAdminOrders();
-  }, [user]);
+    if (status === "authenticated") {
+      fetchAdminOrders();
+    }
+  }, [status, session]);
 
   useEffect(() => {
     if (orders.length) {
@@ -84,7 +95,7 @@ const OrderPanel = () => {
       <div className="md:p-10 p-4 space-y-6 overflow-y-auto">
         <h2 className="text-2xl font-bold flex items-center gap-2">
           <ShoppingCart className="w-6 h-6 text-orange-600" />
-          Users Orders
+          Admin Orders
         </h2>
         {/* Filter */}
         <div className="flex flex-wrap items-center gap-3">
