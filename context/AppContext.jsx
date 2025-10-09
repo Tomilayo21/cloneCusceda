@@ -124,45 +124,12 @@ export const AppContextProvider = ({ children }) => {
   useEffect(() => localStorage.setItem("secondaryColor", secondaryColor), [secondaryColor]);
   useEffect(() => localStorage.setItem("tertiaryColor", tertiaryColor), [tertiaryColor]);
 
-<<<<<<< HEAD
-  // // Load saved theme from localStorage on mount
-  // useEffect(() => {
-  //   const saved = localStorage.getItem("themeMode") || "system";
-  //   setThemeMode(saved);
-  // }, []);
 
-  // // Apply theme whenever themeMode changes
-  // useEffect(() => {
-  //   const mq = window.matchMedia("(prefers-color-scheme: dark)");
-
-  //   const applyTheme = () => {
-  //     if (themeMode === "system") {
-  //       document.documentElement.classList.toggle("dark", mq.matches);
-  //     } else {
-  //       document.documentElement.classList.toggle("dark", themeMode === "dark");
-  //     }
-  //   };
-
-  //   applyTheme();
-
-  //   // Save current theme to localStorage ✅
-  //   localStorage.setItem("themeMode", themeMode);
-
-  //   if (themeMode === "system") {
-  //     mq.addEventListener("change", applyTheme);
-  //     return () => mq.removeEventListener("change", applyTheme);
-  //   }
-
-  //   return () => {};
-  // }, [themeMode]);
-
-=======
   // Load saved theme from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem("themeMode") || "system";
     setThemeMode(saved);
   }, []);
->>>>>>> f23d42968812f4ec46450c8a372451adaf757c70
 
   // Apply theme whenever themeMode changes
   useEffect(() => {
@@ -172,13 +139,25 @@ export const AppContextProvider = ({ children }) => {
       const isDark =
         themeMode === "dark" || (themeMode === "system" && mq.matches);
 
+      // Toggle dark mode class
       document.documentElement.classList.toggle("dark", isDark);
+
+      // 🎨 Apply dynamic color variables
+      const root = document.documentElement;
+      if (isDark) {
+        root.style.setProperty("--background", "#0f0f0f");
+        root.style.setProperty("--foreground", "#ffffff");
+        root.style.setProperty("--primary", "#f97316"); // orange
+        root.style.setProperty("--secondary", "#1e293b"); // slate dark
+      } else {
+        root.style.setProperty("--background", "#ffffff");
+        root.style.setProperty("--foreground", "#000000");
+        root.style.setProperty("--primary", "#2563eb"); // blue
+        root.style.setProperty("--secondary", "#f1f5f9"); // light slate
+      }
     };
 
     applyTheme();
-    localStorage.setItem("themeMode", themeMode);
-
-    // Save current theme to localStorage ✅
     localStorage.setItem("themeMode", themeMode);
 
     if (themeMode === "system") {
@@ -187,44 +166,6 @@ export const AppContextProvider = ({ children }) => {
     }
   }, [themeMode]);
 
-<<<<<<< HEAD
-  // useEffect(() => {
-  //   const mq = window.matchMedia("(prefers-color-scheme: dark)");
-
-  //   const applyTheme = () => {
-  //     const isDark =
-  //       themeMode === "dark" || (themeMode === "system" && mq.matches);
-
-  //     // Toggle dark mode class
-  //     document.documentElement.classList.toggle("dark", isDark);
-
-  //     // 🎨 Apply color variables dynamically
-  //     const root = document.documentElement;
-  //     if (isDark) {
-  //       root.style.setProperty("--background", "#1f1111ff");
-  //       root.style.setProperty("--foreground", "#ffffff");
-  //       root.style.setProperty("--primary", "#f97316"); // orange-500
-  //       root.style.setProperty("--secondary", "#1e293b"); // slate-800
-  //     } else {
-  //       root.style.setProperty("--background", "#ffffff");
-  //       root.style.setProperty("--foreground", "#000000");
-  //       root.style.setProperty("--primary", "#2563eb"); // blue-600
-  //       root.style.setProperty("--secondary", "#f1f5f9"); // slate-100
-  //     }
-  //   };
-
-  //   applyTheme();
-  //   localStorage.setItem("themeMode", themeMode);
-
-  //   if (themeMode === "system") {
-  //     mq.addEventListener("change", applyTheme);
-  //     return () => mq.removeEventListener("change", applyTheme);
-  //   }
-  // }, [themeMode]);
-
-
-=======
->>>>>>> f23d42968812f4ec46450c8a372451adaf757c70
 
   useEffect(() => {
     const saved = localStorage.getItem("contrastMode") === "true";
