@@ -187,6 +187,7 @@ export default function AvatarMenu() {
   return (
     <div className="relative" ref={menuRef}>
       {/* Avatar button */}
+<<<<<<< HEAD
       <button
         onClick={() => {
           if (window.innerWidth >= 768) setDesktopMenuOpen(!desktopMenuOpen);
@@ -205,12 +206,82 @@ export default function AvatarMenu() {
         )}
       </button>
 
+=======
+     {/* <button
+      onClick={() => {
+        if (window.innerWidth >= 768) {
+          // Desktop
+          setDesktopMenuOpen(!desktopMenuOpen);
+        } else {
+          // Mobile
+          setMobileMenuOpen(true);
+        }
+      }}
+      className="w-9 h-9 rounded-full overflow-hidden bg-gradient-to-r from-orange-500 to-pink-500 flex items-center justify-center text-white font-bold"
+    >
+      {user?.image ? (
+        <img
+          src={user.image}
+          alt={user.name || "User"}
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <span>{user?.name?.[0] || "U"}</span>
+      )}
+    </button> */}
+
+    <button
+      onClick={() => {
+        if (window.innerWidth >= 768) setDesktopMenuOpen(!desktopMenuOpen);
+        else setMobileMenuOpen(true);
+      }}
+      className="w-9 h-9 rounded-full overflow-hidden bg-zinc-800 flex items-center justify-center text-gray-300"
+    >
+      {user?.image ? (
+        <img
+          src={user.image}
+          alt={user.name || "User"}
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <User className="w-5 h-5" />
+      )}
+    </button>
+>>>>>>> f23d42968812f4ec46450c8a372451adaf757c70
+
 
 
       {/* ================= DESKTOP DROPDOWN ================= */}
       {desktopMenuOpen && (
         <div className="hidden md:block absolute left-1/2 top-16 transform -translate-x-1/2 w-72 bg-white dark:bg-neutral-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
           {/* Profile Header */}
+<<<<<<< HEAD
+          <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-neutral-800 border-b border-gray-200 dark:border-gray-700">
+            {user?.image ? (
+              <img
+                src={user.image}
+                alt={user.name || "User"}
+                className="w-12 h-12 rounded-full object-cover"
+              />
+=======
+          {/* <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-neutral-800 border-b border-gray-200 dark:border-gray-700">
+            {user.image ? (
+              <img src={user.image} alt={user.name} className="w-12 h-12 rounded-full object-cover" />
+>>>>>>> f23d42968812f4ec46450c8a372451adaf757c70
+            ) : (
+              <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center">
+                <User className="w-6 h-6 text-white" />
+              </div>
+            )}
+
+            <div>
+              <p className="font-semibold text-gray-900 dark:text-white">{user?.name}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 break-words max-w-[180px]">
+                {user?.email}
+              </p>
+            </div>
+          </div> */}
+
           <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-neutral-800 border-b border-gray-200 dark:border-gray-700">
             {user?.image ? (
               <img
@@ -298,6 +369,30 @@ export default function AvatarMenu() {
           >
             <Dialog.Panel className="relative z-50 w-full max-w-md mx-auto rounded-2xl bg-white dark:bg-neutral-900 shadow-2xl overflow-hidden">
               {/* Profile Header */}
+<<<<<<< HEAD
+              <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-neutral-800 border-b">
+                {user?.image ? (
+=======
+              {/* <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-neutral-800 border-b">
+                {user.image ? (
+>>>>>>> f23d42968812f4ec46450c8a372451adaf757c70
+                  <img
+                    src={user.image}
+                    alt={user.name || "User"}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center">
+                    <User className="w-6 h-6 text-white" />
+                  </div>
+                )}
+
+                <div>
+                  <p className="font-semibold text-gray-900 dark:text-white">{user?.name}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{user?.email}</p>
+                </div>
+              </div> */}
+
               <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-neutral-800 border-b">
                 {user?.image ? (
                   <img
@@ -384,6 +479,73 @@ export default function AvatarMenu() {
             {/* Content */}
             <div className="flex-1 p-4 md:p-6 overflow-y-auto space-y-5">
               {tab === "profile" && (
+                // <div className="space-y-5">
+                //   {/* Avatar */}
+                //   <div className="flex flex-col sm:flex-row items-center gap-3">
+                //     <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                //       {imagePreview ? (
+                //         <img src={imagePreview} alt="avatar" className="w-full h-full object-cover" />
+                //       ) : (
+                //         <div className="text-lg font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-500 w-full h-full flex items-center justify-center">
+                //           {localName?.[0] || "U"}
+                //         </div>
+                //       )}
+                //     </div>
+                //     <div className="flex-1 w-full">
+                //       <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Change avatar</label>
+                //       <div className="flex flex-wrap items-center gap-2 mt-1">
+                //         <input type="file" accept="image/*" onChange={handleFileChange} className="text-sm" />
+                //         <button type="button" onClick={handleRemoveImage} className="text-sm text-red-600 hover:underline">
+                //           Remove
+                //         </button>
+                //       </div>
+                //     </div>
+                //   </div>
+
+                //   {/* Name & Username */}
+                //   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                //     <p className="font-semibold text-gray-800 dark:text-gray-200 w-full sm:w-1/3">Full Name</p>
+                //     <input
+                //       value={localName}
+                //       onChange={(e) => setLocalName(e.target.value)}
+                //       className="w-full sm:w-2/3 px-2 py-1 rounded border dark:border-gray-600"
+                //     />
+                //   </div>
+
+                //   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                //     <p className="font-semibold text-gray-800 dark:text-gray-200 w-full sm:w-1/3">Username</p>
+                //     <input
+                //       value={localUsername}
+                //       onChange={(e) => setLocalUsername(e.target.value)}
+                //       className="w-full sm:w-2/3 px-2 py-1 rounded border dark:border-gray-600"
+                //     />
+                //   </div>
+
+                //   {/* Email */}
+                //   <div>
+                //     <p className="font-semibold text-gray-800 dark:text-gray-200">Email Address</p>
+                //     <p className="text-gray-500 dark:text-gray-400 break-all text-sm">{user?.email}</p>
+                //   </div>
+
+                //   {/* Buttons */}
+                //   <div className="flex flex-col sm:flex-row gap-2">
+                //     <button
+                //       onClick={handleSaveProfile}
+                //       disabled={savingProfile}
+                //       className="bg-orange-600 text-white px-3 py-1 rounded hover:bg-orange-700 transition"
+                //     >
+                //       {savingProfile ? "Saving..." : "Save changes"}
+                //     </button>
+                //     <button
+                //       onClick={() => { setModalOpen(false); setTab("profile"); }}
+                //       className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
+                //     >
+                //       Cancel
+                //     </button>
+                //   </div>
+                // </div>
+
+
                 <div className="space-y-5">
                   {/* Avatar */}
                   <div className="flex flex-col sm:flex-row items-center gap-3">

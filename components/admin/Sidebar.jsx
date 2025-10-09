@@ -30,6 +30,10 @@ const menuItems = [
 
 const SideBar = () => {
   const pathname = usePathname();
+<<<<<<< HEAD
+=======
+  const router = useRouter();
+>>>>>>> f23d42968812f4ec46450c8a372451adaf757c70
   const { data: session } = useSession();
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -88,6 +92,7 @@ const SideBar = () => {
       </nav>
 
       {/* Footer / User Section */}
+<<<<<<< HEAD
       <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
         {session?.user ? (
           <div className="flex items-center gap-3">
@@ -99,12 +104,27 @@ const SideBar = () => {
                 {session.user.name}
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400">Signed in</p>
+=======
+      <div className="px-4 py-4 border-t space-y-3">
+        {session?.user ? (
+          <div className="flex items-center gap-3">
+            <div className="rounded-full bg-gray-200 w-8 h-8 flex items-center justify-center font-semibold text-gray-700">
+              {session.user.name?.[0]?.toUpperCase() || "U"}
+            </div>
+            <div className="text-sm">
+              <p className="font-medium text-gray-800">{session.user.name}</p>
+              <p className="text-xs text-gray-500">Signed in</p>
+>>>>>>> f23d42968812f4ec46450c8a372451adaf757c70
             </div>
           </div>
         ) : (
           <Link
             href="/login"
+<<<<<<< HEAD
             className="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 w-full px-4 py-2 rounded-md border border-gray-200 dark:border-gray-700 transition"
+=======
+            className="flex items-center gap-2 text-gray-700 hover:bg-gray-50 w-full px-4 py-2 rounded-md border border-gray-200 transition"
+>>>>>>> f23d42968812f4ec46450c8a372451adaf757c70
           >
             <Users className="w-4 h-4 text-gray-500 dark:text-gray-400" />
             <span className="text-sm font-medium">Sign In</span>

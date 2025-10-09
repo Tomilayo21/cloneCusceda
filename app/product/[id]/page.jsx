@@ -64,6 +64,14 @@ export default function ProductPage() {
   }, [productData]);
 
   // Load reviews
+  // useEffect(() => {
+  //   if (!id) return;
+  //   fetch(`/api/reviews?productId=${id}`)
+  //     .then((res) => res.json())
+  //     .then((data) => setReviews(data));
+  // }, [id]);
+  
+  // Load reviews
   useEffect(() => {
     if (!id) return;
     fetch(`/api/reviews?productId=${id}`)
@@ -73,7 +81,13 @@ export default function ProductPage() {
   }, [id]);
 
 
+<<<<<<< HEAD
   // Toggle Like
+=======
+ 
+  // Toggle Like
+
+>>>>>>> f23d42968812f4ec46450c8a372451adaf757c70
   const toggleLike = async () => {
     if (status !== "authenticated") return router.push("/signup");
 

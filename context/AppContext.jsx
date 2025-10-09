@@ -124,6 +124,7 @@ export const AppContextProvider = ({ children }) => {
   useEffect(() => localStorage.setItem("secondaryColor", secondaryColor), [secondaryColor]);
   useEffect(() => localStorage.setItem("tertiaryColor", tertiaryColor), [tertiaryColor]);
 
+<<<<<<< HEAD
   // // Load saved theme from localStorage on mount
   // useEffect(() => {
   //   const saved = localStorage.getItem("themeMode") || "system";
@@ -155,7 +156,15 @@ export const AppContextProvider = ({ children }) => {
   //   return () => {};
   // }, [themeMode]);
 
+=======
+  // Load saved theme from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("themeMode") || "system";
+    setThemeMode(saved);
+  }, []);
+>>>>>>> f23d42968812f4ec46450c8a372451adaf757c70
 
+  // Apply theme whenever themeMode changes
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -169,12 +178,16 @@ export const AppContextProvider = ({ children }) => {
     applyTheme();
     localStorage.setItem("themeMode", themeMode);
 
+    // Save current theme to localStorage ✅
+    localStorage.setItem("themeMode", themeMode);
+
     if (themeMode === "system") {
       mq.addEventListener("change", applyTheme);
       return () => mq.removeEventListener("change", applyTheme);
     }
   }, [themeMode]);
 
+<<<<<<< HEAD
   // useEffect(() => {
   //   const mq = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -210,6 +223,8 @@ export const AppContextProvider = ({ children }) => {
   // }, [themeMode]);
 
 
+=======
+>>>>>>> f23d42968812f4ec46450c8a372451adaf757c70
 
   useEffect(() => {
     const saved = localStorage.getItem("contrastMode") === "true";
