@@ -226,8 +226,6 @@ export default function AvatarMenu() {
       </button>
 
 
-
-
       {/* ================= DESKTOP DROPDOWN ================= */}
       {desktopMenuOpen && (
         <div className="hidden md:block absolute left-1/2 top-16 transform -translate-x-1/2 w-72 bg-white dark:bg-neutral-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
