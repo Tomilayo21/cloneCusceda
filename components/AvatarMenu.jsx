@@ -352,10 +352,10 @@ export default function AvatarMenu() {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Panel className="relative z-50 w-full max-w-md mx-auto rounded-2xl bg-white dark:bg-neutral-900 shadow-2xl overflow-hidden">
+            <Dialog.Panel className="relative z-50 w-full max-w-md mx-auto rounded-2xl border dark:border-white bg-white dark:bg-black shadow-2xl overflow-hidden">
               {/* Profile Header */}
 
-              <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-neutral-800 border-b">
+              <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-black border-b">
                 {user?.image ? (
                   <img
                     src={user.image}
@@ -363,7 +363,7 @@ export default function AvatarMenu() {
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center">
+                  <div className="w-12 h-12 border dark:border-white rounded-full bg-black flex items-center justify-center">
                     <User className="w-6 h-6 text-white" />
                   </div>
                 )}
@@ -391,7 +391,7 @@ export default function AvatarMenu() {
 
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-3 px-5 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition"
+                  className="flex items-center gap-3 px-5 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 dark:hover:text-white transition"
                 >
                   <LogOut className="w-5 h-5" />
                   <span className="font-thin">Sign Out</span>
@@ -399,7 +399,7 @@ export default function AvatarMenu() {
               </div>
 
               {/* Footer */}
-              <div className="flex items-center justify-center gap-2 px-5 py-3 text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-neutral-800 border-t">
+              <div className="flex items-center justify-center gap-2 px-5 py-3 text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-black border-t">
                 <ShieldCheck className="w-4 h-4" />
                 <span className="font-thin">
                   Secured by <span className="font-thin">{footerData.footerName}</span>
