@@ -100,6 +100,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between px-4 py-3 md:px-16 lg:px-32">
           {/* Logo */}
           <img
+            key={themeMode}
             src={logoSrc || "/default-logo.png"}
             alt="logo"
             width={100}
@@ -169,6 +170,7 @@ const Navbar = () => {
 
             {/* Center: Logo */}
             <img
+              key={themeMode}
               src={logoSrc || "/default-logo.png"}
               alt="logo"
               width={100}
