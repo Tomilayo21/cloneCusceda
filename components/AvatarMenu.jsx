@@ -234,9 +234,9 @@ export default function AvatarMenu() {
 
       {/* ================= DESKTOP DROPDOWN ================= */}
       {desktopMenuOpen && (
-        <div className="hidden md:block absolute left-1/2 top-12 transform -translate-x-1/2 w-72 bg-white dark:bg-neutral-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
+        <div className="hidden md:block absolute left-1/2 top-12 transform -translate-x-1/2 w-72 bg-white dark:bg-black rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
           {/* Profile Header */}
-          <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-neutral-800 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-black border-b border-gray-200 dark:border-gray-700">
             {user?.image ? (
               <img
                 src={user.image}
@@ -263,21 +263,21 @@ export default function AvatarMenu() {
                 <Link
                   href="/my-orders"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="gap-3 px-5 py-3 font-thin rounded-md hover:bg-gray-50 dark:hover:bg-gray-800"
+                  className="gap-3 px-5 py-3 font-thin text-black hover:bg-gray-50 dark:text-white dark:hover:text-black dark:hover:bg-white"
                 >
                   My Orders
                 </Link>
                 <Link
                   href="/favorites"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="gap-3 px-5 py-3 font-thin rounded-md hover:bg-gray-50 dark:hover:bg-gray-800"
+                  className="gap-3 px-5 py-3 font-thin text-black hover:bg-gray-50 dark:text-white dark:hover:text-black dark:hover:bg-white"
                 >
                   Favorites
                 </Link>
                 <Link
                   href="/cart"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="gap-3 px-5 py-3 font-thin rounded-md hover:bg-gray-50 dark:hover:bg-gray-800"
+                  className="gap-3 px-5 py-3 font-thin text-black hover:bg-gray-50 dark:text-white dark:hover:text-black dark:hover:bg-white"
                 >
                   Cart ({getCartCount()})
                 </Link>
@@ -290,14 +290,14 @@ export default function AvatarMenu() {
                 setTab("profile");
                 setModalOpen(true);
               }}
-              className="flex items-center gap-3 px-5 py-3 text-black dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-neutral-800 transition"
+              className="flex items-center gap-3 px-5 py-3 text-black hover:bg-gray-50 dark:text-white dark:hover:text-black dark:hover:bg-white transition"
             >
               <span className="font-thin">Manage Account</span>
             </button>
             {mounted && user?.role === "admin" && (
               <div
                 onClick={handleAdminClick}
-                className="flex items-center gap-3 px-5 py-3 text-black dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-neutral-800 transition font-thin cursor-pointer"
+                className="flex items-center gap-3 px-5 py-3 text-black hover:bg-gray-50 dark:text-white dark:hover:text-black dark:hover:bg-white transition font-thin cursor-pointer"
               >
                 <span className="">Admin</span>
                 {/* <ShieldAlert className="w-5 h-5 text-black" /> */}
@@ -305,7 +305,7 @@ export default function AvatarMenu() {
             )}
             <button
               onClick={handleLogout}
-              className="flex items-center gap-3 px-5 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition"
+              className="flex items-center gap-3 px-5 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 dark:hover:text-white transition"
             >
               <LogOut className="w-5 h-5 font-thin" />
               <span className="font-thin">Sign Out</span>
@@ -313,7 +313,7 @@ export default function AvatarMenu() {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-center gap-2 px-5 py-3 text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-neutral-800 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-center gap-2 px-5 py-3 text-xs text-gray-400 dark:text-gray-700 bg-gray-50 dark:bg-black border-t border-gray-200 dark:border-gray-700">
             <ShieldCheck className="w-4 h-4" />
             <span className="font-thin">
               Secured by <span className="font-thin">{footerData.footerName}</span>
@@ -418,7 +418,7 @@ export default function AvatarMenu() {
 
         {/* Centered modal */}
         <div className="fixed inset-0 flex items-center justify-center px-4 sm:px-6">
-          <Dialog.Panel className="w-full max-w-3xl md:max-w-4xl max-h-[90vh] md:max-h-[80vh] rounded-2xl bg-white dark:bg-neutral-900 shadow-2xl overflow-hidden flex flex-col md:flex-row">
+          <Dialog.Panel className="w-full max-w-3xl md:max-w-4xl max-h-[90vh] md:max-h-[80vh] rounded-2xl bg-white dark:bg-black shadow-2xl overflow-hidden flex flex-col md:flex-row">
             
             {/* Sidebar */}
             <div className="flex md:flex-col w-full md:w-48 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700">
@@ -443,7 +443,7 @@ export default function AvatarMenu() {
                 <div className="space-y-5">
                   {/* Avatar */}
                   <div className="flex flex-col sm:flex-row items-center gap-3">
-                    <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                    <div className="w-20 h-20 border dark:border-white rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
                       {imagePreview ? (
                         <img
                           src={imagePreview}
@@ -462,7 +462,7 @@ export default function AvatarMenu() {
                         Change avatar
                       </label>
                       <div className="flex flex-wrap items-center gap-2 mt-1">
-                        <label className="inline-block cursor-pointer bg-gray-50 dark:bg-black text-black dark:text-white text-sm px-4 py-2 rounded-md hover:bg-gray-50 dark:hover:bg-black transition">
+                        <label className="inline-block cursor-pointer border dark:border-white bg-gray-50 dark:bg-black text-black dark:text-white text-sm px-4 py-2 rounded-md hover:bg-gray-50 dark:hover:bg-black transition">
                           Choose File
                           <input
                             type="file"
@@ -607,7 +607,7 @@ export default function AvatarMenu() {
                     </button>
                   </form>
 
-                  <div className="bg-gray-50 dark:bg-neutral-800 p-3 rounded-lg text-xs">
+                  <div className="bg-gray-50 dark:bg-black border dark:border-white p-3 rounded-lg text-xs">
                     <p className="text-gray-700 dark:text-gray-300 font-medium mb-1">
                       Active Device
                     </p>
