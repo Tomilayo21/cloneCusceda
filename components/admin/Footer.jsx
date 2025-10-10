@@ -1,11 +1,11 @@
 import React from "react";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
-// import { useTheme } from "@/context/ThemeContext";
 import { useAppContext } from "@/context/AppContext";
 
 const Footer = () => {
-  const { themeMode } = useTheme();
+    const { themeMode } = ( useAppContext );
+  
 
   // Select logo based on theme
   const logoSrc = themeMode === "dark" ? "/cusceda___.png" : "/cusceda__.png";
