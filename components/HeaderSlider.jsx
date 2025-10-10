@@ -57,25 +57,25 @@ const HeaderSlider = () => {
             flex flex-col md:flex-row items-center justify-center
             py-8 md:py-12 md:px-16 px-4 min-w-full rounded-2xl
             bg-gradient-to-r from-[#F8F9FB] to-[#E6E9F2]
-            dark:from-gray-900 dark:to-gray-800 shadow-md
+            dark:from-gray-900 dark:to-gray-700 shadow-md
             gap-6 md:gap-12
           "
         >
           {/* Text Section */}
           <div className="text-center md:text-left md:pl-8 max-w-xl">
-            <p className="uppercase tracking-wide text-sm text-orange-600 font-bold mb-2">
+            <p className="uppercase tracking-wide text-sm text-orange-600 font-light mb-2">
               {slide.offer}
             </p>
-            <h1 className="text-2xl md:text-[42px] font-bold leading-snug text-gray-900 dark:text-white">
+            <h1 className="text-2xl md:text-[42px] font-normal leading-snug text-gray-900 dark:text-white">
               {slide.title}
             </h1>
 
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-start gap-3 mt-6">
-              <button className="px-6 md:px-8 py-3 md:py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-full shadow-md transition w-full sm:w-auto">
+              <button className="px-6 md:px-8 py-3 md:py-3 bg-orange-600 hover:bg-orange-700 text-white text-sm font-light rounded-full shadow-md transition w-full sm:w-auto">
                 {slide.buttonText1}
               </button>
-              <button className="group flex items-center justify-center sm:justify-start gap-2 px-6 py-3 text-gray-800 dark:text-white font-medium hover:text-orange-600 transition w-full sm:w-auto">
+              <button className="group flex items-center justify-center sm:justify-start gap-2 px-6 py-3 text-gray-800 dark:text-white font-light hover:text-orange-600 transition w-full sm:w-auto">
                 {slide.buttonText2}
                 <Image
                   className="w-4 h-4 group-hover:translate-x-1 transition-transform"

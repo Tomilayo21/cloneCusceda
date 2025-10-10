@@ -17,17 +17,14 @@ const ProductCard = ({ product }) => {
   const router = useRouter();
   const { currency, addToCart, currentUser } = useAppContext();
 
-  const { data: session } = useSession(); // ✅ replace useAuth
+  const { data: session } = useSession(); 
   const user = session?.user;
 
   const [loading, setLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [likes, setLikes] = useState(product.likes || []);
-  const [actionLoading, setActionLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const pressTimer = useRef(null);
 
-  const liked = user && likes.includes(user.id);
 
   // ------------------ Long Press Modal ------------------
   const handleLongPressStart = () => {
@@ -38,32 +35,6 @@ const ProductCard = ({ product }) => {
     setShowModal(false);
   };
 
-  // ------------------ Toggle Like ------------------
-  const toggleLike = async () => {
-    if (!user) {
-      toast.error("Please login to like products");
-      return;
-    }
-    setActionLoading(true);
-    try {
-      const res = await fetch("/api/likes", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: product._id, userId: user.id }),
-      });
-      const data = await res.json();
-
-      if (data.liked) {
-        setLikes((prev) => [...prev, user.id]);
-      } else {
-        setLikes((prev) => prev.filter((id) => id !== user.id));
-      }
-    } catch (error) {
-      console.error("Like error:", error);
-    } finally {
-      setActionLoading(false);
-    }
-  };
 
   // ------------------ Fetch Favorites ------------------
   useEffect(() => {
@@ -114,9 +85,9 @@ const ProductCard = ({ product }) => {
               {isFavorite ? (
                 <XCircle className="text-red-500" size={20} />
               ) : (
-                <Heart className="text-pink-500 fill-pink-500" size={20} />
+                <Heart className="text-orange-500 fill-orange-500" size={20} />
               )}
-              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              <p className="text-sm font-normal text-black dark:text-white">
                 {!isFavorite ? "Added to favorites" : "Removed from favorites"}
               </p>
             </div>
@@ -159,7 +130,6 @@ const ProductCard = ({ product }) => {
     addToCart(product);
   };
 
-  // ------------------ Render ------------------
   return (
     <div
       onClick={handleCardClick}
@@ -188,32 +158,32 @@ const ProductCard = ({ product }) => {
         >
           <Heart
             size={14}
-            className={isFavorite ? "text-red-500 fill-red-500" : "text-gray-500"}
+            className={isFavorite ? "text-orange-500 fill-orange-500" : "text-gray-500"}
           />
         </button>
       </div>
 
       {/* Details */}
       <div className="p-3 flex flex-col flex-1 text-gray-900 dark:text-white">
-        <h3 className="text-sm font-semibold truncate">{product.name}</h3>
+        <h3 className="text-sm font-normal truncate">{product.name}</h3>
         <div
-          className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-1.5"
+          className="text-xs text-gray-500 dark:text-gray-400 font-thin line-clamp-2 mb-1.5"
           dangerouslySetInnerHTML={{ __html: product.description }}
         />
 
         {/* Price / Rating / Cart */}
         <div className="flex items-center justify-between mt-auto">
           <div>
-            <p className="text-base font-bold text-orange-600">
+            <p className="text-base font-normal text-orange-700">
               {currency}
               {product.offerPrice}
             </p>
-            <div className="flex items-center gap-1 text-xs text-yellow-500">
-              <Star className="w-3 h-3 fill-yellow-500" />
+            <div className="flex items-center gap-1 text-xs text-grey-500">
+              <Star className="w-3 h-3 fill-grey-500" />
               {avgRating.toFixed(1)}
             </div>
             {product.stock <= 10 && product.stock > 0 && (
-              <p className="text-[10px] text-orange-600 font-medium mt-1">
+              <p className="text-[10px] text-grey-500 font-medium mt-1">
                 Only {product.stock} left!
               </p>
             )}
@@ -229,12 +199,12 @@ const ProductCard = ({ product }) => {
             className={`p-1.5 rounded-full shadow-md transition-colors flex items-center justify-center ${
               product.stock === 0
                 ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                : "bg-orange-600 hover:bg-orange-700 text-white"
+                : "bg-orange-600 hover:bg-grey-700 text-white"
             }`}
             aria-label={product.stock === 0 ? "Sold Out" : "Add to Cart"}
           >
             {product.stock === 0 ? (
-              <span className="text-[10px] font-medium">Sold</span>
+              <span className="text-[10px] font-normal">Sold</span>
             ) : (
               <ShoppingCart size={14} />
             )}
