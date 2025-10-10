@@ -19,7 +19,7 @@ const Navbar = () => {
   const { data: session, status } = useSession();
   const user = session?.user;
   const router = useRouter();
-  const { themeMode, setThemeMode } = useAppContext();
+  const { themeMode } = useAppContext();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -53,8 +53,9 @@ const Navbar = () => {
       try {
         const res = await fetch("/api/settings");
         const data = await res.json();
-        setLightLogoUrl(data.lightLogoUrl || null);
-        setDarkLogoUrl(data.darkLogoUrl || null);
+        console.log("Fetched settings:", data);
+        setLightLogoUrl(data.settings?.lightLogoUrl || data.lightLogoUrl || null);
+        setDarkLogoUrl(data.settings?.darkLogoUrl || data.darkLogoUrl || null);
       } catch (err) {
         console.error("Failed to fetch logos", err);
       }
@@ -62,15 +63,9 @@ const Navbar = () => {
     fetchLogos();
   }, []);
 
-  const logoSrc =
-    themeMode === "dark" ? darkLogoUrl || lightLogoUrl : lightLogoUrl || darkLogoUrl;
+  const logoSrc = themeMode === "dark" ? darkLogoUrl || lightLogoUrl : lightLogoUrl || darkLogoUrl;
 
   const handleAdminClick = () => router.push("/admin");
-
-  const handleLogout = () => {
-    signOut();
-    router.push("/");
-  };
 
 
   // Close modal on ESC
@@ -88,6 +83,8 @@ const Navbar = () => {
   }, [showSignup, handleEsc]);
 
   const cartCount = getCartCount();
+
+  if (!logoSrc) return null;
 
   return (
     <>
