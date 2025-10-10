@@ -8,6 +8,7 @@ import { useSession, signOut } from "next-auth/react";
 import DeleteAccountModal from "./DeleteAccountModal";
 import Link from "next/link";
 import { useAppContext } from "@/context/AppContext";
+import { UAParser } from "ua-parser-js";
 
 export default function AvatarMenu() {
   const { data: session } = useSession();
@@ -34,6 +35,9 @@ export default function AvatarMenu() {
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [deviceInfo, setDeviceInfo] = useState({});
+  const [time, setTime] = useState("");
+  const [location, setLocation] = useState("");
 
   useEffect(() => setMounted(true), []);
 
@@ -41,7 +45,6 @@ export default function AvatarMenu() {
     signOut({ callbackUrl: "/" });
   };
 
-  // ✅ Close dropdown when clicking outside (desktop only)
   useEffect(() => {
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -158,19 +161,6 @@ export default function AvatarMenu() {
     setImageFile(null);
   }
 
-
-  async function handleDeleteAccount() {
-    if (!confirm("This will permanently delete your account. Are you sure?")) return;
-    const res = await fetch("/api/user/delete", { method: "DELETE" });
-    if (!res.ok) {
-      const j = await res.json(); alert(j.error || "Failed to delete");
-      return;
-    }
-    // sign the user out and redirect home
-    signOut({ callbackUrl: "/" });
-  }
-
-
   async function handleChangePassword(e) {
     e.preventDefault();
     setChangingPass(true);
@@ -191,6 +181,32 @@ export default function AvatarMenu() {
       setChangingPass(false);
     }
   }  
+
+  useEffect(() => {
+    const parser = new UAParser();
+    const result = parser.getResult();
+    setDeviceInfo({
+      os: result.os.name || "Unknown OS",
+      browser: result.browser.name || "Unknown Browser",
+    });
+
+
+    const now = new Date();
+    setTime(
+      now.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      })
+    );
+
+    // Get location (city, country) using a free IP-based service
+    fetch("https://ipapi.co/json/")
+      .then((res) => res.json())
+      .then((data) => setLocation(`${data.city}, ${data.country_name}`))
+      .catch(() => setLocation("Unknown Location"));
+  }, []);
+
 
   return (
     <div className="relative" ref={menuRef}>
@@ -442,11 +458,11 @@ export default function AvatarMenu() {
                     </div>
 
                     <div className="flex-1 w-full">
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                      <label className="block font-thin text-black dark:text-white">
                         Change avatar
                       </label>
                       <div className="flex flex-wrap items-center gap-2 mt-1">
-                        <label className="inline-block cursor-pointer bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+                        <label className="inline-block cursor-pointer bg-gray-50 dark:bg-black text-black dark:text-white text-sm px-4 py-2 rounded-md hover:bg-gray-50 dark:hover:bg-black transition">
                           Choose File
                           <input
                             type="file"
@@ -459,7 +475,7 @@ export default function AvatarMenu() {
                         <button
                           type="button"
                           onClick={handleRemoveImage}
-                          className="text-sm text-red-600 hover:underline"
+                          className="font-thin text-red-600 hover:underline"
                         >
                           Remove
                         </button>
@@ -469,33 +485,33 @@ export default function AvatarMenu() {
 
                   {/* Name & Username */}
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <p className="font-semibold text-gray-800 dark:text-gray-200 w-full sm:w-1/3">
+                    <p className="font-thin text-black dark:text-white w-full sm:w-1/3">
                       Full Name
                     </p>
                     <input
                       value={localName}
                       onChange={(e) => setLocalName(e.target.value)}
-                      className="w-full sm:w-2/3 px-2 py-1 rounded border dark:border-gray-600"
+                      className="w-full sm:w-2/3 px-2 py-1 rounded border dark:border-black"
                     />
                   </div>
 
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <p className="font-semibold text-gray-800 dark:text-gray-200 w-full sm:w-1/3">
+                    <p className="font-thin text-black dark:text-white w-full sm:w-1/3">
                       Username
                     </p>
                     <input
                       value={localUsername}
                       onChange={(e) => setLocalUsername(e.target.value)}
-                      className="w-full sm:w-2/3 px-2 py-1 rounded border dark:border-gray-600"
+                      className="w-full sm:w-2/3 px-2 py-1 rounded border dark:border-black"
                     />
                   </div>
 
                   {/* Email */}
                   <div>
-                    <p className="font-semibold text-gray-800 dark:text-gray-200">
+                    <p className="font-thin text-black dark:text-white">
                       Email Address
                     </p>
-                    <p className="text-gray-500 dark:text-gray-400 break-all text-sm">
+                    <p className="text-gray-500 font-thin dark:text-gray-400 break-all text-sm">
                       {user?.email}
                     </p>
                   </div>
@@ -505,7 +521,7 @@ export default function AvatarMenu() {
                     <button
                       onClick={handleSaveProfile}
                       disabled={savingProfile}
-                      className="bg-orange-600 text-white px-3 py-1 rounded hover:bg-orange-700 transition"
+                      className="bg-orange-600 text-sm text-white px-5 py-2 rounded-full hover:bg-orange-700 transition"
                     >
                       {savingProfile ? "Saving..." : "Save changes"}
                     </button>
@@ -514,7 +530,7 @@ export default function AvatarMenu() {
                         setModalOpen(false);
                         setTab("profile");
                       }}
-                      className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
+                      className="text-sm text-gray-600 dark:text-white hover:underline"
                     >
                       Cancel
                     </button>
@@ -527,7 +543,7 @@ export default function AvatarMenu() {
               {tab === "security" && (
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
-                    <p className="font-semibold text-gray-800 dark:text-gray-200">Password</p>
+                    <p className="font-normal text-black dark:text-gray-200">Password</p>
                     <button className="text-sm text-orange-600 hover:underline">Update password</button>
                   </div>
 
@@ -539,14 +555,14 @@ export default function AvatarMenu() {
                         placeholder="Current password"
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
-                        className="w-full px-3 py-2 rounded border dark:border-gray-600 pr-10"
+                        className="w-full px-3 py-2 font-normal rounded border dark:border-black pr-10"
                       />
                       <button
                         type="button"
                         onClick={() => setShowCurrent(!showCurrent)}
                         className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
                       >
-                        {showCurrent ? <EyeOff size={18} /> : <Eye size={18} />}
+                        {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                     </div>
 
@@ -557,31 +573,38 @@ export default function AvatarMenu() {
                         placeholder="New password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
-                        className="w-full px-3 py-2 rounded border dark:border-gray-600 pr-10"
+                        className="w-full px-3 py-2 font-normal rounded border dark:border-black pr-10"
                       />
                       <button
                         type="button"
                         onClick={() => setShowNew(!showNew)}
                         className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
                       >
-                        {showNew ? <EyeOff size={18} /> : <Eye size={18} />}
+                        {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                     </div>
 
                     <button
                       type="submit"
                       disabled={changingPass}
-                      className="bg-orange-600 text-white px-3 py-1 rounded hover:bg-orange-700 transition"
+                      className="bg-orange-600 text-sm text-white px-5 py-2 rounded-full hover:bg-orange-700 transition"
                     >
                       {changingPass ? "Updating..." : "Update password"}
                     </button>
                   </form>
 
                   <div className="bg-gray-50 dark:bg-neutral-800 p-3 rounded-lg text-xs">
-                    <p className="text-gray-700 dark:text-gray-300 font-medium mb-1">Active Devices</p>
-                    <p className="text-gray-500 dark:text-gray-400">Windows • Chrome • Ibadan, NG</p>
-                    <p className="text-gray-500 dark:text-gray-400">Today at 9:04 AM</p>
+                    <p className="text-gray-700 dark:text-gray-300 font-medium mb-1">
+                      Active Device
+                    </p>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      {deviceInfo.os} • {deviceInfo.browser} • {location || "Loading..."}
+                    </p>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      Today at {time || "Loading..."}
+                    </p>
                   </div>
+
 
                  <div className="mt-2 flex flex-col gap-1">
                     <DeleteAccountModal />
