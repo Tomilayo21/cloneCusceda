@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, Fragment } from "react";
-import { User, LogOut, ShieldCheck, Eye, EyeOff, AlertCircle, Trash, Heart, ShoppingCart, } from "lucide-react";
+import { User, LogOut, ShieldCheck, Eye, EyeOff, ShieldAlert } from "lucide-react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
@@ -84,6 +84,8 @@ export default function AvatarMenu() {
     };
     fetchFooter();
   }, []);
+
+  const handleAdminClick = () => router.push("/admin");
 
   function fileToDataUrl(file) {
     return new Promise((resolve, reject) => {
@@ -216,7 +218,7 @@ export default function AvatarMenu() {
 
       {/* ================= DESKTOP DROPDOWN ================= */}
       {desktopMenuOpen && (
-        <div className="hidden md:block absolute left-1/2 top-16 transform -translate-x-1/2 w-72 bg-white dark:bg-neutral-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
+        <div className="hidden md:block absolute left-1/2 top-12 transform -translate-x-1/2 w-72 bg-white dark:bg-neutral-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
           {/* Profile Header */}
           <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-neutral-800 border-b border-gray-200 dark:border-gray-700">
             {user?.image ? (
@@ -240,7 +242,6 @@ export default function AvatarMenu() {
 
           {/* Actions */}
           <div className="flex flex-col py-2">
-
             {mounted && user ? (
               <>
                 <Link
@@ -277,7 +278,15 @@ export default function AvatarMenu() {
             >
               <span className="font-thin">Manage Account</span>
             </button>
-
+            {mounted && user?.role === "admin" && (
+              <div
+                onClick={handleAdminClick}
+                className="flex items-center gap-3 px-5 py-3 text-black dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-neutral-800 transition font-thin cursor-pointer"
+              >
+                <span className="">Admin</span>
+                {/* <ShieldAlert className="w-5 h-5 text-black" /> */}
+              </div>
+            )}
             <button
               onClick={handleLogout}
               className="flex items-center gap-3 px-5 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition"
@@ -291,7 +300,7 @@ export default function AvatarMenu() {
           <div className="flex items-center justify-center gap-2 px-5 py-3 text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-neutral-800 border-t border-gray-200 dark:border-gray-700">
             <ShieldCheck className="w-4 h-4" />
             <span className="font-thin">
-              Secured by <span>{footerData.footerName}</span>
+              Secured by <span className="font-thin">{footerData.footerName}</span>
             </span>
           </div>
         </div>
@@ -338,30 +347,13 @@ export default function AvatarMenu() {
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center">
                     <User className="w-6 h-6 text-white" />
                   </div>
                 )}
-              </div>
-
-  
-
-              <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-neutral-800 border-b">
-                {user?.image ? (
-                  <img
-                    src={user.image}
-                    alt={user.name || "User"}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center">
-                    <User className="w-6 h-6 text-white" />
-                  </div>
-                )}
-
                 <div>
-                  <p className="font-semibold text-gray-900 dark:text-white">{user?.name}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{user?.email}</p>
+                  <p className="font-thin text-gray-900 dark:text-white">{user?.name}</p>
+                  <p className="text-sm font-thin text-gray-500 dark:text-gray-400">{user?.email}</p>
                 </div>
               </div>
 
@@ -378,7 +370,7 @@ export default function AvatarMenu() {
                   className="flex items-center gap-3 px-5 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-800 transition"
                 >
                   <User className="w-5 h-5" />
-                  <span className="font-medium">Manage Account</span>
+                  <span className="font-thin">Manage Account</span>
                 </button>
 
                 <button
@@ -386,15 +378,15 @@ export default function AvatarMenu() {
                   className="flex items-center gap-3 px-5 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition"
                 >
                   <LogOut className="w-5 h-5" />
-                  <span className="font-medium">Sign Out</span>
+                  <span className="font-thin">Sign Out</span>
                 </button>
               </div>
 
               {/* Footer */}
               <div className="flex items-center justify-center gap-2 px-5 py-3 text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-neutral-800 border-t">
                 <ShieldCheck className="w-4 h-4" />
-                <span>
-                  Secured by <span className="font-semibold">Cusceda</span>
+                <span className="font-thin">
+                  Secured by <span className="font-thin">{footerData.footerName}</span>
                 </span>
               </div>
             </Dialog.Panel>

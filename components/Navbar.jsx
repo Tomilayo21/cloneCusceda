@@ -137,15 +137,6 @@ const Navbar = () => {
 
           {/* Desktop Right */}
           <div className="hidden md:flex items-center gap-3 relative">
-            {mounted && user?.role === "admin" && (
-              <div
-                onClick={handleAdminClick}
-                className="flex items-center gap-1 bg-transparent text-white text-xs px-1 py-1 rounded-full cursor-pointer"
-              >
-                <ShieldAlert className="w-5 h-5 text-black dark:text-white" />
-              </div>
-            )}
-
             <div className="">
               <SearchBar />
             </div>
@@ -153,23 +144,6 @@ const Navbar = () => {
             {mounted &&
               (user ? (
                 <>
-                  {/* <button
-                    onClick={() => router.push("/favorites")}
-                    className="relative hover:scale-110 hover:text-orange-600 transition-transform"
-                  >
-                    <Heart className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-                  </button>
-                  <button
-                    onClick={() => router.push("/cart")}
-                    className="relative hover:text-orange-600 hover:scale-110 transition-transform"
-                  >
-                    <ShoppingCart className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-                    {cartCount > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[11px] rounded-full px-1.5 font-bold animate-bounce">
-                        {cartCount}
-                      </span>
-                    )}
-                  </button> */}
                   <AvatarMenu />
                 </>
               ) : (
@@ -186,42 +160,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu */}
-          {/* <div className="flex md:hidden items-center gap-3">
-            {mounted && user?.role === "admin" && (
-              <div
-                onClick={handleAdminClick}
-                className="flex items-center gap-1 bg-transparent text-white text-xs px-2.5 py-1 rounded-full cursor-pointer"
-              >
-                <ShieldAlert className="w-5 h-5 text-black" />
-              </div>
-            )}
-
-            <button
-              onClick={() => router.push("/cart")}
-              className="relative hover:text-orange-600 hover:scale-110 transition-transform"
-            >
-              <ShoppingCart className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-black text-white text-[11px] rounded-full px-1.5">
-                  {cartCount}
-                </span>
-              )}
-            </button>
-
-            <SearchBar />
-
-            <button
-              onClick={() => setMobileMenuOpen((prev) => !prev)}
-              aria-label="Toggle Menu"
-              className="hover:scale-110 transition-transform"
-            >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div> */}
-
-
-          {/* Mobile Nav */}
-          <div className="flex md:hidden items-center justify-between w-full px-4">
+           <div className="flex md:hidden items-center justify-between w-full px-4">
             {/* Left: Menu Button */}
             <button
               onClick={() => setMobileMenuOpen((prev) => !prev)}
@@ -267,7 +206,7 @@ const Navbar = () => {
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-2 py-2 font-thin rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="px-2 py-2 mt-2 font-thin rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
             >
               Home
             </Link>
@@ -278,8 +217,6 @@ const Navbar = () => {
             >
               Products
             </Link>
-
-            {/* Logged-in User Menu */}
             {mounted && user ? (
               <>
                 <Link
@@ -296,22 +233,20 @@ const Navbar = () => {
                 >
                   Favorites
                 </Link>
-                <button
-                  onClick={() => {
-                    router.push("/cart");
-                    setMobileMenuOpen(false);
-                  }}
-                  className="flex items-center font-thin gap-2 px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-white"
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  Cart ({getCartCount()})
-                </button>
+                {mounted && user?.role === "admin" && (
+                  <div
+                    onClick={handleAdminClick}
+                    className="flex items-center px-2 py-2 text-black dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-neutral-800 transition font-thin cursor-pointer"
+                  >
+                    <span className="">Admin</span>
+                  </div>
+                )}
                 <AvatarMenu />
               </>
             ) : (
               <button
                 onClick={() => router.push("/signup")}
-                className="flex items-center gap-2 px-2 py-2 rounded-md font-thin text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="flex items-center gap-2 px-2 py-2 rounded-md font-thin text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 <Image src={assets.user_icon} alt="user" className="w-5 h-5" />
                 Sign In
