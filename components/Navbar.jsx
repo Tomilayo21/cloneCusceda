@@ -108,7 +108,7 @@ const Navbar = () => {
             width={100}
             height={100}
             onClick={() => router.push("/")}
-            className="cursor-pointer w-24 md:w-32 hover:scale-105 transition-transform duration-200"
+            className="cursor-pointer w-24 md:w-32 hidden md:block hover:scale-105 transition-transform duration-200"
           />
 
           {/* Desktop Nav */}
@@ -136,25 +136,24 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Right */}
-          <div className="hidden md:flex items-center gap-5 relative">
+          <div className="hidden md:flex items-center gap-3 relative">
             {mounted && user?.role === "admin" && (
               <div
                 onClick={handleAdminClick}
-                className="flex items-center gap-1 bg-orange-600 text-white text-xs px-3 py-1 rounded-full cursor-pointer"
+                className="flex items-center gap-1 bg-transparent text-white text-xs px-1 py-1 rounded-full cursor-pointer"
               >
-                <ShieldAlert className="w-3.5 h-3.5 text-yellow-300" />
-                {/* <span>Super Admin</span> */}
+                <ShieldAlert className="w-5 h-5 text-black" />
               </div>
             )}
 
-            <div className="w-52">
+            <div className="">
               <SearchBar />
             </div>
 
             {mounted &&
               (user ? (
                 <>
-                  <button
+                  {/* <button
                     onClick={() => router.push("/favorites")}
                     className="relative hover:scale-110 hover:text-orange-600 transition-transform"
                   >
@@ -170,12 +169,11 @@ const Navbar = () => {
                         {cartCount}
                       </span>
                     )}
-                  </button>
+                  </button> */}
                   <AvatarMenu />
                 </>
               ) : (
                 <button
-                  // onClick={() => setShowSignup((prev) => !prev)}
                   onClick={() => router.push("/signup")}
                   className="flex items-center gap-2 hover:text-orange-500 transition"
                 >
@@ -188,16 +186,27 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu */}
-          <div className="flex md:hidden items-center gap-3">
+          {/* <div className="flex md:hidden items-center gap-3">
             {mounted && user?.role === "admin" && (
               <div
                 onClick={handleAdminClick}
-                className="flex items-center gap-1 bg-orange-600 text-white text-xs px-2.5 py-1 rounded-full cursor-pointer"
+                className="flex items-center gap-1 bg-transparent text-white text-xs px-2.5 py-1 rounded-full cursor-pointer"
               >
-                <ShieldAlert className="w-3.5 h-3.5 text-yellow-300" />
-                {/* <span>Super Admin</span> */}
+                <ShieldAlert className="w-5 h-5 text-black" />
               </div>
             )}
+
+            <button
+              onClick={() => router.push("/cart")}
+              className="relative hover:text-orange-600 hover:scale-110 transition-transform"
+            >
+              <ShoppingCart className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-black text-white text-[11px] rounded-full px-1.5">
+                  {cartCount}
+                </span>
+              )}
+            </button>
 
             <SearchBar />
 
@@ -208,6 +217,45 @@ const Navbar = () => {
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
+          </div> */}
+
+
+          {/* Mobile Nav */}
+          <div className="flex md:hidden items-center justify-between w-full px-4">
+            {/* Left: Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              aria-label="Toggle Menu"
+              className="hover:scale-110 transition-transform"
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+
+            {/* Center: Logo */}
+            <img
+              src={logoSrc || "/default-logo.png"}
+              alt="logo"
+              width={100}
+              height={100}
+              onClick={() => router.push("/")}
+              className="cursor-pointer w-24 md:w-32 hover:scale-105 transition-transform block md:hidden"
+            />
+
+            {/* Right: Search & Cart */}
+            <div className="flex items-center gap-3">
+              <SearchBar />
+              <button
+                onClick={() => router.push("/cart")}
+                className="relative hover:text-orange-600 hover:scale-110 transition-transform"
+              >
+                <ShoppingCart className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-black text-white text-[11px] rounded-full px-1.5">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
 
         </div>
@@ -219,14 +267,14 @@ const Navbar = () => {
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="px-2 py-2 font-thin rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
             >
               Home
             </Link>
             <Link
               href="/all-products"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="px-2 py-2 font-thin rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
             >
               Products
             </Link>
@@ -237,14 +285,14 @@ const Navbar = () => {
                 <Link
                   href="/my-orders"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="px-2 py-2 font-thin rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   My Orders
                 </Link>
                 <Link
                   href="/favorites"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="px-2 py-2 font-thin rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   Favorites
                 </Link>
@@ -253,7 +301,7 @@ const Navbar = () => {
                     router.push("/cart");
                     setMobileMenuOpen(false);
                   }}
-                  className="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-white"
+                  className="flex items-center font-thin gap-2 px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-white"
                 >
                   <ShoppingCart className="w-4 h-4" />
                   Cart ({getCartCount()})
@@ -261,14 +309,9 @@ const Navbar = () => {
                 <AvatarMenu />
               </>
             ) : (
-              /* Not logged in: Sign In triggers modal */
               <button
-                // onClick={() => {
-                //   setShowSignup(true);
-                //   setMobileMenuOpen(false);
-                // }}
                 onClick={() => router.push("/signup")}
-                className="flex items-center gap-2 px-2 py-2 rounded-md text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="flex items-center gap-2 px-2 py-2 rounded-md font-thin text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 <Image src={assets.user_icon} alt="user" className="w-5 h-5" />
                 Sign In

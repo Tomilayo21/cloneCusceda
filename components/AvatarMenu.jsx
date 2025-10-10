@@ -1,16 +1,19 @@
 "use client";
 
 import { useState, useEffect, useRef, Fragment } from "react";
-import { User, LogOut, ShieldCheck, Eye, EyeOff, AlertCircle, Trash } from "lucide-react";
+import { User, LogOut, ShieldCheck, Eye, EyeOff, AlertCircle, Trash, Heart, ShoppingCart, } from "lucide-react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import DeleteAccountModal from "./DeleteAccountModal";
+import Link from "next/link";
+import { useAppContext } from "@/context/AppContext";
 
 export default function AvatarMenu() {
   const { data: session } = useSession();
   const router = useRouter();
   const user = session?.user;
+  const { getCartCount } = useAppContext();
 
   const menuRef = useRef(null);
 
@@ -28,8 +31,11 @@ export default function AvatarMenu() {
   const [changingPass, setChangingPass] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-   const [showCurrent, setShowCurrent] = useState(false);
+  const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const handleLogout = () => {
     signOut({ callbackUrl: "/" });
@@ -193,57 +199,25 @@ export default function AvatarMenu() {
           if (window.innerWidth >= 768) setDesktopMenuOpen(!desktopMenuOpen);
           else setMobileMenuOpen(true);
         }}
-        className="w-9 h-9 rounded-full overflow-hidden bg-gradient-to-r from-orange-500 to-pink-500 flex items-center justify-center text-white font-bold shadow hover:opacity-90 transition"
+        className="w-9 h-9 rounded-full overflow-hidden bg-black flex items-center justify-center text-white font-bold shadow hover:opacity-90 transition"
       >
         {user?.image ? (
           <img
             src={user.image}
             alt={user.name || "User"}
-            className="w-full h-full object-cover"
+            className="w-10 h-10 rounded-full object-cover"
           />
         ) : (
-          <span>{user?.name?.[0]?.toUpperCase() || "U"}</span>
+          <div className="w-10 h-10 rounded-full bg-transparent flex items-center justify-center border-0">
+            <User className="w-4 h-4 text-white" />
+          </div>
         )}
       </button>
-
-      {/* Avatar button */}
-      <button
-        onClick={() => {
-          if (window.innerWidth >= 768) setDesktopMenuOpen(!desktopMenuOpen);
-          else setMobileMenuOpen(true);
-        }}
-        className="w-9 h-9 rounded-full overflow-hidden bg-gradient-to-r from-orange-500 to-pink-500 flex items-center justify-center text-white font-bold shadow hover:opacity-90 transition"
-      >
-        {user?.image ? (
-          <img
-            src={user.image}
-            alt={user.name || "User"}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <span>{user?.name?.[0]?.toUpperCase() || "U"}</span>
-        )}
-      </button>
-
 
       {/* ================= DESKTOP DROPDOWN ================= */}
       {desktopMenuOpen && (
         <div className="hidden md:block absolute left-1/2 top-16 transform -translate-x-1/2 w-72 bg-white dark:bg-neutral-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
           {/* Profile Header */}
-          <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-neutral-800 border-b border-gray-200 dark:border-gray-700">
-            {user?.image ? (
-                  <img
-                    src={user.image}
-                    alt={user.name || "User"}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center">
-                    <User className="w-6 h-6 text-white" />
-                  </div>
-                )}
-          </div>
-
           <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 dark:bg-neutral-800 border-b border-gray-200 dark:border-gray-700">
             {user?.image ? (
               <img
@@ -256,10 +230,9 @@ export default function AvatarMenu() {
                 <User className="w-6 h-6 text-white" />
               </div>
             )}
-
             <div>
-              <p className="font-semibold text-gray-900 dark:text-white">{user?.name}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 break-words max-w-[180px]">
+              <p className="text-gray-900 font-thin dark:text-white">{user?.name}</p>
+              <p className="text-sm text-gray-500 font-thin dark:text-gray-400 break-words max-w-[180px]">
                 {user?.email}
               </p>
             </div>
@@ -267,32 +240,58 @@ export default function AvatarMenu() {
 
           {/* Actions */}
           <div className="flex flex-col py-2">
+
+            {mounted && user ? (
+              <>
+                <Link
+                  href="/my-orders"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="gap-3 px-5 py-3 font-thin rounded-md hover:bg-gray-50 dark:hover:bg-gray-800"
+                >
+                  My Orders
+                </Link>
+                <Link
+                  href="/favorites"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="gap-3 px-5 py-3 font-thin rounded-md hover:bg-gray-50 dark:hover:bg-gray-800"
+                >
+                  Favorites
+                </Link>
+                <Link
+                  href="/cart"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="gap-3 px-5 py-3 font-thin rounded-md hover:bg-gray-50 dark:hover:bg-gray-800"
+                >
+                  Cart ({getCartCount()})
+                </Link>
+              </>
+            ) : null }
+
             <button
               onClick={() => {
                 setDesktopMenuOpen(false);
                 setTab("profile");
                 setModalOpen(true);
               }}
-              className="flex items-center gap-3 px-5 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-800 transition"
+              className="flex items-center gap-3 px-5 py-3 text-black dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-neutral-800 transition"
             >
-              <User className="w-5 h-5" />
-              <span className="font-medium">Manage Account</span>
+              <span className="font-thin">Manage Account</span>
             </button>
 
             <button
               onClick={handleLogout}
               className="flex items-center gap-3 px-5 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition"
             >
-              <LogOut className="w-5 h-5" />
-              <span className="font-medium">Sign Out</span>
+              <LogOut className="w-5 h-5 font-thin" />
+              <span className="font-thin">Sign Out</span>
             </button>
           </div>
 
           {/* Footer */}
           <div className="flex items-center justify-center gap-2 px-5 py-3 text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-neutral-800 border-t border-gray-200 dark:border-gray-700">
             <ShieldCheck className="w-4 h-4" />
-            <span>
-              Secured by <span className="font-semibold">{footerData.footerName}</span>
+            <span className="font-thin">
+              Secured by <span>{footerData.footerName}</span>
             </span>
           </div>
         </div>

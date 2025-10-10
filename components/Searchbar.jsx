@@ -469,7 +469,7 @@ export default function Searchbar() {
                     {/* Header */}
                     <div className="flex items-center gap-3 p-4 bg-zinc-900/60 backdrop-blur-lg border-b border-zinc-800">
                         <div className="flex items-center flex-1 bg-zinc-800/70 rounded-full px-4 py-2">
-                        <Search className="text-gray-400 w-5 h-5 mr-2" />
+                        <Search className="text-gray-50 w-5 h-5 font-thin mr-2" />
                         <input
                             ref={inputRef}
                             type="text"
@@ -480,12 +480,12 @@ export default function Searchbar() {
                             setHighlightIndex(-1);
                             }}
                             onKeyDown={handleKeyDown}
-                            className="flex-1 bg-transparent outline-none text-white placeholder-gray-400"
+                            className="flex-1 font-thin bg-transparent outline-none text-white placeholder-gray-400"
                         />
                         </div>
                         <button
                         onClick={() => setIsOpen(false)}
-                        className="text-gray-300 text-sm ml-3 hover:text-white"
+                        className="text-gray-300 text-sm ml-3 font-thin hover:text-white"
                         >
                         Cancel
                         </button>
@@ -496,10 +496,10 @@ export default function Searchbar() {
                         {!inputValue && recentSearches.length > 0 && (
                         <div className="mb-6">
                             <div className="flex justify-between items-center mb-2">
-                            <h2 className="text-lg">Recent Searches</h2>
+                            <h2 className="text-lg font-thin">Recent Searches</h2>
                             <button
                                 onClick={clearAll}
-                                className="text-sm text-gray-200 hover:text-white"
+                                className="text-sm text-gray-200 font-thin hover:text-white"
                             >
                                 Clear all
                             </button>
@@ -512,9 +512,9 @@ export default function Searchbar() {
                                 >
                                 <span
                                     onClick={() => handleSearch(s)}
-                                    className="flex items-center gap-2"
+                                    className="flex items-center gap-2 font-thin"
                                 >
-                                    <History size={14} className="text-gray-400" />
+                                    <History size={14} className="text-gray-50 font-thin" />
                                     {s}
                                 </span>
                                 <button
