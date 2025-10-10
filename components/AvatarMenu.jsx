@@ -491,7 +491,11 @@ export default function AvatarMenu() {
                     <input
                       value={localName}
                       onChange={(e) => setLocalName(e.target.value)}
-                      className="w-full sm:w-2/3 px-2 py-1 rounded border dark:border-black"
+                      className="w-full sm:w-2/3 px-2 py-1 rounded border border-gray-300 dark:border-gray-700
+                        bg-white dark:bg-neutral-900 text-gray-800 dark:text-gray-100
+                        placeholder-gray-400 dark:placeholder-gray-500
+                        focus:outline-none focus:ring-2 focus:ring-white
+                        transition-colors duration-300"
                     />
                   </div>
 
@@ -502,7 +506,11 @@ export default function AvatarMenu() {
                     <input
                       value={localUsername}
                       onChange={(e) => setLocalUsername(e.target.value)}
-                      className="w-full sm:w-2/3 px-2 py-1 rounded border dark:border-black"
+                      className="w-full sm:w-2/3 px-2 py-1 rounded border border-gray-300 dark:border-gray-700
+                        bg-white dark:bg-neutral-900 text-gray-800 dark:text-gray-100
+                        placeholder-gray-400 dark:placeholder-gray-500
+                        focus:outline-none focus:ring-2 focus:ring-white
+                        transition-colors duration-300"
                     />
                   </div>
 
@@ -555,7 +563,10 @@ export default function AvatarMenu() {
                         placeholder="Current password"
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
-                        className="w-full px-3 py-2 font-normal rounded border dark:border-black pr-10"
+                        className="w-full px-3 py-2 font-normal rounded border border-gray-300 dark:border-gray-700 
+                          bg-white dark:bg-neutral-900 text-gray-800 dark:text-gray-100 
+                          placeholder-gray-400 dark:placeholder-gray-500 
+                          pr-10 focus:outline-none focus:ring-2 focus:ring-white transition-colors duration-300"
                       />
                       <button
                         type="button"
@@ -573,7 +584,10 @@ export default function AvatarMenu() {
                         placeholder="New password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
-                        className="w-full px-3 py-2 font-normal rounded border dark:border-black pr-10"
+                        className="w-full px-3 py-2 font-normal rounded border border-gray-300 dark:border-gray-700 
+                          bg-white dark:bg-neutral-900 text-gray-800 dark:text-gray-100 
+                          placeholder-gray-400 dark:placeholder-gray-500 
+                          pr-10 focus:outline-none focus:ring-2 focus:ring-white transition-colors duration-300"
                       />
                       <button
                         type="button"
