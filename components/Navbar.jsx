@@ -142,7 +142,7 @@ const Navbar = () => {
                 onClick={handleAdminClick}
                 className="flex items-center gap-1 bg-transparent text-white text-xs px-1 py-1 rounded-full cursor-pointer"
               >
-                <ShieldAlert className="w-5 h-5 text-black" />
+                <ShieldAlert className="w-5 h-5 text-black dark:text-white" />
               </div>
             )}
 
@@ -228,7 +228,7 @@ const Navbar = () => {
               aria-label="Toggle Menu"
               className="hover:scale-110 transition-transform"
             >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {mobileMenuOpen ? <X className="font-thin" size={24} /> : <Menu className="font-thin" size={24} />}
             </button>
 
             {/* Center: Logo */}
@@ -250,7 +250,7 @@ const Navbar = () => {
               >
                 <ShoppingCart className="w-5 h-5 text-gray-700 dark:text-gray-300" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-black text-white text-[11px] rounded-full px-1.5">
+                  <span className="absolute -top-2 -right-2 bg-black text-white dark:bg-white dark:text-black text-[11px] rounded-full px-1.5">
                     {cartCount}
                   </span>
                 )}
