@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import Footer from "@/components/admin/Footer";
@@ -35,51 +35,6 @@ const ProductList = () => {
   
   dayjs.extend(relativeTime);
 
-  // useEffect(() => {
-  //   window.scrollTo({ top: 0, behavior: "smooth" });
-  // }, [currentPage]);
- 
-  // useEffect(() => {
-  //   if (openProduct) {
-  //     setEditableProduct({ ...openProduct });
-  //   }
-  // }, [openProduct]);
-
-  // // Set end of day for the end date so the filter includes the whole day
-  // if (parsedEnd) {
-  //   parsedEnd.setHours(23, 59, 59, 999);
-  // }
-
-  // const fetchAdminProduct = async () => {
-  //   try {
-  //     const token = await getToken();
-  //     const { data } = await axios.get("/api/product/admin-list", {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
-
-  //     if (data.success) {
-  //       setProducts(data.products);
-  //       setFilteredProducts(data.products);
-  //       setLoading(false);
-  //     } else {
-  //       toast.error(data.message);
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.message);
-  //   }
-  // };
-  // useEffect(() => {
-  // let temp = [...products];
-
-  // if (searchTerm) {
-  //   temp = temp.filter((p) =>
-  //     p.name.toLowerCase().includes(searchTerm.toLowerCase())
-  //   );
-  // }
-
-
-
-
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -96,7 +51,6 @@ const ProductList = () => {
     parsedEnd.setHours(23, 59, 59, 999);
   }
 
-  // ✅ Wrap fetchAdminProduct in useCallback to stabilize reference
   const fetchAdminProduct = useCallback(async () => {
     try {
       const token = await getToken();
@@ -114,47 +68,55 @@ const ProductList = () => {
     } catch (error) {
       toast.error(error.message);
     }
-  }, []); // no dependencies → stable function
+  }, []);
 
-  // ✅ Use parsedStart / parsedEnd inside an effect
+  // 🔹 Call fetch when date filters change
   useEffect(() => {
     if (!parsedStart || !parsedEnd) return;
-
-    // Do something that depends on parsedStart and parsedEnd
-    // e.g., fetch filtered products
     fetchAdminProduct();
-  }, [parsedStart, parsedEnd, fetchAdminProduct]); // ✅ dependencies added
+  }, [parsedStart, parsedEnd, fetchAdminProduct]);
 
-  // ✅ Filter products based on search term
+  // 🔹 Update filtered list based on all filters
   useEffect(() => {
     let temp = [...products];
 
+    // Search filtering
     if (searchTerm) {
       temp = temp.filter((p) =>
         p.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
+    // Category filtering
+    if (selectedCategory !== "All") {
+      temp = temp.filter((p) => p.category === selectedCategory);
+    }
+
+    // Date range filtering
+    temp = temp.filter((p) => {
+      const created = new Date(p.createdAt || p.date || p.addedAt);
+      return (
+        (!parsedStart || created >= parsedStart) &&
+        (!parsedEnd || created <= parsedEnd)
+      );
+    });
+
+    // Sorting
+    if (sortOption === "price-asc") {
+      temp.sort((a, b) => a.offerPrice - b.offerPrice);
+    } else if (sortOption === "price-desc") {
+      temp.sort((a, b) => b.offerPrice - a.offerPrice);
+    } else if (sortOption === "stock-asc") {
+      temp.sort((a, b) => a.stock - b.stock);
+    } else if (sortOption === "stock-desc") {
+      temp.sort((a, b) => b.stock - a.stock);
+    }
+
     setFilteredProducts(temp);
-  }, [products, searchTerm]); // ✅ dependencies added
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory, products, sortOption, parsedStart, parsedEnd]);
 
 
-
-
-
-
-  if (selectedCategory !== "All") {
-    temp = temp.filter((p) => p.category === selectedCategory);
-  }
-
-  // Date range filtering
-  temp = temp.filter((p) => {
-    const created = new Date(p.date); // use the correct date field from your schema
-    return (
-      (!parsedStart || created >= parsedStart) &&
-      (!parsedEnd || created <= parsedEnd)
-    );
-  });
 
   // Sorting
   if (sortOption === "price-asc") {
@@ -167,34 +129,29 @@ const ProductList = () => {
     temp.sort((a, b) => b.stock - a.stock);
   }
 
-  setFilteredProducts(temp);
-  setCurrentPage(1);
-}, [searchTerm, selectedCategory, products, sortOption, startDate, endDate]);
+  const handleExportCSV = () => {
+    const headers = ["Name", "Category", "Price", "Stock", "Created At"];
+    const rows = filteredProducts.map((p) => [
+      p.name,
+      p.category,
+      p.offerPrice,
+      p.stock,
+      new Date(p.createdAt).toLocaleString(),
+    ]);
 
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) => row.join(",")),
+    ].join("\n");
 
-const handleExportCSV = () => {
-  const headers = ["Name", "Category", "Price", "Stock", "Created At"];
-  const rows = filteredProducts.map((p) => [
-    p.name,
-    p.category,
-    p.offerPrice,
-    p.stock,
-    new Date(p.createdAt).toLocaleString(),
-  ]);
-
-  const csvContent = [
-    headers.join(","),
-    ...rows.map((row) => row.join(",")),
-  ].join("\n");
-
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.setAttribute("download", "products.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", "products.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   useEffect(() => {
     if (user) fetchAdminProduct();
