@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import Footer from "@/components/admin/Footer";
-// import Loading from "@/components/Loading";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { ImagePlus, Pencil, Trash2 } from "lucide-react";
@@ -36,22 +35,69 @@ const ProductList = () => {
   
   dayjs.extend(relativeTime);
 
+  // useEffect(() => {
+  //   window.scrollTo({ top: 0, behavior: "smooth" });
+  // }, [currentPage]);
+ 
+  // useEffect(() => {
+  //   if (openProduct) {
+  //     setEditableProduct({ ...openProduct });
+  //   }
+  // }, [openProduct]);
+
+  // // Set end of day for the end date so the filter includes the whole day
+  // if (parsedEnd) {
+  //   parsedEnd.setHours(23, 59, 59, 999);
+  // }
+
+  // const fetchAdminProduct = async () => {
+  //   try {
+  //     const token = await getToken();
+  //     const { data } = await axios.get("/api/product/admin-list", {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+
+  //     if (data.success) {
+  //       setProducts(data.products);
+  //       setFilteredProducts(data.products);
+  //       setLoading(false);
+  //     } else {
+  //       toast.error(data.message);
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   }
+  // };
+  // useEffect(() => {
+  // let temp = [...products];
+
+  // if (searchTerm) {
+  //   temp = temp.filter((p) =>
+  //     p.name.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
+  // }
+
+
+
+
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
- 
+
   useEffect(() => {
     if (openProduct) {
       setEditableProduct({ ...openProduct });
     }
   }, [openProduct]);
 
-  // Set end of day for the end date so the filter includes the whole day
+  // Ensure parsedEnd includes the full day
   if (parsedEnd) {
     parsedEnd.setHours(23, 59, 59, 999);
   }
 
-  const fetchAdminProduct = async () => {
+  // ✅ Wrap fetchAdminProduct in useCallback to stabilize reference
+  const fetchAdminProduct = useCallback(async () => {
     try {
       const token = await getToken();
       const { data } = await axios.get("/api/product/admin-list", {
@@ -68,15 +114,34 @@ const ProductList = () => {
     } catch (error) {
       toast.error(error.message);
     }
-  };
-  useEffect(() => {
-  let temp = [...products];
+  }, []); // no dependencies → stable function
 
-  if (searchTerm) {
-    temp = temp.filter((p) =>
-      p.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }
+  // ✅ Use parsedStart / parsedEnd inside an effect
+  useEffect(() => {
+    if (!parsedStart || !parsedEnd) return;
+
+    // Do something that depends on parsedStart and parsedEnd
+    // e.g., fetch filtered products
+    fetchAdminProduct();
+  }, [parsedStart, parsedEnd, fetchAdminProduct]); // ✅ dependencies added
+
+  // ✅ Filter products based on search term
+  useEffect(() => {
+    let temp = [...products];
+
+    if (searchTerm) {
+      temp = temp.filter((p) =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredProducts(temp);
+  }, [products, searchTerm]); // ✅ dependencies added
+
+
+
+
+
 
   if (selectedCategory !== "All") {
     temp = temp.filter((p) => p.category === selectedCategory);
@@ -84,12 +149,12 @@ const ProductList = () => {
 
   // Date range filtering
   temp = temp.filter((p) => {
-  const created = new Date(p.date); // use the correct date field from your schema
-  return (
-    (!parsedStart || created >= parsedStart) &&
-    (!parsedEnd || created <= parsedEnd)
-  );
-});
+    const created = new Date(p.date); // use the correct date field from your schema
+    return (
+      (!parsedStart || created >= parsedStart) &&
+      (!parsedEnd || created <= parsedEnd)
+    );
+  });
 
   // Sorting
   if (sortOption === "price-asc") {
