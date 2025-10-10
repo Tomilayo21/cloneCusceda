@@ -164,7 +164,7 @@ export const AppContextProvider = ({ children }) => {
       mq.addEventListener("change", applyTheme);
       return () => mq.removeEventListener("change", applyTheme);
     }
-  }, [themeMode]);
+  }, [themeMode]);git 
 
 
   useEffect(() => {

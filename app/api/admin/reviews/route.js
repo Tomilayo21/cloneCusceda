@@ -1,17 +1,13 @@
-import connectDB from '@/config/db';
-import Review from '@/models/Review';
-import authSeller from '@/lib/authAdmin';
-import { getAuth } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
+import connectDB from "@/config/db";
+import Review from "@/models/Review";
+import { requireAdmin } from "@/lib/authAdmin";
+import { NextResponse } from "next/server";
 
+// ✅ PATCH — approve or unapprove a review
 export async function PATCH(request) {
   try {
-    const { userId } = getAuth(request);
-    const isAdmin = await authSeller(userId);
-
-    if (!isAdmin) {
-      return NextResponse.json({ message: 'Not authorized' }, { status: 403 });
-    }
+    const admin = await requireAdmin(request);
+    if (admin instanceof NextResponse) return admin; // means not authorized
 
     await connectDB();
 
@@ -23,29 +19,36 @@ export async function PATCH(request) {
       { new: true }
     );
 
+    if (!review) {
+      return NextResponse.json({ message: "Review not found" }, { status: 404 });
+    }
+
     return NextResponse.json(review, { status: 200 });
   } catch (error) {
+    console.error("PATCH /reviews error:", error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
 
+// ✅ DELETE — delete a review
 export async function DELETE(request) {
   try {
-    const { userId } = getAuth(request);
-    const isAdmin = await authSeller(userId);
-
-    if (!isAdmin) {
-      return NextResponse.json({ message: 'Not authorized' }, { status: 403 });
-    }
+    const admin = await requireAdmin(request);
+    if (admin instanceof NextResponse) return admin; // not authorized
 
     await connectDB();
 
     const { reviewId } = await request.json();
 
-    await Review.findByIdAndDelete(reviewId);
+    const deleted = await Review.findByIdAndDelete(reviewId);
 
-    return NextResponse.json({ message: 'Deleted' }, { status: 200 });
+    if (!deleted) {
+      return NextResponse.json({ message: "Review not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Deleted successfully" }, { status: 200 });
   } catch (error) {
+    console.error("DELETE /reviews error:", error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }

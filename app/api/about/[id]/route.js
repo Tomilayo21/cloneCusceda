@@ -1,8 +1,6 @@
-// /api/about/[id]/route.js
 import connectDB from "@/config/db";
-import authSeller from "@/lib/authAdmin";
+import { requireAdmin } from "@/lib/authAdmin";
 import About from "@/models/About";
-import { getAuth } from "@clerk/nextjs/server";
 import { v2 as cloudinary } from "cloudinary";
 import { NextResponse } from "next/server";
 
@@ -12,9 +10,13 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-
+// ✅ DELETE About section (admin only)
 export async function DELETE(req, { params }) {
   await connectDB();
+
+  // 🔒 Require admin
+  const admin = await requireAdmin(req);
+  if (admin instanceof NextResponse) return admin;
 
   const { id } = params;
 
@@ -31,15 +33,15 @@ export async function DELETE(req, { params }) {
   }
 }
 
+// ✅ UPDATE About section (admin only)
 export async function PUT(req, { params }) {
-  try {
-    const { userId } = getAuth(req);
-    const isAdmin = await authSeller(userId);
-    if (!isAdmin) {
-      return NextResponse.json({ success: false, message: "Not authorized" }, { status: 403 });
-    }
+  await connectDB();
 
-    await connectDB();
+  // 🔒 Require admin
+  const admin = await requireAdmin(req);
+  if (admin instanceof NextResponse) return admin;
+
+  try {
     const formData = await req.formData();
 
     const heading = formData.get("heading");

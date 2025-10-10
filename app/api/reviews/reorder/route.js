@@ -1,12 +1,12 @@
-// /app/api/reviews/route.js
 import connectDB from "@/config/db";
 import Review from "@/models/Review";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import authAdmin from "@/lib/authAdmin";
 import { authOptions } from "@/lib/authOptions";
+import { requireAdmin } from "@/lib/authAdmin";
 
-export async function POST(req) {
+// ✅ Handle review submission (users)
+export async function POST(request) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -15,13 +15,14 @@ export async function POST(req) {
 
     await connectDB();
 
-    const { productId, rating, comment, username } = await req.json();
+    const { productId, rating, comment, username } = await request.json();
     if (!productId || !rating || !comment) {
       return NextResponse.json({ message: "Missing fields" }, { status: 400 });
     }
 
     const userId = session.user.id;
     const existing = await Review.findOne({ productId, userId });
+
     if (existing) {
       return NextResponse.json({ message: "You already submitted a review" }, { status: 400 });
     }
@@ -44,20 +45,22 @@ export async function POST(req) {
   }
 }
 
-export async function PATCH(req) {
+// ✅ Handle review updates (admin only)
+export async function PATCH(request) {
   try {
-    const session = await getServerSession(authOptions);
-    const userId = session?.user?.id;
-    const isAdmin = await authAdmin(userId);
-
-    if (!isAdmin) {
-      return NextResponse.json({ success: false, message: "Not authorized" }, { status: 403 });
+    // 🔐 Enforce admin authentication
+    const adminUser = await requireAdmin(request);
+    if (adminUser instanceof NextResponse) {
+      // requireAdmin() already returned a NextResponse error (401/403)
+      return adminUser;
     }
 
     await connectDB();
 
-    const { order } = await req.json();
-    // order = [{ id: "reviewId", position: 0 }, ...]
+    const { order } = await request.json(); // e.g. [{ id: "reviewId", position: 0 }]
+    if (!Array.isArray(order)) {
+      return NextResponse.json({ success: false, message: "Invalid order data" }, { status: 400 });
+    }
 
     const bulkOps = order.map(({ id, position }) => ({
       updateOne: {

@@ -1,7 +1,6 @@
 import connectDB from "@/config/db";
-import authSeller from "@/lib/authAdmin";
+import { requireAdmin } from "@/lib/authAdmin"; 
 import Team from "@/models/Team";
-import { getAuth } from "@clerk/nextjs/server";
 import { v2 as cloudinary } from "cloudinary";
 import { NextResponse } from "next/server";
 
@@ -11,17 +10,21 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// GET: Fetch all team entries (sorted by section & position)
+// ✅ GET: Fetch all team entries (sorted by section & position)
 export async function GET() {
   await connectDB();
   const teams = await Team.find().sort({ position: 1 });
-
   return NextResponse.json(teams);
 }
 
-export async function POST(req) {
+// ✅ POST: Create new team entry
+export async function POST(request) {
   try {
-    const formData = await req.formData();
+    // 🔐 Require admin authentication
+    const admin = await requireAdmin(request);
+    if (admin instanceof NextResponse) return admin; // If unauthorized or forbidden, return it directly
+
+    const formData = await request.formData();
     const heading = formData.get("heading");
     const subheading = formData.get("subheading");
     const section = formData.get("section");
@@ -29,15 +32,14 @@ export async function POST(req) {
     const position = formData.get("position");
     const files = formData.getAll("images");
 
-    // Get existing images if provided (when editing)
     const existingImages = JSON.parse(formData.get("existingImages") || "[]");
 
-    // Validate file types
+    // ✅ Validate file types
     const validFiles = files.filter((file) =>
       ["image/jpeg", "image/png", "image/gif", "image/webp"].includes(file.type)
     );
 
-    // Upload new files to Cloudinary
+    // ✅ Upload new files to Cloudinary
     const newUploadedImages = await Promise.all(
       validFiles.map(async (file) => {
         const arrayBuffer = await file.arrayBuffer();
@@ -56,18 +58,16 @@ export async function POST(req) {
       })
     );
 
-    // Merge old + new images
     const allImages = [...existingImages, ...newUploadedImages];
 
-    // Save to DB
+    // ✅ Save to MongoDB
     const newTeam = await Team.create({
       title: formData.get("title"),
-      description: formData.get("description"),
+      description,
       image: allImages,
       heading,
       subheading,
       section,
-      description,
       position,
     });
 
@@ -78,13 +78,12 @@ export async function POST(req) {
   }
 }
 
+// ✅ PATCH: Update team positions (requires admin)
 export async function PATCH(request) {
   try {
-    const { userId } = getAuth(request);
-    const isAdmin = await authSeller(userId);
-    if (!isAdmin) {
-      return NextResponse.json({ success: false, message: "Not authorized" }, { status: 403 });
-    }
+    // 🔐 Require admin
+    const admin = await requireAdmin(request);
+    if (admin instanceof NextResponse) return admin;
 
     const updates = await request.json();
     await connectDB();
@@ -97,6 +96,7 @@ export async function PATCH(request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }

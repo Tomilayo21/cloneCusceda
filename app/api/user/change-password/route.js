@@ -1,60 +1,10 @@
-// import { NextResponse } from "next/server";
-// import connectDB from "@/config/db";
-// import User from "@/models/User";
-// import { getServerSession } from "next-auth/next";
-// import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-// import bcrypt from "bcryptjs";
-
-// export async function POST(req) {
-//   const session = await getServerSession(authOptions);
-//   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-//   const { currentPassword, newPassword } = await req.json();
-//   if (!currentPassword || !newPassword) return NextResponse.json({ error: "Missing fields" }, { status: 400 });
-//   if (newPassword.length < 8) return NextResponse.json({ error: "Password too short" }, { status: 400 });
-
-//   await connectDB();
-//   const user = await User.findById(session.user.id);
-//   if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
-
-//   const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
-//   if (!isMatch) return NextResponse.json({ error: "Current password incorrect" }, { status: 403 });
-
-//   user.passwordHash = await bcrypt.hash(newPassword, 10);
-//   await user.save();
-
-//   return NextResponse.json({ ok: true });
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // app/api/user/change-password/route.js (example)
 import { NextResponse } from "next/server";
 import connectDB from "@/config/db";
 import User from "@/models/User";
 import { getServerSession } from "next-auth/next";
 import bcrypt from "bcryptjs";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 
 function validatePasswordRules(password) {
   const errors = [];

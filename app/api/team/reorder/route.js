@@ -1,19 +1,27 @@
 import connectDB from "@/config/db";
-import authSeller from "@/lib/authAdmin";
-import { getAuth } from "@clerk/nextjs/server";
+import { requireAdmin } from "@/lib/authAdmin";
 import Team from "@/models/Team";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
-    const { userId } = getAuth(request);
-    const isAdmin = await authSeller(userId);
-    if (!isAdmin) {
-      return NextResponse.json({ success: false, message: "Not authorized" }, { status: 403 });
+    // ✅ Check if user is an admin
+    const adminUser = await requireAdmin(request);
+    if (adminUser instanceof NextResponse) {
+      // requireAdmin already returns a response when unauthorized
+      return adminUser;
     }
 
     await connectDB();
-    const { order } = await request.json(); 
+
+    const { order } = await request.json();
+
+    if (!Array.isArray(order)) {
+      return NextResponse.json(
+        { success: false, message: "Invalid order data" },
+        { status: 400 }
+      );
+    }
 
     const bulkOps = order.map(({ id, position }) => ({
       updateOne: {
@@ -26,6 +34,10 @@ export async function POST(request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    console.error("Error updating team order:", error);
+    return NextResponse.json(
+      { success: false, message: error.message },
+      { status: 500 }
+    );
   }
 }

@@ -1,7 +1,6 @@
 import connectDB from "@/config/db";
-import authSeller from "@/lib/authAdmin";
+import { requireAdmin } from "@/lib/authAdmin";
 import About from "@/models/About";
-import { getAuth } from "@clerk/nextjs/server";
 import { v2 as cloudinary } from "cloudinary";
 import { NextResponse } from "next/server";
 
@@ -11,17 +10,21 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// GET: Fetch all about entries (sorted by section & position)
+// ✅ GET: Fetch all about entries (sorted by section & position)
 export async function GET() {
   await connectDB();
   const abouts = await About.find().sort({ position: 1 });
-
   return NextResponse.json(abouts);
 }
 
-export async function POST(req) {
+// ✅ POST: Create new "About" section (admin only)
+export async function POST(request) {
   try {
-    const formData = await req.formData();
+    // 🔐 Require admin
+    const admin = await requireAdmin(request);
+    if (admin instanceof NextResponse) return admin; // unauthorized or forbidden
+
+    const formData = await request.formData();
     const heading = formData.get("heading");
     const subheading = formData.get("subheading");
     const section = formData.get("section");
@@ -29,15 +32,14 @@ export async function POST(req) {
     const position = formData.get("position");
     const files = formData.getAll("images");
 
-    // Get existing images if provided (when editing)
+    // Existing images if editing
     const existingImages = JSON.parse(formData.get("existingImages") || "[]");
 
-    // Validate file types
+    // Validate and upload new files
     const validFiles = files.filter((file) =>
       ["image/jpeg", "image/png", "image/gif", "image/webp"].includes(file.type)
     );
 
-    // Upload new files to Cloudinary
     const newUploadedImages = await Promise.all(
       validFiles.map(async (file) => {
         const arrayBuffer = await file.arrayBuffer();
@@ -56,35 +58,32 @@ export async function POST(req) {
       })
     );
 
-    // Merge old + new images
     const allImages = [...existingImages, ...newUploadedImages];
 
-    // Save to DB
+    await connectDB();
     const newAbout = await About.create({
       title: formData.get("title"),
-      description: formData.get("description"),
+      description,
       image: allImages,
       heading,
       subheading,
       section,
-      description,
       position,
     });
 
     return NextResponse.json(newAbout, { status: 201 });
   } catch (error) {
-    console.error(error);
+    console.error("POST /about error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
+// ✅ PATCH: Update order/positions (admin only)
 export async function PATCH(request) {
   try {
-    const { userId } = getAuth(request);
-    const isAdmin = await authSeller(userId);
-    if (!isAdmin) {
-      return NextResponse.json({ success: false, message: "Not authorized" }, { status: 403 });
-    }
+    // 🔐 Require admin
+    const admin = await requireAdmin(request);
+    if (admin instanceof NextResponse) return admin; // unauthorized or forbidden
 
     const updates = await request.json();
     await connectDB();
@@ -94,9 +93,9 @@ export async function PATCH(request) {
     );
 
     await Promise.all(updatePromises);
-
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("PATCH /about error:", error);
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }

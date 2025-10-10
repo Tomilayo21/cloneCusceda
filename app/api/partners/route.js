@@ -1,8 +1,8 @@
+// app/api/partners/route.js (for example)
 
 import connectDB from "@/config/db";
 import Partner from "@/models/Partner";
-import authSeller from "@/lib/authAdmin";
-import { getAuth } from "@clerk/nextjs/server";
+import { requireAdmin } from "@/lib/authAdmin";
 import { v2 as cloudinary } from "cloudinary";
 import { NextResponse } from "next/server";
 
@@ -12,25 +12,27 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// ✅ GET all partners
 export async function GET() {
   await connectDB();
   const partners = await Partner.find().sort({ position: 1 });
   return NextResponse.json(partners);
 }
-export async function POST(req) {
+
+// ✅ POST - Add a new partner
+export async function POST(request) {
   try {
-    const { userId } = getAuth(req);
-    if (!userId || !(await authSeller(userId))) {
-      return NextResponse.json({ message: "Not authorized" }, { status: 403 });
-    }
+    const admin = await requireAdmin(request);
+    if (admin instanceof NextResponse) return admin; // not authorized
+
     await connectDB();
 
     // Parse multipart formData
-    const formData = await req.formData();
+    const formData = await request.formData();
     const username = formData.get("username");
     const name = formData.get("name");
     const comment = formData.get("comment");
-    const files = formData.getAll("images"); // multiple images input named "images"
+    const files = formData.getAll("images");
 
     if (!username || !name || !comment) {
       return NextResponse.json({ message: "Missing fields" }, { status: 400 });
@@ -64,7 +66,7 @@ export async function POST(req) {
       username,
       name,
       comment,
-      imageUrl: uploadedImageUrls, // <-- save as array of strings
+      imageUrl: uploadedImageUrls,
       approved: false,
       position: 9999,
     });
@@ -77,17 +79,19 @@ export async function POST(req) {
   }
 }
 
-export async function PUT(req) {
+// ✅ PUT - Update a partner (details or approval)
+export async function PUT(request) {
   try {
-    const { userId } = getAuth(req);
-    if (!userId || !(await authSeller(userId))) {
-      return NextResponse.json({ message: "Not authorized" }, { status: 403 });
-    }
+    const admin = await requireAdmin(request);
+    if (admin instanceof NextResponse) return admin;
+
     await connectDB();
 
-    const contentType = req.headers.get("content-type") || "";
+    const contentType = request.headers.get("content-type") || "";
+
+    // Case 1: multipart formData (update partner info)
     if (contentType.startsWith("multipart/form-data")) {
-      const formData = await req.formData();
+      const formData = await request.formData();
       const id = formData.get("id");
       const username = formData.get("username");
       const name = formData.get("name");
@@ -135,8 +139,8 @@ export async function PUT(req) {
       return NextResponse.json(updated);
     }
 
-    // Handle approval toggle PUT requests (JSON)
-    const body = await req.json();
+    // Case 2: JSON (toggle approval)
+    const body = await request.json();
     if ("approved" in body && body.id) {
       const updated = await Partner.findByIdAndUpdate(
         body.id,
@@ -156,11 +160,10 @@ export async function PUT(req) {
   }
 }
 
+// ✅ PATCH - Update partner order
 export async function PATCH(request) {
-  const { userId } = getAuth(request);
-  if (!userId || !(await authSeller(userId))) {
-    return NextResponse.json({ message: "Not authorized" }, { status: 403 });
-  }
+  const admin = await requireAdmin(request);
+  if (admin instanceof NextResponse) return admin;
 
   const { order } = await request.json();
   if (!Array.isArray(order)) {
@@ -169,12 +172,8 @@ export async function PATCH(request) {
 
   await connectDB();
 
-  // Update positions
   const bulkOps = order.map(({ id, position }) => ({
-    updateOne: {
-      filter: { _id: id },
-      update: { position },
-    },
+    updateOne: { filter: { _id: id }, update: { position } },
   }));
 
   await Partner.bulkWrite(bulkOps);
@@ -182,11 +181,10 @@ export async function PATCH(request) {
   return NextResponse.json({ message: "Order updated" });
 }
 
+// ✅ DELETE - Delete a partner
 export async function DELETE(request) {
-  const { userId } = getAuth(request);
-  if (!userId || !(await authSeller(userId))) {
-    return NextResponse.json({ message: "Not authorized" }, { status: 403 });
-  }
+  const admin = await requireAdmin(request);
+  if (admin instanceof NextResponse) return admin;
 
   const { id } = await request.json();
   if (!id) {
@@ -194,7 +192,6 @@ export async function DELETE(request) {
   }
 
   await connectDB();
-
   await Partner.findByIdAndDelete(id);
 
   return NextResponse.json({ message: "Deleted" });
