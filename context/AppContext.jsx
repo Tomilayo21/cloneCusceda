@@ -127,7 +127,7 @@ export const AppContextProvider = ({ children }) => {
 
   // Load saved theme from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem("themeMode") || "system";
+    const saved = localStorage.getItem("themeMode") || "light";
     setThemeMode(saved);
   }, []);
 

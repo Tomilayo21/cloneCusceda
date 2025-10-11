@@ -10,6 +10,10 @@ import Footer from "@/components/Footer";
 import Loading from "@/components/Loading";
 import { useAppContext } from "@/context/AppContext";
 import LandingPage from "@/components/LandingPage";
+import FadeInWhenVisible from "@/components/animations/FadeInWhenVisible";
+import SlideInWhenVisible from "@/components/animations/SlideInWhenVisible";
+import ParallaxFadeIn from "@/components/animations/ParallaxFadeIn";
+import AnimatedInView from "@/components/animations/AnimatedInView";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -70,15 +74,30 @@ const Home = () => {
       <Navbar />
 
       <div className="px-6 md:px-16 lg:px-32 mt-16">
+        
+        <FadeInWhenVisible>
         <HeaderSlider />
+        </FadeInWhenVisible>
+
+        <FadeInWhenVisible>
         <HomeProducts />
+        </FadeInWhenVisible>
         {/* <FeaturedProduct /> */}
+
+        <SlideInWhenVisible>
         <Banner />
+        </SlideInWhenVisible>
+
+        <ParallaxFadeIn>
         <NewsLetter />
+        </ParallaxFadeIn>
+
         {/* <LandingPage /> */}
       </div>
 
+      <AnimatedInView>
       <Footer />
+      </AnimatedInView>
 
       {/* Elfsight Chatbot Embed */}
       <div
