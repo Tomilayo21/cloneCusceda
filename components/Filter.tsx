@@ -220,7 +220,7 @@
 "use client";
 
 import * as Select from "@radix-ui/react-select";
-import { ChevronDown, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, SlidersHorizontal, ListFilter } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
 
@@ -469,21 +469,26 @@ export default function FilterBar() {
             onValueChange={(value) => handleFilterChange("sort", value)}
           >
             <Select.Trigger
-              className={`${triggerClasses} w-auto min-w-[8rem] flex items-center justify-between`}
+              className={`${triggerClasses} w-auto min-w-[9rem] flex items-center justify-between gap-2`}
             >
-              <div className="text-gray-500 text-xs">
-                {(() => {
-                  const sort = searchParams.get("sort");
-                  if (sort === "asc price") return "Price (low → high)";
-                  if (sort === "desc price") return "Price (high → low)";
-                  if (sort === "asc date") return "Oldest";
-                  if (sort === "desc date") return "Newest";
-                  return "Select sort order";
-                })()}
+              {/* === Left Section: Icon + Label === */}
+              <div className="flex items-center gap-2 text-gray-500 text-xs">
+                <ListFilter className="w-4 h-4 text-gray-500" />
+                <span>
+                  {(() => {
+                    const sort = searchParams.get("sort");
+                    if (sort === "asc price") return "Price (low → high)";
+                    if (sort === "desc price") return "Price (high → low)";
+                    if (sort === "asc date") return "Oldest";
+                    if (sort === "desc date") return "Newest";
+                    return "Sort order";
+                  })()}
+                </span>
               </div>
 
+              {/* === Right Section: Chevron === */}
               <Select.Icon>
-                <ChevronDown className="w-4 h-4 text-gray-500 ml-2" />
+                <ChevronDown className="w-4 h-4 text-gray-500" />
               </Select.Icon>
             </Select.Trigger>
 
@@ -497,8 +502,8 @@ export default function FilterBar() {
                 {[
                   { label: "Price (low → high)", value: "asc price" },
                   { label: "Price (high → low)", value: "desc price" },
-                  { label: "Newest", value: "asc date" },
-                  { label: "Oldest", value: "desc date" },
+                  { label: "Newest", value: "desc date" },
+                  { label: "Oldest", value: "asc date" },
                 ].map((item) => (
                   <Select.Item
                     key={item.value}
@@ -512,6 +517,7 @@ export default function FilterBar() {
             </Select.Content>
           </Select.Root>
         </div>
+
 
       </div>
     </div>
