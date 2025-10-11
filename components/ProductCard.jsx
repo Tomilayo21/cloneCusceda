@@ -4,10 +4,10 @@ import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "@/context/AppContext";
-import { useSession } from "next-auth/react";  // ✅ NextAuth
+import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import toast from "react-hot-toast";
-import { Heart, Star, XCircle, ShoppingCart } from "lucide-react";
+import { Heart, Star, XCircle, ShoppingCart, AlertTriangle } from "lucide-react";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -57,7 +57,24 @@ const ProductCard = ({ product }) => {
   const toggleFavorite = async (e) => {
     e.stopPropagation();
     if (!user) {
-      toast.error("Please log in first.");
+      toast.custom(
+        (t) => (
+          <div
+            className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 border-l-4 border-red-500 ${
+              t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+            }`}
+          >
+            <AlertTriangle className="text-red-500 shrink-0" size={20} />
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Please login to add items as favorite
+            </p>
+          </div>
+        ),
+        {
+          duration: 2500,
+          position: "top-right",
+        }
+      );
       return;
     }
 
@@ -124,7 +141,24 @@ const ProductCard = ({ product }) => {
   const handleAddToCart = () => {
     if (loading) return;
     if (!user) {
-      toast.error("Please login to add items to your cart");
+      toast.custom(
+        (t) => (
+          <div
+            className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 border-l-4 border-red-500 ${
+              t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+            }`}
+          >
+            <AlertTriangle className="text-red-500 shrink-0" size={20} />
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Please login to add items to your cart
+            </p>
+          </div>
+        ),
+        {
+          duration: 2500,
+          position: "top-right",
+        }
+      );
       return;
     }
     addToCart(product);

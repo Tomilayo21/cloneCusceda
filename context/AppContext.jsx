@@ -124,15 +124,7 @@ export const AppContextProvider = ({ children }) => {
   useEffect(() => localStorage.setItem("secondaryColor", secondaryColor), [secondaryColor]);
   useEffect(() => localStorage.setItem("tertiaryColor", tertiaryColor), [tertiaryColor]);
 
-
-  // Load saved theme from localStorage on mount
-  // useEffect(() => {
-  //   const saved = localStorage.getItem("themeMode") || "light";
-  //   setThemeMode(saved);
-  // }, []);
-
   useEffect(() => {
-  // ✅ Force light as the default mode
     const saved = localStorage.getItem("themeMode") || "light";
     setThemeMode(saved);
 
@@ -142,64 +134,27 @@ export const AppContextProvider = ({ children }) => {
   }, []);
 
 
-useEffect(() => {
-  const isDark = themeMode === "dark";
-  document.documentElement.classList.toggle("dark", isDark);
+  useEffect(() => {
+    const isDark = themeMode === "dark";
+    document.documentElement.classList.toggle("dark", isDark);
 
-  const root = document.documentElement;
-  if (isDark) {
-    root.style.setProperty("--background", "#0f0f0f");
-    root.style.setProperty("--foreground", "#ffffff");
-  } else {
-    root.style.setProperty("--background", "#ffffff");
-    root.style.setProperty("--foreground", "#000000");
-  }
+    const root = document.documentElement;
+    if (isDark) {
+      root.style.setProperty("--background", "#0f0f0f");
+      root.style.setProperty("--foreground", "#ffffff");
+    } else {
+      root.style.setProperty("--background", "#ffffff");
+      root.style.setProperty("--foreground", "#000000");
+    }
 
-  localStorage.setItem("themeMode", themeMode);
-}, [themeMode]);
-
-
-
-  // // Apply theme whenever themeMode changes
-  // useEffect(() => {
-  //   const mq = window.matchMedia("(prefers-color-scheme: dark)");
-
-  //   const applyTheme = () => {
-  //     const isDark =
-  //       themeMode === "dark" || (themeMode === "system" && mq.matches);
-
-  //     // Toggle dark mode class
-  //     document.documentElement.classList.toggle("dark", isDark);
-
-  //     // 🎨 Apply dynamic color variables
-  //     const root = document.documentElement;
-  //     if (isDark) {
-  //       root.style.setProperty("--background", "#0f0f0f");
-  //       root.style.setProperty("--foreground", "#ffffff");
-  //       root.style.setProperty("--primary", "#f97316"); // orange
-  //       root.style.setProperty("--secondary", "#1e293b"); // slate dark
-  //     } else {
-  //       root.style.setProperty("--background", "#ffffff");
-  //       root.style.setProperty("--foreground", "#000000");
-  //       root.style.setProperty("--primary", "#2563eb"); // blue
-  //       root.style.setProperty("--secondary", "#f1f5f9"); // light slate
-  //     }
-  //   };
-
-  //   applyTheme();
-  //   localStorage.setItem("themeMode", themeMode);
-
-  //   if (themeMode === "system") {
-  //     mq.addEventListener("change", applyTheme);
-  //     return () => mq.removeEventListener("change", applyTheme);
-  //   }
-  // }, [themeMode]);
-
+    localStorage.setItem("themeMode", themeMode);
+  }, [themeMode]);
 
   useEffect(() => {
     const saved = localStorage.getItem("contrastMode") === "true";
     setContrastMode(saved);
   }, []);
+
   useEffect(() => {
     document.documentElement.classList.toggle("high-contrast", contrastMode);
     localStorage.setItem("contrastMode", contrastMode);
