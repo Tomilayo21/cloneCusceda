@@ -123,291 +123,168 @@ export default function AuthForm({ initialMode = "login", onSuccess }) {
     setMessage("");
   }
 
-  // // Submit handler
-  // async function handleSubmit(e) {
-  //   e.preventDefault();
-  //   setMessage("");
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setMessage("");
 
-  //   setLoading(true);
-  //   try {
-  //     if (mode === "signup") {
-  //       // ✅ Signup mode: call signup API and validate password on backend only
-  //       const res = await fetch("/api/auth/signup", {
-  //         method: "POST",
-  //         headers: { "Content-Type": "application/json" },
-  //         body: JSON.stringify(form),
-  //       });
-  //       const data = await res.json();
+    setLoading(true);
+    try {
+      if (mode === "signup") {
+        // ✅ Signup mode
+        const res = await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+        const data = await res.json();
 
-  //       if (!res.ok) {
-  //         // Show backend-specific field errors
-  //         if (data.fieldErrors) {
-  //           Object.values(data.fieldErrors).forEach((errMsg) => {
-  //             toast.custom(
-  //               (t) => (
-  //                 <div
-  //                   className={`max-w-md w-full bg-red-50 dark:bg-red-900 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
-  //                     t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
-  //                   }`}
-  //                 >
-  //                   <XCircle className="text-red-500" size={20} />
-  //                   <p className="text-sm font-medium text-red-700 dark:text-red-300">{errMsg}</p>
-  //                 </div>
-  //               ),
-  //               { duration: 4000, position: "top-right" }
-  //             );
-  //           });
-  //         } else {
-  //           throw new Error(data.error || "Signup failed");
-  //         }
-  //         return;
-  //       }
-
-  //       // Success
-  //       setSuccess(true);
-  //       setTimeout(() => setSuccess(false), 3000);
-  //       toast.custom(
-  //         (t) => (
-  //           <div
-  //             className={`max-w-md w-full bg-green-50 dark:bg-green-900 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
-  //               t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
-  //             }`}
-  //           >
-  //             <CheckCircle className="text-green-600" size={20} />
-  //             <p className="text-sm font-medium text-green-800 dark:text-green-200">
-  //               Account created! Check your email.
-  //             </p>
-  //           </div>
-  //         ),
-  //         { duration: 2500, position: "top-right" }
-  //       );
-
-  //       setMode("login");
-  //       setForm({ name: "", username: "", email: "", password: "", verifyPassword: "" });
-  //     } else if (mode === "login") {
-  //       // ✅ Login mode: call login API, do NOT validate password rules here
-  //       const res = await signIn("credentials", {
-  //         redirect: false,
-  //         email: form.email,
-  //         password: form.password,
-  //       });
-
-  //       if (res.error) throw new Error(res.error);
-
-  //       setSuccess(true);
-  //       setTimeout(() => setSuccess(false), 3000);
-
-  //       toast.custom(
-  //         (t) => (
-  //           <div
-  //             className={`max-w-md w-full bg-blue-50 dark:bg-blue-900 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
-  //               t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
-  //             }`}
-  //           >
-  //             <CheckCircle className="text-blue-600" size={20} />
-  //             <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
-  //               Login successful
-  //             </p>
-  //           </div>
-  //         ),
-  //         { duration: 2000, position: "top-right" }
-  //       );
-
-  //       if (onSuccess) onSuccess();
-  //       window.location.href = "/";
-  //     }
-
-  //     // Handle forgot/reset as before...
-  //   } catch (err) {
-  //     console.error(err);
-  //     // Show backend error specifically
-  //     toast.custom(
-  //       (t) => (
-  //         <div
-  //           className={`max-w-md w-full bg-red-50 dark:bg-red-900 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
-  //             t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
-  //           }`}
-  //         >
-  //           <XCircle className="text-red-500" size={20} />
-  //           <p className="text-sm font-medium text-red-700 dark:text-red-300">{err.message}</p>
-  //         </div>
-  //       ),
-  //       { duration: 4000, position: "top-right" }
-  //     );
-
-  //     setMessage(err.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
-
-
-async function handleSubmit(e) {
-  e.preventDefault();
-  setMessage("");
-
-  setLoading(true);
-  try {
-    if (mode === "signup") {
-      // ✅ Signup mode
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        if (data.fieldErrors) {
-          Object.values(data.fieldErrors).forEach((errMsg) => {
-            toast.custom(
-              (t) => (
-                <div
-                  className={`max-w-md w-full bg-red-50 dark:bg-red-900 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
-                    t.visible
-                      ? "translate-x-0 opacity-100"
-                      : "translate-x-10 opacity-0"
-                  }`}
-                >
-                  <XCircle className="text-red-500" size={20} />
-                  <p className="text-sm font-medium text-red-700 dark:text-red-300">
-                    {errMsg}
-                  </p>
-                </div>
-              ),
-              { duration: 4000, position: "top-right" }
-            );
-          });
-        } else {
-          throw new Error(data.error || "Signup failed");
+        if (!res.ok) {
+          if (data.fieldErrors) {
+            Object.values(data.fieldErrors).forEach((errMsg) => {
+              toast.custom(
+                (t) => (
+                  <div
+                    className={`max-w-md w-full bg-red-50 dark:bg-red-900 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
+                      t.visible
+                        ? "translate-x-0 opacity-100"
+                        : "translate-x-10 opacity-0"
+                    }`}
+                  >
+                    <XCircle className="text-red-500" size={20} />
+                    <p className="text-sm font-medium text-red-700 dark:text-red-300">
+                      {errMsg}
+                    </p>
+                  </div>
+                ),
+                { duration: 4000, position: "top-right" }
+              );
+            });
+          } else {
+            throw new Error(data.error || "Signup failed");
+          }
+          return;
         }
-        return;
+
+        // Success
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 3000);
+        toast.custom(
+          (t) => (
+            <div
+              className={`max-w-md w-full bg-green-50 dark:bg-green-900 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
+                t.visible
+                  ? "translate-x-0 opacity-100"
+                  : "translate-x-10 opacity-0"
+              }`}
+            >
+              <CheckCircle className="text-green-600" size={20} />
+              <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                Account created! Check your email.
+              </p>
+            </div>
+          ),
+          { duration: 2500, position: "top-right" }
+        );
+
+        setMode("login");
+        setForm({
+          name: "",
+          username: "",
+          email: "",
+          password: "",
+          verifyPassword: "",
+        });
+      } else if (mode === "login") {
+        // ✅ Login mode
+        const res = await signIn("credentials", {
+          redirect: false,
+          email: form.email,
+          password: form.password,
+        });
+
+        if (res.error) throw new Error(res.error);
+
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 3000);
+
+        toast.custom(
+          (t) => (
+            <div
+              className={`max-w-md w-full bg-blue-50 dark:bg-blue-900 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
+                t.visible
+                  ? "translate-x-0 opacity-100"
+                  : "translate-x-10 opacity-0"
+              }`}
+            >
+              <CheckCircle className="text-blue-600" size={20} />
+              <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                Login successful
+              </p>
+            </div>
+          ),
+          { duration: 2000, position: "top-right" }
+        );
+
+        if (onSuccess) onSuccess();
+        window.location.href = "/";
+      } else if (mode === "forgot") {
+        // ✅ Forgot password mode
+        const res = await fetch("/api/auth/forgot-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: resetEmail }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || "Reset failed");
+
+        toast.custom(
+          (t) => (
+            <div
+              className={`max-w-md w-full bg-yellow-50 dark:bg-yellow-900 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
+                t.visible
+                  ? "translate-x-0 opacity-100"
+                  : "translate-x-10 opacity-0"
+              }`}
+            >
+              <CheckCircle className="text-yellow-600" size={20} />
+              <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                Reset link sent! Check your email.
+              </p>
+            </div>
+          ),
+          { duration: 3000, position: "top-right" }
+        );
+
+        // Reset email field
+        setResetEmail("");
+        setMode("login");
       }
-
-      // Success
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      console.error(err);
       toast.custom(
         (t) => (
           <div
-            className={`max-w-md w-full bg-green-50 dark:bg-green-900 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
+            className={`max-w-md w-full bg-red-50 dark:bg-red-900 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
               t.visible
                 ? "translate-x-0 opacity-100"
                 : "translate-x-10 opacity-0"
             }`}
           >
-            <CheckCircle className="text-green-600" size={20} />
-            <p className="text-sm font-medium text-green-800 dark:text-green-200">
-              Account created! Check your email.
+            <XCircle className="text-red-500" size={20} />
+            <p className="text-sm font-medium text-red-700 dark:text-red-300">
+              {err.message}
             </p>
           </div>
         ),
-        { duration: 2500, position: "top-right" }
+        { duration: 4000, position: "top-right" }
       );
 
-      setMode("login");
-      setForm({
-        name: "",
-        username: "",
-        email: "",
-        password: "",
-        verifyPassword: "",
-      });
-    } else if (mode === "login") {
-      // ✅ Login mode
-      const res = await signIn("credentials", {
-        redirect: false,
-        email: form.email,
-        password: form.password,
-      });
-
-      if (res.error) throw new Error(res.error);
-
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
-
-      toast.custom(
-        (t) => (
-          <div
-            className={`max-w-md w-full bg-blue-50 dark:bg-blue-900 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
-              t.visible
-                ? "translate-x-0 opacity-100"
-                : "translate-x-10 opacity-0"
-            }`}
-          >
-            <CheckCircle className="text-blue-600" size={20} />
-            <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
-              Login successful
-            </p>
-          </div>
-        ),
-        { duration: 2000, position: "top-right" }
-      );
-
-      if (onSuccess) onSuccess();
-      window.location.href = "/";
-    } else if (mode === "forgot") {
-      // ✅ Forgot password mode
-      const res = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: resetEmail }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.error || "Reset failed");
-
-      toast.custom(
-        (t) => (
-          <div
-            className={`max-w-md w-full bg-yellow-50 dark:bg-yellow-900 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
-              t.visible
-                ? "translate-x-0 opacity-100"
-                : "translate-x-10 opacity-0"
-            }`}
-          >
-            <CheckCircle className="text-yellow-600" size={20} />
-            <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-              Reset link sent! Check your email.
-            </p>
-          </div>
-        ),
-        { duration: 3000, position: "top-right" }
-      );
-
-      // Reset email field
-      setResetEmail("");
-      setMode("login");
+      setMessage(err.message);
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    console.error(err);
-    toast.custom(
-      (t) => (
-        <div
-          className={`max-w-md w-full bg-red-50 dark:bg-red-900 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
-            t.visible
-              ? "translate-x-0 opacity-100"
-              : "translate-x-10 opacity-0"
-          }`}
-        >
-          <XCircle className="text-red-500" size={20} />
-          <p className="text-sm font-medium text-red-700 dark:text-red-300">
-            {err.message}
-          </p>
-        </div>
-      ),
-      { duration: 4000, position: "top-right" }
-    );
-
-    setMessage(err.message);
-  } finally {
-    setLoading(false);
   }
-}
-
-
-
-
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
@@ -431,7 +308,7 @@ async function handleSubmit(e) {
           onSubmit={handleSubmit}
           className="relative z-10 w-full max-w-md bg-white/95 backdrop-blur-md p-8 rounded-2xl shadow-xl"
         >
-          <h2 className="text-3xl md:text-2xl font-bold text-gray-800 mb-4 text-center">
+          <h2 className="text-3xl md:text-2xl font-semibold text-gray-800 mb-4 text-center">
             {mode === "signup"
               ? "Create an account"
               : mode === "login"
@@ -495,33 +372,6 @@ async function handleSubmit(e) {
                 />
               </>
             )}
-
-            {/* {["signup", "login"].includes(mode) && (
-              <>
-                <InputField
-                  icon={<Mail className="w-5 h-5 text-gray-400" />}
-                  placeholder="Email address"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  error={errors.email}
-                  type="email"
-                />
-
-                <InputField
-                  icon={<Lock className="w-5 h-5 text-gray-400" />}
-                  placeholder="Password"
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  error={errors.password}
-                  showToggle
-                  show={showPassword}
-                  setShow={setShowPassword}
-                  type={showPassword ? "text" : "password"}
-                />
-              </>
-            )} */}
 
             {["signup", "login"].includes(mode) && (
               <>
