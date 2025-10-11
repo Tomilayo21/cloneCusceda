@@ -126,45 +126,74 @@ export const AppContextProvider = ({ children }) => {
 
 
   // Load saved theme from localStorage on mount
+  // useEffect(() => {
+  //   const saved = localStorage.getItem("themeMode") || "light";
+  //   setThemeMode(saved);
+  // }, []);
+
   useEffect(() => {
+  // ✅ Force light as the default mode
     const saved = localStorage.getItem("themeMode") || "light";
     setThemeMode(saved);
+
+    // ✅ Immediately apply light mode before anything renders
+    document.documentElement.classList.remove("dark");
+    document.documentElement.classList.add("light");
   }, []);
 
-  // Apply theme whenever themeMode changes
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
 
-    const applyTheme = () => {
-      const isDark =
-        themeMode === "dark" || (themeMode === "system" && mq.matches);
+useEffect(() => {
+  const isDark = themeMode === "dark";
+  document.documentElement.classList.toggle("dark", isDark);
 
-      // Toggle dark mode class
-      document.documentElement.classList.toggle("dark", isDark);
+  const root = document.documentElement;
+  if (isDark) {
+    root.style.setProperty("--background", "#0f0f0f");
+    root.style.setProperty("--foreground", "#ffffff");
+  } else {
+    root.style.setProperty("--background", "#ffffff");
+    root.style.setProperty("--foreground", "#000000");
+  }
 
-      // 🎨 Apply dynamic color variables
-      const root = document.documentElement;
-      if (isDark) {
-        root.style.setProperty("--background", "#0f0f0f");
-        root.style.setProperty("--foreground", "#ffffff");
-        root.style.setProperty("--primary", "#f97316"); // orange
-        root.style.setProperty("--secondary", "#1e293b"); // slate dark
-      } else {
-        root.style.setProperty("--background", "#ffffff");
-        root.style.setProperty("--foreground", "#000000");
-        root.style.setProperty("--primary", "#2563eb"); // blue
-        root.style.setProperty("--secondary", "#f1f5f9"); // light slate
-      }
-    };
+  localStorage.setItem("themeMode", themeMode);
+}, [themeMode]);
 
-    applyTheme();
-    localStorage.setItem("themeMode", themeMode);
 
-    if (themeMode === "system") {
-      mq.addEventListener("change", applyTheme);
-      return () => mq.removeEventListener("change", applyTheme);
-    }
-  }, [themeMode]);
+
+  // // Apply theme whenever themeMode changes
+  // useEffect(() => {
+  //   const mq = window.matchMedia("(prefers-color-scheme: dark)");
+
+  //   const applyTheme = () => {
+  //     const isDark =
+  //       themeMode === "dark" || (themeMode === "system" && mq.matches);
+
+  //     // Toggle dark mode class
+  //     document.documentElement.classList.toggle("dark", isDark);
+
+  //     // 🎨 Apply dynamic color variables
+  //     const root = document.documentElement;
+  //     if (isDark) {
+  //       root.style.setProperty("--background", "#0f0f0f");
+  //       root.style.setProperty("--foreground", "#ffffff");
+  //       root.style.setProperty("--primary", "#f97316"); // orange
+  //       root.style.setProperty("--secondary", "#1e293b"); // slate dark
+  //     } else {
+  //       root.style.setProperty("--background", "#ffffff");
+  //       root.style.setProperty("--foreground", "#000000");
+  //       root.style.setProperty("--primary", "#2563eb"); // blue
+  //       root.style.setProperty("--secondary", "#f1f5f9"); // light slate
+  //     }
+  //   };
+
+  //   applyTheme();
+  //   localStorage.setItem("themeMode", themeMode);
+
+  //   if (themeMode === "system") {
+  //     mq.addEventListener("change", applyTheme);
+  //     return () => mq.removeEventListener("change", applyTheme);
+  //   }
+  // }, [themeMode]);
 
 
   useEffect(() => {

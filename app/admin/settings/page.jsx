@@ -1395,7 +1395,7 @@ export default function AdminSettings() {
                 className="font-semibold text-lg cursor-pointer flex items-center justify-between text-gray-800 dark:text-gray-100"
                 onClick={() => setOpen(!open)}
               >
-                Appearance / Theme
+                Theme
                 <ChevronDown
                   className={`w-5 h-5 transition-transform duration-300 ${
                     open ? "rotate-180" : ""
@@ -1472,11 +1472,9 @@ export default function AdminSettings() {
           </div>
         )}
 
-
         {activeTab === 'security' && (
           <SecuritySettings />
         )}
-        
 
         {activeTab === "legal" && (
           <div className="relative overflow-hidden">
