@@ -6,13 +6,16 @@ import { useAppContext } from "@/context/AppContext";
 import useSWR from "swr";
 import toast from "react-hot-toast";
 import { Heart, Star, XCircle, ShoppingCart, Tag, Package } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 const ProductCard = ({ product }) => {
+  const { data: session } = useSession(); 
+  const user = session?.user;
   if (product.visible === false) return null;
-
-  const { currency, router, addToCart, user } = useAppContext();
+  
+  const { currency, router, addToCart } = useAppContext();
   const [isFavorite, setIsFavorite] = useState(false);
   const [likes, setLikes] = useState(product.likes || []);
   const [loading, setLoading] = useState(false);
@@ -30,31 +33,6 @@ const ProductCard = ({ product }) => {
     setShowModal(false);
   };
 
-  // Toggle Like
-  const toggleLike = async () => {
-    if (!user) {
-      toast.error("Please log in to like products.");
-      router.push("/login");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const res = await fetch("/api/likes", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: product._id, userId: user.id }),
-      });
-      const data = await res.json();
-
-      if (data.liked) setLikes((prev) => [...prev, user.id]);
-      else setLikes((prev) => prev.filter((id) => id !== user.id));
-    } catch (err) {
-      console.error("Like error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Fetch favorites
   useEffect(() => {
@@ -74,20 +52,23 @@ const ProductCard = ({ product }) => {
     checkFavorite();
   }, [user, product._id]);
 
-  // Toggle favorite
+  // ------------------ Toggle Favorite ------------------
   const toggleFavorite = async (e) => {
     e.stopPropagation();
     if (!user) {
-      toast.error("Please log in to add to favorites.");
-      router.push("/login");
+      toast.error("Please log in first.");
       return;
     }
 
     try {
+      setLoading(true);
       const res = await fetch("/api/favorites", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: product._id }),
+        body: JSON.stringify({
+          productId: product._id,
+          userId: user.id,
+        }),
       });
 
       if (res.ok) {
@@ -103,20 +84,25 @@ const ProductCard = ({ product }) => {
               {isFavorite ? (
                 <XCircle className="text-red-500" size={20} />
               ) : (
-                <Heart className="text-pink-500 fill-pink-500" size={20} />
+                <Heart className="text-orange-500 fill-orange-500" size={20} />
               )}
-              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              <p className="text-sm font-normal text-black dark:text-white">
                 {!isFavorite ? "Added to favorites" : "Removed from favorites"}
               </p>
             </div>
           ),
           { duration: 2000 }
         );
-      } else toast.error("Failed to update favorites");
-    } catch (err) {
+      } else {
+        toast.error("Failed to update favorites");
+      }
+    } catch (error) {
       toast.error("An error occurred");
+    } finally {
+      setLoading(false);
     }
   };
+
 
   const { data: reviews = [] } = useSWR(
     `/api/reviews?productId=${product._id}`,
@@ -136,7 +122,7 @@ const ProductCard = ({ product }) => {
   const handleAddToCart = () => {
     if (!user) {
       toast.error("Please log in to add items to your cart.");
-      router.push("/login");
+      router.push("/signup");
       return;
     }
     addToCart(product);
@@ -150,7 +136,7 @@ const ProductCard = ({ product }) => {
       onMouseUp={handleLongPressEnd}
       onMouseLeave={handleLongPressEnd}
       onTouchEnd={handleLongPressEnd}
-      className="group flex flex-col w-[160px] cursor-pointer rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:shadow-md hover:scale-[1.02] transition-all overflow-hidden"
+      className="group flex flex-col w-[160px] cursor-pointer rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-black hover:shadow-md hover:scale-[1.02] transition-all overflow-hidden"
     >
       {/* Image */}
       <div className="relative h-28 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
@@ -170,27 +156,27 @@ const ProductCard = ({ product }) => {
         >
           <Heart
             size={14}
-            className={isFavorite ? "text-red-500 fill-red-500" : "text-gray-500"}
+            className={isFavorite ? "text-orange-500 fill-orange-500" : "text-gray-500"}
           />
         </button>
       </div>
 
       {/* Details */}
       <div className="p-2 flex flex-col flex-1 text-gray-900 dark:text-white">
-        <h3 className="text-xs font-medium truncate flex items-center gap-1">
+        <h3 className="text-xs font-normal truncate flex items-center gap-1">
           <Package className="w-3 h-3 text-gray-500 dark:text-gray-300" />
           {product.name}
         </h3>
 
         {/* Price & Rating */}
         <div className="mt-1 flex items-center justify-between">
-          <p className="flex items-center gap-1 text-sm font-bold text-orange-600">
-            <Tag size={12} className="text-orange-500" />
+          <p className="flex items-center gap-1 text-sm font-thin text-orange-700">
+            <Tag size={12} className="text-orange-700" />
             {currency}
             {product.offerPrice}
           </p>
-          <div className="flex items-center gap-0.5 text-[10px] text-yellow-500">
-            <Star className="w-3 h-3 fill-yellow-500" />
+          <div className="flex items-center gap-0.5 text-[10px] text-grey-500">
+            <Star className="w-3 h-3 fill-grey-500" />
             {avgRating.toFixed(1)}
           </div>
         </div>
@@ -202,10 +188,10 @@ const ProductCard = ({ product }) => {
             handleAddToCart();
           }}
           disabled={product.stock === 0}
-          className={`mt-2 flex items-center justify-center gap-1 py-1 rounded-lg text-xs font-medium transition-colors ${
+          className={`mt-2 flex items-center justify-center gap-1 py-1 rounded-lg text-xs font-normal transition-colors ${
             product.stock === 0
               ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-              : "bg-orange-600 hover:bg-orange-700 text-white"
+              : "bg-orange-600 hover:bg-grey-700 text-white"
           }`}
           aria-label={product.stock === 0 ? "Sold Out" : "Add to Cart"}
         >

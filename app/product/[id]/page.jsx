@@ -9,8 +9,8 @@ import RelatedProducts from "@/components/RelatedProducts";
 import Loading from "@/components/Loading";
 import { useAppContext } from "@/context/AppContext";
 import toast from "react-hot-toast";
-import { Heart, ShoppingCart, ArrowRight, Star, CheckCircle, XCircle, Tag, MessageCircle } from "lucide-react";
-import { FaStar, FaRegStar } from "react-icons/fa";
+import { Heart, ShoppingCart, ArrowRight, Star, CheckCircle, XCircle, Tag, MessageCircle, ThumbsUp } from "lucide-react";
+import { FaStar, FaRegStar, FaThumbsUp, FaTag } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 
 export default function ProductPage() {
@@ -319,8 +319,8 @@ export default function ProductPage() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center mt-8 mb-8 bg-white text-black dark:bg-black dark:text-white min-h-screen">
-        <div className="px-6 md:px-16 lg:px-32 mt-8 space-y-10">
+      <div className="flex flex-col items-center mt-8  bg-white text-black dark:bg-black dark:text-white min-h-screen">
+        <div className="px-6 py-4 md:px-16 lg:px-32 mt-8 space-y-10">
           {/* Product Info */}
           <div className="grid md:grid-cols-2 gap-16 mt-8">
             {/* Left: Product Images */}
@@ -349,7 +349,7 @@ export default function ProductPage() {
 
             {/* Right: Product Info */}
             <div className="flex flex-col">
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">{productData.name}</h1>
+              <h1 className="text-4xl font-normal text-black dark:text-white mb-2">{productData.name}</h1>
 
               {/* Rating */}
               <div className="flex items-center gap-2 mb-4">
@@ -362,25 +362,25 @@ export default function ProductPage() {
                       Math.round(
                         reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length || 0
                       )
-                        ? "text-yellow-500 fill-yellow-500"
+                        ? "text-orange-500 fill-orange-500"
                         : "text-gray-300"
                     }
                   />
                 ))}
-                <span className="text-sm text-gray-500">
+                <span className="text-sm font-thin text-gray-500">
                   ({reviews.length} {reviews.length === 1 ? "review" : "reviews"})
                 </span>
               </div>
 
               {/* Description */}
               <div
-                className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"
+                className="text-gray-700 font-thin dark:text-gray-300 leading-relaxed mb-4"
                 dangerouslySetInnerHTML={{ __html: productData.description }}
               />
 
               {/* Price */}
               <div className="flex items-center gap-3 mb-6">
-                <span className="text-3xl font-bold text-orange-600 flex items-center gap-1">
+                <span className="text-3xl font-normal text-orange-600 flex items-center gap-1">
                   <Tag size={20} />
                   {currency}
                   {productData.offerPrice}
@@ -396,15 +396,15 @@ export default function ProductPage() {
                 <table className="table-auto border-collapse w-full max-w-sm text-sm">
                   <tbody>
                     <tr>
-                      <td className="font-medium py-2 pr-4 text-gray-700 dark:text-gray-300">Brand</td>
+                      <td className="font-medium py-2 pr-4 text-black dark:text-white">Brand</td>
                       <td>{productData.brand}</td>
                     </tr>
                     <tr>
-                      <td className="font-medium py-2 pr-4 text-gray-700 dark:text-gray-300">Color</td>
+                      <td className="font-medium py-2 pr-4 text-black dark:text-white">Color</td>
                       <td>{productData.color}</td>
                     </tr>
                     <tr>
-                      <td className="font-medium py-2 pr-4 text-gray-700 dark:text-gray-300">Category</td>
+                      <td className="font-medium py-2 pr-4 text-black dark:text-white">Category</td>
                       <td>{productData.category}</td>
                     </tr>
                   </tbody>
@@ -421,8 +421,8 @@ export default function ProductPage() {
                       : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white"
                   }`}
                 >
-                  <Heart size={16} className={liked ? "fill-white" : ""} />
-                  {liked ? "Liked" : "Like"}
+                  <FaThumbsUp size={16} className={liked ? "fill-white" : ""} />
+                  {/* {liked ? "Liked" : "Like"} */}
                 </button>
 
                 {likeCount > 0 && (
@@ -476,7 +476,7 @@ export default function ProductPage() {
               <div>
                 {session?.user ? (
                   <>
-                    <h2 className="font-semibold mb-2 text-lg text-gray-900 dark:text-white">
+                    <h2 className="font-normal mb-2 text-lg text-gray-900 dark:text-white">
                       Leave a Review
                     </h2>
 
@@ -489,7 +489,7 @@ export default function ProductPage() {
                         id="rating-select"
                         value={rating}
                         onChange={(e) => setRating(+e.target.value)}
-                        className="border rounded px-2 py-1 text-black dark:text-white bg-white dark:bg-gray-900"
+                        className="border rounded px-2 py-1 text-black dark:text-white bg-white dark:bg-black"
                       >
                         {[1, 2, 3, 4, 5].map((n) => (
                           <option key={n} value={n}>
@@ -503,14 +503,14 @@ export default function ProductPage() {
                       rows={3}
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
-                      className="w-full border rounded-lg p-2 mb-3 text-black dark:text-white bg-white dark:bg-gray-900"
+                      className="w-full border rounded-lg p-2 mb-3 text-black dark:text-white bg-white dark:bg-black"
                       placeholder="Your comment..."
                     />
 
                     <button
                       onClick={handleSubmitReview}
                       disabled={loading}
-                      className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition disabled:opacity-50"
+                      className="flex items-center gap-2 px-4 py-2 bg-black border dark:border-white text-white rounded-lg hover:bg-gray-800 transition disabled:opacity-50"
                     >
                       {loading ? (
                         <>
@@ -543,7 +543,7 @@ export default function ProductPage() {
 
             <div className="space-y-6">
               {reviews.length === 0 ? (
-                <p className="text-center text-gray-500 dark:text-gray-400 text-sm py-8 border rounded-xl bg-gray-50 dark:bg-gray-900/40">
+                <p className="text-center text-gray-500 dark:text-gray-400 text-sm py-8 border rounded-xl bg-gray-50 dark:bg-black">
                   No reviews yet. Be the first to review this product!
                 </p>
               ) : (
@@ -555,10 +555,10 @@ export default function ProductPage() {
                       return (
                         <div
                           key={r._id}
-                          className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-900 transition hover:shadow-md"
+                          className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-black transition hover:shadow-md"
                         >
                           <div className="flex items-center justify-between mb-2">
-                            <p className="font-semibold text-gray-900 dark:text-white">{r.username}</p>
+                            <p className="font-normal text-gray-900 dark:text-white">{r.username}</p>
                             <span className="text-xs text-gray-500">
                               {new Date(r.createdAt).toLocaleDateString("en-GB")}
                             </span>
@@ -566,7 +566,7 @@ export default function ProductPage() {
 
                           <div className="flex items-center gap-1 mb-2">{renderStars(r.rating)}</div>
 
-                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{r.comment}</p>
+                          <p className="text-gray-700 dark:text-gray-300 font-thin">{r.comment}</p>
 
                           <div className="flex items-center gap-3 mt-3">
                             <button
@@ -574,10 +574,10 @@ export default function ProductPage() {
                               className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition ${
                                 foundHelpful
                                   ? "bg-orange-500 text-white shadow-sm"
-                                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-orange-50"
+                                  : "bg-gray-100 dark:bg-black border border-white text-gray-700 dark:text-gray-300 hover:bg-orange-50"
                               }`}
                             >
-                              <Heart size={16} />
+                              <FaThumbsUp size={16} />
                               {foundHelpful ? "Helpful" : "Mark as Helpful"}
                             </button>
                             <span className="text-sm text-gray-500">
@@ -664,7 +664,7 @@ export default function ProductPage() {
           {relatedProducts.length > 0 && (
             <section className="mt-10">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
+                <h2 className="text-xl md:text-2xl font-normal text-gray-900 dark:text-gray-100">
                   Related Products
                 </h2>
               </div>

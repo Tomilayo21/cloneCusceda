@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useState, useEffect } from "react";
 import HeaderSlider from "@/components/HeaderSlider";
 import HomeProducts from "@/components/HomeProducts";
@@ -8,45 +8,40 @@ import FeaturedProduct from "@/components/FeaturedProduct";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Loading from "@/components/Loading";
+import { useAppContext } from "@/context/AppContext";
 import LandingPage from "@/components/LandingPage";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { themeMode } = useAppContext(); // ✅ from context
 
   useEffect(() => {
-    // Sync theme
-    const savedMode = localStorage.getItem("theme");
-    if (savedMode === "dark") {
-      setIsDarkMode(true);
+    // ✅ Sync dark/light mode directly from AppContext
+    if (themeMode === "dark") {
       document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
     }
+  }, [themeMode]);
 
-    // Elfsight Script Injection
+  useEffect(() => {
+    // ✅ Inject Elfsight script
     const script = document.createElement("script");
     script.src = "https://static.elfsight.com/platform/platform.js";
     script.async = true;
     document.body.appendChild(script);
 
-    // Simulated fetch
+    // ✅ Simulate data fetch
     const fetchData = async () => {
       try {
-        await new Promise((resolve, reject) => {
-          setTimeout(() => {
-            const shouldFail = false; // change to true to test error
-            if (shouldFail) reject(new Error("Failed to load data"));
-            else resolve();
-          }, 2000);
-        });
-
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         setLoading(false);
       } catch (err) {
-        setError(err.message);
+        setError("Failed to load data");
         setLoading(false);
       }
     };
-
     fetchData();
 
     return () => {
@@ -54,23 +49,10 @@ const Home = () => {
     };
   }, []);
 
-  const toggleDarkMode = () => {
-    const root = document.documentElement;
-    if (isDarkMode) {
-      root.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    } else {
-      root.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    }
-    setIsDarkMode(!isDarkMode);
-  };
-
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center h-[70vh] space-y-4">
         <Loading />
-        {/* <p className="text-gray-700 text-lg font-medium">Please wait while loading...</p> */}
       </div>
     );
   }
@@ -90,16 +72,15 @@ const Home = () => {
       <div className="px-6 md:px-16 lg:px-32 mt-16">
         <HeaderSlider />
         <HomeProducts />
-        <FeaturedProduct />
+        {/* <FeaturedProduct /> */}
         <Banner />
         <NewsLetter />
         {/* <LandingPage /> */}
       </div>
 
       <Footer />
-      {/* <ScrollButton /> */}
 
-      {/* Elfsight Chatbot Embed with Reduced Size */}
+      {/* Elfsight Chatbot Embed */}
       <div
         style={{
           transform: "scale(0.8)",
@@ -120,5 +101,3 @@ const Home = () => {
 };
 
 export default Home;
-
-

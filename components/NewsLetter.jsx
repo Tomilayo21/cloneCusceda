@@ -58,8 +58,8 @@ const NewsLetter = () => {
       />
 
       {/* Headline */}
-      <h1 className="md:text-4xl text-2xl font-bold text-black dark:text-white z-10 px-4">
-        Subscribe Now & Get <span className="text-orange-600">20% Off</span>
+      <h1 className="md:text-4xl text-2xl font-normal text-black dark:text-white z-10 px-4">
+        Subscribe Now & Get Updated
       </h1>
 
       {/* Description */}
@@ -93,7 +93,7 @@ const NewsLetter = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full md:w-auto md:px-12 px-8 py-3 md:py-4 bg-orange-600 text-white font-semibold rounded-md md:rounded-r-md md:rounded-l-none transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-orange-400/50 disabled:opacity-50"
+          className="w-full md:w-auto md:px-12 px-8 py-3 md:py-4 bg-orange-600 text-white font-normal rounded-md md:rounded-r-md md:rounded-l-none transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-orange-400/50 disabled:opacity-50"
         >
           {loading ? "Subscribing..." : "Subscribe"}
         </button>

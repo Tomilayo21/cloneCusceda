@@ -57,7 +57,7 @@ const HeaderSlider = () => {
             flex flex-col md:flex-row items-center justify-center
             py-8 md:py-12 md:px-16 px-4 min-w-full rounded-2xl
             bg-gradient-to-r from-[#F8F9FB] to-[#E6E9F2]
-            dark:from-gray-900 dark:to-gray-700 shadow-md
+            dark:from-gray-900 dark:to-gray-800 shadow-md
             gap-6 md:gap-12
           "
         >

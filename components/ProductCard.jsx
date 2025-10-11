@@ -15,7 +15,7 @@ const ProductCard = ({ product }) => {
   if (product.visible === false) return null;
 
   const router = useRouter();
-  const { currency, addToCart, currentUser } = useAppContext();
+  const { currency, addToCart } = useAppContext();
 
   const { data: session } = useSession(); 
   const user = session?.user;

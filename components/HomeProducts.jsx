@@ -1,13 +1,10 @@
-//<----------------------------------------Lazy Loading---------------------------------------------------->
-
-//
 import React, { useState } from "react";
 import ProductCard from "./ProductCard";
 import { useAppContext } from "@/context/AppContext";
 
 const HomeProducts = () => {
   const { products, router } = useAppContext();
-  const [visibleCount, setVisibleCount] = useState(25); // initial limit
+  const [visibleCount, setVisibleCount] = useState(25);
 
   const visibleProducts = products.slice(0, visibleCount);
 
@@ -18,8 +15,8 @@ const HomeProducts = () => {
   return (
     <div className="flex flex-col items-center pt-14">
       <div className="flex flex-col items-center">
-        <p className="text-3xl font-medium">
-          All <span className="text-orange-600">Products</span>
+        <p className="text-3xl font-normal">
+          Featured Products
         </p>
         <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
       </div>

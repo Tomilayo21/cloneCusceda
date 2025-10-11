@@ -6,8 +6,8 @@ import Link from "next/link";
 import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Menu, X, Heart, ShoppingCart, ShieldAlert } from "lucide-react";
-import { useSession, signOut } from "next-auth/react"; 
+import { Menu, X, ShoppingCart, } from "lucide-react";
+import { useSession } from "next-auth/react"; 
 
 import Signup from "@/components/Signup";
 import SearchBar from "./Searchbar";

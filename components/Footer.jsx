@@ -14,7 +14,7 @@ const FooterSection = ({ title, children }) => {
     <div className="border-b border-gray-200 dark:border-gray-800 md:border-none pb-4 md:pb-0">
       {/* Section Header */}
       <button
-        className="w-full flex items-center justify-between md:justify-start md:cursor-default text-left font-semibold text-gray-900 dark:text-gray-100 text-lg tracking-wide"
+        className="w-full flex items-center justify-between md:justify-start md:cursor-default text-left font-normal text-gray-900 dark:text-gray-100 text-lg tracking-wide"
         onClick={() => setOpen(!open)}
       >
         {title}
@@ -41,7 +41,7 @@ const FooterSection = ({ title, children }) => {
 };
 
 export default function Footer() {
-  const { themeMode } = ( useAppContext );
+  const { themeMode } = useAppContext ();
   const [logoUrl, setLogoUrl] = useState(null);
   const [lightLogoUrl, setLightLogoUrl] = useState(null);
   const [darkLogoUrl, setDarkLogoUrl] = useState(null);
@@ -60,14 +60,16 @@ export default function Footer() {
       try {
         const res = await fetch("/api/settings");
         const data = await res.json();
-        setLightLogoUrl(data.lightLogoUrl || null);
-        setDarkLogoUrl(data.darkLogoUrl || null);
+        console.log("Fetched settings:", data);
+        setLightLogoUrl(data.settings?.lightLogoUrl || data.lightLogoUrl || null);
+        setDarkLogoUrl(data.settings?.darkLogoUrl || data.darkLogoUrl || null);
       } catch (err) {
         console.error("Failed to fetch logos", err);
       }
     };
     fetchLogos();
   }, []);
+
 
   // Select logo based on theme
   useEffect(() => {
@@ -97,15 +99,17 @@ export default function Footer() {
   // Current year
   const currentYear = new Date().getFullYear();
 
+  const logoSrc = themeMode === "dark" ? darkLogoUrl || lightLogoUrl : lightLogoUrl || darkLogoUrl;
+
   return (
     <footer className="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-400">
       {/* Top Section */}
       <div className="flex flex-col md:flex-row items-start justify-between px-6 md:px-16 lg:px-32 gap-6 md:gap-12 py-12 md:py-16 border-b border-gray-200/70 dark:border-gray-800/70">
         {/* Logo & Description */}
         <div className="w-full md:w-1/3 space-y-6">
-          {logoUrl && (
+          {logoSrc && (
             <img
-              src={logoUrl}
+              src={logoSrc}
               alt="Logo"
               className="cursor-pointer w-28 md:w-36 hover:opacity-90 transition"
             />
