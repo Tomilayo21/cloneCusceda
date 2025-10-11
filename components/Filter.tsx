@@ -262,8 +262,8 @@ export default function FilterBar() {
     const sortLabels: Record<string, string> = {
       "asc price": "Price (low → high)",
       "desc price": "Price (high → low)",
-      "asc date": "Newest",
-      "desc date": "Oldest",
+      "asc date": "Oldest",
+      "desc date": "Newest",
     };
 
     const chips: { name: string; label: string }[] = [];
@@ -476,8 +476,8 @@ export default function FilterBar() {
                   const sort = searchParams.get("sort");
                   if (sort === "asc price") return "Price (low → high)";
                   if (sort === "desc price") return "Price (high → low)";
-                  if (sort === "asc date") return "Newest";
-                  if (sort === "desc date") return "Oldest";
+                  if (sort === "asc date") return "Oldest";
+                  if (sort === "desc date") return "Newest";
                   return "Select sort order";
                 })()}
               </div>
