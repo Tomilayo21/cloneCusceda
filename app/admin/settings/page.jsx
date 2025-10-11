@@ -343,7 +343,7 @@ export default function AdminSettings() {
   
   return (
     <div className="max-w-5xl mx-auto p-4 space-y-6 text-gray-700 dark:text-gray-300 dark:bg-black">
-      <h2 className="text-2xl font-bold text-gray-800 text-gray-700 dark:text-gray-300 dark:bg-black">Settings</h2>
+      <h2 className="text-2xl font-normal text-gray-800 text-gray-700 dark:text-gray-300 dark:bg-black">Settings</h2>
 
       {/* Tab Header */}
       <div className="flex flex-wrap gap-2 border-b pb-2 text-gray-700 dark:text-gray-300">
@@ -357,7 +357,7 @@ export default function AdminSettings() {
               if (tab.key === "users") setUserPanel("main");
               if (tab.key === "orders") setOrderPanel(null);
             }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-normal transition-all duration-200
               ${
                 activeTab === tab.key
                   ? "bg-orange-500 text-white shadow-md"
@@ -385,7 +385,7 @@ export default function AdminSettings() {
                   transition={{ duration: 0.3 }}
                   className="space-y-4"
                 >
-                  <h3 className="font-semibold text-lg dark:text-gray-300 dark:bg-black">Site Settings</h3>
+                  <h3 className="font-normal text-lg dark:text-gray-300 dark:bg-black">Site Settings</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                     <button
                       onClick={() => setSettingsPanel('site')}
@@ -399,10 +399,10 @@ export default function AdminSettings() {
                         border border-transparent 
                       "
                     >
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex font-thin items-center gap-2 mb-1">
                         <span className="">Site Metadata</span>
                       </div>
-                      <p className="text-xs text-left text-gray-700 dark:text-gray-300">
+                      <p className="text-xs text-left font-thin text-gray-700 dark:text-gray-300">
                         Edit your site’s title, description, support email and logo.
                       </p>
                     </button>
@@ -725,8 +725,8 @@ export default function AdminSettings() {
                   transition={{ duration: 0.3 }}
                   className="space-y-4"
                 >
-                  <h3 className="font-semibold text-lg">Company Info</h3>
-                  <p className="text-sm text-gray-600">
+                  <h3 className="font-normal text-lg">Company Info</h3>
+                  <p className="text-sm font-thin text-gray-600">
                     Manage your company's public-facing content and team details.
                   </p>
 
@@ -735,32 +735,32 @@ export default function AdminSettings() {
                       onClick={() => setCompanyPanel("about")}
                       className="flex flex-col items-start bg-sky-100 hover:bg-sky-200 text-sky-800 p-4 rounded-xl shadow"
                     >
-                      <span className="font-semibold mb-1">About Us</span>
-                      <p className="text-xs text-left">Edit your company's story and purpose.</p>
+                      <span className="font-thin mb-1">About Us</span>
+                      <p className="text-xs font-thin text-left">Edit your company's story and purpose.</p>
                     </button>
 
                     <button
                       onClick={() => setCompanyPanel("partners")}
                       className="flex flex-col items-start bg-pink-100 hover:bg-pink-200 text-pink-800 p-4 rounded-xl shadow"
                     >
-                      <span className="font-semibold mb-1">Partner With Us</span>
-                      <p className="text-xs text-left">Manage partnership information and callouts.</p>
+                      <span className="font-thin mb-1">Partner With Us</span>
+                      <p className="text-xs font-thin text-left">Manage partnership information and callouts.</p>
                     </button>
 
                     <button
                       onClick={() => setCompanyPanel("who")}
                       className="flex flex-col items-start bg-indigo-100 hover:bg-indigo-200 text-indigo-800 p-4 rounded-xl shadow"
                     >
-                      <span className="font-semibold mb-1">Testimonials</span>
-                      <p className="text-xs text-left">Showcase what clients or customers say about you.</p>
+                      <span className="font-normal mb-1">Testimonials</span>
+                      <p className="text-xs font-thin text-left">Showcase what clients or customers say about you.</p>
                     </button>
 
                     <button
                       onClick={() => setCompanyPanel("team")}
                       className="flex flex-col items-start bg-rose-100 hover:bg-rose-200 text-rose-800 p-4 rounded-xl shadow"
                     >
-                      <span className="font-semibold mb-1">Cusceda Team</span>
-                      <p className="text-xs text-left">Showcase team members and bios.</p>
+                      <span className="font-normal mb-1">Cusceda Team</span>
+                      <p className="text-xs font-thin text-left">Showcase team members and bios.</p>
                     </button>
                   </div>
                 </motion.div>
@@ -853,7 +853,7 @@ export default function AdminSettings() {
                     transition={{ duration: 0.3 }}
                     className="space-y-4"
                     >
-                    <h3 className="font-semibold text-lg">Product Settings</h3>
+                    <h3 className="font-normal text-lg">Product Settings</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                     <button
                         onClick={() => setProductPanel('add')}
@@ -861,9 +861,9 @@ export default function AdminSettings() {
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <PlusCircle className="w-5 h-5" />
-                          <span className="font-semibold">Add Product</span>
+                          <span className="font-thin">Add Product</span>
                         </div>
-                        <p className="text-xs text-left">
+                        <p className="text-xs font-thin text-left">
                           Create a new product, upload images, set prices, and manage availability.
                       </p>
                       </button>
@@ -873,9 +873,9 @@ export default function AdminSettings() {
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <List className="w-5 h-5" />
-                          <span className="font-semibold">Product List</span>
+                          <span className="font-thin">Product List</span>
                         </div>
-                      <p className="text-xs text-left">
+                      <p className="text-xs font-thin text-left">
                           View and manage your existing product catalog, edit or delete items.
                         </p>
                       </button>
@@ -886,9 +886,9 @@ export default function AdminSettings() {
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <Star className="w-5 h-5" />
-                          <span className="font-semibold">Reviews</span>
+                          <span className="font-thin">Reviews</span>
                         </div>
-                        <p className="text-xs text-left">
+                        <p className="text-xs font-thin text-left">
                         Monitor and approve customer reviews and ratings on products.
                         </p>
                       </button>
