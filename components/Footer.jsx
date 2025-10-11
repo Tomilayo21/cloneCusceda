@@ -2,11 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-// import { useTheme } from "@/context/ThemeContext";
 import { useAppContext } from "@/context/AppContext";
 import { Phone, Mail, ChevronDown } from "lucide-react";
 
-// ✅ Reusable Section with Accordion
 const FooterSection = ({ title, children }) => {
   const [open, setOpen] = useState(false);
 
@@ -103,7 +101,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-400">
-      {/* Top Section */}
+
       <div className="flex flex-col md:flex-row items-start justify-between px-6 md:px-16 lg:px-32 gap-6 md:gap-12 py-12 md:py-16 border-b border-gray-200/70 dark:border-gray-800/70">
         {/* Logo & Description */}
         <div className="w-full md:w-1/3 space-y-6">
@@ -189,7 +187,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom Bar */}
       <div className="py-4 md:py-5 px-6 md:px-16 lg:px-32 flex flex-col md:flex-row items-center justify-between text-xs md:text-sm text-gray-500 dark:text-gray-500">
         <p className="text-center md:text-left">
           © {currentYear} {footerData.footerName}. All Rights Reserved.

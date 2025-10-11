@@ -16,13 +16,18 @@ const HomeProducts = () => {
   };
 
   return (
-    <div className="flex flex-col items-center pt-14">
-      <div className="flex flex-col items-center">
-        <p className="text-3xl font-normal">Featured Products</p>
-        <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
+    <div className="flex flex-col items-center pt-14 lg:px-32 px-6">
+      <div className="flex flex-col items-center text-center mb-10">
+        <p className="text-3xl md:text-4xl font-semibold text-gray-900 dark:text-white">
+          Trending Products
+        </p>
+        <p className="mt-3 max-w-2xl text-gray-600 dark:text-gray-400 text-sm md:text-base">
+          Find the best products — quality, value, and style in one place.
+        </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6 pb-14 w-full">
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-6 mt-6 pb-14 w-full">
         {visibleProducts.map((product, index) => (
           <FadeInWhenVisible key={index} delay={index * 0.1}>
             <ProductCard product={product} />

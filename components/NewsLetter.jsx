@@ -48,7 +48,7 @@ const NewsLetter = () => {
 
 
   return (
-    <div className="flex flex-col items-center mb-12 justify-center text-center space-y-4 pt-12 pb-16 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-800 rounded-xl shadow-md relative overflow-hidden">
+    <div className="flex flex-col items-center mb-12 justify-center text-center space-y-4 pt-12 pb-16 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-800 rounded-xl  relative overflow-hidden">
 
       {/* Decorative Illustration */}
       <img

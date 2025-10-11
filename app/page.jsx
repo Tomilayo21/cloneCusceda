@@ -73,7 +73,7 @@ const Home = () => {
     <div className="min-h-[200vh] bg-background text-foreground transition-colors duration-300">
       <Navbar />
 
-      <div className="px-6 md:px-16 lg:px-32 mt-16">
+      <div className="px-6 md:px-16 lg:px-0 mt-16">
         
         <FadeInWhenVisible>
         <HeaderSlider />

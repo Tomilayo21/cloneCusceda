@@ -6,7 +6,6 @@ import { AppContextProvider } from '@/context/AppContext';
 import { Toaster } from 'react-hot-toast';
 import LayoutWrapper from '@/components/LayoutWrapper';
 import AnalyticsTracker from '@/components/admin/AnalyticsTracker';
-import { AuthProvider } from "@/context/AuthContext";
 import { SessionProvider } from "next-auth/react";
 
 const outfit = Outfit({ subsets: ['latin'], weight: ['300', '400', '500'] });
@@ -21,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`antialiased ${mounted ? outfit.className : ""}`}>
-          <SessionProvider>  {/* 👈 wrap here */}
+          <SessionProvider> 
             <AppContextProvider>
               <Toaster position="top-right" />
               <AnalyticsTracker>
