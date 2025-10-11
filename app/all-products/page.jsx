@@ -12,7 +12,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Filter from "@/components/Filter";
 import { useAppContext } from "@/context/AppContext";
-import { PackageSearch, ChevronLeft, ChevronRight, Frown, SlidersHorizontal } from "lucide-react";
+import { PackageSearch, ChevronLeft, ChevronRight, Frown, ListFilter, SlidersHorizontal } from "lucide-react";
 
 const PRODUCTS_PER_PAGE = 25;
 
@@ -128,16 +128,16 @@ const AllProducts = () => {
         <div className="w-full flex items-center justify-between border-b pb-6">
           <div>
             <h2
-              className={`font-semibold text-2xl md:text-3xl ${fontSizeClass} flex items-center gap-2`}
+              className={`font-normal text-2xl md:text-3xl ${fontSizeClass} flex items-center gap-2`}
               style={{ color: secondaryColor }}
             >
               <PackageSearch className="w-6 h-6 text-orange-600" />
               All Products
             </h2>
-            <div
+            {/* <div
               className="w-20 h-1 rounded-full mt-2"
               style={{ backgroundColor: themeColor }}
-            ></div>
+            ></div> */}
           </div>
         </div>
 
