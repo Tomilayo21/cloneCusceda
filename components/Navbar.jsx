@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Menu, X, ShoppingCart, } from "lucide-react";
 import { useSession } from "next-auth/react"; 
+import { motion, AnimatePresence } from "framer-motion";
 
 import Signup from "@/components/Signup";
 import SearchBar from "./Searchbar";
@@ -158,14 +159,39 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu */}
-           <div className="flex md:hidden items-center justify-between w-full px-4">
+
+          <div className="flex md:hidden items-center justify-between w-full px-4">
             {/* Left: Menu Button */}
             <button
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               aria-label="Toggle Menu"
-              className="hover:scale-110 transition-transform"
+              className="hover:scale-110 transition-transform relative w-6 h-6 flex items-center justify-center"
             >
-              {mobileMenuOpen ? <X className="font-thin" size={24} /> : <Menu className="font-thin" size={24} />}
+              <AnimatePresence mode="wait" initial={false}>
+                {mobileMenuOpen ? (
+                  <motion.div
+                    key="close"
+                    initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
+                    animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                    exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    className="absolute"
+                  >
+                    <X className="font-thin text-gray-800 dark:text-gray-100" size={24} />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="menu"
+                    initial={{ rotate: 90, opacity: 0, scale: 0.8 }}
+                    animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                    exit={{ rotate: -90, opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    className="absolute"
+                  >
+                    <Menu className="font-thin text-gray-800 dark:text-gray-100" size={24} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </button>
 
             {/* Center: Logo */}
@@ -182,17 +208,19 @@ const Navbar = () => {
             {/* Right: Search & Cart */}
             <div className="flex items-center gap-3">
               <SearchBar />
-              <button
-                onClick={() => router.push("/cart")}
-                className="relative hover:text-orange-600 hover:scale-110 transition-transform"
-              >
-                <ShoppingCart className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-black text-white dark:bg-white dark:text-black text-[11px] rounded-full px-1.5">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
+              {mounted && user ? (
+                <button
+                  onClick={() => router.push("/cart")}
+                  className="relative hover:text-orange-600 hover:scale-110 transition-transform"
+                >
+                  <ShoppingCart className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-black text-white dark:bg-white dark:text-black text-[11px] rounded-full px-1.5">
+                      {cartCount}
+                    </span>
+                  )}
+                </button>
+              ) : null}
             </div>
           </div>
 
