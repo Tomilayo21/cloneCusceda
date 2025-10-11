@@ -131,7 +131,7 @@ const AllProducts = () => {
               className={`font-normal text-2xl md:text-3xl ${fontSizeClass} flex items-center gap-2`}
               style={{ color: secondaryColor }}
             >
-              <PackageSearch className="w-6 h-6 text-orange-600" />
+              {/* <PackageSearch className="w-6 h-6 text-orange-600" /> */}
               All Products
             </h2>
             {/* <div

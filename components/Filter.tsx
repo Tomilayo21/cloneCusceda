@@ -282,12 +282,13 @@ export default function FilterBar() {
   return (
     <div className="flex flex-col gap-4 md:gap-6">
       {/* === Summary Chips (Now Above Filters) === */}
-      <div className="flex flex-wrap items-center gap-2 text-xs md:text-sm text-gray-700">
+        <div className="flex flex-wrap items-center gap-2 text-xs md:text-sm text-gray-700">
         {summaryChips.length > 0 && (
           <>
             <span className="font-medium text-gray-500 mr-1">
               Showing results for:
             </span>
+
             {summaryChips.map((chip, idx) => (
               <span
                 key={idx}
@@ -307,10 +308,27 @@ export default function FilterBar() {
                 </button>
               </span>
             ))}
+
+            {/* === Clear All Button === */}
+            <button
+              onClick={() => {
+                const params = new URLSearchParams(window.location.search);
+                params.delete("category");
+                params.delete("brand");
+                params.delete("color");
+                params.delete("min");
+                params.delete("max");
+                params.delete("sort");
+                const newUrl = `${window.location.pathname}`;
+                router.push(newUrl); // navigates to base path (cleared filters)
+              }}
+              className="ml-2 text-xs md:text-sm text-orange-600 hover:text-orange-800 font-medium underline decoration-underline-offset-2"
+            >
+              Clear all
+            </button>
           </>
         )}
       </div>
-
 
       {/* === Filter Controls === */}
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-6">
