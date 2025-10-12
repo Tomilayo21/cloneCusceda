@@ -210,19 +210,20 @@ const ProductCard = ({ product }) => {
           <div>
             <p className="text-base font-normal text-orange-700">
               {currency}
-              {product.offerPrice}
+              {Number(product.offerPrice).toLocaleString()}
             </p>
-            <div className="flex items-center gap-1 text-xs text-grey-500">
-              <Star className="w-3 h-3 fill-grey-500" />
+
+            <div className="flex items-center gap-1 text-xs text-gray-500">
+              <Star className="w-3 h-3 fill-gray-500" />
               {avgRating.toFixed(1)}
             </div>
+
             {product.stock <= 10 && product.stock > 0 && (
-              <p className="text-[10px] text-grey-500 font-medium mt-1">
+              <p className="text-[10px] text-gray-500 font-medium mt-1">
                 Only {product.stock} left!
               </p>
             )}
           </div>
-
           {/* Add to Cart Button */}
           <button
             onClick={(e) => {

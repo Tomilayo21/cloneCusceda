@@ -10,10 +10,13 @@ import Footer from "@/components/Footer";
 import Loading from "@/components/Loading";
 import { useAppContext } from "@/context/AppContext";
 import LandingPage from "@/components/LandingPage";
+import PromoBanner from "@/components/PromoBanner";
 import FadeInWhenVisible from "@/components/animations/FadeInWhenVisible";
 import SlideInWhenVisible from "@/components/animations/SlideInWhenVisible";
 import ParallaxFadeIn from "@/components/animations/ParallaxFadeIn";
 import AnimatedInView from "@/components/animations/AnimatedInView";
+import TrendingProducts from "@/components/TrendingProducts";
+import Categories from "@/components/Categories";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -72,6 +75,8 @@ const Home = () => {
   return (
     <div className="min-h-[200vh] bg-background text-foreground transition-colors duration-300">
       <Navbar />
+      {/* <PromoBanner /> */}
+
 
       <div className="px-6 md:px-16 lg:px-0 mt-16">
         
@@ -79,8 +84,12 @@ const Home = () => {
         <HeaderSlider />
         </FadeInWhenVisible>
 
+        <TrendingProducts />
+
         <FadeInWhenVisible>
-        <HomeProducts />
+        {/* <HomeProducts /> 
+        */}
+        <Categories />
         </FadeInWhenVisible>
         {/* <FeaturedProduct /> */}
 

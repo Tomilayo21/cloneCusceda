@@ -48,7 +48,10 @@ const NewsLetter = () => {
 
 
   return (
-    <div className="flex flex-col items-center mb-12 justify-center text-center space-y-4 pt-12 pb-16 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-800 rounded-xl  relative overflow-hidden">
+    <div className="flex flex-col items-center mb-12 
+      justify-center text-center space-y-4 pt-12 pb-16 
+      bg-gradient-to-b from-gray-50 dark:from-gray-900 
+      to-white dark:to-gray-800 rounded-xl  relative overflow-hidden">
 
       {/* Decorative Illustration */}
       <img
@@ -64,7 +67,8 @@ const NewsLetter = () => {
 
       {/* Description */}
       <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 max-w-xl z-10 px-6">
-        Join our newsletter for exclusive discounts, product updates, and early access to new arrivals — starting with 20% off your first order!
+        Join our newsletter for exclusive discounts, product updates, 
+        and early access to new arrivals — starting with 20% off your first order!
       </p>
 
       {/* Subscription Form */}
@@ -78,7 +82,10 @@ const NewsLetter = () => {
         <div className="relative flex-1 group w-full">
           {/* Mail Icon */}
           <Mail
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-orange-600 transition-all duration-300 group-focus-within:animate-pulse"
+            className="absolute left-3 top-1/2 transform 
+            -translate-y-1/2 text-gray-400 group-focus-within:text-orange-600 
+            transition-all duration-300 group-focus-within:animate-pulse
+          "
             size={20}
           />
           <input
@@ -86,14 +93,23 @@ const NewsLetter = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
-            className="pl-10 pr-4 py-3 md:py-4 w-full rounded-md md:rounded-l-md md:rounded-r-none border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white transition-all"
+            className="pl-10 pr-4 py-3 md:py-4 w-full rounded-md 
+              md:rounded-l-md md:rounded-r-none border border-gray-300 
+              focus:outline-none focus:ring-2 focus:ring-orange-500 
+              dark:bg-gray-800 dark:border-gray-700 dark:text-white transition-all
+            "
             required
           />
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="w-full md:w-auto md:px-12 px-8 py-3 md:py-4 bg-orange-600 text-white font-normal rounded-md md:rounded-r-md md:rounded-l-none transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-orange-400/50 disabled:opacity-50"
+          className="w-full md:w-auto md:px-12 px-8 py-3 
+          md:py-4 bg-orange-600 text-white font-normal 
+          rounded-md md:rounded-r-md md:rounded-l-none 
+          transition-all transform hover:scale-105 hover:shadow-lg 
+          hover:shadow-orange-400/50 disabled:opacity-50
+        "
         >
           {loading ? "Subscribing..." : "Subscribe"}
         </button>

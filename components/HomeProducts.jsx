@@ -19,7 +19,7 @@ const HomeProducts = () => {
     <div className="flex flex-col items-center pt-14 lg:px-32 px-6">
       <div className="flex flex-col items-center text-center mb-10">
         <p className="text-3xl md:text-4xl font-semibold text-gray-900 dark:text-white">
-          Trending Products
+          Products
         </p>
         <p className="mt-3 max-w-2xl text-gray-600 dark:text-gray-400 text-sm md:text-base">
           Find the best products — quality, value, and style in one place.

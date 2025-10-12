@@ -4,11 +4,13 @@ import * as Select from "@radix-ui/react-select";
 import { ChevronDown, SlidersHorizontal, ListFilter } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
+import { useAppContext } from "@/context/AppContext";
 
 export default function FilterBar() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [showFilters, setShowFilters] = useState(false);
+  const { currency } = useAppContext();
 
   const handleFilterChange = (name: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -53,7 +55,7 @@ export default function FilterBar() {
     if (brand) chips.push({ name: "brand", label: `Brand: ${brand}` });
     if (color) chips.push({ name: "color", label: `Color: ${color}` });
     if (min || max)
-      chips.push({ name: "price", label: `₦${min || "0"} – ₦${max || "∞"}` });
+      chips.push({ name: "price", label: `${currency}${min || "0"} – ${currency}${max || "∞"}` });
     if (sort)
       chips.push({ name: "sort", label: sortLabels[sort] || sort });
 
