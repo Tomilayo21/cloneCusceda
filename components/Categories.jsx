@@ -10,10 +10,10 @@ const Categories = () => {
 
   const categories = [
     { name: "Headphones", image: "/headphones.jpg", slug: "Headphone" },
-    { name: "Laptops", image: "/laptop.jpg", slug: "Laptop" },
-    { name: "Consoles", image: "/controller.jpg", slug: "Consoles" },
-    { name: "Accessories", image: "/accessories.jpg", slug: "Accessories" },
-    { name: "Smartphones", image: "/smartphone.jpg", slug: "Smartphone" },
+    { name: "Laptops", image: "/Gemini_Laptop.png", slug: "Laptop" },
+    { name: "Consoles", image: "/Gemini_Console.png", slug: "Consoles" },
+    { name: "Accessories", image: "/Gemini_Accessories.png", slug: "Accessories" },
+    { name: "Smartphones", image: "/Gemini_Phone.png", slug: "Smartphone" },
   ];
 
   return (
