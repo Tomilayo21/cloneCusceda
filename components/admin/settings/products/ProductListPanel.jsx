@@ -13,7 +13,7 @@ import { CheckCircle, AlertCircle, Search } from "lucide-react";
 import confetti from "canvas-confetti";
 import { useSession } from "next-auth/react";
 
-const PRODUCTS_PER_PAGE = 15;
+const PRODUCTS_PER_PAGE = 25;
 
 const ProductListPanel = () => {
   const { router, getToken, user, currency } = useAppContext();
@@ -344,7 +344,7 @@ const ProductListPanel = () => {
       <div className="w-full md:p-10 p-4 max-w-7xl mx-auto space-y-6">
         {/* Title */}
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-semibold text-gray-800">All Products</h2>
+          <h2 className="text-2xl font-normal text-gray-800">All Products</h2>
           <button
             onClick={handleExportCSV}
             className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm shadow-sm transition"
@@ -465,7 +465,10 @@ const ProductListPanel = () => {
                   </td>
 
                   <td className="px-4 py-3">{product.category}</td>
-                  <td className="px-4 py-3 font-semibold text-gray-800">${product.offerPrice}</td>
+                  <td className="px-4 py-3 font-normal text-gray-800">
+                    {currency}
+                    {Number(product.offerPrice).toLocaleString()}
+                  </td>
 
                   <td className="px-4 py-3 text-center">
                     <span className="inline-block px-2 py-1 text-sm font-medium bg-gray-100 rounded-md">
@@ -475,9 +478,9 @@ const ProductListPanel = () => {
 
                   <td className="px-4 py-3">
                     {product.stock > 0 ? (
-                      <span className="text-green-600 font-semibold">In Stock</span>
+                      <span className="text-green-600 font-normal">In Stock</span>
                     ) : (
-                      <span className="text-red-500 font-semibold">Sold Out</span>
+                      <span className="text-red-500 font-normal">Sold Out</span>
                     )}
                   </td>
 
@@ -538,16 +541,19 @@ const ProductListPanel = () => {
               <div className="flex-1 space-y-1">
                 <h3 className="font-semibold text-base truncate text-gray-800">{product.name}</h3>
                 <p className="text-xs text-gray-500">{product.category}</p>
-                <p className="text-sm font-medium text-gray-800">${product.offerPrice}</p>
+                <p className="text-sm font-normal text-gray-800">              
+                  {currency}
+                  {Number(product.offerPrice).toLocaleString()}
+                </p>
 
                 <div className="mt-1 flex items-center gap-2">
                   {product.stock > 0 ? (
                     <>
                       <span className="text-sm font-medium">{product.stock}</span>
-                      <span className="text-green-600 text-xs font-medium">In Stock</span>
+                      <span className="text-green-600 text-xs font-normal">In Stock</span>
                     </>
                   ) : (
-                    <span className="text-red-500 text-xs font-medium">Sold Out</span>
+                    <span className="text-red-500 text-xs font-normal">Sold Out</span>
                   )}
                 </div>
 

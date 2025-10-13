@@ -383,11 +383,11 @@ export default function ProductPage() {
                 <span className="text-3xl font-normal text-orange-600 flex items-center gap-1">
                   <Tag size={20} />
                   {currency}
-                  {productData.offerPrice}
+                  {Number(productData.offerPrice).toLocaleString()}
                 </span>
                 <span className="line-through text-gray-500 dark:text-gray-400">
                   {currency}
-                  {productData.price}
+                  {Number(productData.price).toLocaleString()}
                 </span>
               </div>
 
@@ -669,7 +669,7 @@ export default function ProductPage() {
                 </h2>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {relatedProducts.map((p) => (
                   <div key={p._id} className="transition-transform hover:scale-[1.02] duration-200">
                     <RelatedProducts product={p} />

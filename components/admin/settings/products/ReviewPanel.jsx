@@ -252,7 +252,7 @@ const ReviewsPanel = () => {
 
   return (
     <div className="p-4 max-w-6xl flex-1 overflow-y-auto mx-auto">
-      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
+      <h1 className="text-2xl md:text-3xl font-normal mb-6 text-gray-800">
         Manage Reviews
       </h1>
 

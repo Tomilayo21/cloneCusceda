@@ -124,14 +124,19 @@ const Navbar = () => {
             >
               Products
             </Link>
-            {mounted && user && (
-              <Link
-                href="/my-orders"
-                className="px-3 py-1.5 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-              >
-                My Orders
-              </Link>
-            )}
+            <Link
+              href="/about"
+              className="px-3 py-1.5 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            >
+              About Us
+            </Link>
+            <Link
+              href="/contact"
+              className="px-3 py-1.5 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            >
+              Contact
+            </Link>
+
           </div>
 
           {/* Desktop Right */}
@@ -244,15 +249,22 @@ const Navbar = () => {
             >
               Products
             </Link>
+            <Link
+              href="/about"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-2 py-2 font-thin rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              About Us
+            </Link>
+            <Link
+              href="/contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-2 py-2 font-thin rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              Contact
+            </Link>
             {mounted && user ? (
               <>
-                <Link
-                  href="/my-orders"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-2 py-2 font-thin rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
-                  My Orders
-                </Link>
                 <Link
                   href="/favorites"
                   onClick={() => setMobileMenuOpen(false)}

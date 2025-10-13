@@ -163,17 +163,15 @@ const ProductCard = ({ product }) => {
 
       {/* Details */}
       <div className="p-2 flex flex-col flex-1 text-gray-900 dark:text-white">
-        <h3 className="text-xs font-normal truncate flex items-center gap-1">
-          <Package className="w-3 h-3 text-gray-500 dark:text-gray-300" />
+        <h3 className="text-xs font-semibold truncate flex items-center gap-1">
           {product.name}
         </h3>
 
         {/* Price & Rating */}
         <div className="mt-1 flex items-center justify-between">
-          <p className="flex items-center gap-1 text-sm font-thin text-orange-700">
-            <Tag size={12} className="text-orange-700" />
+        <p className="text-sm font-normal text-gray-600">
             {currency}
-            {product.offerPrice}
+            {Number(product.offerPrice).toLocaleString()}
           </p>
           <div className="flex items-center gap-0.5 text-[10px] text-grey-500">
             <Star className="w-3 h-3 fill-grey-500" />
@@ -188,10 +186,10 @@ const ProductCard = ({ product }) => {
             handleAddToCart();
           }}
           disabled={product.stock === 0}
-          className={`mt-2 flex items-center justify-center gap-1 py-1 rounded-lg text-xs font-normal transition-colors ${
+          className={`mt-2 flex items-center justify-center gap-1 py-1 rounded-md border text-xs font-normal transition-colors ${
             product.stock === 0
               ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-              : "bg-orange-600 hover:bg-grey-700 text-white"
+              : "bg-grey-600 hover:bg-gray-50 text-black"
           }`}
           aria-label={product.stock === 0 ? "Sold Out" : "Add to Cart"}
         >

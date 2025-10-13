@@ -163,7 +163,7 @@ const AddProduct = () => {
         onSubmit={handleSubmit}
         className="p-6 md:p-10 max-w-4xl mx-auto space-y-8"
       >
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+        <h1 className="text-2xl md:text-3xl font-normal text-gray-900">
           Add New Product
         </h1>
 
@@ -396,9 +396,9 @@ const AddProduct = () => {
           >
             {uploading ? "Uploading..." : "Add Product"}
           </button>
-          {uploadDone && !uploading && (
+          {/* {uploadDone && !uploading && (
             <p className="text-orange-600 font-semibold"> <CheckCircle className="text-orange-500" size={22}/> Product uploaded successfully!</p>
-          )}
+          )} */}
         </div>
       </form>
     </div>

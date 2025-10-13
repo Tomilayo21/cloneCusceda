@@ -13,6 +13,7 @@ import Footer from "@/components/Footer";
 import Filter from "@/components/Filter";
 import { useAppContext } from "@/context/AppContext";
 import { PackageSearch, ChevronLeft, ChevronRight, Frown, ListFilter, SlidersHorizontal } from "lucide-react";
+import ProductSlider from "@/components/ProductSlider";
 
 const PRODUCTS_PER_PAGE = 25;
 
@@ -112,6 +113,7 @@ const AllProducts = () => {
     return (
       <>
         <Navbar />
+        <ProductSlider />
         <div className="w-full flex justify-center items-center h-96 text-lg text-gray-600">
           Please wait...
         </div>
@@ -123,12 +125,13 @@ const AllProducts = () => {
   return (
     <>
       <Navbar />
+      <ProductSlider />
       <div className="flex flex-col items-start px-6 md:px-16 mt-10 lg:px-32 pt-8">
         {/* Header */}
         <div className="w-full flex items-center justify-between border-b pb-6">
           <div>
             <h2
-              className={`font-normal text-2xl md:text-3xl ${fontSizeClass} flex items-center gap-2`}
+              className={`font-semibold text-2xl md:text-3xl ${fontSizeClass} flex items-center gap-2`}
               style={{ color: secondaryColor }}
             >
               {/* <PackageSearch className="w-6 h-6 text-orange-600" /> */}
