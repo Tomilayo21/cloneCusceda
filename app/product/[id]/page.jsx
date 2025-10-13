@@ -325,7 +325,7 @@ export default function ProductPage() {
           <div className="grid md:grid-cols-2 gap-16 mt-8">
             {/* Left: Product Images */}
             <div>
-              <div className="rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 mb-6 shadow-md">
+              <div className="rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800 mb-6 hover:shadow-md">
                 <Image
                   src={mainImage || productData.image[0]}
                   alt={productData.name}
@@ -339,7 +339,7 @@ export default function ProductPage() {
                   <div
                     key={i}
                     onClick={() => setMainImage(img)}
-                    className="cursor-pointer rounded-xl overflow-hidden border hover:ring-2 hover:ring-orange-500 transition"
+                    className="cursor-pointer rounded-md overflow-hidden border hover:ring-2 hover:ring-orange-500 transition"
                   >
                     <Image src={img} alt="Product thumbnail" width={200} height={200} className="w-full h-24 object-cover" />
                   </div>
@@ -380,16 +380,30 @@ export default function ProductPage() {
 
               {/* Price */}
               <div className="flex items-center gap-3 mb-6">
+                {/* === Discounted Price === */}
                 <span className="text-3xl font-normal text-orange-600 flex items-center gap-1">
                   <Tag size={20} />
                   {currency}
                   {Number(productData.offerPrice).toLocaleString()}
                 </span>
+
+                {/* === Original Price (Strikethrough) === */}
                 <span className="line-through text-gray-500 dark:text-gray-400">
                   {currency}
                   {Number(productData.price).toLocaleString()}
                 </span>
+
+                {/* === Percentage Off === */}
+                {productData.price > productData.offerPrice && (
+                  <span className="bg-orange-100 text-orange-700 text-sm font-normal px-2.5 py-1 rounded-md">
+                    {Math.round(
+                      ((productData.price - productData.offerPrice) / productData.price) * 100
+                    )}
+                    % OFF
+                  </span>
+                )}
               </div>
+
 
               {/* Specs Table */}
               <div className="overflow-x-auto mb-6">
