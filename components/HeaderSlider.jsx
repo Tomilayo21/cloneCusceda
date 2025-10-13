@@ -8,26 +8,26 @@ const HeaderSlider = () => {
   const sliderData = [
     {
       id: 1,
-      title: "Turn Up the Volume – Headphones That Redefine Sound!",
-      offer: "Limited Time: Enjoy 30% Off!",
+      title: "Powerful Sound. Total Comfort. Meet Your Next Headphones.",
+      offer: "Flash Deal: Save 30% Today",
       buttonText1: "Shop Now",
-      buttonText2: "Browse More",
+      buttonText2: "View Collection",
       imgSrc: "/bose_headphone_image.png",
     },
     {
       id: 2,
-      title: "Own the Game – Snag Your PlayStation 5 Today!",
-      offer: "Hurry! Only a Few Left in Stock!",
-      buttonText1: "Shop Now",
-      buttonText2: "View Deals",
+      title: "Next-Gen Gaming Starts with PlayStation 5.",
+      offer: "Limited Stock — Order Before It’s Gone",
+      buttonText1: "Get Yours Now",
+      buttonText2: "View Offers",
       imgSrc: "/header_playstation_image.png",
     },
     {
       id: 3,
-      title: "Work Hard. Create More. Dominate with MacBook Pro!",
-      offer: "Special Offer: Save 40% Today!",
-      buttonText1: "Order Now",
-      buttonText2: "Discover More",
+      title: "Unleash Power & Performance with MacBook Pro.",
+      offer: "Special Deal: Save 40% Instantly",
+      buttonText1: "Shop Deals",
+      buttonText2: "Learn More",
       imgSrc: "/side-view-laptop-black-wall-removebg-preview.png",
     },
   ];
@@ -128,7 +128,7 @@ const HeaderSlider = () => {
             key={slide.id}
             className="
               flex flex-col-reverse md:flex-row items-center justify-between
-              min-w-full py-10 md:py-16 px-6 md:px-20 lg:px-0
+              min-w-full py-10 md:py-16 px-6 md:px-20
               bg-gradient-to-r from-[#FAFAFA] to-[#F3F4F8] dark:from-gray-900 dark:to-gray-800
               gap-10 md:gap-16
             "
