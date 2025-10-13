@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
+import Link from "next/link";
 
 const HeaderSlider = () => {
   const sliderData = [
@@ -145,17 +146,22 @@ const HeaderSlider = () => {
 
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start">
-                <button className="px-6 md:px-8 py-2.5 md:py-3 bg-orange-600 hover:bg-orange-700 text-white text-sm font-light rounded-full shadow-md transition">
-                  {slide.buttonText1}
-                </button>
-                <button className="group flex items-center justify-center sm:justify-start gap-2 px-6 py-2.5 text-gray-800 dark:text-white text-sm font-light hover:text-orange-600 transition">
-                  {slide.buttonText2}
-                  <Image
-                    className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                    src={assets.arrow_icon}
-                    alt="arrow_icon"
-                  />
-                </button>
+                <Link href="/all-product">
+                  <button className="px-6 md:px-8 py-2.5 md:py-3 bg-orange-600 hover:bg-orange-700 text-white text-sm font-light rounded-full shadow-md transition">
+                    {slide.buttonText1}
+                  </button>
+                </Link>
+
+                <Link href="/all-product">
+                  <button className="group flex items-center justify-center sm:justify-start gap-2 px-6 py-2.5 text-gray-800 dark:text-white text-sm font-light hover:text-orange-600 transition">
+                    {slide.buttonText2}
+                    <Image
+                      className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                      src={assets.arrow_icon}
+                      alt="arrow_icon"
+                    />
+                  </button>
+                </Link>
               </div>
             </div>
 
