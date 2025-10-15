@@ -714,7 +714,7 @@ export default function AdminSettings() {
         )}
 
         {activeTab === "company" && (
-          <div className="relative overflow-hidden">
+          <div className="relative overflow-hidden dark:text-gray-300 dark:bg-black">
             <AnimatePresence mode="wait">
               {companyPanel === "main" && (
                 <motion.div
@@ -726,14 +726,16 @@ export default function AdminSettings() {
                   className="space-y-4"
                 >
                   <h3 className="font-normal text-lg">Company Info</h3>
-                  <p className="text-sm font-thin text-gray-600">
+                  <p className="text-sm font-thin dark:text-white text-gray-600">
                     Manage your company's public-facing content and team details.
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     <button
                       onClick={() => setCompanyPanel("about")}
-                      className="flex flex-col items-start bg-sky-100 hover:bg-sky-200 text-sky-800 p-4 rounded-xl shadow"
+                      className="flex flex-col items-start bg-sky-100 hover:bg-sky-200 text-sky-800 p-4
+                       rounded-xl shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                     >
                       <span className="font-thin mb-1">About Us</span>
                       <p className="text-xs font-thin text-left">Edit your company's story and purpose.</p>
@@ -741,7 +743,9 @@ export default function AdminSettings() {
 
                     <button
                       onClick={() => setCompanyPanel("partners")}
-                      className="flex flex-col items-start bg-pink-100 hover:bg-pink-200 text-pink-800 p-4 rounded-xl shadow"
+                      className="flex flex-col items-start bg-pink-100 hover:bg-pink-200 text-pink-800 p-4
+                       rounded-xl shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                     >
                       <span className="font-thin mb-1">Partner With Us</span>
                       <p className="text-xs font-thin text-left">Manage partnership information and callouts.</p>
@@ -749,7 +753,8 @@ export default function AdminSettings() {
 
                     <button
                       onClick={() => setCompanyPanel("who")}
-                      className="flex flex-col items-start bg-indigo-100 hover:bg-indigo-200 text-indigo-800 p-4 rounded-xl shadow"
+                      className="flex flex-col items-start bg-indigo-100 hover:bg-indigo-200 text-indigo-800 p-4 rounded-xl shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                     >
                       <span className="font-normal mb-1">Testimonials</span>
                       <p className="text-xs font-thin text-left">Showcase what clients or customers say about you.</p>
@@ -757,7 +762,8 @@ export default function AdminSettings() {
 
                     <button
                       onClick={() => setCompanyPanel("team")}
-                      className="flex flex-col items-start bg-rose-100 hover:bg-rose-200 text-rose-800 p-4 rounded-xl shadow"
+                      className="flex flex-col items-start bg-rose-100 hover:bg-rose-200 text-rose-800 p-4 rounded-xl shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                     >
                       <span className="font-normal mb-1">Cusceda Team</span>
                       <p className="text-xs font-thin text-left">Showcase team members and bios.</p>
@@ -776,7 +782,8 @@ export default function AdminSettings() {
                   transition={{ duration: 0.3 }}
                   className="space-y-4"
                 >
-                  <button onClick={() => setCompanyPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                  <button onClick={() => setCompanyPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black  dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg">
                     <ArrowLeft className="w-4 h-4 mr-1" /> Back
                   </button>
 
@@ -857,7 +864,9 @@ export default function AdminSettings() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                     <button
                         onClick={() => setProductPanel('add')}
-                        className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow"
+                        className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow 
+                        dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <PlusCircle className="w-5 h-5" />
@@ -869,7 +878,9 @@ export default function AdminSettings() {
                       </button>
                       <button
                         onClick={() => setProductPanel('list')}
-                        className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
+                        className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow
+                         dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <List className="w-5 h-5" />
@@ -882,7 +893,9 @@ export default function AdminSettings() {
 
                       <button
                         onClick={() => setProductPanel('reviews')}
-                        className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow"
+                        className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow
+                         dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <Star className="w-5 h-5" />
@@ -904,7 +917,8 @@ export default function AdminSettings() {
                   transition={{ duration: 0.3 }}
                   className="space-y-4"
                   >
-                  <button onClick={() => setProductPanel(null)} className="flex items-center text-sm text-gray-600 hover:text-black">
+                  <button onClick={() => setProductPanel(null)} className="flex items-center text-sm text-gray-600 hover:text-black
+                   dark:text-white dark:hover:text-grey-200 dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg">
                       <ArrowLeft className="w-4 h-4 mr-1" /> Back
                   </button>
 
@@ -929,46 +943,52 @@ export default function AdminSettings() {
                   transition={{ duration: 0.3 }}
                   className="space-y-4"
                 >
-                  <h3 className="font-semibold text-lg">Users & Subscribers</h3>
-                  <p className="text-sm text-gray-600">
+                  <h3 className="font-thin text-lg">Users & Subscribers</h3>
+                  <p className="text-sm dark:text-white text-gray-600">
                     Role assignments, user lists, and subscriber communication tools.
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                     <button
                       onClick={() => setUserPanel("list")}
-                      className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
+                      className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl 
+                      shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                     >
                       <div className="flex items-center gap-2 mb-1">
                         <Users className="w-5 h-5" />
-                        <span className="font-semibold">View Users</span>
+                        <span className="font-normal">View Users</span>
                       </div>
-                      <p className="text-xs text-left">
+                      <p className="text-xs text-left font-thin">
                         Browse and manage all registered users, including profile info and activity.
                       </p>
                     </button>
 
                       <button
                       onClick={() => setUserPanel("subscribers")}
-                      className="flex flex-col items-start bg-green-100 hover:bg-green-200 text-green-800 p-4 rounded-xl shadow"
+                      className="flex flex-col items-start bg-green-100 hover:bg-green-200 text-green-800 p-4 rounded-xl 
+                      shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                     >
                       <div className="flex items-center gap-2 mb-1">
                         <Mail className="w-5 h-5" />
-                        <span className="font-semibold">Subscribers</span>
+                        <span className="font-normal">Subscribers</span>
                       </div>
-                      <p className="text-xs text-left">
+                      <p className="text-xs text-left font-thin">
                         View and export newsletter subscribers and manage email outreach.
                       </p>
                     </button>
 
                     <button
                       onClick={() => setUserPanel("roles")}
-                      className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow"
+                      className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl 
+                      shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                     >
                       <div className="flex items-center gap-2 mb-1">
                         <ShieldCheck className="w-5 h-5" />
-                        <span className="font-semibold">Roles & Permissions</span>
+                        <span className="font-normal">Roles & Permissions</span>
                       </div>
-                      <p className="text-xs text-left">
+                      <p className="text-xs text-left font-thin">
                         Assign roles to users, configure access levels, and manage permissions.
                       </p>
                     </button>
@@ -1118,66 +1138,78 @@ export default function AdminSettings() {
                     transition={{ duration: 0.3 }}
                     className="space-y-4"
                     >
-                    <h3 className="font-semibold text-lg">Orders & Payments</h3>
+                    <h3 className="font-normal text-lg">Orders & Payments</h3>
 
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                        <button
                         onClick={() => setOrderPanel('orders')}
-                        className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow"
+                        className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl 
+                        shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <PackageSearch className="w-5 h-5" />
-                          <span className="font-semibold">View Orders</span>
+                          <span className="font-normal">View Orders</span>
                         </div>
-                        <p className="text-xs text-left">
+                        <p className="text-xs font-thin text-left">
                           Browse all placed orders, track delivery status, and update order stages.
                         </p>
                       </button>
 
                       <button
                         onClick={() => setOrderPanel('transactions')}
-                        className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
+                        className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl 
+                        shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <CreditCard className="w-5 h-5" />
-                          <span className="font-semibold">View Transactions</span>
+                          <span className="font-normal">View Transactions</span>
                         </div>
-                        <p className="text-xs text-left">
+                        <p className="text-xs font-thin text-left">
                           Monitor all payment records, verify receipts, and check transaction types.
                         </p>
                       </button>
                      </div> 
+
+
                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
                        <button
                         onClick={() => setOrderPanel('orders')}
-                        className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow transition"
+                        className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl 
+                        shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg transition"
                       >
                         <div className="flex items-center gap-2 mb-1">
-                          <PackageSearch className="w-5 h-5" />
-                          <span className="font-semibold">View Orders</span>
+                          <PackageSearch className="w-5 h-5" /> 
+                          <span className="font-normal">View Orders</span>
                         </div>
-                        <p className="text-xs text-left">
+                        <p className="text-xs font-thin text-left">
                           Browse all placed orders, track delivery status, and update order stages.
                         </p>
                       </button>
 
                       <button
                         onClick={() => setOrderPanel('transactions')}
-                        className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow transition"
+                        className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl 
+                        shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg transition"
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <CreditCard className="w-5 h-5" />
-                          <span className="font-semibold">View Transactions</span>
+                          <span className="font-normal">View Transactions</span>
                         </div>
-                        <p className="text-xs text-left">
+                        <p className="text-x font-thin text-left">
                           Monitor all payment records, verify receipts, and check transaction types.
                         </p>
                       </button>
 
-                      {/* Placeholder for future section */}
-                      <div className="flex flex-col items-start bg-gray-100 text-gray-500 p-4 rounded-xl shadow italic">
+
+                      <div className="flex flex-col items-start bg-gray-100 text-gray-500 p-4 rounded-xl 
+                      shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg italic">
                         <span className="font-medium mb-1">More Coming Soon</span>
-                        <p className="text-xs">
+                        <p className="text-xs font-thin">
                           Stay tuned for additional features in this section.
                         </p>
                       </div>
@@ -1232,7 +1264,7 @@ export default function AdminSettings() {
                 <div>
                     <label className="block text-sm font-medium mb-1">Preferred Language</label>
                     <select
-                        className="w-full border p-2 rounded"
+                        className="w-full border p-2 rounded dark:bg-black"
                         onChange={changeLanguage}
                         defaultValue={Cookies.get('lang') || 'en'}
                     >
@@ -1248,7 +1280,7 @@ export default function AdminSettings() {
                 {/* Timezone Selection */}
                 <div>
                 <label className="block text-sm font-medium mb-1">Timezone</label>
-                <select className="w-full border p-2 rounded">
+                <select className="w-full border p-2 rounded dark:bg-black">
                     <option>(GMT+01:00) West Africa Time</option>
                     <option>(GMT+00:00) UTC</option>
                     <option>(GMT-05:00) Eastern Time (US & Canada)</option>
@@ -1260,7 +1292,7 @@ export default function AdminSettings() {
                 {/* Date Format */}
                 <div>
                 <label className="block text-sm font-medium mb-1">Date Format</label>
-                <select className="w-full border p-2 rounded">
+                <select className="w-full border p-2 rounded dark:bg-black">
                     <option>MM/DD/YYYY</option>
                     <option>DD/MM/YYYY</option>
                     <option>YYYY-MM-DD</option>
@@ -1270,7 +1302,7 @@ export default function AdminSettings() {
                 {/* Number Format */}
                 <div>
                 <label className="block text-sm font-medium mb-1">Number Format</label>
-                <select className="w-full border p-2 rounded">
+                <select className="w-full border p-2 rounded dark:bg-black">
                     <option>1,234.56 (US)</option>
                     <option>1.234,56 (EU)</option>
                     <option>1 234,56 (Russia/Arabic)</option>
@@ -1281,7 +1313,7 @@ export default function AdminSettings() {
                 <div>
                     <label className="block text-sm font-medium mb-1">Currency</label>
                     <select
-                        className="w-full border p-2 rounded"
+                        className="w-full border p-2 rounded dark:bg-black"
                         value={currency}
                         onChange={(e) => setCurrency(e.target.value)}
                     >
@@ -1303,7 +1335,7 @@ export default function AdminSettings() {
                 {/* Text Direction */}
                 <div>
                 <label className="block text-sm font-medium mb-1">Text Direction</label>
-                <select className="w-full border p-2 rounded">
+                <select className="w-full border p-2 rounded dark:bg-black">
                     <option value="ltr">Left to Right (LTR)</option>
                     <option value="rtl">Right to Left (RTL)</option>
                 </select>
@@ -1332,7 +1364,7 @@ export default function AdminSettings() {
             {/* Theme Color Picker */}
             <div>
               <h3
-                className="font-semibold text-lg mb-2 cursor-pointer flex items-center justify-between text-gray-800 dark:text-gray-100"
+                className="font-normal text-lg mb-2 cursor-pointer flex items-center justify-between text-gray-800 dark:text-gray-100"
                 onClick={() => setColorOpen(!colorOpen)}
               >
                 Color Picker
@@ -1392,7 +1424,7 @@ export default function AdminSettings() {
             {/* Appearance / Theme Toggle */}
             <div className="space-y-2">
               <h3
-                className="font-semibold text-lg cursor-pointer flex items-center justify-between text-gray-800 dark:text-gray-100"
+                className="font-normal text-lg cursor-pointer flex items-center justify-between text-gray-800 dark:text-gray-100"
                 onClick={() => setOpen(!open)}
               >
                 Theme
@@ -1429,7 +1461,7 @@ export default function AdminSettings() {
                     <span>Dark Mode</span>
                   </label>
 
-                  <label className="flex items-center gap-2 cursor-pointer">
+                  {/* <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"
                       name="theme"
@@ -1437,14 +1469,14 @@ export default function AdminSettings() {
                       onChange={() => setThemeMode("system")}
                     />
                     <span>System Preference</span>
-                  </label>
+                  </label> */}
                 </div>
               </div>
             </div>
 
             {/* High Contrast Mode */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-100">
+              <h3 className="font-normal text-lg text-gray-800 dark:text-gray-100">
                 High Contrast
               </h3>
 
@@ -1488,18 +1520,20 @@ export default function AdminSettings() {
                   transition={{ duration: 0.3 }}
                   className="space-y-4"
                 >
-                  <h3 className="font-semibold text-lg">Legal & Policy</h3>
-                  <p className="text-sm text-gray-600">
+                  <h3 className="font-normal text-lg">Legal & Policy</h3>
+                  <p className="text-sm fonormal text-gray-600">
                     Manage your website's legal documents and policy pages.
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     <button
                       onClick={() => setLegalPanel("privacy")}
-                      className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow"
+                      className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl 
+                      shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                     >
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold">Privacy Policy</span>
+                        <span className="font-normal">Privacy Policy</span>
                       </div>
                       <p className="text-xs text-left">
                         Describe how user data is collected and used.
@@ -1508,10 +1542,12 @@ export default function AdminSettings() {
 
                     <button
                       onClick={() => setLegalPanel("terms")}
-                      className="flex flex-col items-start bg-green-100 hover:bg-green-200 text-green-800 p-4 rounded-xl shadow"
+                      className="flex flex-col items-start bg-green-100 hover:bg-green-200 text-green-800 p-4 rounded-xl 
+                      shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                     >
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold">Terms & Conditions</span>
+                        <span className="font-normal">Terms & Conditions</span>
                       </div>
                       <p className="text-xs text-left">
                         Outline the rules for using your service.
@@ -1520,10 +1556,12 @@ export default function AdminSettings() {
 
                     <button
                       onClick={() => setLegalPanel("returns")}
-                      className="flex flex-col items-start bg-yellow-100 hover:bg-yellow-200 text-yellow-800 p-4 rounded-xl shadow"
+                      className="flex flex-col items-start bg-yellow-100 hover:bg-yellow-200 text-yellow-800 p-4 rounded-xl 
+                      shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                     >
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold">Return Policy</span>
+                        <span className="font-normal">Return Policy</span>
                       </div>
                       <p className="text-xs text-left">
                         Specify your returns and refund process.
@@ -1532,10 +1570,12 @@ export default function AdminSettings() {
 
                     <button
                       onClick={() => setLegalPanel("faq")}
-                      className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow"
+                      className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl 
+                      shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
+                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
                     >
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold">FAQs</span>
+                        <span className="font-normal">FAQs</span>
                       </div>
                       <p className="text-xs text-left">
                         Manage common legal-related questions and answers.
@@ -1555,10 +1595,10 @@ export default function AdminSettings() {
                   transition={{ duration: 0.3 }}
                   className="space-y-4"
                 >
-                  <button onClick={() => setLegalPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                  <button onClick={() => setLegalPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-white">
                     <ArrowLeft className="w-4 h-4 mr-1" /> Back
                   </button>
-                  <h3 className="font-semibold text-lg">Edit Privacy Policy</h3>
+                  <h3 className="font-normal text-lg">Edit Privacy Policy</h3>
                   
                   <PrivacyEditor />
                 </motion.div>
@@ -1576,11 +1616,11 @@ export default function AdminSettings() {
                 >
                   <button
                     onClick={() => setLegalPanel("main")}
-                    className="flex items-center text-sm text-gray-600 hover:text-black"
+                    className="flex items-center text-sm text-gray-600 hover:text-white"
                   >
                     <ArrowLeft className="w-4 h-4 mr-1" /> Back
                   </button>
-                  <h3 className="font-semibold text-lg">Edit Terms & Conditions</h3>
+                  <h3 className="font-normal text-lg">Edit Terms & Conditions</h3>
 
                   <TermsEditor />
 
@@ -1600,7 +1640,7 @@ export default function AdminSettings() {
                 >
                   <button
                     onClick={() => setLegalPanel("main")}
-                    className="flex items-center text-sm text-gray-600 hover:text-black"
+                    className="flex items-center text-sm text-gray-600 hover:text-white"
                   >
                     <ArrowLeft className="w-4 h-4 mr-1" /> Back
                   </button>
@@ -1622,10 +1662,10 @@ export default function AdminSettings() {
                   transition={{ duration: 0.3 }}
                   className="space-y-4"
                 >
-                  <button onClick={() => setLegalPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
+                  <button onClick={() => setLegalPanel("main")} className="flex items-center text-sm text-gray-600 dark:hover:text-white">
                     <ArrowLeft className="w-4 h-4 mr-1" /> Back
                   </button>
-                  <h3 className="font-semibold text-lg">Edit FAQs</h3>
+                  <h3 className="font-normal text-lg">Edit FAQs</h3>
 
                   <FAQEditor />
                 </motion.div>

@@ -1,141 +1,3 @@
-// "use client";
-
-// import { useEffect, useState } from "react";
-// import { motion } from "framer-motion";
-// import { ArrowLeft } from "lucide-react";
-
-// export default function ReturnPolicyPanel({ setLegalPanel }) {
-//   const [policies, setPolicies] = useState([]);
-//   const [heading, setHeading] = useState("");
-//   const [subheading, setSubheading] = useState("");
-//   const [editingPolicy, setEditingPolicy] = useState(null);
-  
-
-//   useEffect(() => {
-//     fetchPolicies();
-//   }, []);
-
-//   const fetchPolicies = async () => {
-//     const res = await fetch("/api/returns");
-//     const data = await res.json();
-//     setPolicies(data);
-//   };
-
-//   const handleSave = async () => {
-//     const payload = { heading, subheading };
-
-//     if (editingPolicy) {
-//       await fetch(`/api/returns/${editingPolicy._id}`, {
-//         method: "PUT",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(payload),
-//       });
-//     } else {
-//       await fetch("/api/returns", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(payload),
-//       });
-//     }
-
-//     setHeading("");
-//     setSubheading("");
-//     setEditingPolicy(null);
-//     fetchPolicies();
-//   };
-
-//   const startEdit = (policy) => {
-//     setEditingPolicy(policy);
-//     setHeading(policy.heading);
-//     setSubheading(policy.subheading);
-//   };
-
-//   const handleDelete = async (id) => {
-//     await fetch(`/api/returns/${id}`, { method: "DELETE" });
-//     fetchPolicies();
-//   };
-
-//   return (
-//     <motion.div
-//       key="legal-returns"
-//       initial={{ x: 300, opacity: 0 }}
-//       animate={{ x: 0, opacity: 1 }}
-//       exit={{ x: -300, opacity: 0 }}
-//       transition={{ duration: 0.3 }}
-//       className="space-y-4"
-//     >
-//       <button
-//         onClick={() => setLegalPanel("main")}
-//         className="flex items-center text-sm text-gray-600 hover:text-black"
-//       >
-//         <ArrowLeft className="w-4 h-4 mr-1" /> Back
-//       </button>
-
-//       <h3 className="font-semibold text-lg">
-//         {editingPolicy ? "Edit Return Policy" : "Add Return Policy"}
-//       </h3>
-
-//       <input
-//         type="text"
-//         placeholder="Heading"
-//         value={heading}
-//         onChange={(e) => setHeading(e.target.value)}
-//         className="w-full border p-2 rounded"
-//       />
-//       <textarea
-//         placeholder="Subheading / content"
-//         value={subheading}
-//         onChange={(e) => setSubheading(e.target.value)}
-//         className="w-full border p-2 rounded"
-//         rows={6}
-//       />
-//       <button
-//         onClick={handleSave}
-//         className="px-4 py-2 bg-yellow-600 text-white rounded"
-//       >
-//         {editingPolicy ? "Update" : "Save"}
-//       </button>
-
-//       <div className="divide-y">
-//         {policies.map((policy) => (
-//           <div
-//             key={policy._id}
-//             className="py-2 flex justify-between items-start"
-//           >
-//             <div className="text-sm text-gray-700 whitespace-pre-wrap">
-//               <h4 className="font-semibold">{policy.heading}</h4>
-//               <p>{policy.subheading}</p>
-//             </div>
-//             <div className="space-x-2">
-//               <button
-//                 onClick={() => startEdit(policy)}
-//                 className="text-blue-600 text-sm"
-//               >
-//                 Edit
-//               </button>
-//               <button
-//                 onClick={() => handleDelete(policy._id)}
-//                 className="text-red-600 text-sm"
-//               >
-//                 Delete
-//               </button>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </motion.div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -210,26 +72,26 @@ export default function ReturnsEditor() {
           value={heading}
           onChange={(e) => setHeading(e.target.value)}
           placeholder="Policy Heading"
-          className="w-full border px-2 py-1 rounded"
+          className="w-full border px-2 py-1 rounded dark:bg-black"
         />
         <textarea
           value={subheading}
           onChange={(e) => setSubheading(e.target.value)}
           placeholder="Policy Subheading"
           rows={6}
-          className="w-full border px-2 py-1 rounded"
+          className="w-full border px-2 py-1 rounded dark:bg-black"
         />
         {editingId ? (
           <div className="space-x-2">
             <button
               onClick={handleUpdate}
-              className="px-4 py-2 bg-blue-600 text-white rounded"
+              className="px-4 py-2 bg-blue-600 text-white rounded dark:bg-black"
             >
               Update Policy
             </button>
             <button
               onClick={cancelEdit}
-              className="px-4 py-2 bg-gray-400 text-white rounded"
+              className="px-4 py-2 bg-gray-400 text-white rounded dark:bg-black"
             >
               Cancel Edit
             </button>
@@ -237,7 +99,7 @@ export default function ReturnsEditor() {
         ) : (
           <button
             onClick={handleAdd}
-            className="px-4 py-2 bg-green-600 text-white rounded"
+            className="px-4 py-2 bg-green-600 text-white rounded dark:bg-black dark:border dark:hover:bg-gray-800"
           >
             Add Policy
           </button>
@@ -257,13 +119,13 @@ export default function ReturnsEditor() {
             <div className="space-x-2">
               <button
                 onClick={() => startEdit(policy)}
-                className="text-blue-600 text-sm"
+                className="text-orange-600 text-sm dark:text-orange-400 dark:hover:text-orange-300"
               >
                 Edit
               </button>
               <button
                 onClick={() => handleDelete(policy._id)}
-                className="text-red-600 text-sm"
+                className="text-red-600 text-sm dark:text-red-400 dark:hover:text-red-300"
               >
                 Delete
               </button>

@@ -26,7 +26,7 @@ export default function LayoutStyleSelector() {
       <select
         value={localStyle}
         onChange={(e) => handlePreview(e.target.value)}
-        className="w-full border p-2 rounded"
+        className="w-full border p-2 rounded dark:bg-black"
       >
         <option value="default">Default</option>
         <option value="compact">Compact</option>

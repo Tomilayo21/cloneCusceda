@@ -70,26 +70,26 @@ export default function PrivacyEditor() {
           value={heading}
           onChange={e => setHeading(e.target.value)}
           placeholder="Policy Heading"
-          className="w-full border px-2 py-1 rounded"
+          className="w-full border px-2 py-1 rounded dark:bg-black"
         />
         <textarea
           value={subheading}
           onChange={e => setSubheading(e.target.value)}
           placeholder="Policy Subheading"
           rows={6}
-          className="w-full border px-2 py-1 rounded"
+          className="w-full border px-2 py-1 rounded dark:bg-black"
         />
         {editingId ? (
           <div className="space-x-2">
             <button
               onClick={handleUpdate}
-              className="px-4 py-2 bg-blue-600 text-white rounded"
+              className="px-4 py-2 bg-blue-600 text-white rounded dark:bg-black"
             >
               Update Policy
             </button>
             <button
               onClick={cancelEdit}
-              className="px-4 py-2 bg-gray-400 text-white rounded"
+              className="px-4 py-2 bg-gray-400 text-white rounded dark:bg-black"
             >
               Cancel Edit
             </button>
@@ -97,7 +97,7 @@ export default function PrivacyEditor() {
         ) : (
           <button
             onClick={handleAdd}
-            className="px-4 py-2 bg-green-600 text-white rounded"
+            className="px-4 py-2 bg-orange-600 text-white rounded dark:bg-black dark:border dark:hover:bg-gray-800"
           >
             Add Policy
           </button>

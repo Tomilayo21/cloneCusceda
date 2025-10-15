@@ -246,7 +246,7 @@ export default function TeamEditor() {
               placeholder="Name"
               value={selectedEntry?.heading || ""}
               onChange={(e) => setSelectedEntry({ ...selectedEntry, heading: e.target.value })}
-              className="w-full border p-2 rounded"
+              className="w-full border p-2 rounded dark:bg-black"
             />
 
             <input
@@ -254,7 +254,7 @@ export default function TeamEditor() {
               placeholder="Position"
               value={selectedEntry?.subheading || ""}
               onChange={(e) => setSelectedEntry({ ...selectedEntry, subheading: e.target.value })}
-              className="w-full border p-2 rounded"
+              className="w-full border p-2 rounded dark:bg-black"
             />
 
             <input
@@ -262,7 +262,7 @@ export default function TeamEditor() {
               placeholder="Section (e.g. Team)"
               value={selectedEntry?.section || ""}
               onChange={(e) => setSelectedEntry({ ...selectedEntry, section: e.target.value })}
-              className="w-full border p-2 rounded"
+              className="w-full border p-2 rounded dark:bg-black"
             />
 
             <TiptapEditor

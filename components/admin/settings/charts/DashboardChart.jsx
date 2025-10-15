@@ -35,18 +35,15 @@ export default function SalesDashboard() {
   });
   const [loading, setLoading] = useState(false);
   const [range, setRange] = useState("7");
-  const [mode, setMode] = useState("comparison"); // orders | revenue | comparison
-  const [showMore, setShowMore] = useState(true); // set true so chart shows initially
+  const [mode, setMode] = useState("comparison"); // "orders" | "revenue" | "comparison"
 
   const { currency } = useAppContext();
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        console.log(`📅 Fetching stats for range: ${range}`);
+        setLoading(true);
         const res = await axios.get(`/api/order/transactions?range=${range}`);
-        console.log("📊 API Response:", res.data);
-
         if (res.data.success) {
           setStats({
             totalOrders: res.data.totalOrders,
@@ -60,14 +57,15 @@ export default function SalesDashboard() {
       } catch (err) {
         console.error("❌ Fetch Stats Error:", err);
         toast.error("Error fetching stats");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchStats();
   }, [range]);
 
-
-  // 🧮 Combine dailyOrders + dailyRevenue
+  // Merge dailyOrders + dailyRevenue
   const combinedData = stats.dailyOrders.map((o) => {
     const rev = stats.dailyRevenue.find((r) => r.date === o.date);
     return {
@@ -79,35 +77,40 @@ export default function SalesDashboard() {
   });
 
   return (
-    <div className="mt-2 space-y-6">
-      {/* Top Stats */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <StatCard label="Total Orders" value={stats.totalOrders} color="orange" />
+    <div className="mt-4 space-y-8">
+      {/* --- Top Cards --- */}
+      <div className="grid gap-6 sm:grid-cols-2">
+        <StatCard
+          label="Total Orders"
+          value={stats.totalOrders}
+          accent="from-orange-500 to-orange-400"
+        />
         <StatCard
           label="Total Revenue"
           value={`${currency}${Number(stats.totalRevenue).toLocaleString()}`}
-          color="blue"
+          accent="from-blue-500 to-blue-400"
         />
       </div>
 
-      {/* Filter Buttons */}
-      <div className="flex flex-wrap justify-center gap-2 mt-4">
+      {/* --- Filters --- */}
+      <div className="flex justify-center gap-2 flex-wrap">
         {FILTERS.map((f) => (
           <button
             key={f.value}
             onClick={() => setRange(f.value)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
-              range === f.value
-                ? "bg-orange-500 text-white shadow"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+              ${
+                range === f.value
+                  ? "bg-orange-500 text-white shadow-md"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
           >
             {f.label}
           </button>
         ))}
       </div>
 
-      {/* Chart */}
+      {/* --- Chart Section --- */}
       <SalesChart
         combinedData={combinedData}
         stats={stats}
@@ -120,35 +123,46 @@ export default function SalesDashboard() {
   );
 }
 
-const StatCard = ({ label, value, color }) => (
-  <div className="bg-white shadow rounded-2xl p-6 border border-gray-100">
-    <h3 className="text-sm font-medium text-gray-500">{label}</h3>
-    <p className={`text-3xl font-bold text-${color}-500 mt-2`}>{value}</p>
+/* --- Stat Card --- */
+const StatCard = ({ label, value, accent }) => (
+  <div className="relative bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
+    <div
+      className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${accent} rounded-t-2xl`}
+    ></div>
+    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+      {label}
+    </h3>
+    <p className="text-3xl font-normal text-gray-900 dark:text-white mt-2">
+      {value}
+    </p>
   </div>
 );
 
+/* --- Chart --- */
 const SalesChart = ({ combinedData, stats, mode, setMode, loading, currency }) => (
-  <div className="bg-white shadow rounded-2xl p-4 sm:p-6 border border-gray-100 mt-4">
+  <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 p-6">
     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
       <div>
-        <h3 className="text-base sm:text-lg font-semibold text-gray-700">
-          Orders & Revenue Trend
+        <h3 className="text-lg font-normal text-gray-800 dark:text-gray-100">
+          Orders & Revenue Overview
         </h3>
-        <p className="text-xs sm:text-sm text-gray-500">
-          Track total orders and total revenue over the selected period.
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Visualize performance over your selected date range.
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        <span className="px-3 py-1 rounded-full text-xs bg-orange-100 text-orange-700">
+      <div className="flex gap-2 flex-wrap">
+        <span className="px-3 py-1 rounded-md text-xs bg-orange-50 text-orange-700">
           Orders: {stats.totalOrders}
         </span>
-        <span className="px-3 py-1 rounded-full text-xs bg-blue-100 text-blue-700">
-          Revenue: {`${ currency }${Number(stats.totalRevenue).toLocaleString()}`}
+        <span className="px-3 py-1 rounded-md text-xs bg-gray-100 text-gray-700">
+          Revenue: {currency}
+          {Number(stats.totalRevenue).toLocaleString()}
         </span>
       </div>
     </div>
 
+    {/* Chart Toggles */}
     <div className="flex gap-2 mb-4">
       <ChartToggle label="Orders" active={mode === "orders"} onClick={() => setMode("orders")} />
       <ChartToggle label="Revenue" active={mode === "revenue"} onClick={() => setMode("revenue")} />
@@ -159,26 +173,34 @@ const SalesChart = ({ combinedData, stats, mode, setMode, loading, currency }) =
       />
     </div>
 
+    {/* Chart Body */}
     {loading ? (
       <p className="text-center text-gray-500 mt-10">Loading chart...</p>
     ) : combinedData.length === 0 ? (
       <p className="text-center text-gray-500 mt-10">No data available</p>
     ) : (
-      <div className="w-full h-64 sm:h-72 md:h-80">
+      <div className="w-full h-64 sm:h-80">
         <ResponsiveContainer>
           <LineChart data={combinedData}>
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
             <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#6b7280" }} />
             <YAxis tick={{ fontSize: 10, fill: "#6b7280" }} />
-            <Tooltip />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#fff",
+                borderRadius: "8px",
+                border: "1px solid #e5e7eb",
+                fontSize: "12px",
+              }}
+            />
             <Legend />
             {(mode === "orders" || mode === "comparison") && (
               <Line
                 type="monotone"
                 dataKey="orders"
                 stroke="#f97316"
-                strokeWidth={2}
-                dot={{ r: 2 }}
+                strokeWidth={2.5}
+                dot={false}
                 activeDot={{ r: 4 }}
               />
             )}
@@ -186,9 +208,9 @@ const SalesChart = ({ combinedData, stats, mode, setMode, loading, currency }) =
               <Line
                 type="monotone"
                 dataKey="revenue"
-                stroke="#3b82f6"
-                strokeWidth={2}
-                dot={{ r: 2 }}
+                stroke="#464545ff"
+                strokeWidth={2.5}
+                dot={false}
                 activeDot={{ r: 4 }}
               />
             )}
@@ -199,11 +221,14 @@ const SalesChart = ({ combinedData, stats, mode, setMode, loading, currency }) =
   </div>
 );
 
+/* --- Chart Toggle Button --- */
 const ChartToggle = ({ label, active, onClick }) => (
   <button
     onClick={onClick}
-    className={`px-3 py-1 rounded text-sm ${
-      active ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-700"
+    className={`px-4 py-1.5 rounded-lg text-sm font-normal transition-all duration-200 ${
+      active
+        ? "bg-gradient-to-r from-orange-500 to-orange-400 text-white shadow"
+        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
     }`}
   >
     {label}

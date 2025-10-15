@@ -82,27 +82,27 @@ export default function TermsEditor() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Term Title"
-          className="w-full border px-2 py-1 rounded"
+          className="w-full border px-2 py-1 rounded dark:bg-black"
         />
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Term Content"
           rows={4}
-          className="w-full border px-2 py-1 rounded"
+          className="w-full border px-2 py-1 rounded dark:bg-black"
         />
 
         {editingId ? (
           <div className="space-x-2">
             <button
               onClick={handleUpdate}
-              className="px-4 py-2 bg-blue-600 text-white rounded"
+              className="px-4 py-2 bg-blue-600 text-white rounded dark:bg-black"
             >
               Update Term
             </button>
             <button
               onClick={cancelEdit}
-              className="px-4 py-2 bg-gray-400 text-white rounded"
+              className="px-4 py-2 bg-gray-400 text-white rounded dark:bg-black"
             >
               Cancel Edit
             </button>
@@ -110,7 +110,7 @@ export default function TermsEditor() {
         ) : (
           <button
             onClick={handleAdd}
-            className="px-4 py-2 bg-green-600 text-white rounded"
+            className="px-4 py-2 bg-orange-600 text-white rounded dark:bg-black dark:border dark:hover:bg-gray-800"
           >
             Add Term
           </button>
