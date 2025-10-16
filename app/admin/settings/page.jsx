@@ -1066,9 +1066,6 @@ export default function AdminSettings() {
         {activeTab === 'notifications' && (
           <div className="space-y-6">
             <h3 className="font-normal text-lg text-gray-800">Notification Preferences</h3>
-            <p className="text-sm text-gray-500">
-              Choose which updates you’d like to receive by email. You can update these settings anytime.
-            </p>
             <NotificationPreferences />
           </div>
         )}
