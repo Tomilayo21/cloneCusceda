@@ -469,7 +469,7 @@ const OrderSummary = () => {
 
         {/* Payment button */}
         <button onClick={handlePayment} disabled={processing || getCartCount() === 0} className={`w-full py-3 mt-4 md:mt-5 rounded-lg text-white font-medium transition ${processing || getCartCount() === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-orange-600 hover:bg-orange-700 shadow-md"}`}>
-          {processing ? "Processing..." : `Pay ${currency}${total.toFixed(2)}`}
+          {processing ? "Processing..." : `Pay ${currency}${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
         </button>
 
       </div>

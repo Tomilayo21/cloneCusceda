@@ -193,7 +193,7 @@ const MyOrders = () => {
                   >
                     <div className="flex items-center gap-4">
                       <Image
-                        className="w-20 h-20 object-cover rounded-md border"
+                        className="w-20 h-20 object-contain rounded-md border"
                         src={order.items[0]?.product.image[0] || assets.box_icon}
                         alt={order.items[0]?.product.name || "Product"}
                         width={80}
@@ -237,7 +237,12 @@ const MyOrders = () => {
                         <p className="font-semibold flex items-center gap-2 mb-1">
                           <DollarSign size={16} /> Total
                         </p>
-                        <p className="text-lg font-bold text-orange-600">{currency}{order.amount?.toFixed(2)}</p>
+                        <p className="text-lg font-bold text-orange-600">
+                          {currency}
+                          {order.amount?.toLocaleString
+                            (undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                          }
+                        </p>
                       </div>
                     </div>
 

@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 import { Dialog } from '@headlessui/react';
-import { useUser } from '@clerk/nextjs';
+import confetti from "canvas-confetti";
+import { useSession } from "next-auth/react";
 
 export default function RestoreModal({ isOpen, onClose }) {
-  const { user } = useUser();
-  const isAdmin = user?.publicMetadata?.role === 'admin'; // Or adjust based on your role logic
+  const { data: session } = useSession();
+    const isAdmin = session?.user?.role === 'admin';
 
   const [file, setFile] = useState(null);
   const [password, setPassword] = useState('');

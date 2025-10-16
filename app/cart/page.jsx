@@ -108,7 +108,7 @@ const Cart = () => {
                         </h3>
                         <p className="text-gray-500 mt-1">
                           {currency}
-                          {product.offerPrice.toFixed(2)}
+                          {Number(product.offerPrice).toLocaleString()}
                         </p>
                         <button
                           className="text-sm text-red-500 mt-2 hover:underline"
@@ -163,8 +163,9 @@ const Cart = () => {
 
                         {/* Price below quantity selector */}
                         <p className="text-lg font-semibold text-gray-800">
-                          {currency}
-                          {(product.offerPrice * currentQuantity).toFixed(2)}
+                          {currency}{Number(product.offerPrice * currentQuantity)
+                          .toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+
                         </p>
                       </div>
 

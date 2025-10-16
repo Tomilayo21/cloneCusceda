@@ -52,6 +52,7 @@ import ExportUserCSV from '@/components/admin/settings/users/ExportUsersCSV';
 import ExportProductsCSV from '@/components/admin/settings/products/ExportProductsCSV';
 import ExportOrdersCSV from '@/components/admin/settings/orders/ExportOrdersCSV';
 import SecuritySettings from '@/components/admin/SecuritySettings';
+import NotificationPreferences from '@/components/admin/NotificationPreferences';
 
 const settingsTabs = [
   { key: 'general', label: 'General', icon: <Cog className="w-4 h-4" /> },
@@ -1064,65 +1065,11 @@ export default function AdminSettings() {
 
         {activeTab === 'notifications' && (
           <div className="space-y-6">
-            <h3 className="font-semibold text-lg text-gray-800">Notification Preferences</h3>
+            <h3 className="font-normal text-lg text-gray-800">Notification Preferences</h3>
             <p className="text-sm text-gray-500">
               Choose which updates you’d like to receive by email. You can update these settings anytime.
             </p>
-
-            {/* Orders */}
-            <div>
-              <h4 className="text-sm font-semibold text-gray-700 mb-2">Orders</h4>
-              <div className="space-y-2">
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" defaultChecked className="accent-orange-600" /> Email on New Order
-                </label>
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="accent-orange-600" /> Email on Order Shipped
-                </label>
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="accent-orange-600" /> Email on Order Delivered
-                </label>
-              </div>
-            </div>
-
-            {/* Reviews */}
-            <div>
-              <h4 className="text-sm font-semibold text-gray-700 mb-2">Reviews</h4>
-              <div className="space-y-2">
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="accent-orange-600" /> Email on New Review
-                </label>
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="accent-orange-600" /> Email on Review Approval
-                </label>
-              </div>
-            </div>
-
-            {/* Stock Alerts */}
-            <div>
-              <h4 className="text-sm font-semibold text-gray-700 mb-2">Stock Alerts</h4>
-              <div className="space-y-2">
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="accent-orange-600" /> Email on Low Stock
-                </label>
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="accent-orange-600" /> Email on Out-of-Stock Product
-                </label>
-              </div>
-            </div>
-
-            {/* Marketing */}
-            <div>
-              <h4 className="text-sm font-semibold text-gray-700 mb-2">Marketing</h4>
-              <div className="space-y-2">
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="accent-orange-600" /> Receive Newsletter
-                </label>
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="accent-orange-600" /> Receive Promotional Offers
-                </label>
-              </div>
-            </div>
+            <NotificationPreferences />
           </div>
         )}
 
