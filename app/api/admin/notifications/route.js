@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth";
 import connectDB from "@/config/db";
 import NotificationPreferences from "@/models/NotificationPreferences";
-import { sendEmail } from "@/lib/email";
 import { authOptions } from "@/lib/authOptions";
 
 export async function GET() {
@@ -35,6 +34,7 @@ export async function PUT(req) {
     { $set: body },
     { new: true, upsert: true }
   );
+
 
   return new Response(JSON.stringify(updated), { status: 200 });
 }

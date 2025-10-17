@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 function generateOrderId() {
-  const prefix = "ORD-";
+  const prefix = "CUS-";
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   const randomString = [...Array(12)]
     .map(() => chars.charAt(Math.floor(Math.random() * chars.length)))

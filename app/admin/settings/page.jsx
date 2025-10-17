@@ -1065,7 +1065,7 @@ export default function AdminSettings() {
 
         {activeTab === 'notifications' && (
           <div className="space-y-6">
-            <h3 className="font-normal text-lg text-gray-800">Notification Preferences</h3>
+            {/* <h3 className="font-normal text-lg text-gray-800">Notification Preferences</h3> */}
             <NotificationPreferences />
           </div>
         )}

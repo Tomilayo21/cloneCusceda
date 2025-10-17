@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const NotificationPreferencesSchema = new mongoose.Schema(
   {
-    userId: { type: String, required: true, unique: true },
+    userId: { type: String, required: true, unique: true }, // ✅ string, not ObjectId
     orders: {
       newOrder: { type: Boolean, default: true },
       shipped: { type: Boolean, default: true },

@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { CheckCircle, XCircle } from "lucide-react";
+
 
 export default function NotificationPreferences() {
   const [prefs, setPrefs] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Fetch current preferences
+
   useEffect(() => {
     const fetchPrefs = async () => {
       try {
@@ -23,8 +25,8 @@ export default function NotificationPreferences() {
     };
     fetchPrefs();
   }, []);
+  
 
-  // ✅ Update preference instantly
   const updatePref = async (path, value) => {
     if (!prefs) return;
     const updated = { ...prefs };
@@ -41,7 +43,21 @@ export default function NotificationPreferences() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updated),
       });
-      toast.success("Preferences updated");
+        toast.custom(
+          (t) => (
+            <div
+              className={`${
+                t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+              } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 transition-all`}
+            >
+              <CheckCircle className="text-orange-500" size={22} />
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                Preference Updated successfully!
+              </p>
+            </div>
+          ),
+          { duration: 3500, position: "top-right" }
+        );
     } catch {
       toast.error("Failed to update preference");
     }
