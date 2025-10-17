@@ -181,11 +181,23 @@ const SalesChart = ({ combinedData, stats, mode, setMode, loading, currency }) =
     ) : (
       <div className="w-full h-64 sm:h-80">
         <ResponsiveContainer>
-          <LineChart data={combinedData}>
+          <LineChart
+            data={combinedData.map((d) => ({
+              ...d,
+              // 🧮 Scale revenue down only in comparison mode
+              scaledRevenue:
+                mode === "comparison" ? Number(d.revenue) / 100000 : Number(d.revenue),
+            }))}
+          >
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
             <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#6b7280" }} />
             <YAxis tick={{ fontSize: 10, fill: "#6b7280" }} />
             <Tooltip
+              formatter={(value, name) =>
+                name === "scaledRevenue" && mode === "comparison"
+                  ? [`${currency}${(value * 10000).toLocaleString()}`, "Revenue"]
+                  : [value, name === "orders" ? "Orders" : "Revenue"]
+              }
               contentStyle={{
                 backgroundColor: "#fff",
                 borderRadius: "8px",
@@ -202,20 +214,27 @@ const SalesChart = ({ combinedData, stats, mode, setMode, loading, currency }) =
                 strokeWidth={2.5}
                 dot={false}
                 activeDot={{ r: 4 }}
+                name="Orders"
               />
             )}
             {(mode === "revenue" || mode === "comparison") && (
               <Line
                 type="monotone"
-                dataKey="revenue"
+                dataKey={mode === "comparison" ? "scaledRevenue" : "revenue"}
                 stroke="#464545ff"
                 strokeWidth={2.5}
                 dot={false}
                 activeDot={{ r: 4 }}
+                name="Revenue"
               />
             )}
           </LineChart>
         </ResponsiveContainer>
+        {mode === "comparison" && (
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 italic text-center">
+            *Revenue values shown in thousands for scale*
+          </p>
+        )}
       </div>
     )}
   </div>
