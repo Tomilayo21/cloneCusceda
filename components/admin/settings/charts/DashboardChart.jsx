@@ -232,7 +232,7 @@ const SalesChart = ({ combinedData, stats, mode, setMode, loading, currency }) =
         </ResponsiveContainer>
         {mode === "comparison" && (
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 italic text-center">
-            *Revenue values shown in thousands for scale*
+            Revenue values shown in hundreds of thousands for scale
           </p>
         )}
       </div>
