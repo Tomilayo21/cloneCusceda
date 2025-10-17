@@ -196,22 +196,22 @@ export default function AdminDashboard({
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       })}`,
-      icon: <DollarSign className="w-6 h-6 text-gray-600" />,
+      icon: <DollarSign className="w-6 h-6 text-gray-600 dark:text-white" />,
     },
     {
       title: "Total Orders",
       value: thisMonthTransactionCount.toString(),
-      icon: <CreditCard className="w-6 h-6 text-gray-600" />,
+      icon: <CreditCard className="w-6 h-6 text-gray-600 dark:text-white" />,
     },
     {
       title: "Total Customers",
       value: allCustomers.toString(),
-      icon: <Users className="w-6 h-6 text-gray-600" />,
+      icon: <Users className="w-6 h-6 text-gray-600 dark:text-white" />,
     },
     {
       title: "New Customers",
       value: newCustomers.toString(),
-      icon: <Users className="w-6 h-6 text-orange-600" />,
+      icon: <Users className="w-6 h-6 text-orange-600 dark:text-white" />,
     },
     {
       title: "Conversion",
@@ -219,7 +219,7 @@ export default function AdminDashboard({
         (thisMonthTransactionCount / Math.max(userCount, 1)) *
         100
       ).toFixed(1)}%`,
-      icon: <TrendingUp className="w-6 h-6 text-gray-600" />,
+      icon: <TrendingUp className="w-6 h-6 text-gray-600 dark:text-white" />,
     },
     {
       title: "Avg. Order Value",
@@ -229,30 +229,34 @@ export default function AdminDashboard({
               2
             )}`
           : `${currency}0.00`,
-      icon: <FileBarChart className="w-6 h-6 text-gray-600" />,
+      icon: <FileBarChart className="w-6 h-6 text-gray-600 dark:text-white" />,
     },
     {
       title: "Subscribers",
       value: subscriberCount.toString(),
-      icon: <UserCheck className="w-6 h-6 text-gray-600" />,
+      icon: <UserCheck className="w-6 h-6 text-gray-600 dark:text-white" />,
     },
     {
       title: "Monthly Growth %",
       value: `${projectGrowth}%`,
-      icon: <Rocket className="w-6 h-6 text-gray-600" />,
+      icon: <Rocket className="w-6 h-6 text-gray-600 dark:text-white" />,
     },
   ];
 
   return (
-    <div className="min-h-screen w-full flex bg-gray-50">
-      <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 py-6">
+    <div className="min-h-screen w-full flex bg-gray-50 dark:bg-black">
+      <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 py-6 dark:bg-black">
         {/* Header */}
         <AdminHeader />
 
         {/* Icon Toggle */}
         <button
           onClick={() => setShowIcons(!showIcons)}
-          className="mb-4 inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-100 transition"
+          className="mb-4 inline-flex items-center gap-2 
+          rounded-md border border-gray-300 bg-white px-4 py-2 
+          text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-100 transition
+          dark:bg-black dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-900
+          "
         >
           {showIcons ? (
             <>
@@ -268,11 +272,11 @@ export default function AdminDashboard({
         </button>
 
         {/* Top Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 dark:bg-black">
           {stats.slice(0, 3).map((item, idx) => (
             <div
               key={idx}
-              className="group relative bg-white dark:bg-gray-900 p-6 rounded-md shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300"
+              className="group relative bg-white dark:bg-black p-6 rounded-md shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300"
             >
               {/* Accent Line */}
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-orange-400 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -280,7 +284,10 @@ export default function AdminDashboard({
               {/* Top Section (Icon) */}
               <div className="flex items-center justify-between mb-4">
                 {showIcons && (
-                  <div className="flex items-center justify-center w-10 h-10 rounded-md bg-orange-50 text-orange-600 group-hover:bg-orange-100 transition">
+                  <div className="flex items-center justify-center w-10 h-10
+                    dark:bg-black dark:border-gray-700 dark:text-white dark:hover:bg-gray-900
+                    rounded-md bg-orange-50 text-orange-600 border group-hover:bg-orange-100 transition"
+                    >
                     <span className="text-3xl">{item.icon}</span>
                   </div>
                 )}
@@ -321,7 +328,7 @@ export default function AdminDashboard({
           {stats.slice(3).map((item, idx) => (
             <div
               key={idx}
-              className={`group relative bg-white dark:bg-gray-900 p-6 rounded-md shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300 ${
+              className={`group relative bg-white dark:bg-black p-6 rounded-md shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300 ${
                 idx === 0 ? "sm:col-span-2" : "sm:col-span-1"
               }`}
             >
@@ -331,7 +338,9 @@ export default function AdminDashboard({
               {/* Icon */}
               {showIcons && (
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-md bg-orange-50 text-orange-600 group-hover:bg-orange-100 transition">
+                  <div className="flex items-center justify-center w-10 h-10
+                    dark:bg-black dark:border-gray-700 dark:hover:bg-gray-900 
+                    rounded-md bg-orange-50  border text-orange-600 group-hover:bg-orange-100 transition">
                     <span className="text-2xl">{item.icon}</span>
                   </div>
                 </div>
@@ -378,10 +387,10 @@ export default function AdminDashboard({
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-xl sm:text-3xl font-normal text-gray-900">
+              <h1 className="text-xl sm:text-3xl font-normal text-gray-900 dark:text-white">
                 Top Products
               </h1>
-              <p className="text-gray-500 text-sm font-light sm:text-base mt-1">
+              <p className="text-gray-500 text-sm font-light sm:text-base mt-1 dark:text-white">
                 Track your best-selling items and revenue performance.
               </p>
             </div>
@@ -398,7 +407,7 @@ export default function AdminDashboard({
               topProducts.map((p, idx) => (
                 <div
                   key={idx}
-                  className="bg-white dark:bg-gray-900 p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300"
+                  className="bg-white dark:bg-black p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300"
                 >
                   {/* Product Header */}
                   <div className="flex items-start justify-between mb-4">
@@ -411,7 +420,8 @@ export default function AdminDashboard({
                       </p>
                     </div>
                     <span
-                      className={`text-xs font-light px-2.5 py-1 rounded-md ${
+                      className={`text-xs font-light px-2.5 py-1 rounded-md 
+                        dark:bg-black border dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-900 ${
                         p.stock > 20
                           ? "bg-green-100 text-black"
                           : p.stock > 5
@@ -467,10 +477,10 @@ export default function AdminDashboard({
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-normal text-gray-900">
+              <h1 className="text-2xl sm:text-3xl font-normal text-gray-900 dark:text-white">
                 Recent Orders
               </h1>
-              <p className="text-gray-500 text-sm font-light sm:text-base mt-1">
+              <p className="text-gray-500 text-sm font-light sm:text-base mt-1 dark:text-white">
                 Track your latest orders, statuses, and payment progress.
               </p>
             </div>
@@ -481,7 +491,7 @@ export default function AdminDashboard({
 
           {/* Orders List */}
           {orders.length > 0 ? (
-            <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-white border border-gray-100 rounded-md shadow-sm overflow-hidden dark:bg-black dark:border-gray-700 border">
               <div className="divide-y divide-gray-100">
                 {orders
                   .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -489,7 +499,7 @@ export default function AdminDashboard({
                   .map((order) => (
                     <div
                       key={order._id}
-                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 hover:bg-gray-50 transition"
+                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 dark:hover:bg-gray-900 hover:bg-gray-50 transition"
                     >
                       {/* Customer Info */}
                       <div className="flex items-center gap-3 min-w-[180px]">
@@ -499,10 +509,10 @@ export default function AdminDashboard({
                             : "?"}
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900">
+                          <p className="font-medium text-gray-900 dark:text-white truncate">
                             {order.address?.fullName || order.fullName || "N/A"}
                           </p>
-                          <p className="text-xs font-thin text-gray-500 truncate">
+                          <p className="text-xs font-thin text-gray-500 truncate dark:text-white">
                             {order.orderId || "N/A"}
                           </p>
                         </div>
@@ -510,8 +520,8 @@ export default function AdminDashboard({
 
                       {/* Amount */}
                       <div className="min-w-[100px]">
-                        <p className="text-sm font-normal text-gray-500">Amount</p>
-                        <p className="font-thin text-gray-800">
+                        <p className="text-sm font-normal text-gray-500 dark:text-white">Amount</p>
+                        <p className="font-thin text-gray-800 dark:text-white">
                           {order.amount
                             ? `${currency}${order.amount.toLocaleString(undefined, {
                                 minimumFractionDigits: 2,
@@ -523,9 +533,9 @@ export default function AdminDashboard({
 
                       {/* Order Status */}
                       <div className="min-w-[120px]">
-                        <p className="text-sm text-gray-500">Order</p>
+                        <p className="text-sm text-gray-500 dark:text-white">Order</p>
                         <span
-                          className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full
+                          className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full dark:text-white dark:bg-black border dark:border-gray-700
                             ${
                               order.orderStatus === "Delivered"
                                 ? "bg-green-100 text-green-700"
@@ -537,7 +547,7 @@ export default function AdminDashboard({
                             }`}
                         >
                           <span
-                            className={`w-1.5 h-1.5 rounded-full ${
+                            className={`w-1.5 h-1.5 rounded-full dark:text-white ${
                               order.orderStatus === "Delivered"
                                 ? "bg-green-500"
                                 : order.orderStatus === "Pending"
@@ -553,9 +563,9 @@ export default function AdminDashboard({
 
                       {/* Payment Status */}
                       <div className="min-w-[130px]">
-                        <p className="text-sm text-gray-500">Payment</p>
+                        <p className="text-sm text-gray-500 dark:text-white">Payment</p>
                         <span
-                          className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full
+                          className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full dark:text-white dark:bg-black border dark:border-gray-700
                             ${
                               order.paymentStatus === "Paid"
                                 ? "bg-green-100 text-green-700"
@@ -567,7 +577,7 @@ export default function AdminDashboard({
                             }`}
                         >
                           <span
-                            className={`w-1.5 h-1.5 rounded-full ${
+                            className={`w-1.5 h-1.5 rounded-full dark:text-white ${
                               order.paymentStatus === "Successful"
                                 ? "bg-green-500"
                                 : order.paymentStatus === "Pending"
@@ -583,8 +593,8 @@ export default function AdminDashboard({
 
                       {/* Date */}
                       <div className="min-w-[120px] text-right">
-                        <p className="text-sm text-gray-500">Date</p>
-                        <p className="font-thin text-gray-800">
+                        <p className="text-sm text-gray-500 dark:text-white">Date</p>
+                        <p className="font-thin text-gray-800 dark:text-white">
                           {new Date(order.createdAt).toLocaleDateString("en-US", {
                             month: "short",
                             day: "numeric",
@@ -597,20 +607,20 @@ export default function AdminDashboard({
               </div>
             </div>
           ) : (
-            <p className="text-gray-500 text-sm">No orders available.</p>
+            <p className="text-gray-500 text-sm dark:text-white">No orders available.</p>
           )}
         </div>
 
 
         {/* Sales Overview */}
         <div className="space-y-4 mt-8">
-          <h1 className="text-2xl font-normal text-gray-800">Sales Overview</h1>
-          <p className="text-gray-600 font-light">
+          <h1 className="text-2xl font-normal text-gray-800 dark:text-white">Sales Overview</h1>
+          <p className="text-gray-600 font-light dark:text-white">
             Track total orders and revenue across different time ranges.
           </p>
         </div>
 
-        <div className="mt-8 bg-white p-5 rounded-xl shadow-md border border-gray-100">
+        <div className="mt-8 bg-white p-5 rounded-md dark:bg-black shadow-md border border-gray-100">
           <AnimatePresence>
             <motion.div
               key="chart"

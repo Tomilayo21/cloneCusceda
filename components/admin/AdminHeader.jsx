@@ -72,10 +72,11 @@ const AdminHeader = () => {
       className="bg-gradient-to-r from-orange-50 via-white to-orange-50
                  border border-orange-100 text-gray-900 rounded-2xl p-6 mb-6
                  shadow-md hover:shadow-lg transition-shadow 
-                 flex flex-col md:flex-row items-start md:items-center justify-between"
+                 flex flex-col md:flex-row items-start md:items-center justify-between
+                 dark:from-gray-900 dark:via-black dark:to-gray-900 dark:border-gray-800 dark:text-gray-200"
     >
       {/* Left Section */}
-      <div className="flex items-center gap-4 mb-4 md:mb-0">
+      <div className="flex items-center gap-4  mb-4 md:mb-0">
         <div>
           {user ? (
             <>
@@ -83,12 +84,12 @@ const AdminHeader = () => {
                 <span className="bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-500 text-transparent bg-clip-text">
                   {greeting},
                 </span>{" "}
-                <span className="font-normal bg-gradient-to-r from-gray-800 to-gray-500 text-transparent bg-clip-text">
+                <span className="font-normal dark:text-white bg-gradient-to-r from-gray-800 to-gray-500 text-transparent bg-clip-text">
                   {user.name || user.email}
                 </span>
               </h2>
 
-              <p className="flex items-center gap-2 text-sm mt-1 bg-gradient-to-r from-gray-600 to-gray-400 text-transparent bg-clip-text">
+              <p className="flex items-center dark:text-white gap-2 text-sm mt-1 bg-gradient-to-r from-gray-600 to-gray-400 text-transparent bg-clip-text">
                 {tagline.icon} {tagline.text}
               </p>
             </>
@@ -113,7 +114,7 @@ const AdminHeader = () => {
       </div>
 
       {/* Right Section */}
-      <div className="flex items-center gap-6 text-sm font-normal text-gray-600">
+      <div className="flex items-center gap-6 text-sm font-normal text-gray-600 dark:text-white">
         <span className="flex items-center gap-2">
           <Calendar className="w-4 h-4 text-orange-500" />
           <span>{date}</span>

@@ -79,7 +79,7 @@ export default function SalesDashboard() {
   return (
     <div className="mt-4 space-y-8">
       {/* --- Top Cards --- */}
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-6 sm:grid-cols-2 dark:bg-black">
         <StatCard
           label="Total Orders"
           value={stats.totalOrders}
@@ -93,7 +93,7 @@ export default function SalesDashboard() {
       </div>
 
       {/* --- Filters --- */}
-      <div className="flex justify-center gap-2 flex-wrap">
+      <div className="flex justify-center gap-2 flex-wrap dark:bg-black">
         {FILTERS.map((f) => (
           <button
             key={f.value}
@@ -125,7 +125,7 @@ export default function SalesDashboard() {
 
 /* --- Stat Card --- */
 const StatCard = ({ label, value, accent }) => (
-  <div className="relative bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
+  <div className="relative bg-white dark:bg-black p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
     <div
       className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${accent} rounded-t-2xl`}
     ></div>
@@ -140,7 +140,7 @@ const StatCard = ({ label, value, accent }) => (
 
 /* --- Chart --- */
 const SalesChart = ({ combinedData, stats, mode, setMode, loading, currency }) => (
-  <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 p-6">
+  <div className="bg-white dark:bg-black rounded-2xl shadow-sm border border-gray-100 p-6">
     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
       <div>
         <h3 className="text-lg font-normal text-gray-800 dark:text-gray-100">
@@ -152,10 +152,10 @@ const SalesChart = ({ combinedData, stats, mode, setMode, loading, currency }) =
       </div>
 
       <div className="flex gap-2 flex-wrap">
-        <span className="px-3 py-1 rounded-md text-xs bg-orange-50 text-orange-700">
+        <span className="px-3 py-1 rounded-md text-xs bg-orange-50 text-orange-700 dark:bg-orange-900 dark:text-orange-300">
           Orders: {stats.totalOrders}
         </span>
-        <span className="px-3 py-1 rounded-md text-xs bg-gray-100 text-gray-700">
+        <span className="px-3 py-1 rounded-md text-xs bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
           Revenue: {currency}
           {Number(stats.totalRevenue).toLocaleString()}
         </span>
@@ -227,7 +227,7 @@ const ChartToggle = ({ label, active, onClick }) => (
     onClick={onClick}
     className={`px-4 py-1.5 rounded-lg text-sm font-normal transition-all duration-200 ${
       active
-        ? "bg-gradient-to-r from-orange-500 to-orange-400 text-white shadow"
+        ? "bg-orange-600 dark:bg-black text-white shadow"
         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
     }`}
   >
