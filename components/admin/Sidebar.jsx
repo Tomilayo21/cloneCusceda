@@ -163,7 +163,7 @@ export default function Sidebar() {
             </div>
           ) : (
             <Link
-              href="/login"
+              href="/signup"
               className="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 w-full px-4 py-2 rounded-md border border-gray-200 dark:border-gray-700 transition"
             >
               <Users className="w-4 h-4 text-gray-500 dark:text-gray-400" />
