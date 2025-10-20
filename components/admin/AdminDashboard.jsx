@@ -12,6 +12,10 @@ import {
   Eye,
   EyeOff,
   ArrowLeft,
+  Bell, 
+  Plus, 
+  ShoppingCart, 
+  Box
 } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
 import MiniChart from "./settings/charts/MiniChart";
@@ -21,6 +25,8 @@ import AnalyticsDashboard from "./AnalyticsDashboard";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { LineChart, Line, ResponsiveContainer } from "recharts";
 
 export default function AdminDashboard({
   setActiveView,
@@ -55,6 +61,45 @@ export default function AdminDashboard({
   const [newCustomers, setNewCustomers] = useState(0);
   const [viewAll, setViewAll] = useState(false);
   const [viewAllOrders, setViewAllOrders] = useState(false);
+
+  const miniTrendData = [
+    { day: "Mon", sales: 30 },
+    { day: "Tue", sales: 45 },
+    { day: "Wed", sales: 35 },
+    { day: "Thu", sales: 50 },
+    { day: "Fri", sales: 65 },
+    { day: "Sat", sales: 55 },
+    { day: "Sun", sales: 70 },
+  ];
+
+  const lowStockProducts = [
+    { name: "Product A", stock: 3 },
+    { name: "Product B", stock: 5 },
+    { name: "Product C", stock: 2 },
+  ];
+
+  const quickActions = [
+    { name: "Add Product", icon: <Plus className="w-5 h-5" /> },
+    { name: "Process Order", icon: <ShoppingCart className="w-5 h-5" /> },
+    { name: "Update Stock", icon: <Box className="w-5 h-5" /> },
+  ];
+
+  const notifications = [
+    { message: "New user signed up", time: "2 mins ago" },
+    { message: "Order #1024 shipped", time: "1 hour ago" },
+    { message: "Low stock alert: Product C", time: "3 hours ago" },
+  ];
+
+
+
+
+
+
+
+
+
+
+
 
 
   // === Customers ===
@@ -574,35 +619,77 @@ export default function AdminDashboard({
         </div>
 
 
-        {/* Sales Overview */}
-        <div className="space-y-4 mt-8">
-          <h1 className="text-2xl font-normal text-gray-800 dark:text-white">Sales Overview</h1>
-          <p className="text-gray-600 font-light dark:text-white">
-            Track total orders and revenue across different time ranges.
-          </p>
-        </div>
-
-        <div className="mt-8 bg-white p-5 rounded-md dark:bg-black shadow-md border border-gray-100">
-          <AnimatePresence>
-            <motion.div
-              key="chart"
-              initial={{ opacity: 0, y: -20, height: 0 }}
-              animate={{ opacity: 1, y: 0, height: "auto" }}
-              exit={{ opacity: 0, y: 20, height: 0 }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="overflow-hidden mt-4"
+        {/* Sales Overview Section (With Button to Analytics) */}
+        <div className="mt-10">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">Sales Overview</h2>
+            <Link
+              href="/admin/analytics"
+              className="text-sm underline hover:opacity-70 transition"
             >
-              <DashboardChart
-                dailyTrend={dailyTrendData}
-                monthlyTrend={monthlyTrendData}
-              />
-            </motion.div>
-          </AnimatePresence>
+              View Full Analytics →
+            </Link>
+          </div>
+          
+
+          {/* <SalesOverviewChart /> */}
         </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Mini Trend Chart */}
+          <div className="bg-white p-4 rounded-lg shadow">
+            <h3 className="font-medium mb-2">Weekly Sales Trend</h3>
+            <ResponsiveContainer width="100%" height={100}>
+              <LineChart data={miniTrendData}>
+                <Line type="monotone" dataKey="sales" stroke="#4f46e5" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
 
-        {/* Analytics Dashboard */}
-        <AnalyticsDashboard />
+          {/* Low Stock Alerts */}
+          <div className="bg-white p-4 rounded-lg shadow">
+            <h3 className="font-medium mb-2">Low Stock Alerts</h3>
+            <ul>
+              {lowStockProducts.map((product, idx) => (
+                <li key={idx} className="flex justify-between py-1 border-b last:border-b-0">
+                  <span>{product.name}</span>
+                  <span className="text-red-500 font-semibold">{product.stock}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Quick Actions Card */}
+          <div className="bg-white p-4 rounded-lg shadow">
+            <h3 className="font-medium mb-2">Quick Actions</h3>
+            <div className="flex flex-col space-y-2">
+              {quickActions.map((action, idx) => (
+                <button
+                  key={idx}
+                  className="flex items-center gap-2 px-3 py-2 bg-indigo-50 hover:bg-indigo-100 rounded-md transition"
+                >
+                  {action.icon}
+                  {action.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Notifications Panel */}
+          <div className="bg-white p-4 rounded-lg shadow">
+            <h3 className="font-medium mb-2 flex items-center gap-2">
+              <Bell className="w-5 h-5" /> Notifications
+            </h3>
+            <ul>
+              {notifications.map((note, idx) => (
+                <li key={idx} className="py-1 border-b last:border-b-0">
+                  <p className="text-sm">{note.message}</p>
+                  <p className="text-xs text-gray-400">{note.time}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </main>
     </div>
   );

@@ -10,6 +10,8 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+import { RiDownload2Line, RiFilePdfLine, RiFileExcel2Line, RiCalendarLine } from "react-icons/ri";
+
 
 const FILTERS = [
   { label: "Today", value: "1" },
@@ -30,7 +32,7 @@ export default function AnalyticsDashboard() {
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState("7");
   const [mode, setMode] = useState("comparison");
-  const [showMore, setShowMore] = useState(false);
+  const [showMore, setShowMore] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -63,79 +65,113 @@ export default function AnalyticsDashboard() {
   });
 
   return (
-    <div className="mt-8 space-y-8">
+    <div className="mt-8">
       {/* Header */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-normal text-gray-900 dark:text-white">
+        <h1 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
           Analytics Overview
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl">
-          Monitor your site’s performance and engagement metrics in real time.
-          Compare trends in visitors, clicks, and page views effortlessly.
-        </p>
       </div>
 
-      {/* Top Stats */}
-      <div className="grid gap-6 md:grid-cols-3">
-        <StatCard
-          label="Total Visitors"
-          value={stats.totalVisitors}
-          accent="from-blue-500 to-blue-400"
-        />
-        <StatCard
-          label="Total Page Views"
-          value={stats.totalPageViews}
-          accent="from-orange-500 to-orange-400"
-        />
-        <StatCard
-          label="Total Clicks"
-          value={stats.totalClicks}
-          accent="from-emerald-500 to-emerald-400"
-        />
-      </div>
-
-      {/* Toggle button */}
-      <div className="flex justify-center">
-        <button
-          onClick={() => setShowMore(!showMore)}
-          className="px-5 py-2 text-sm font-medium text-orange-600 border border-orange-300 rounded-lg hover:bg-orange-50 transition-all"
-        >
-          {showMore ? "Show Less" : "Show More"}
-        </button>
-      </div>
-
-      {showMore && (
-        <div className="space-y-8">
-          {/* Filter Buttons */}
-          <div className="flex flex-wrap gap-2 justify-center">
-            {FILTERS.map((f) => (
-              <button
-                key={f.value}
-                onClick={() => setRange(f.value)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  range === f.value
-                    ? "bg-gradient-to-r from-orange-500 to-orange-400 text-white shadow"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"
-                }`}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Chart Section */}
-          <EngagementChart
-            combinedData={combinedData}
-            stats={stats}
-            mode={mode}
-            setMode={setMode}
-            loading={loading}
+      <div className="mt-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 bg-white dark:bg-black rounded-2xl shadow-sm border border-gray-100 p-6">
+        {/* Top Stats */}
+        <div className="grid gap-6 md:grid-cols-3">
+          <StatCard
+            label="Total Visitors"
+            value={stats.totalVisitors}
+            accent="from-blue-500 to-blue-400"
           />
-
-          {/* Top Pages Table */}
-          <TopPages topPages={stats.topPages} />
+          <StatCard
+            label="Total Page Views"
+            value={stats.totalPageViews}
+            accent="from-orange-500 to-orange-400"
+          />
+          <StatCard
+            label="Total Clicks"
+            value={stats.totalClicks}
+            accent="from-emerald-500 to-emerald-400"
+          />
         </div>
-      )}
+
+        {/* Toggle button */}
+        <div className="flex justify-center">
+          <button
+            onClick={() => setShowMore(!showMore)}
+            className="px-5 py-2 text-sm font-medium text-orange-600 border border-orange-300 rounded-lg hover:bg-orange-50 transition-all"
+          >
+            {showMore ? "Show Less" : "Show More"}
+          </button>
+        </div>
+
+        {showMore && (
+          <div className="space-y-8">
+            {/* Filter Buttons */}
+            <div className="flex md:hidden justify-center gap-2 flex-wrap dark:bg-black mb-4">
+              {FILTERS.map((f) => (
+                <button
+                  key={f.value}
+                  onClick={() => setRange(f.value)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    range === f.value
+                      ? "bg-gradient-to-r from-orange-500 to-orange-400 text-white shadow"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="hidden md:flex items-center justify-between mb-6">
+              {/* Date Range Dropdown */}
+              <div className="flex items-center gap-2">
+                <RiCalendarLine className="text-gray-500" />
+                <select
+                  value={range}
+                  onChange={(e) => setRange(e.target.value)}
+                  className="border border-gray-300 dark:border-gray-700 rounded-md px-3 py-2 text-sm bg-white dark:bg-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                >
+                  <option value="1">Today</option>
+                  <option value="7">Last 7 Days</option>
+                  <option value="30">Last 30 Days</option>
+                  <option value="90">Last 90 Days</option>
+                  <option value="custom">Custom Range</option>
+                </select>
+              </div>
+
+              {/* Export Options */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => console.log("Export CSV...")}
+                  className="flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                >
+                  <RiFileExcel2Line className="text-lg" />
+                  Export CSV
+                </button>
+                <button
+                  onClick={() => console.log("Export PDF...")}
+                  className="flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                >
+                  <RiFilePdfLine className="text-lg" />
+                  Export PDF
+                </button>
+              </div>
+            </div>
+
+            {/* Chart Section */}
+            <EngagementChart
+              combinedData={combinedData}
+              stats={stats}
+              mode={mode}
+              setMode={setMode}
+              loading={loading}
+            />
+
+            {/* Top Pages Table */}
+            <TopPages topPages={stats.topPages} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

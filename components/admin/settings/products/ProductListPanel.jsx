@@ -55,26 +55,17 @@ const ProductListPanel = () => {
   if (parsedEnd) {
     parsedEnd.setHours(23, 59, 59, 999);
   }
-
-  // useEffect(() => {
-  //   if (session?.user?.role === "admin") {
-  //     fetchAdminProduct();
-  //   } else {
-  //     toast.error("You are not authorized to view this page");
-  //   }
-  // }, [session]);
-
   
-    useEffect(() => {
-      if (status === 'authenticated' && !isAdmin) {
-        router.replace('/'); 
-      }
-    }, [status, isAdmin, router]);
-  
-    useEffect(() => {
-      if (status !== 'authenticated' || !isAdmin) return;
-      fetchAdminProduct();
-    }, [status, isAdmin]);
+  useEffect(() => {
+    if (status === 'authenticated' && !isAdmin) {
+      router.replace('/'); 
+    }
+  }, [status, isAdmin, router]);
+
+  useEffect(() => {
+    if (status !== 'authenticated' || !isAdmin) return;
+    fetchAdminProduct();
+  }, [status, isAdmin]);
 
   const fetchAdminProduct = async () => {
     try {

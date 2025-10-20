@@ -16,6 +16,8 @@ import axios from "axios";
 import { useAppContext } from "@/context/AppContext";
 import { toast } from "react-hot-toast";
 import { useSession } from "next-auth/react";
+import { RiDownload2Line, RiFilePdfLine, RiFileExcel2Line, RiCalendarLine } from "react-icons/ri";
+
 
 const FILTERS = [
   { label: "Today", value: "1" },
@@ -93,7 +95,45 @@ export default function SalesDashboard() {
       </div>
 
       {/* --- Filters --- */}
-      <div className="flex justify-center gap-2 flex-wrap dark:bg-black">
+      {/* Desktop Toolbar */}
+      <div className="hidden md:flex items-center justify-between mb-6">
+        {/* Date Range Dropdown */}
+        <div className="flex items-center gap-2">
+          <RiCalendarLine className="text-gray-500" />
+          <select
+            value={range}
+            onChange={(e) => setRange(e.target.value)}
+            className="border border-gray-300 dark:border-gray-700 rounded-md px-3 py-2 text-sm bg-white dark:bg-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          >
+            <option value="1">Today</option>
+            <option value="7">Last 7 Days</option>
+            <option value="30">Last 30 Days</option>
+            <option value="90">Last 90 Days</option>
+            <option value="custom">Custom Range</option>
+          </select>
+        </div>
+
+        {/* Export Options */}
+        <div className="flex gap-3">
+          <button
+            onClick={() => console.log("Export CSV...")}
+            className="flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+          >
+            <RiFileExcel2Line className="text-lg" />
+            Export CSV
+          </button>
+          <button
+            onClick={() => console.log("Export PDF...")}
+            className="flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+          >
+            <RiFilePdfLine className="text-lg" />
+            Export PDF
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Button Filter Group */}
+      <div className="flex md:hidden justify-center gap-2 flex-wrap dark:bg-black mb-4">
         {FILTERS.map((f) => (
           <button
             key={f.value}

@@ -202,7 +202,18 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Settings, Package, Bell, Globe, Shield, Database, Users, Home } from "lucide-react";
+import { 
+  LayoutDashboard, 
+  Settings, 
+  Package, 
+  Bell, 
+  Globe, 
+  Shield, 
+  Database, 
+  Users, 
+  Home, 
+  LogOut 
+} from "lucide-react";
 import { UsersIcon, ChartPieIcon } from "@heroicons/react/24/outline";
 import { RiMoneyDollarCircleLine, RiFeedbackLine } from "react-icons/ri";
 import { toast } from "react-hot-toast";
