@@ -258,7 +258,7 @@ const AdminMessagesDashboard = () => {
 
   return (
     <div className="p-4 sm:p-6">
-      <h1 className="text-xl md:text-2xl font-bold mb-4">Contacts & Feedbacks</h1>
+      <h1 className="text-xl md:text-2xl font-bold mb-4">Messages & Feedbacks</h1>
       {/* View Buttons */}
       {["inbox", "deleted"].includes(view) && selectedIds.length > 0 && (
         <p className="text-sm text-gray-600 mb-2">

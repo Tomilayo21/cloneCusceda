@@ -12,7 +12,6 @@ import { useSession } from "next-auth/react";
 
 
 const AddProduct = () => {
-  const { getToken, user } = useAppContext();
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isAdmin, setIsAdmin] = useState(false);

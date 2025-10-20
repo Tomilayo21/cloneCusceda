@@ -57,10 +57,10 @@ import NotificationPreferences from '@/components/admin/NotificationPreferences'
 const settingsTabs = [
   { key: 'general', label: 'General', icon: <Cog className="w-4 h-4" /> },
   { key: 'company', label: 'Company', icon: <Briefcase className="w-4 h-4" /> },
-  // { key: 'product', label: 'Products & Reviews', icon: <Box className="w-4 h-4" /> },
-  // { key: 'users', label: 'Users, Subscribers & Roles', icon: <Users className="w-4 h-4" /> },
+  { key: 'product', label: 'Products & Reviews', icon: <Box className="w-4 h-4" /> },
+  { key: 'users', label: 'Users, Subscribers & Roles', icon: <Users className="w-4 h-4" /> },
   { key: 'notifications', label: 'Notifications', icon: <Bell className="w-4 h-4" /> },
-  // { key: 'orders', label: 'Orders & Payments', icon: <CreditCard className="w-4 h-4" /> },
+  { key: 'orders', label: 'Orders & Payments', icon: <CreditCard className="w-4 h-4" /> },
   { key: 'localization', label: 'Localization', icon: <Globe className="w-4 h-4" /> },
   { key: 'appearance', label: 'Appearance', icon: <Palette className="w-4 h-4" /> },
   { key: 'security', label: 'Security', icon: <ShieldCheck className="w-4 h-4" /> },

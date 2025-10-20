@@ -17,7 +17,7 @@ const PRODUCTS_PER_PAGE = 25;
 
 const ProductListPanel = () => {
   const { router, getToken, user, currency } = useAppContext();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,6 +34,8 @@ const ProductListPanel = () => {
   const [editableProduct, setEditableProduct] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [viewProduct, setViewProduct] = useState(null);
+  
+  const isAdmin = session?.user?.role === 'admin';
   
 
   
@@ -54,13 +56,25 @@ const ProductListPanel = () => {
     parsedEnd.setHours(23, 59, 59, 999);
   }
 
-  useEffect(() => {
-    if (session?.user?.role === "admin") {
+  // useEffect(() => {
+  //   if (session?.user?.role === "admin") {
+  //     fetchAdminProduct();
+  //   } else {
+  //     toast.error("You are not authorized to view this page");
+  //   }
+  // }, [session]);
+
+  
+    useEffect(() => {
+      if (status === 'authenticated' && !isAdmin) {
+        router.replace('/'); 
+      }
+    }, [status, isAdmin, router]);
+  
+    useEffect(() => {
+      if (status !== 'authenticated' || !isAdmin) return;
       fetchAdminProduct();
-    } else {
-      toast.error("You are not authorized to view this page");
-    }
-  }, [session]);
+    }, [status, isAdmin]);
 
   const fetchAdminProduct = async () => {
     try {
@@ -330,6 +344,8 @@ const ProductListPanel = () => {
       setIsUpdating(false);
     }
   };
+
+  if (!isAdmin) return <p className="p-8 text-center text-red-500">Access denied. You are not an admin.</p>;
 
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
   const paginatedProducts = filteredProducts.slice(
