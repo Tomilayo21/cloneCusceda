@@ -11,7 +11,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 const AdminMessagesDashboard = () => {
-  // const { user } = useUser();
   const { data: session } = useSession();
   const user = session?.user;
 
@@ -82,14 +81,6 @@ const AdminMessagesDashboard = () => {
   }, [view]); 
 
 
-  // useEffect(() => {
-  //   if (!user) return;
-  //   if (user.publicMetadata?.role !== "admin") {
-  //     router.push("/");
-  //   } else {
-  //     fetchMessages();
-  //   }
-  // }, [user]);
   useEffect(() => {
     if (!user) return;
     if (user.role !== "admin") {
