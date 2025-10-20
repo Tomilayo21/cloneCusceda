@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { toast } from "react-hot-toast";
 import {
-  ShoppingCart, Package, UserPlus, CreditCard, AlertTriangle, Star, Bell
+  ShoppingCart, Package, UserPlus, CreditCard, AlertTriangle, Star, Bell, Mail
 } from "lucide-react";
 
 const POLL_INTERVAL = 30000;
@@ -16,6 +16,8 @@ const typeConfig = {
   review: { icon: <Star className="w-5 h-5" />, color: "bg-purple-100" },
   system: { icon: <AlertTriangle className="w-5 h-5" />, color: "bg-gray-100" },
   promo: { icon: <Bell className="w-5 h-5" />, color: "bg-indigo-100" },
+  message: { icon: <Mail className="w-5 h-5" />, color: "bg-red-100" },
+  mail: { icon: <Mail className="w-5 h-5" />, color: "bg-red-100" },
 };
 
 export default function AdminNotifications() {
@@ -76,29 +78,49 @@ export default function AdminNotifications() {
       case "stock": window.location.href = `/admin/products/${notif.relatedId}`; break;
       case "user": window.location.href = `/admin/users/${notif.relatedId}`; break;
       case "review": window.location.href = `/admin/reviews/${notif.relatedId}`; break;
+      case "message": window.location.href = `/admin/messages`; break; // go to messages
+      case "mail": window.location.href = `/admin/messages`; break;
       default: console.log("No action defined");
     }
     markAsRead(notif._id);
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="p-4 sm:p-6 bg-white rounded shadow border dark:bg-black dark:text-gray-300">
       <h1 className="text-2xl font-semibold mb-4">Notifications</h1>
-      {loading ? <p>Loading...</p> : notifications.length === 0 ? <p>No notifications</p> :
+
+      {loading ? (
+        <p>Loading...</p>
+      ) : notifications.length === 0 ? (
+        <p>No notifications</p>
+      ) : (
         <ul className="space-y-3">
-          {notifications.map(notif => {
+          {notifications.map((notif) => {
             const config = typeConfig[notif.type] || typeConfig.system;
+
             return (
-              <li key={notif._id} onClick={() => handleNotificationClick(notif)}
-                  className={`cursor-pointer flex items-start gap-3 p-3 rounded-md ${notif.isRead ? "bg-gray-50" : config.color} hover:shadow`}>
+              <li
+                key={notif._id}
+                onClick={() => handleNotificationClick(notif)}
+                className={`cursor-pointer flex items-start gap-3 p-3 rounded-md ${
+                  notif.isRead ? "bg-gray-50" : config.color
+                } hover:shadow`}
+              >
                 <div className="mt-1">{config.icon}</div>
                 <div className="flex-1">
                   <p className="font-medium">{notif.message}</p>
-                  <small className="text-gray-500">{new Date(notif.createdAt).toLocaleString()}</small>
+                  <small className="text-gray-500">
+                    {new Date(notif.createdAt).toLocaleString()}
+                  </small>
                 </div>
                 {!notif.isRead && (
-                  <button onClick={e => { e.stopPropagation(); markAsRead(notif._id); }}
-                          className="text-sm text-indigo-600 hover:underline">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      markAsRead(notif._id);
+                    }}
+                    className="text-sm text-indigo-600 hover:underline"
+                  >
                     Mark as read
                   </button>
                 )}
@@ -106,7 +128,7 @@ export default function AdminNotifications() {
             );
           })}
         </ul>
-      }
+      )}
     </div>
   );
 }

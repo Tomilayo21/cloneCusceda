@@ -22,20 +22,7 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import ViewBroadcastButton from '@/components/admin/settings/users/ViewBroadcastButton';
-import OrderPanel from '@/components/admin/settings/orders/OrderPanel';
-import TransactionPanel from '@/components/admin/settings/orders/TransactionPanel';
-import AddProductPanel from "@/components/admin/settings/products/AddProductPanel";
-import ProductListPanel from "@/components/admin/settings/products/ProductListPanel";
-import ReviewPanel from "@/components/admin/settings/products/ReviewPanel";
-import UserListPanel from "@/components/admin/settings/users/UserListPanel";
-import SubscribersPage from "@/components/admin/settings/users/SubscribersPage";
-import RegUsers from "@/components/admin/RegUsers";
 import toast from "react-hot-toast";
-import FormatDatabase from '@/components/admin/FormatDatabase';
-import BackupModal from '@/components/admin/BackupModal';
-import AdminRestore from '@/components/admin/AdminRestore';
-import RestoreModal from '@/components/admin/RestoreModal';
 import { useAppContext } from '@/context/AppContext';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
@@ -48,29 +35,21 @@ import AboutEditor from '@/components/AboutEditor';
 import TeamEditor from '@/components/TeamEditor';
 import Testimonials from "@/components/Testimonials";
 import PartnerEditor from '@/components/PartnerEditor';
-import ExportUserCSV from '@/components/admin/settings/users/ExportUsersCSV';
-import ExportProductsCSV from '@/components/admin/settings/products/ExportProductsCSV';
-import ExportOrdersCSV from '@/components/admin/settings/orders/ExportOrdersCSV';
 import SecuritySettings from '@/components/admin/SecuritySettings';
 import NotificationPreferences from '@/components/admin/NotificationPreferences';
 
 const settingsTabs = [
   { key: 'general', label: 'General', icon: <Cog className="w-4 h-4" /> },
   { key: 'company', label: 'Company', icon: <Briefcase className="w-4 h-4" /> },
-  // { key: 'product', label: 'Products & Reviews', icon: <Box className="w-4 h-4" /> },
-  // { key: 'users', label: 'Users, Subscribers & Roles', icon: <Users className="w-4 h-4" /> },
   { key: 'notifications', label: 'Notifications', icon: <Bell className="w-4 h-4" /> },
-  // { key: 'orders', label: 'Orders & Payments', icon: <CreditCard className="w-4 h-4" /> },
   { key: 'localization', label: 'Localization', icon: <Globe className="w-4 h-4" /> },
   { key: 'appearance', label: 'Appearance', icon: <Palette className="w-4 h-4" /> },
   { key: 'security', label: 'Security', icon: <ShieldCheck className="w-4 h-4" /> },
-  { key: 'legal', label: 'Legal / Policy', icon: <FileText className="w-4 h-4" /> },
-  { key: 'backup', label: 'Backup / Export', icon: <CloudDownload className="w-4 h-4" /> },
+  { key: 'legal', label: 'Legal & Policy', icon: <FileText className="w-4 h-4" /> },
 ];
 
 export default function AdminSettings() {
   const { 
-    currentUser,
     currency, 
     setCurrency, 
     themeColor, 
@@ -84,14 +63,7 @@ export default function AdminSettings() {
     contrastMode, 
     setContrastMode,
     layoutStyle,
-    setLayoutStyle,
     fontSize,
-    setFontSize,
-    savePreferences,
-    layout,
-    updateSettings,
-    saveLayoutStyle,
-    cancelPreview,
     
   } = useAppContext();
 
@@ -111,7 +83,6 @@ export default function AdminSettings() {
   const [supportEmail, setSupportEmail] = useState("");
   const [settingsPanel, setSettingsPanel] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [legalPanel, setLegalPanel] = useState("main");
   const [companyPanel, setCompanyPanel] = useState("main");
@@ -119,13 +90,7 @@ export default function AdminSettings() {
   const [darkLogoPreview, setDarkLogoPreview] = useState(null);
   const [socialLinks, setSocialLinks] = useState([]);
   const [users, setUsers] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [orders, setOrders] = useState([]);
   const [colorOpen, setColorOpen] = useState(false);
-  const [layoutVal, setLayoutVal] = useState(layout);
-  const [fontVal, setFontVal] = useState(fontSize);
-  const [selectedFontSize, setSelectedFontSize] = useState(fontSize);
-  const [selectedLayout, setSelectedLayout] = useState(layoutStyle);
   const [localLayout, setLocalLayout] = useState(layoutStyle);
   const [localFontSize, setLocalFontSize] = useState(fontSize);
   
@@ -278,26 +243,6 @@ export default function AdminSettings() {
     }
   };
 
-  const handleFormatDatabase = async () => {
-    const confirmed = confirm("Are you sure? This will permanently delete ALL data.");
-    if (!confirmed) return;
-
-    try {
-      const res = await fetch("/api/admin/format-database", {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        toast.success("Database wiped successfully.");
-      } else {
-        const data = await res.json();
-        toast.error(data.error || "Failed to format database.");
-      }
-    } catch (err) {
-      toast.error("Unexpected error occurred.");
-    }
-  };
-
   const router = useRouter();
 
   const changeLanguage = (e) => {
@@ -310,12 +255,6 @@ export default function AdminSettings() {
       setLocalLayout(layoutStyle);
       setLocalFontSize(fontSize);
   }, [layoutStyle, fontSize]);
-
-  const handleSave = async () => {
-    setLayoutStyle(localLayout);
-    setFontSize(localFontSize);
-    await savePreferences(localFontSize, localLayout);
-  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -334,14 +273,6 @@ export default function AdminSettings() {
     fetchUsers();
   }, []);
 
-  const logActivity = async (action, detail) => {
-    await fetch("/api/activity-log", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action, detail }),
-    });
-  };
-  
   return (
     <div className="max-w-5xl mx-auto p-4 space-y-6 text-gray-700 dark:text-gray-300 dark:bg-black">
       <h2 className="text-2xl font-normal text-gray-800 text-gray-700 dark:text-gray-300 dark:bg-black">Settings</h2>
@@ -849,340 +780,11 @@ export default function AdminSettings() {
           </div>
         )}
 
-        {activeTab === 'product' && (
-            <div className="relative overflow-hidden">
-                <AnimatePresence mode="wait">
-                {!productPanel && (
-                    <motion.div
-                    key="product-main"
-                    initial={{ x: 300, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -300, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="space-y-4"
-                    >
-                    <h3 className="font-normal text-lg">Product Settings</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                    <button
-                        onClick={() => setProductPanel('add')}
-                        className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl shadow 
-                        dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
-                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
-                      >
-                        <div className="flex items-center gap-2 mb-1">
-                          <PlusCircle className="w-5 h-5" />
-                          <span className="font-thin">Add Product</span>
-                        </div>
-                        <p className="text-xs font-thin text-left">
-                          Create a new product, upload images, set prices, and manage availability.
-                      </p>
-                      </button>
-                      <button
-                        onClick={() => setProductPanel('list')}
-                        className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl shadow
-                         dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
-                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
-                      >
-                        <div className="flex items-center gap-2 mb-1">
-                          <List className="w-5 h-5" />
-                          <span className="font-thin">Product List</span>
-                        </div>
-                      <p className="text-xs font-thin text-left">
-                          View and manage your existing product catalog, edit or delete items.
-                        </p>
-                      </button>
-
-                      <button
-                        onClick={() => setProductPanel('reviews')}
-                        className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl shadow
-                         dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
-                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
-                      >
-                        <div className="flex items-center gap-2 mb-1">
-                          <Star className="w-5 h-5" />
-                          <span className="font-thin">Reviews</span>
-                        </div>
-                        <p className="text-xs font-thin text-left">
-                        Monitor and approve customer reviews and ratings on products.
-                        </p>
-                      </button>
-                    </div>
-                    </motion.div>
-                )}
-                {productPanel && (
-                  <motion.div
-                  key="product-sub"
-                  initial={{ x: 300, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -300, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4"
-                  >
-                  <button onClick={() => setProductPanel(null)} className="flex items-center text-sm text-gray-600 hover:text-black
-                   dark:text-white dark:hover:text-grey-200 dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg">
-                      <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                  </button>
-
-                  {productPanel === 'add' && <AddProductPanel />}
-                  {productPanel === 'list' && <ProductListPanel />}
-                  {productPanel === 'reviews' && <ReviewPanel />}
-                  </motion.div>
-              )}
-              </AnimatePresence>
-          </div>
-        )}
-
-        {activeTab === "users" && (
-          <div className="relative overflow-hidden">
-            <AnimatePresence mode="wait">
-              {userPanel === "main" && (
-                <motion.div
-                  key="user-main"
-                  initial={{ x: 300, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -300, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4"
-                >
-                  <h3 className="font-thin text-lg">Users & Subscribers</h3>
-                  <p className="text-sm dark:text-white text-gray-600">
-                    Role assignments, user lists, and subscriber communication tools.
-                  </p>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                    <button
-                      onClick={() => setUserPanel("list")}
-                      className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl 
-                      shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
-                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
-                    >
-                      <div className="flex items-center gap-2 mb-1">
-                        <Users className="w-5 h-5" />
-                        <span className="font-normal">View Users</span>
-                      </div>
-                      <p className="text-xs text-left font-thin">
-                        Browse and manage all registered users, including profile info and activity.
-                      </p>
-                    </button>
-
-                      <button
-                      onClick={() => setUserPanel("subscribers")}
-                      className="flex flex-col items-start bg-green-100 hover:bg-green-200 text-green-800 p-4 rounded-xl 
-                      shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
-                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
-                    >
-                      <div className="flex items-center gap-2 mb-1">
-                        <Mail className="w-5 h-5" />
-                        <span className="font-normal">Subscribers</span>
-                      </div>
-                      <p className="text-xs text-left font-thin">
-                        View and export newsletter subscribers and manage email outreach.
-                      </p>
-                    </button>
-
-                    <button
-                      onClick={() => setUserPanel("roles")}
-                      className="flex flex-col items-start bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl 
-                      shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
-                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
-                    >
-                      <div className="flex items-center gap-2 mb-1">
-                        <ShieldCheck className="w-5 h-5" />
-                        <span className="font-normal">Roles & Permissions</span>
-                      </div>
-                      <p className="text-xs text-left font-thin">
-                        Assign roles to users, configure access levels, and manage permissions.
-                      </p>
-                    </button>
-                  </div>
-                </motion.div>
-                )}
-                {userPanel === "list" && (
-                <motion.div
-                  key="user-list"
-                  initial={{ x: 300, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -300, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4"
-                >
-                  <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
-                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                  </button>
-                  <RegUsers />
-                </motion.div>
-                )}
-                {userPanel === "subscribers" && (
-                <motion.div
-                  key="user-subscribers"
-                  initial={{ x: 300, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -300, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4"
-                >
-                  <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
-                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                  </button>
-                  <button onClick={() => setUserPanel("broadcast")} className="bg-orange-600 text-white px-4 py-2 rounded">
-                    View Broadcast History
-                  </button>
-                  <SubscribersPage />
-                </motion.div>
-                )}
-                {userPanel === "broadcast" && (
-                <motion.div
-                  key="user-broadcast"
-                  initial={{ x: 300, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -300, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4"
-                >
-                  <button onClick={() => setUserPanel("subscribers")} className="flex items-center text-sm text-gray-600 hover:text-black">
-                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                  </button>
-                  <ViewBroadcastButton />
-                </motion.div>
-                )}
-                {userPanel === "roles" && (
-                <motion.div
-                  key="user-subscribers"
-                  initial={{ x: 300, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -300, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4"
-                >
-                  <button onClick={() => setUserPanel("main")} className="flex items-center text-sm text-gray-600 hover:text-black">
-                    <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                  </button>
-                  <UserListPanel />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        )}
-
         {activeTab === 'notifications' && (
           <div className="space-y-6">
             {/* <h3 className="font-normal text-lg text-gray-800">Notification Preferences</h3> */}
             <NotificationPreferences />
           </div>
-        )}
-
-        {activeTab === 'orders' && (
-            <div className="relative overflow-hidden">
-                <AnimatePresence mode="wait">
-                {!orderPanel && (
-                    <motion.div
-                    key="orders-main"
-                    initial={{ x: 300, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -300, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="space-y-4"
-                    >
-                    <h3 className="font-normal text-lg">Orders & Payments</h3>
-
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                       <button
-                        onClick={() => setOrderPanel('orders')}
-                        className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl 
-                        shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
-                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
-                      >
-                        <div className="flex items-center gap-2 mb-1">
-                          <PackageSearch className="w-5 h-5" />
-                          <span className="font-normal">View Orders</span>
-                        </div>
-                        <p className="text-xs font-thin text-left">
-                          Browse all placed orders, track delivery status, and update order stages.
-                        </p>
-                      </button>
-
-                      <button
-                        onClick={() => setOrderPanel('transactions')}
-                        className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl 
-                        shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
-                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg"
-                      >
-                        <div className="flex items-center gap-2 mb-1">
-                          <CreditCard className="w-5 h-5" />
-                          <span className="font-normal">View Transactions</span>
-                        </div>
-                        <p className="text-xs font-thin text-left">
-                          Monitor all payment records, verify receipts, and check transaction types.
-                        </p>
-                      </button>
-                     </div> 
-
-
-                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-                       <button
-                        onClick={() => setOrderPanel('orders')}
-                        className="flex flex-col items-start bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl 
-                        shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
-                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg transition"
-                      >
-                        <div className="flex items-center gap-2 mb-1">
-                          <PackageSearch className="w-5 h-5" /> 
-                          <span className="font-normal">View Orders</span>
-                        </div>
-                        <p className="text-xs font-thin text-left">
-                          Browse all placed orders, track delivery status, and update order stages.
-                        </p>
-                      </button>
-
-                      <button
-                        onClick={() => setOrderPanel('transactions')}
-                        className="flex flex-col items-start bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl 
-                        shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
-                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg transition"
-                      >
-                        <div className="flex items-center gap-2 mb-1">
-                          <CreditCard className="w-5 h-5" />
-                          <span className="font-normal">View Transactions</span>
-                        </div>
-                        <p className="text-x font-thin text-left">
-                          Monitor all payment records, verify receipts, and check transaction types.
-                        </p>
-                      </button>
-
-
-                      <div className="flex flex-col items-start bg-gray-100 text-gray-500 p-4 rounded-xl 
-                      shadow dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100 
-                        dark:border-gray-700 hover:shadow-md dark:hover:shadow-lg italic">
-                        <span className="font-medium mb-1">More Coming Soon</span>
-                        <p className="text-xs font-thin">
-                          Stay tuned for additional features in this section.
-                        </p>
-                      </div>
-                    </div>
-                    </motion.div>
-                 )}
-
-                 {orderPanel && (
-                    <motion.div
-                    key="orders-sub"
-                    initial={{ x: 300, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -300, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="space-y-4"
-                    >
-                    <button
-                        onClick={() => setOrderPanel(null)}
-                        className="flex items-center text-sm text-gray-600 hover:text-black"
-                    >
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                    </button>
-
-                    {orderPanel === 'orders' && <OrderPanel />}
-                    {orderPanel === 'transactions' && <TransactionPanel />}
-                    </motion.div>
-                )}
-                </AnimatePresence>
-            </div>
         )}
 
         {activeTab === 'localization' && (
@@ -1618,79 +1220,6 @@ export default function AdminSettings() {
             </AnimatePresence>
           </div>
         )}
-
-        {activeTab === 'backup' && (
-          <div className="space-y-6">
-            <h3 className="font-semibold text-lg">Backup & Export</h3>
-
-            {/* Export Orders */}
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Download all order records in CSV format.</p>
-              <ExportOrdersCSV orders={orders} />
-            </div>
-
-            {/* Export Products */}
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Download product inventory as CSV.</p>
-              {/* <button className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">
-                Export Products CSV
-              </button> */}
-              <ExportProductsCSV filteredProducts={filteredProducts} />
-            </div>
-
-            {/* Export Users */}
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Download user list in CSV format.</p>
-              {/* <button className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">
-                Export Users CSV
-              </button> */}
-              <ExportUserCSV users={users} logActivity={logActivity} />
-
-            </div>
-
-            {/* Database Backup */}
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Generate and download a full database backup.</p>
-              <button
-                onClick={() => setShowModal(true)}
-                className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800"
-              >
-                Database Backup
-              </button>
-              {showModal && <BackupModal onClose={() => setShowModal(false)} />}
-            </div>
-
-            {/* Restore From Backup */}
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Restore data from a backup file.</p>
-              {/* <input type="file" className="block mb-2" /> */}
-              <button
-                onClick={() => setOpen(true)}
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-              >
-                🛠 Restore Backup
-              </button>
-
-              {/* <RestoreModal isOpen={open} onClose={() => setOpen(false)}/> */}
-              <RestoreModal isOpen={open} onClose={() => setOpen(false)} />
-            </div>
-
-            {/* Format (Wipe Database) */}
-            <div className="pt-4 border-t border-red-200">
-              <h4 className="text-red-600 font-semibold">Danger Zone</h4>
-              <p className="text-sm text-gray-600 mb-2">
-                This will permanently erase all data (orders, products, users, etc). This action cannot be undone.
-              </p>
-              <FormatDatabase
-                onSuccess={() => {
-                  // Optional: trigger refetch or redirect
-                  console.log("Database cleared.");
-                }}
-              />
-            </div>
-          </div>
-        )}
-
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ export default function AdminSettings() {
 
   return (
     <div className="max-w-5xl mx-auto p-4 space-y-6 text-gray-700 dark:text-gray-300 dark:bg-black">
-      <h2 className="text-2xl font-normal text-gray-800 text-gray-700 dark:text-gray-300 dark:bg-black">User Management</h2>
+      <h2 className="text-2xl font-normal text-gray-800 text-gray-700 dark:text-gray-300 dark:bg-black">Users Management</h2>
 
       {/* Content Area */}
       <div className="bg-white p-6 rounded shadow border dark:text-gray-300 dark:bg-black">

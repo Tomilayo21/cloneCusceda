@@ -12,7 +12,7 @@ import PasswordConfirmPopup from "./PasswordConfirmPopup";
 
 const menuItems = [
   { name: "Dashboard", path: "/admin", icon: <LayoutDashboard className="w-5 h-5" /> },
-  { name: "User Management", path: "/admin/users", icon: <UsersIcon className="w-5 h-5" /> },
+  { name: "Users Management", path: "/admin/users", icon: <UsersIcon className="w-5 h-5" /> },
   { name: "Products", path: "/admin/products", icon: <Package className="w-5 h-5" /> },
   { name: "Payments & Orders", path: "/admin/payments", icon: <RiMoneyDollarCircleLine className="w-5 h-5" /> },
   { name: "Messages & Feedback", path: "/admin/messages", icon: <RiFeedbackLine className="w-5 h-5" /> },
