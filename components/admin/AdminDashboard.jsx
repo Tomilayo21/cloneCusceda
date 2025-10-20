@@ -11,6 +11,7 @@ import {
   UserCheck,
   Eye,
   EyeOff,
+  ArrowLeft,
 } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
 import MiniChart from "./settings/charts/MiniChart";
@@ -48,9 +49,13 @@ export default function AdminDashboard({
   const [prevMonthTotal, setPrevMonthTotal] = useState(0);
   const [prevMonthCount, setPrevMonthCount] = useState(0);
   const [topProducts, setTopProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [allCustomers, setAllCustomers] = useState(0);
   const [newCustomers, setNewCustomers] = useState(0);
+  const [viewAll, setViewAll] = useState(false);
+  const [viewAllOrders, setViewAllOrders] = useState(false);
+
 
   // === Customers ===
   useEffect(() => {
@@ -136,9 +141,9 @@ export default function AdminDashboard({
   }, []);
 
   // === Orders ===
-  const fetchAdminOrders = async () => {
+  const fetchAdminOrders = async (limit = 5) => {
     try {
-      const { data } = await axios.get("/api/order/admin-orders?limit=5&page=1");
+      const { data } = await axios.get(`/api/order/admin-orders?limit=${limit}&page=1`);
 
       if (data.success) {
         setOrders(data.orders || []);
@@ -161,9 +166,10 @@ export default function AdminDashboard({
   useEffect(() => {
     const fetchTopProducts = async () => {
       try {
-        const { data } = await axios.get("/api/admin/order/top-products");
+        const { data } = await axios.get("/api/admin/order/top-products?limit=50");
         if (data.success) {
-          setTopProducts(data.topProducts);
+          setTopProducts(data.topProducts.slice(0, 5));
+          setAllProducts(data.topProducts); // ✅ store the full list
         } else {
           toast.error(data.message || "No products found");
         }
@@ -383,232 +389,188 @@ export default function AdminDashboard({
         </div>
 
         {/* Top Products */}
-        <div className="space-y-8 mt-8">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-xl sm:text-3xl font-normal text-gray-900 dark:text-white">
-                Top Products
-              </h1>
-              <p className="text-gray-500 text-sm font-light sm:text-base mt-1 dark:text-white">
-                Track your best-selling items and revenue performance.
-              </p>
-            </div>
-            {topProducts.length > 0 && (
-              <button className="px-4 py-2 mt-3 sm:mt-0 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition">
-                View All
-              </button>
-            )}
-          </div>
-
-          {/* Product Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {topProducts.length > 0 ? (
-              topProducts.map((p, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white dark:bg-black p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300"
-                >
-                  {/* Product Header */}
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h2 className="text-lg font-normal text-gray-900 dark:text-gray-100 truncate">
-                        {p.product}
-                      </h2>
-                      <p className="text-xs text-gray-500 mt-0.5">
-                        Product ID: #{p.id || idx + 1}
-                      </p>
-                    </div>
-                    <span
-                      className={`text-xs font-light px-2.5 py-1 rounded-md 
-                        dark:bg-black border dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-900 ${
-                        p.stock > 20
-                          ? "bg-green-100 text-black"
-                          : p.stock > 5
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-red-100 text-black"
-                      }`}
+        <div className="space-y-8 mt-8 relative overflow-hidden">
+          <AnimatePresence mode="wait">
+            {/* 🧩 Default Top Products View */}
+            {!viewAll && (
+              <motion.div
+                key="top-products-main"
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-8"
+              >
+                {/* Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <h1 className="text-xl sm:text-3xl font-normal text-gray-900 dark:text-white">
+                      Top Products
+                    </h1>
+                    <p className="text-gray-500 text-sm font-light sm:text-base mt-1 dark:text-white">
+                      Track your best-selling items and revenue performance.
+                    </p>
+                  </div>
+                  {topProducts.length > 0 && (
+                    <button
+                      onClick={() => setViewAll(true)}
+                      // className="px-4 py-2 mt-3 sm:mt-0 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition"
+                      className="text-sm text-orange-600 hover:text-orange-700 font-normal mt-3 sm:mt-0 transition"
                     >
-                      {p.stock} left
-                    </span>
-                  </div>
-
-                  {/* Stats */}
-                  <div className="flex justify-between items-center mb-4">
-                    <div>
-                      <p className="text-sm text-gray-500">Units Sold</p>
-                      <p className="text-xl font-normal text-gray-900 dark:text-gray-100">
-                        {p.units}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm text-gray-500">Revenue</p>
-                      <p className="text-xl font-normal text-gray-900 dark:text-gray-100">
-                        {currency}
-                        {Number(p.revenue).toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
-                    <div
-                      className="bg-orange-500 h-2 rounded-full transition-all duration-500"
-                      style={{
-                        width: `${Math.min((p.units / 100) * 100, 100)}%`,
-                      }}
-                    ></div>
-                  </div>
+                      View All
+                    </button>
+                  )}
                 </div>
-              ))
-            ) : (
-              <p className="text-gray-500 col-span-full text-center py-10">
-                No products found.
-              </p>
+
+                {/* Product Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {topProducts.length > 0 ? (
+                    topProducts.map((p, idx) => (
+                      <ProductCard key={idx} p={p} currency={currency} idx={idx} />
+                    ))
+                  ) : (
+                    <p className="text-gray-500 col-span-full text-center py-10">
+                      No products found.
+                    </p>
+                  )}
+                </div>
+              </motion.div>
             )}
-          </div>
+
+            {/* 🧩 Full Product List View */}
+            {viewAll && (
+              <motion.div
+                key="top-products-all"
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6"
+              >
+                <button
+                  onClick={() => setViewAll(false)}
+                  className="flex items-center text-sm text-gray-600 hover:text-black dark:text-white dark:hover:text-gray-200 transition"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                </button>
+
+                <h2 className="text-xl sm:text-2xl font-normal text-gray-900 dark:text-white">
+                  All Products
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {allProducts && allProducts.length > 0 ? (
+                    allProducts.map((p, idx) => (
+                      <ProductCard key={idx} p={p} currency={currency} idx={idx} />
+                    ))
+                  ) : (
+                    <p className="text-gray-500 col-span-full text-center py-10">
+                      No products available.
+                    </p>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
+
         {/* Recent Orders */}
-        <div className="space-y-6 mt-8">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-normal text-gray-900 dark:text-white">
-                Recent Orders
-              </h1>
-              <p className="text-gray-500 text-sm font-light sm:text-base mt-1 dark:text-white">
-                Track your latest orders, statuses, and payment progress.
-              </p>
-            </div>
-            <button className="text-sm text-orange-600 hover:text-orange-700 font-normal mt-3 sm:mt-0 transition">
-              View All Orders →
-            </button>
-          </div>
+        <div className="space-y-8 mt-8 relative overflow-hidden">
+          <AnimatePresence mode="wait">
+            {/* Default Recent Orders View */}
+            {!viewAllOrders && (
+              <motion.div
+                key="recent-orders-main"
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6"
+              >
+                {/* Header */}
+                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <h1 className="text-2xl sm:text-3xl font-normal text-gray-900 dark:text-white">
+                      Recent Orders
+                    </h1>
+                    <p className="text-gray-500 text-sm font-light sm:text-base mt-1 dark:text-white">
+                      Track your latest orders, statuses, and payment progress.
+                    </p>
+                  </div>
 
-          {/* Orders List */}
-          {orders.length > 0 ? (
-            <div className="bg-white border border-gray-100 rounded-md shadow-sm overflow-hidden dark:bg-black dark:border-gray-700 border">
-              <div className="divide-y divide-gray-100">
-                {orders
-                  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                  .slice(0, 5)
-                  .map((order) => (
-                    <div
-                      key={order._id}
-                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 dark:hover:bg-gray-900 hover:bg-gray-50 transition"
+                  {orders.length > 0 && (
+                    <button
+                      onClick={async () => {
+                        await fetchAdminOrders(50); // fetch more
+                        setViewAllOrders(true);       // then show all
+                      }}
+                      className="text-sm text-orange-600 hover:text-orange-700 font-normal mt-3 sm:mt-0 transition"
                     >
-                      {/* Customer Info */}
-                      <div className="flex items-center gap-3 min-w-[180px]">
-                        <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-medium uppercase">
-                          {order.address?.fullName
-                            ? order.address.fullName.charAt(0)
-                            : "?"}
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900 dark:text-white truncate">
-                            {order.address?.fullName || order.fullName || "N/A"}
-                          </p>
-                          <p className="text-xs font-thin text-gray-500 truncate dark:text-white">
-                            {order.orderId || "N/A"}
-                          </p>
-                        </div>
-                      </div>
+                      View All Orders →
+                    </button>
+                  )}
+                </div>
 
-                      {/* Amount */}
-                      <div className="min-w-[100px]">
-                        <p className="text-sm font-normal text-gray-500 dark:text-white">Amount</p>
-                        <p className="font-thin text-gray-800 dark:text-white">
-                          {order.amount
-                            ? `${currency}${order.amount.toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              })}`
-                            : "N/A"}
-                        </p>
-                      </div>
-
-                      {/* Order Status */}
-                      <div className="min-w-[120px]">
-                        <p className="text-sm text-gray-500 dark:text-white">Order</p>
-                        <span
-                          className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full dark:text-white dark:bg-black border dark:border-gray-700
-                            ${
-                              order.orderStatus === "Delivered"
-                                ? "bg-green-100 text-green-700"
-                                : order.orderStatus === "Pending"
-                                ? "bg-orange-100 text-orange-700"
-                                : order.orderStatus === "Cancelled"
-                                ? "bg-red-100 text-red-700"
-                                : "bg-gray-100 text-gray-700"
-                            }`}
-                        >
-                          <span
-                            className={`w-1.5 h-1.5 rounded-full dark:text-white ${
-                              order.orderStatus === "Delivered"
-                                ? "bg-green-500"
-                                : order.orderStatus === "Pending"
-                                ? "bg-orange-500"
-                                : order.orderStatus === "Cancelled"
-                                ? "bg-red-500"
-                                : "bg-gray-400"
-                            }`}
-                          ></span>
-                          {order.orderStatus || "N/A"}
-                        </span>
-                      </div>
-
-                      {/* Payment Status */}
-                      <div className="min-w-[130px]">
-                        <p className="text-sm text-gray-500 dark:text-white">Payment</p>
-                        <span
-                          className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full dark:text-white dark:bg-black border dark:border-gray-700
-                            ${
-                              order.paymentStatus === "Paid"
-                                ? "bg-green-100 text-green-700"
-                                : order.paymentStatus === "Pending"
-                                ? "bg-orange-100 text-orange-700"
-                                : order.paymentStatus === "Failed"
-                                ? "bg-red-100 text-red-700"
-                                : "bg-gray-100 text-gray-700"
-                            }`}
-                        >
-                          <span
-                            className={`w-1.5 h-1.5 rounded-full dark:text-white ${
-                              order.paymentStatus === "Successful"
-                                ? "bg-green-500"
-                                : order.paymentStatus === "Pending"
-                                ? "bg-orange-500"
-                                : order.paymentStatus === "Failed"
-                                ? "bg-red-500"
-                                : "bg-gray-400"
-                            }`}
-                          ></span>
-                          {order.paymentStatus || "N/A"}
-                        </span>
-                      </div>
-
-                      {/* Date */}
-                      <div className="min-w-[120px] text-right">
-                        <p className="text-sm text-gray-500 dark:text-white">Date</p>
-                        <p className="font-thin text-gray-800 dark:text-white">
-                          {new Date(order.createdAt).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
-                        </p>
-                      </div>
+                {/* Orders List */}
+                {orders.length > 0 ? (
+                  <div className="bg-white border border-gray-100 rounded-md shadow-sm overflow-hidden dark:bg-black dark:border-gray-700">
+                    <div className="divide-y divide-gray-100">
+                      {orders
+                        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                        .slice(0, 5)
+                        .map((order) => (
+                          <OrderRow key={order._id} order={order} currency={currency} />
+                        ))}
                     </div>
-                  ))}
-              </div>
-            </div>
-          ) : (
-            <p className="text-gray-500 text-sm dark:text-white">No orders available.</p>
-          )}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-sm dark:text-white">
+                    No orders available.
+                  </p>
+                )}
+              </motion.div>
+            )}
+
+            {/* Full Orders List View */}
+            {viewAllOrders && (
+              <motion.div
+                key="recent-orders-all"
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6"
+              >
+                <button
+                  onClick={() => setViewAllOrders(false)}
+                  className="flex items-center text-sm text-gray-600 hover:text-black dark:text-white dark:hover:text-gray-200 transition"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                </button>
+
+                <h2 className="text-xl sm:text-2xl font-normal text-gray-900 dark:text-white">
+                  All Orders
+                </h2>
+
+                {orders.length > 0 ? (
+                  <div className="bg-white border border-gray-100 rounded-md shadow-sm overflow-hidden dark:bg-black dark:border-gray-700">
+                    <div className="divide-y divide-gray-100">
+                      {orders
+                        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                        .map((order) => (
+                          <OrderRow key={order._id} order={order} currency={currency} />
+                        ))}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-sm dark:text-white">
+                    No orders available.
+                  </p>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
 
@@ -642,6 +604,167 @@ export default function AdminDashboard({
         {/* Analytics Dashboard */}
         <AnalyticsDashboard />
       </main>
+    </div>
+  );
+}
+
+function ProductCard({ p, currency, idx }) {
+  return (
+    <div className="bg-white dark:bg-black p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300">
+      {/* Product Header */}
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <h2 className="text-lg font-normal text-gray-900 dark:text-gray-100 truncate">
+            {p.product}
+          </h2>
+          <p className="text-xs text-gray-500 mt-0.5">Product ID: #{p.id || idx + 1}</p>
+        </div>
+        <span
+          className={`text-xs font-light px-2.5 py-1 rounded-md ${
+            p.stock > 20
+              ? "bg-green-100 text-black"
+              : p.stock > 5
+              ? "bg-yellow-100 text-yellow-700"
+              : "bg-red-100 text-black"
+          } dark:bg-black border dark:border-gray-700 dark:text-gray-300`}
+        >
+          {p.stock} left
+        </span>
+      </div>
+
+      {/* Stats */}
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <p className="text-sm text-gray-500">Units Sold</p>
+          <p className="text-xl font-normal text-gray-900 dark:text-gray-100">{p.units}</p>
+        </div>
+        <div className="text-right">
+          <p className="text-sm text-gray-500">Revenue</p>
+          <p className="text-xl font-normal text-gray-900 dark:text-gray-100">
+            {currency}
+            {Number(p.revenue).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </p>
+        </div>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+        <div
+          className="bg-orange-500 h-2 rounded-full transition-all duration-500"
+          style={{ width: `${Math.min((p.units / 100) * 100, 100)}%` }}
+        ></div>
+      </div>
+    </div>
+  );
+}
+
+function OrderRow({ order, currency }) {
+  return (
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 dark:hover:bg-gray-900 hover:bg-gray-50 transition">
+      {/* Customer Info */}
+      <div className="flex items-center gap-3 min-w-[180px]">
+        <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-medium uppercase">
+          {order.address?.fullName
+            ? order.address.fullName.charAt(0)
+            : "?"}
+        </div>
+        <div>
+          <p className="font-medium text-gray-900 dark:text-white truncate">
+            {order.address?.fullName || order.fullName || "N/A"}
+          </p>
+          <p className="text-xs font-thin text-gray-500 truncate dark:text-white">
+            {order.orderId || "N/A"}
+          </p>
+        </div>
+      </div>
+
+      {/* Amount */}
+      <div className="min-w-[100px]">
+        <p className="text-sm font-normal text-gray-500 dark:text-white">Amount</p>
+        <p className="font-thin text-gray-800 dark:text-white">
+          {order.amount
+            ? `${currency}${order.amount.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}`
+            : "N/A"}
+        </p>
+      </div>
+
+      {/* Order Status */}
+      <div className="min-w-[120px]">
+        <p className="text-sm text-gray-500 dark:text-white">Order</p>
+        <span
+          className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full dark:text-white dark:bg-black border dark:border-gray-700
+            ${
+              order.orderStatus === "Delivered"
+                ? "bg-green-100 text-green-700"
+                : order.orderStatus === "Pending"
+                ? "bg-orange-100 text-orange-700"
+                : order.orderStatus === "Cancelled"
+                ? "bg-red-100 text-red-700"
+                : "bg-gray-100 text-gray-700"
+            }`}
+        >
+          <span
+            className={`w-1.5 h-1.5 rounded-full ${
+              order.orderStatus === "Delivered"
+                ? "bg-green-500"
+                : order.orderStatus === "Pending"
+                ? "bg-orange-500"
+                : order.orderStatus === "Cancelled"
+                ? "bg-red-500"
+                : "bg-gray-400"
+            }`}
+          ></span>
+          {order.orderStatus || "N/A"}
+        </span>
+      </div>
+
+      {/* Payment Status */}
+      <div className="min-w-[130px]">
+        <p className="text-sm text-gray-500 dark:text-white">Payment</p>
+        <span
+          className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full dark:text-white dark:bg-black border dark:border-gray-700
+            ${
+              order.paymentStatus === "Paid"
+                ? "bg-green-100 text-green-700"
+                : order.paymentStatus === "Pending"
+                ? "bg-orange-100 text-orange-700"
+                : order.paymentStatus === "Failed"
+                ? "bg-red-100 text-red-700"
+                : "bg-gray-100 text-gray-700"
+            }`}
+        >
+          <span
+            className={`w-1.5 h-1.5 rounded-full ${
+              order.paymentStatus === "Paid"
+                ? "bg-green-500"
+                : order.paymentStatus === "Pending"
+                ? "bg-orange-500"
+                : order.paymentStatus === "Failed"
+                ? "bg-red-500"
+                : "bg-gray-400"
+            }`}
+          ></span>
+          {order.paymentStatus || "N/A"}
+        </span>
+      </div>
+
+      {/* Date */}
+      <div className="min-w-[120px] text-right">
+        <p className="text-sm text-gray-500 dark:text-white">Date</p>
+        <p className="font-thin text-gray-800 dark:text-white">
+          {new Date(order.createdAt).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </p>
+      </div>
     </div>
   );
 }

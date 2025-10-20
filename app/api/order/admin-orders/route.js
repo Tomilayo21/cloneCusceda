@@ -14,14 +14,19 @@ export async function GET(request) {
     fromDate.setDate(now.getDate() - range);
 
     // --- Fetch recent orders
+    const limit = parseInt(searchParams.get("limit")) || 5;
+    const page = parseInt(searchParams.get("page")) || 1;
+    const skip = (page - 1) * limit;
+
     const recentOrders = await Order.find({})
-      .sort({ createdAt: -1 })
-      .limit(5)
-      .populate("address")  // ✅ Works now
-      .populate("items.product");
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .populate("address")
+    .populate("items.product");
+
 
     const ordersInRange = await Order.find({ createdAt: { $gte: fromDate } });
-
     const totalOrders = ordersInRange.length;
     const totalRevenue = ordersInRange.reduce(
       (sum, o) => sum + (o.amount || 0),
