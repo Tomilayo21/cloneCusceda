@@ -27,11 +27,31 @@ export default function AdminOtpVerification({ email, onSuccess }) {
     return () => clearInterval(interval);
   }, [email]); 
 
+
   useEffect(() => {
     if (status === "loading") return;
+
     if (!session || session.user.role !== "admin") {
-      toast.error("Access denied. Admins only.");
-      router.back();
+      toast.custom(
+        (t) => (
+          <div
+            className={`
+              max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4
+              transform transition-all duration-300 ease-in-out
+              ${t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"}
+              animate-shake
+            `}
+          >
+            <XCircle className="text-red-500 flex-shrink-0" size={20} />
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Access denied. Admins only.
+            </p>
+          </div>
+        ),
+        { duration: 2500, position: "top-right" }
+      );
+
+      router.back(); // 🔙 go to the previous page
     }
   }, [session, status, router]);
 
