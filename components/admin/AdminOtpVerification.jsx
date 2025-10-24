@@ -174,7 +174,7 @@ export default function AdminOtpVerification({ email, onSuccess }) {
             >
               <CheckCircle className="text-green-600 flex-shrink-0" size={20} />
               <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                ✅ OTP verified successfully!
+                OTP verified successfully!
               </p>
             </div>
           ),

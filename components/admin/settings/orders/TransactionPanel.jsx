@@ -119,23 +119,31 @@ export default function TransactionPanel() {
       toast.error("Unauthorized: Please sign in again.");
       return;
     }
+
     try {
-      const token = session.accessToken; 
+      const token = session.accessToken;
       const { data } = await axios.post(
         "/api/order/update-status",
         { orderId, status },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       if (data.success) {
-        toast.success("Status updated");
+        toast.success("Order status updated");
+
+        // ✅ Update the local state so the UI reflects the new status
+        setTransactions((prev) =>
+          prev.map((txn) =>
+            txn.orderId === orderId ? { ...txn, orderStatus: status } : txn
+          )
+        );
       } else {
-        toast.error(data.message);
+        toast.error(data.message || "Failed to update");
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response?.data?.message || "Failed to update order");
     }
   };
-
 
   const groupedTransactions = useMemo(() => {
     const groups = {};
@@ -149,14 +157,14 @@ export default function TransactionPanel() {
     return groups;
   }, [filteredTransactions]);
 
-  if (loading) return <p className="text-gray-500">Loading transactions...</p>;
+  if (loading) return <p className="text-gray-500">Loading payments...</p>;
 
   return (
     <div className="flex-1 overflow-auto h-screen p-4 sm:p-6 bg-gray-50 dark:bg-neutral-900">
       {/* Header */}
       <div className="flex flex-col mb-6 gap-4">
         <h1 className="text-2xl sm:text-3xl font-normal flex items-center gap-2">
-          Transactions
+          Payments
         </h1>
 
         {/* Controls */}
@@ -194,23 +202,29 @@ export default function TransactionPanel() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <div className="bg-white dark:bg-neutral-800 p-4 rounded-lg shadow text-center sm:text-left">
           <h3 className="text-sm font-semibold text-gray-500">Last 24hours</h3>
-          <p className="text-xl font-bold mt-1">
+          <p className="text-xl font-normal mt-1">
             {currency}
-            {summary.last24HoursAmount.toFixed(2)}
+            {summary
+              .last24HoursAmount
+              .toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
         </div>
         <div className="bg-white dark:bg-neutral-800 p-4 rounded-lg shadow text-center sm:text-left">
           <h3 className="text-sm font-semibold text-gray-500">Last 7 Days</h3>
-          <p className="text-xl font-bold mt-1">
+          <p className="text-xl font-normal mt-1">
             {currency}
-            {summary.last7DaysAmount.toFixed(2)}
+            {summary
+              .last7DaysAmount
+              .toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
         </div>
         <div className="bg-white dark:bg-neutral-800 p-4 rounded-lg shadow text-center sm:text-left">
           <h3 className="text-sm font-semibold text-gray-500">Last 30 Days</h3>
-          <p className="text-xl font-bold mt-1">
+          <p className="text-xl font-normal mt-1">
             {currency}
-            {summary.last30DaysAmount.toFixed(2)}
+            {summary
+              .last30DaysAmount
+              .toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
         </div>
       </div>
@@ -223,7 +237,7 @@ export default function TransactionPanel() {
           {Object.entries(groupedTransactions).map(([day, txns]) => (
             <div key={day}>
               {/* ✅ Day header */}
-              <h2 className="text-base sm:text-lg font-semibold px-3 sm:px-4 py-2 bg-gray-100 dark:bg-neutral-700 border-b rounded-t-lg">
+              <h2 className="text-base sm:text-lg font-normal px-3 sm:px-4 py-2 bg-gray-100 dark:bg-neutral-700 border-b rounded-t-lg">
                 {new Date(txns[0].date).toLocaleDateString("en-US", {
                   weekday: "long",
                   year: "numeric",
@@ -237,13 +251,13 @@ export default function TransactionPanel() {
                 <table className="min-w-full text-sm border-collapse border border-gray-300 dark:border-neutral-700">
                   <thead className="bg-gray-50 dark:bg-neutral-700">
                     <tr>
-                      <th className="border px-2 py-1">Order ID</th>
-                      <th className="border px-2 py-1">User ID</th>
-                      <th className="border px-2 py-1">Amount</th>
-                      <th className="border px-2 py-1">Payment Method</th>
-                      <th className="border px-2 py-1">Payment Status</th>
-                      <th className="border px-2 py-1">Order Status</th>
-                      <th className="border px-2 py-1">Time</th>
+                      <th className="border font-normal px-2 py-1">Order ID</th>
+                      <th className="border font-normal px-2 py-1">User ID</th>
+                      <th className="border font-normal px-2 py-1">Amount</th>
+                      <th className="border font-normal px-2 py-1">Payment Method</th>
+                      <th className="border font-normal px-2 py-1">Payment Status</th>
+                      <th className="border font-normal px-2 py-1">Order Status</th>
+                      <th className="border font-normal px-2 py-1">Time</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -256,7 +270,7 @@ export default function TransactionPanel() {
                         <td className="border px-2 py-1">{txn.userId?.username}</td>
                         <td className="border px-2 py-1">
                           {currency}
-                          {txn.amount?.toFixed(2)}
+                          {txn.amount?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </td>
                         <td className="border px-2 py-1">{txn.paymentMethod}</td>
                         <td className="border px-2 py-1">
@@ -310,7 +324,7 @@ export default function TransactionPanel() {
                   >
                     {/* Header row */}
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold text-sm">{txn.orderId}</span>
+                      <span className="font-normal text-sm">{txn.orderId}</span>
                       <span className="text-xs text-gray-500">
                         {new Date(txn.createdAt).toLocaleTimeString("en-US", {
                           hour: "numeric",
@@ -322,20 +336,20 @@ export default function TransactionPanel() {
                     {/* Body */}
                     <div className="mt-2 text-sm space-y-1">
                       <p>
-                        <span className="font-medium">User:</span> {txn.userId?.username}
+                        <span className="font-normal">User:</span> {txn.userId?.username}
                       </p>
                       <p>
-                        <span className="font-medium">Amount:</span> {currency}
+                        <span className="font-normal">Amount:</span> {currency}
                         {txn.amount?.toFixed(2)}
                       </p>
                       <p>
-                        <span className="font-medium">Method:</span> {txn.paymentMethod}
+                        <span className="font-normal">Method:</span> {txn.paymentMethod}
                       </p>
                     </div>
 
                     {/* Editable statuses */}
                     <div className="mt-3 flex flex-col gap-2">
-                      <label className="text-xs font-medium">Payment Status</label>
+                      <label className="text-xs font-normal">Payment Status</label>
                       <select
                         value={txn.paymentStatus}
                         onChange={(e) => updatePaymentStatus(txn._id, e.target.value)}
@@ -347,7 +361,7 @@ export default function TransactionPanel() {
                         <option value="Failed">Failed</option>
                       </select>
 
-                      <label className="text-xs font-medium">Order Status</label>
+                      <label className="text-xs font-normal">Order Status</label>
                       <select
                         value={txn.orderStatus}
                         onChange={(e) => updateOrderStatus(txn.orderId, e.target.value)}

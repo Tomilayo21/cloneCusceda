@@ -93,8 +93,8 @@ const OrderPanel = () => {
   return (
     <div className="flex-1 h-screen flex flex-col justify-between bg-gray-50 dark:bg-neutral-900">
       <div className="md:p-10 p-4 space-y-6 overflow-y-auto">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          <ShoppingCart className="w-6 h-6 text-orange-600" />
+        <h2 className="text-2xl font-normal flex items-center gap-2">
+          {/* <ShoppingCart className="w-6 h-6 text-orange-600" /> */}
           Admin Orders
         </h2>
         {/* Filter */}
