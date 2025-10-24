@@ -2,20 +2,22 @@
 import { useState, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { Mail, AlertCircle, CheckCircle, XCircle, AlertTriangle } from "lucide-react"; 
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 
-
-export default function AdminOtpVerification({ email, onCancel, onSuccess }) {
+export default function AdminOtpVerification({ email, onSuccess }) {
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [error, setError] = useState("");
   const [cooldown, setCooldown] = useState(0);
   const [loading, setLoading] = useState(false);
-
   const inputRefs = useRef([]);
+  const router = useRouter();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     if (email) {
-      sendOtp(); // ✅ only send if email exists
+      sendOtp(); 
     }
 
     const interval = setInterval(() => {
@@ -25,11 +27,18 @@ export default function AdminOtpVerification({ email, onCancel, onSuccess }) {
     return () => clearInterval(interval);
   }, [email]); 
 
+  useEffect(() => {
+    if (status === "loading") return;
+    if (!session || session.user.role !== "admin") {
+      toast.error("Access denied. Admins only.");
+      router.back();
+    }
+  }, [session, status, router]);
 
 
   function maskEmail(email) {
     if (!email || typeof email !== "string" || !email.includes("@")) {
-      return "******@****"; // fallback if no email provided
+      return "******@****"; 
     }
 
     const [name, domain] = email.split("@");
@@ -235,10 +244,10 @@ export default function AdminOtpVerification({ email, onCancel, onSuccess }) {
 
   return (
     <div className="p-6 bg-white border border-gray-200 rounded-2xl shadow-lg w-full max-w-md mx-auto">
-      <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2 text-center">
+      <h2 className="text-lg sm:text-xl font-light text-gray-800 mb-2 text-center">
         Verify OTP
       </h2>
-      <p className="text-sm text-gray-600 mb-4 text-center">
+      <p className="text-sm font-thin text-gray-600 mb-4 text-center">
         Enter the 6-digit code sent to{" "}
         <span className="font-mono text-gray-800">{maskedEmail}</span>
       </p>
@@ -258,7 +267,7 @@ export default function AdminOtpVerification({ email, onCancel, onSuccess }) {
             value={digit}
             onChange={(e) => handleChange(e.target.value, index)}
             onKeyDown={(e) => handleKeyDown(e, index)}
-            className="w-9 h-11 sm:w-10 sm:h-12 text-center text-base sm:text-lg font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-600"
+            className="w-9 h-11 sm:w-10 sm:h-12 text-center text-base sm:text-lg font-thin border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-600"
           />
         ))}
       </div>
@@ -270,15 +279,15 @@ export default function AdminOtpVerification({ email, onCancel, onSuccess }) {
         <button
           onClick={handleVerify}
           disabled={loading}
-          className="w-full bg-orange-700 hover:bg-orange-800 text-white py-2.5 rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-orange-700 hover:bg-orange-800 text-white py-2.5 rounded-full font-light transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? "Verifying..." : "Verify OTP"}
         </button>
 
         <button
-          onClick={onCancel}
+          onClick={() => router.back()}
           disabled={loading}
-          className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2.5 rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full hover:bg-gray-50 text-gray-800 py-2.5 rounded-lg font-light transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Cancel
         </button>
@@ -286,7 +295,7 @@ export default function AdminOtpVerification({ email, onCancel, onSuccess }) {
         <button
           onClick={sendOtp}
           disabled={cooldown > 0}
-          className="w-full text-sm font-medium text-orange-600 hover:text-orange-700 transition disabled:text-gray-400 disabled:cursor-not-allowed"
+          className="w-full text-sm font-light text-orange-600 hover:text-orange-700 transition disabled:text-gray-400 disabled:cursor-not-allowed"
         >
           {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend OTP"}
         </button>

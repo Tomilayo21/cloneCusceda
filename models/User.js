@@ -11,17 +11,14 @@ const userSchema = new mongoose.Schema(
     cartItems: { type: Object, default: {} },
     welcomeSent: { type: Boolean, default: false },
     imagePublicId: { type: String, default: null },
-
-    // NEW fields:
-    passwordHash: { type: String },                   // hashed password (do not store plaintext)
+    passwordHash: { type: String },
     role: { type: String, enum: ["user", "admin", "seller"], default: "user" },
-    // optional: emailVerified, reset tokens etc.
     emailVerified: { type: Boolean, default: false },
     resetToken: { type: String },
     resetTokenExpiry: { type: Date },
   },
   {
-    timestamps: true, // adds createdAt, updatedAt
+    timestamps: true,
     minimize: false,
   }
 );

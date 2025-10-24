@@ -2,24 +2,37 @@ import connectDB from '@/config/db';
 import Otp from '@/models/Otp';
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import User from '@/models/User';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/authOptions";
 
 export async function POST(req) {
   await connectDB();
+
+  // 🧠 Check session user
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // 🧱 Check if the user is an admin
+  if (session.user.role !== 'admin') {
+    return NextResponse.json({ error: 'Forbidden - Admins only' }, { status: 403 });
+  }
 
   const { email } = await req.json();
   if (!email) {
     return NextResponse.json({ error: 'Email is required' }, { status: 400 });
   }
 
-  // Generate OTP and expiration
+  // Generate OTP
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
-  // Clear old OTPs and save new one
   await Otp.deleteMany({ email });
   await Otp.create({ email, otp, expiresAt });
 
-  // Create mail transporter
+  // Send email
   const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: parseInt(process.env.EMAIL_PORT),
