@@ -185,13 +185,16 @@ export default function UserListPanel() {
                 <p className="font-semibold">
                   {user.name}
                 </p>
-                <p className="text-xs text-gray-600">{user.email}</p>
+                <div className="min-w-0">
+                  <p className="text-xs text-gray-600 truncate">{user.email}</p>
+                </div>
               </div>
             </div>
-            <p className="text-xs">
+            <p className="text-xs text-gray-700 break-words whitespace-normal">
               <span className="font-medium">Username:</span>{" "}
-              {user.username ?? "N/A"}
+              <span className="text-gray-600">{user.username ?? "N/A"}</span>
             </p>
+
           </div>
         ))}
       </div>

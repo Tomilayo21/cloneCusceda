@@ -14,6 +14,9 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Package, Truck, CreditCard, DollarSign, MapPin, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+
 
 dayjs.extend(relativeTime);
 
@@ -150,6 +153,111 @@ const MyOrders = () => {
     }
   };
 
+  const handleDownloadReceipt = async (order) => {
+    const { default: jsPDF } = await import("jspdf");
+    const autoTable = (await import("jspdf-autotable")).default;
+
+    const doc = new jsPDF();
+
+    // 🧩 Constants
+    const companyName = "Cusceda Store";
+    const companyTagline = "Your Trusted Online Marketplace";
+    const date = dayjs(order.createdAt).format("DD/MM/YYYY");
+    const method = paymentMethods.find((m) => m.id === order.paymentMethod);
+    const items = order.items.map((i) => [
+      i.product.name,
+      i.quantity,
+      `${currency}${i.product.price.toLocaleString()}`,
+    ]);
+    const total = `${currency}${order.amount.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+    })}`;
+
+    // 🎨 Brand Color
+    const primaryColor = [255, 165, 0]; // Orange
+    const gray = [60, 60, 60];
+
+    // =========================
+    // 🧾 HEADER
+    // =========================
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(20);
+    doc.setTextColor(...primaryColor);
+    doc.text(companyName, 105, 20, { align: "center" });
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(...gray);
+    doc.text(companyTagline, 105, 26, { align: "center" });
+
+    doc.setDrawColor(...primaryColor);
+    doc.line(14, 32, 196, 32); // divider line
+
+    // =========================
+    // 🧍 CUSTOMER INFO
+    // =========================
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.text("Customer Information", 14, 42);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text(`Name: ${order.address?.fullName || "N/A"}`, 14, 48);
+    doc.text(`Email: ${session?.user?.email || "N/A"}`, 14, 54);
+    doc.text(`Order ID: ${order.orderId || order._id}`, 14, 60);
+    doc.text(`Order Date: ${date}`, 14, 66);
+    doc.text(`Payment Method: ${method?.label || "N/A"}`, 14, 72);
+    doc.text(`Payment Status: ${order.paymentStatus || "Pending"}`, 14, 78);
+
+    // =========================
+    // 🚚 SHIPPING INFO
+    // =========================
+    doc.setFont("helvetica", "bold");
+    doc.text("Shipping Address", 14, 88);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text(`${order.address?.state || ""}, ${order.address?.city || ""}`, 14, 94);
+    doc.text(`${order.address?.country || ""}`, 14, 100);
+    doc.text(`Phone: ${order.address?.phoneNumber || ""}`, 14, 106);
+
+    doc.setDrawColor(200);
+    doc.line(14, 112, 196, 112); // divider line
+
+
+    autoTable(doc, {
+      startY: 118,
+      head: [["Product", "Quantity", "Price"]],
+      body: items,
+      theme: "grid",
+      styles: { fontSize: 10, halign: "center", textColor: 50 },
+      headStyles: { fillColor: primaryColor, textColor: [255, 255, 255], halign: "center" },
+      alternateRowStyles: { fillColor: [245, 245, 245] },
+    });
+
+    const finalY = doc.lastAutoTable.finalY || 130;
+
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.setTextColor(...gray);
+    doc.text(`Total Amount: ${total}`, 14, finalY + 12);
+
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(120);
+    doc.setFillColor(245, 245, 245);
+    doc.rect(14, finalY + 20, 182, 16, "F");
+    doc.text("Thank you for shopping with Cusceda Store!", 105, finalY + 30, { align: "center" });
+    doc.text("We hope to serve you again soon.", 105, finalY + 36, { align: "center" });
+
+
+    doc.save(`Receipt-${order.orderId || order._id}.pdf`);
+  };
+
+
+
   if (status === "loading" || loading) return <Loading />;
   if (status === "unauthenticated") return <p>Please log in to view your orders.</p>;
 
@@ -161,7 +269,7 @@ const MyOrders = () => {
       <main className="flex flex-col justify-between mt-2 px-6 md:px-16 lg:px-32 py-6 min-h-screen">
         <div className="space-y-6">
           <h2 className="text-xl font-semibold mt-6 text-black dark:text-white flex items-center gap-2">
-            <Package className="w-5 h-5 text-orange-600" />
+            {/* <Package className="w-5 h-5 text-orange-600" /> */}
             My Orders
           </h2>
 
@@ -248,12 +356,20 @@ const MyOrders = () => {
 
                     <div className="mt-3 border-t pt-3 space-y-2 text-sm">
                       {order.orderStatus !== "Cancelled" && order.orderStatus !== "Delivered" && (
+                        <>
                         <button
                           onClick={() => handleCancelOrder(order._id)}
                           className="w-fit px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm"
                         >
                           Cancel Order
                         </button>
+                          {/* <button
+                            onClick={() => handleDownloadReceipt(order)}
+                            className="w-fit px-4 py-2 flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm"
+                          >
+                            <DollarSign size={14} /> Download Receipt
+                          </button> */}
+                        </>
                       )}
 
                       {order.orderStatus === "Cancelled" && (
@@ -277,6 +393,13 @@ const MyOrders = () => {
                               </a>
                             )}
                           </div>
+                          <button
+                            onClick={() => handleDownloadReceipt(order)}
+                            className="w-fit px-4 py-2 flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm"
+                          >
+                            <DollarSign size={14} /> Download Receipt
+                          </button>
+
                         </div>
                       )}
                     </div>

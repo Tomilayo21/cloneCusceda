@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Country, State, City } from "country-state-city";
-import { X, AlertCircle, CheckCircle, ShoppingCart, LogIn, Trash2 } from "lucide-react";
+import { X, AlertCircle, CheckCircle, ShoppingCart, LogIn, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 // Payment methods
@@ -16,7 +16,7 @@ const paymentMethods = [
 ];
 
 const OrderSummary = () => {
-  const { currency, user, currentUser,  cartItems, getCartCount, getCartAmount } = useAppContext();
+  const { currency, cartItems, getCartCount, getCartAmount } = useAppContext();
     const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -49,14 +49,15 @@ const OrderSummary = () => {
   const parcel = { length: 10, width: 5, height: 5, distance_unit: "cm", weight: 1, mass_unit: "kg" };
 
   const selectedPayment = paymentMethods.find((m) => m.id === selectedMethod);
-  const baseAmount = getCartAmount() + Math.floor(getCartAmount() * 0.02);
-  const feeAmount = selectedPayment ? baseAmount * selectedPayment.fee : 0;
-  const shippingFee = selectedShipping ? parseFloat(selectedShipping.amount.amount) : 0;
-  const total = baseAmount + feeAmount + shippingFee;
 
-  // -------------------------------
-  // Fetch user addresses
-  // -------------------------------
+  const cartAmount = getCartAmount();
+  const vat = cartAmount * 0.075;
+  const paymentFeeRate = selectedPayment?.fee || 0;
+  const paymentFee = (cartAmount + vat) * paymentFeeRate * 0;
+  const shippingFee = selectedShipping ? parseFloat(selectedShipping.amount.amount) : 0;
+  const total = cartAmount + vat + paymentFee + shippingFee;
+  const [showBreakdown, setShowBreakdown] = useState(false);
+
   useEffect(() => {
     if (status !== "authenticated") return; // wait for auth
 
@@ -83,9 +84,6 @@ const OrderSummary = () => {
     return () => { cancelled = true; };
   }, [status]);
 
-  // -------------------------------
-  // Fetch shipping rates when address changes
-  // -------------------------------
   useEffect(() => {
     const fetchShippingRates = async () => {
       if (!selectedAddress) return;
@@ -118,9 +116,6 @@ const OrderSummary = () => {
     fetchShippingRates();
   }, [selectedAddress]);
 
-  // -------------------------------
-  // Country / State / City effects
-  // -------------------------------
   useEffect(() => setCountries(Country.getAllCountries()), []);
 
   useEffect(() => {
@@ -137,9 +132,6 @@ const OrderSummary = () => {
     setCities(country && state ? City.getCitiesOfState(country.isoCode, state.isoCode) : []);
   }, [selectedCountry, selectedState, countries, states]);
 
-  // -------------------------------
-  // Handlers
-  // -------------------------------
   const handleAddressSelect = (addr) => {
     setSelectedAddress(addr);
     setIsDropdownOpen(false);
@@ -356,9 +348,6 @@ const OrderSummary = () => {
     setShowEditModal(true);
   };
 
-  // -------------------------------
-  // Shipping rates booking
-  // -------------------------------
   const fetchRates = async () => {
     if (!selectedAddress) return toast.error("Select address first");
     setLoadingRates(true); setRateError("");
@@ -388,9 +377,6 @@ const OrderSummary = () => {
     }
   };
 
-  // -------------------------------
-  // Render
-  // -------------------------------
   return (
     <div className="w-full md:w-96 bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-4 md:p-6 border border-gray-200 dark:border-gray-700">
       <h2 className="text-xl md:text-2xl font-semibold text-gray-900 dark:text-gray-100 tracking-tight">
@@ -466,6 +452,97 @@ const OrderSummary = () => {
             {paymentMethods.map(pm => <option key={pm.id} value={pm.id}>{pm.label}</option>)}
           </select>
         </div>
+
+        {/* Fee Breakdown */}
+        <div className="bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mt-4 space-y-2 text-sm text-gray-700 dark:text-gray-300">
+          <div className="flex justify-between">
+            <span>Subtotal:</span>
+            <span>{currency}{cartAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+          </div>
+
+          <div className="flex justify-between">
+            <span>VAT (7.5%):</span>
+            <span>{currency}{vat.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+          </div>
+
+          <div className="flex justify-between">
+            <span>Payment Fee 
+              {/* ({selectedPayment?.label} {paymentFeeRate * 100}%) */}
+              :</span>
+            <span>{currency}{paymentFee.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+          </div>
+
+          <div className="flex justify-between">
+            <span>Shipping:</span>
+            <span>{currency}{shippingFee.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+          </div>
+
+          <hr className="border-gray-200 dark:border-gray-700" />
+
+          <div className="flex justify-between font-semibold text-gray-900 dark:text-gray-100">
+            <span>Total:</span>
+            <span>{currency}{total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+          </div>
+        </div>
+
+        {/* <div className="bg-white dark:bg-neutral-900 p-4 rounded-xl shadow-md">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-gray-700 dark:text-gray-300 font-medium">Total</span>
+            <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              {currency}{total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            </span>
+          </div>
+
+          <button
+            onClick={() => setShowBreakdown(!showBreakdown)}
+            className="flex items-center text-sm text-orange-600 hover:text-orange-700 font-medium mt-2 focus:outline-none"
+          >
+            {showBreakdown ? (
+              <>
+                Hide breakdown <ChevronUp size={16} className="ml-1 transition-transform" />
+              </>
+            ) : (
+              <>
+                Show breakdown <ChevronDown size={16} className="ml-1 transition-transform" />
+              </>
+            )}
+          </button>
+
+          <div
+            className={`transition-all duration-500 ease-in-out overflow-hidden ${
+              showBreakdown ? "max-h-96 mt-3 opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            <div className="bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 space-y-2 text-sm text-gray-700 dark:text-gray-300">
+              <div className="flex justify-between">
+                <span>Subtotal:</span>
+                <span>{currency}{cartAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span>VAT (2%):</span>
+                <span>{currency}{vat.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span>Payment Fee ({selectedPayment?.label || "N/A"} {paymentFeeRate * 100}%):</span>
+                <span>{currency}{paymentFee.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span>Shipping:</span>
+                <span>{currency}{shippingFee.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+              </div>
+
+              <hr className="border-gray-200 dark:border-gray-700" />
+
+              <div className="flex justify-between font-semibold text-gray-900 dark:text-gray-100">
+                <span>Total:</span>
+                <span>{currency}{total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+              </div>
+            </div>
+          </div>
+        </div> */}
 
         {/* Payment button */}
         <button onClick={handlePayment} disabled={processing || getCartCount() === 0} className={`w-full py-3 mt-4 md:mt-5 rounded-lg text-white font-medium transition ${processing || getCartCount() === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-orange-600 hover:bg-orange-700 shadow-md"}`}>
