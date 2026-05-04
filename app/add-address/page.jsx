@@ -324,13 +324,14 @@ import { Country, State, City } from "country-state-city";
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
 import { MapPin, Phone, User, Mail, Landmark, MapPinHouse, Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 countries.registerLocale(enLocale);
 
 const AddAddress = () => {
   const router = useRouter();
-  const { currentUser } = useAppContext(); // get current user and token
-
+  const { data: session, status } = useSession();
+  
   const [address, setAddress] = useState({
     fullName: "",
     phoneNumber: "",
@@ -372,11 +373,12 @@ const AddAddress = () => {
     e.preventDefault();
 
     // ✅ Get token from context or fallback to localStorage
-    const token = currentUser?.token || localStorage.getItem("authToken");
-    if (!token) {
-      toast.error("Please login first");
-      return;
-    }
+   if (status === "loading") return;
+
+  if (!session) {
+    toast.error("Please login first");
+    return;
+  }
 
     if (
       !address.fullName ||
