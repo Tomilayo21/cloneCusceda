@@ -5,6 +5,8 @@ import mongoose, { Schema, Model, models } from "mongoose";
 const SettingsSchema = new Schema<ISettings>({
   lightLogoUrl: String,
   darkLogoUrl: String,
+  logoWidth: { type: String, default: "120px" },
+  logoHeight: { type: String, default: "auto" },
   siteTitle: String,
   siteDescription: String,
   supportEmail: String,

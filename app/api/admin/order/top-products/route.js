@@ -42,7 +42,9 @@ export async function GET() {
     const finalProducts = await Promise.all(
       topProductsAgg.map(async (item) => {
         const product = await Product.findById(item._id).lean();
+
         return {
+          productId: item._id.toString(), // ✅ convert ObjectId to string
           product: product?.name || "Unknown Product",
           units: item.totalUnits,
           revenue: item.totalRevenue || 0,

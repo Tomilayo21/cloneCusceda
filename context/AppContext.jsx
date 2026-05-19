@@ -214,15 +214,22 @@ export const AppContextProvider = ({ children }) => {
     toast.custom(
       (t) => (
         <div
-          className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-center gap-3 p-4 transform transition-all duration-300 ${
+          className={`max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-start gap-3 p-4 transform transition-all duration-300 ${
             t.visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
           }`}
         >
-          <ShoppingCart className="text-orange-500" size={20} />
-          <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Item added to cart</p>
+          <ShoppingCart className="text-orange-500 mt-0.5" size={20} />
+          <div>
+            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+              Added to cart
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              Your item has been successfully added to your cart.
+            </p>
+          </div>
         </div>
       ),
-      { duration: 2000, position: "top-right" }
+      { duration: 2500, position: "top-right" }
     );
   };
 

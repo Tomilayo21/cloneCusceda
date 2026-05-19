@@ -130,7 +130,7 @@ const HeaderSlider = () => {
             className="
               flex flex-col-reverse md:flex-row items-center justify-between
               min-w-full py-10 md:py-16 px-6 md:px-20
-              bg-gradient-to-r from-[#FAFAFA] to-[#F3F4F8] dark:from-gray-900 dark:to-gray-800
+              bg-gradient-to-r from-[#FAFAFA] to-[#F3F4F8] dark:from-black dark:black
               gap-10 md:gap-16
             "
           >

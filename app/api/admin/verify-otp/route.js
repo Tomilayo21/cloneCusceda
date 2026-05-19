@@ -7,7 +7,11 @@ export async function POST(req) {
   const { email, otp } = await req.json();
 
   const record = await Otp.findOne({ email });
-  if (!record || record.otp !== otp || record.expiresAt < new Date()) {
+  if (
+    !record ||
+    record.otp !== otp.toString() ||
+    record.expiresAt < new Date()
+  ) {
     return NextResponse.json({ success: false }, { status: 401 });
   }
 

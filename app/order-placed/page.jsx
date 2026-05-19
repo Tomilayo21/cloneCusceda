@@ -20,18 +20,19 @@ const OrderPlaced = () => {
       if (!pending) {
         toast.custom(
           (t) => (
-            <div
-              className={`${
-                t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4`}
-            >
-              <XCircle className="text-red-500" size={20} />
-              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                No pending order data found
-              </p>
+            <div className={`${t.visible ? "animate-enter" : "animate-leave"} max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-start gap-3 p-4`}>
+              <XCircle className="text-red-500 mt-0.5" size={20} />
+              <div>
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                  Order not found
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  We couldn’t locate your order details. Please try again.
+                </p>
+              </div>
             </div>
           ),
-          { duration: 2500, position: "top-right" }
+          { duration: 3000, position: "top-right" }
         );
         setFinalizing(false);
         return;
@@ -40,18 +41,19 @@ const OrderPlaced = () => {
       if (status !== "authenticated") {
         toast.custom(
           (t) => (
-            <div
-              className={`${
-                t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4`}
-            >
-              <XCircle className="text-red-500" size={20} />
-              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                You must be logged in to finalize order
-              </p>
+            <div className={`${t.visible ? "animate-enter" : "animate-leave"} max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-start gap-3 p-4`}>
+              <XCircle className="text-red-500 mt-0.5" size={20} />
+              <div>
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                  Sign in required
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Please sign in to complete your order.
+                </p>
+              </div>
             </div>
           ),
-          { duration: 2500, position: "top-right" }
+          { duration: 3000, position: "top-right" }
         );
         setFinalizing(false);
         return;
@@ -77,56 +79,58 @@ const OrderPlaced = () => {
         if (res.data.success) {
           toast.custom(
             (t) => (
-              <div
-                className={`${
-                  t.visible ? 'animate-enter' : 'animate-leave'
-                } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4`}
-              >
-                <CheckCircle className="text-green-500" size={20} />
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  Order successfully created
-                </p>
+              <div className={`${t.visible ? "animate-enter" : "animate-leave"} max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-start gap-3 p-4`}>
+                <CheckCircle className="text-green-500 mt-0.5" size={20} />
+                <div>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                    Order confirmed
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Your order has been placed successfully. Redirecting…
+                  </p>
+                </div>
               </div>
             ),
-            { duration: 2500, position: 'top-right' }
+            { duration: 2500, position: "top-right" }
           );
-
           setCartItems({}); // clear cart
           sessionStorage.removeItem('pendingOrder');
           setTimeout(() => router.push('/my-orders'), 1500);
         } else {
           toast.custom(
             (t) => (
-              <div
-                className={`${
-                  t.visible ? 'animate-enter' : 'animate-leave'
-                } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4`}
-              >
-                <PartyPopper className="text-red-500" size={20} />
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  {res.data.message || 'Order creation failed'}
-                </p>
+              <div className={`${t.visible ? "animate-enter" : "animate-leave"} max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-start gap-3 p-4`}>
+                <XCircle className="text-red-500 mt-0.5" size={20} />
+                <div>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                    Unable to complete order
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {res.data.message || "Something went wrong. Please try again."}
+                  </p>
+                </div>
               </div>
             ),
-            { duration: 2500, position: 'top-right' }
+            { duration: 3500, position: "top-right" }
           );
         }
       } catch (error) {
         console.error('Finalize Order Error:', error);
         toast.custom(
           (t) => (
-            <div
-              className={`${
-                t.visible ? 'animate-enter' : 'animate-leave'
-              } max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4`}
-            >
-              <PartyPopper className="text-red-500" size={20} />
-              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                Failed to finalize order: {error.message || 'Unknown error'}
-              </p>
+            <div className={`${t.visible ? "animate-enter" : "animate-leave"} max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg flex items-start gap-3 p-4`}>
+              <XCircle className="text-red-500 mt-0.5" size={20} />
+              <div>
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                  Order processing failed
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Please check your connection and try again.
+                </p>
+              </div>
             </div>
           ),
-          { duration: 2500, position: 'top-right' }
+          { duration: 3500, position: "top-right" }
         );
       } finally {
         setFinalizing(false);
@@ -141,26 +145,36 @@ const OrderPlaced = () => {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center px-6 py-10 bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
+      
+      {/* Loader / Success Icon */}
       <div className="relative flex justify-center items-center mb-6">
         {finalizing ? (
-          <div className="animate-spin rounded-full h-28 w-28 border-4 border-t-orange-400 border-gray-200 dark:border-neutral-700"></div>
+          <div className="animate-spin rounded-full h-28 w-28 border-4 border-t-orange-500 border-gray-200 dark:border-neutral-700"></div>
         ) : (
           <CheckCircle className="h-28 w-28 text-green-500" />
         )}
       </div>
 
-      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
-        {finalizing ? 'Finalizing your order...' : 'Order Placed Successfully'}
-        {!finalizing && <PartyPopper className="w-6 h-6 text-orange-500" />}
+      {/* Title */}
+      <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 dark:text-gray-100 text-center">
+        {finalizing ? "Processing your order" : "Order Confirmed"}
       </h1>
 
+      {/* Subtext */}
+      <p className="mt-3 text-sm md:text-base text-gray-500 dark:text-gray-400 text-center max-w-md">
+        {finalizing
+          ? "Please wait while we securely finalize your transaction. This may take a few moments."
+          : "Thank you for your purchase. Your order has been successfully placed and is now being prepared for delivery."}
+      </p>
+
+      {/* Actions */}
       {!finalizing && (
         <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
           <a
             href="/my-orders"
             className="w-full sm:w-auto px-6 py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-medium shadow-md transition text-center"
           >
-            View My Orders
+            View Orders
           </a>
           <a
             href="/all-products"
@@ -170,7 +184,8 @@ const OrderPlaced = () => {
           </a>
         </div>
       )}
-    </div>    
+
+    </div> 
   );
 };
 

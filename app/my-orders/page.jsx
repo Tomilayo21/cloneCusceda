@@ -10,12 +10,13 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { assets } from "@/assets/assets";
-import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Package, Truck, CreditCard, DollarSign, MapPin, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import dayjs from "@/lib/dayjs"; 
+import { generateReceipt } from "@/utils/generateReceipt";
 
 
 dayjs.extend(relativeTime);
@@ -30,6 +31,7 @@ const MyOrders = () => {
   const perPage = 8;
   const router = useRouter();
   const [activeOrder, setActiveOrder] = useState(null);
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const paymentMethods = [
     { id: "stripe", label: "Stripe", fee: 0.029 },
@@ -153,107 +155,20 @@ const MyOrders = () => {
     }
   };
 
-  const handleDownloadReceipt = async (order) => {
-    const { default: jsPDF } = await import("jspdf");
-    const autoTable = (await import("jspdf-autotable")).default;
-
-    const doc = new jsPDF();
-
-    // 🧩 Constants
-    const companyName = "Cusceda Store";
-    const companyTagline = "Your Trusted Online Marketplace";
-    const date = dayjs(order.createdAt).format("DD/MM/YYYY");
-    const method = paymentMethods.find((m) => m.id === order.paymentMethod);
-    const items = order.items.map((i) => [
-      i.product.name,
-      i.quantity,
-      `${currency}${i.product.price.toLocaleString()}`,
-    ]);
-    const total = `${currency}${order.amount.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-    })}`;
-
-    // 🎨 Brand Color
-    const primaryColor = [255, 165, 0]; // Orange
-    const gray = [60, 60, 60];
-
-    // =========================
-    // 🧾 HEADER
-    // =========================
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(20);
-    doc.setTextColor(...primaryColor);
-    doc.text(companyName, 105, 20, { align: "center" });
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.setTextColor(...gray);
-    doc.text(companyTagline, 105, 26, { align: "center" });
-
-    doc.setDrawColor(...primaryColor);
-    doc.line(14, 32, 196, 32); // divider line
-
-    // =========================
-    // 🧍 CUSTOMER INFO
-    // =========================
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "bold");
-    doc.text("Customer Information", 14, 42);
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.text(`Name: ${order.address?.fullName || "N/A"}`, 14, 48);
-    doc.text(`Email: ${session?.user?.email || "N/A"}`, 14, 54);
-    doc.text(`Order ID: ${order.orderId || order._id}`, 14, 60);
-    doc.text(`Order Date: ${date}`, 14, 66);
-    doc.text(`Payment Method: ${method?.label || "N/A"}`, 14, 72);
-    doc.text(`Payment Status: ${order.paymentStatus || "Pending"}`, 14, 78);
-
-    // =========================
-    // 🚚 SHIPPING INFO
-    // =========================
-    doc.setFont("helvetica", "bold");
-    doc.text("Shipping Address", 14, 88);
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.text(`${order.address?.state || ""}, ${order.address?.city || ""}`, 14, 94);
-    doc.text(`${order.address?.country || ""}`, 14, 100);
-    doc.text(`Phone: ${order.address?.phoneNumber || ""}`, 14, 106);
-
-    doc.setDrawColor(200);
-    doc.line(14, 112, 196, 112); // divider line
 
 
-    autoTable(doc, {
-      startY: 118,
-      head: [["Product", "Quantity", "Price"]],
-      body: items,
-      theme: "grid",
-      styles: { fontSize: 10, halign: "center", textColor: 50 },
-      headStyles: { fillColor: primaryColor, textColor: [255, 255, 255], halign: "center" },
-      alternateRowStyles: { fillColor: [245, 245, 245] },
+  const handleDownloadReceipt = (order) => {
+    generateReceipt({
+      order,
+      session,
+      paymentMethods,
+      currency: "₦",
+      company: {
+        name: "Cusceda Store",
+        tagline: "Your Trusted Online Marketplace",
+        logo: "/logo.png", // optional
+      },
     });
-
-    const finalY = doc.lastAutoTable.finalY || 130;
-
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(12);
-    doc.setTextColor(...gray);
-    doc.text(`Total Amount: ${total}`, 14, finalY + 12);
-
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.setTextColor(120);
-    doc.setFillColor(245, 245, 245);
-    doc.rect(14, finalY + 20, 182, 16, "F");
-    doc.text("Thank you for shopping with Cusceda Store!", 105, finalY + 30, { align: "center" });
-    doc.text("We hope to serve you again soon.", 105, finalY + 36, { align: "center" });
-
-
-    doc.save(`Receipt-${order.orderId || order._id}.pdf`);
   };
 
 
@@ -266,178 +181,260 @@ const MyOrders = () => {
   return (
     <div className="items-center pt-8 bg-white text-black dark:bg-black dark:text-white min-h-screen">
       <Navbar />
-      <main className="flex flex-col justify-between mt-2 px-6 md:px-16 lg:px-32 py-6 min-h-screen">
-        <div className="space-y-6">
-          <h2 className="text-xl font-semibold mt-6 text-black dark:text-white flex items-center gap-2">
-            {/* <Package className="w-5 h-5 text-orange-600" /> */}
-            My Orders
-          </h2>
+        <main className="px-6 md:px-16 lg:px-32 py-10 min-h-screen bg-gray-50 dark:bg-neutral-900">
 
+          {/* Page Header */}
+          <div className="mb-8">
+            <h1 className="text-2xl md:text-3xl font-medium text-gray-900 dark:text-white">
+              Order History
+            </h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              View and manage your recent orders
+            </p>
+          </div>
+
+          {/* EMPTY STATE */}
           {orders.length === 0 ? (
-            <div className="text-center py-16 px-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-dashed border-gray-300 dark:border-gray-700">
-              <Package className="w-14 h-14 mx-auto text-gray-400 dark:text-gray-500 mb-4" />
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                No Orders Yet
+            <div className="flex flex-col items-center justify-center text-center py-20 bg-white dark:bg-neutral-800 border border-dashed border-gray-300 dark:border-gray-700 rounded-2xl">
+              <Package className="w-14 h-14 text-gray-400 mb-4" />
+
+              <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">
+                No orders found
               </h3>
-              <p className="text-gray-500 dark:text-gray-400 mt-1">
-                Looks like you haven’t placed any orders. Start shopping and your orders will appear here!
+
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 max-w-md">
+                You haven’t placed any orders yet. Once you make a purchase, your order history will appear here.
               </p>
+
               <button
                 onClick={() => router.push("/all-products")}
-                className="mt-6 px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-medium shadow-md transition"
+                className="mt-6 px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-medium shadow-sm transition"
               >
-                Browse Products
+                Start Shopping
               </button>
             </div>
           ) : (
-            <section className="grid gap-6 max-w-5xl text-sm text-black dark:text-white">
+
+            <div className="space-y-6">
+
               {orders.slice((page - 1) * perPage, page * perPage).map((order, index) => {
+
                 const method = paymentMethods.find(m => m.id === order.paymentMethod);
+
+                const getStatusBadge = (status) => {
+                  const base = "px-2.5 py-1 text-xs rounded-full font-medium";
+
+                  switch (status?.toLowerCase()) {
+                    case "delivered":
+                      return `${base} bg-green-100 text-green-700`;
+                    case "processing":
+                      return `${base} bg-yellow-100 text-yellow-700`;
+                    case "shipped":
+                      return `${base} bg-blue-100 text-blue-700`;
+                    case "cancelled":
+                      return `${base} bg-red-100 text-red-700`;
+                    default:
+                      return `${base} bg-gray-100 text-gray-700`;
+                  }
+                };
 
                 return (
                   <div
                     key={order._id || index}
-                    className="bg-white dark:bg-gray-900 shadow-sm border rounded-xl p-5 space-y-5"
+                    className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm hover:shadow-md transition p-5"
                   >
-                    <div className="flex items-center gap-4">
-                      <Image
-                        className="w-20 h-20 object-contain rounded-md border"
-                        src={order.items[0]?.product.image[0] || assets.box_icon}
-                        alt={order.items[0]?.product.name || "Product"}
-                        width={80}
-                        height={80}
-                      />
-                      <div>
-                        <p className="font-semibold text-base">
-                          {order.items.map(item => `${item.product.name} x ${item.quantity}`).join(", ")}
-                        </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {order.items.length} item{order.items.length > 1 ? "s" : ""}
-                        </p>
-                      </div>
-                    </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                      <div>
-                        <p className="font-semibold flex items-center gap-2 mb-1">
-                          <MapPin size={16} /> Shipping Address
-                        </p>
-                        <address className="not-italic text-gray-700 dark:text-gray-300">
-                          <p><span className="font-medium">Name:</span> {order.address?.fullName}</p>
-                          <p><span className="font-medium">Country:</span> {order.address?.country}</p>
-                          <p><span className="font-medium">State:</span> {order.address?.state}, <span className="font-medium">City:</span> {order.address?.city}</p>
-                          <p><span className="font-medium">Phone:</span> {order.address?.phoneNumber}</p>
-                        </address>
+                    {/* TOP SECTION */}
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+                      {/* Product Info */}
+                      <div className="flex items-center gap-4">
+                        <Image
+                          src={order.items[0]?.product.image[0] || assets.box_icon}
+                          alt="product"
+                          width={80}
+                          height={80}
+                          className="w-20 h-20 rounded-lg border object-contain bg-white"
+                        />
+
+                        <div>
+                          <p className="font-medium text-gray-900 dark:text-white text-sm md:text-base">
+                            {order.items.map(item => `${item.product.name} × ${item.quantity}`).join(", ")}
+                          </p>
+
+                          <p className="text-xs text-gray-500 mt-1">
+                            {order.items.length} item{order.items.length > 1 ? "s" : ""}
+                          </p>
+                        </div>
                       </div>
 
-                      <div>
-                        <p className="font-semibold flex items-center gap-2 mb-1">
-                          <CreditCard size={16} /> Order Info
-                        </p>
-                        {method && <p className="text-sm">Payment: <span className="font-medium">{method.label}</span></p>}
-                        <p className="text-sm">Order ID: <span className="font-medium">{order.orderId || order._id}</span></p>
-                        <p className="text-sm">Date: <span className="font-medium">{dayjs(order.date || order.createdAt).format("DD/MM/YYYY")} • {dayjs(order.date || order.createdAt).fromNow()}</span></p>
-                        <p className="text-sm">Payment Status: <span className="font-medium">{order.paymentStatus || "Pending"}</span></p>
-                        <p className="text-sm">Order Status: <span className="font-medium">{order.orderStatus}</span></p>
-                      </div>
+                      {/* Status + Price */}
+                      <div className="flex flex-col md:items-end gap-2">
+                        <span className={getStatusBadge(order.orderStatus)}>
+                          {order.orderStatus}
+                        </span>
 
-                      <div>
-                        <p className="font-semibold flex items-center gap-2 mb-1">
-                          <DollarSign size={16} /> Total
-                        </p>
-                        <p className="text-lg font-bold text-orange-600">
+                        <p className="text-lg font-semibold text-orange-600">
                           {currency}
-                          {order.amount?.toLocaleString
-                            (undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-                          }
+                          {order.amount?.toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                          })}
                         </p>
                       </div>
                     </div>
 
-                    <div className="mt-3 border-t pt-3 space-y-2 text-sm">
+                    {/* DETAILS GRID */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 text-sm">
+
+                      {/* Shipping */}
+                      <div>
+                        <p className="font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                          Shipping Details
+                        </p>
+                        <div className="text-gray-600 dark:text-gray-400 space-y-1">
+                          <p>{order.address?.fullName}</p>
+                          <p>{order.address?.city}, {order.address?.state}</p>
+                          <p>{order.address?.country}</p>
+                          <p>{order.address?.phoneNumber}</p>
+                        </div>
+                      </div>
+
+                      {/* Order Info */}
+                      <div>
+                        <p className="font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                          Order Summary
+                        </p>
+                        <div className="text-gray-600 dark:text-gray-400 space-y-1">
+                          <p>
+                            ID: <span className="font-medium">{order.orderId || order._id}</span>
+                          </p>
+                          <p>
+                            Payment: <span className="font-medium">{method?.label}</span>
+                          </p>
+                          
+
+                          <p>
+                            Date:{" "}
+                            <span className="font-medium">
+                              {dayjs(order.createdAt)
+                                .tz(tz)
+                                .format("dddd, DD MMM YYYY, hh:mm A")} ({tz})
+                            </span>
+                          </p>
+                          <p>
+                            Payment Status:{" "}
+                            <span className="font-medium">
+                              {order.paymentStatus || "Pending"}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Tracking */}
+                      <div>
+                        <p className="font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                          Delivery
+                        </p>
+
+                        {order.trackingNumber ? (
+                          <div className="text-gray-600 dark:text-gray-400 space-y-1">
+                            <p>Tracking: {order.trackingNumber}</p>
+                            <p>Carrier: {order.shippingCarrier}</p>
+
+                            {order.shippingLabelUrl && (
+                              <a
+                                href={order.shippingLabelUrl}
+                                target="_blank"
+                                className="text-blue-600 text-sm hover:underline"
+                              >
+                                Download Label
+                              </a>
+                            )}
+                          </div>
+                        ) : (
+                          <p className="text-gray-400 text-sm">
+                            Tracking not available
+                          </p>
+                        )}
+                      </div>
+
+                    </div>
+
+                    {/* ACTIONS */}
+                    <div className="flex flex-wrap gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+
                       {order.orderStatus !== "Cancelled" && order.orderStatus !== "Delivered" && (
-                        <>
                         <button
                           onClick={() => handleCancelOrder(order._id)}
-                          className="w-fit px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm"
+                          className="px-4 py-2 text-sm bg-red-600 hover:bg-red-700 text-white rounded-lg transition"
                         >
-                          Cancel Order
+                          Request Cancellation
                         </button>
-                          {/* <button
-                            onClick={() => handleDownloadReceipt(order)}
-                            className="w-fit px-4 py-2 flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm"
-                          >
-                            <DollarSign size={14} /> Download Receipt
-                          </button> */}
-                        </>
                       )}
 
                       {order.orderStatus === "Cancelled" && (
                         <button
                           onClick={() => handleDeleteOrder(order._id)}
-                          className="w-fit px-4 py-2 flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg text-sm"
+                          className="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition"
                         >
-                          <Trash2 size={14} /> Delete Order
+                          Remove Order
                         </button>
                       )}
 
-                      {order.trackingNumber && (
-                        <div className="flex items-center gap-3">
-                          <Truck size={16} className="text-gray-500" />
-                          <div>
-                            <p><span className="font-medium">Tracking:</span> {order.trackingNumber}</p>
-                            <p><span className="font-medium">Carrier:</span> {order.shippingCarrier}</p>
-                            {order.shippingLabelUrl && (
-                              <a href={order.shippingLabelUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm">
-                                Download Label
-                              </a>
-                            )}
-                          </div>
-                          <button
-                            onClick={() => handleDownloadReceipt(order)}
-                            className="w-fit px-4 py-2 flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm"
-                          >
-                            <DollarSign size={14} /> Download Receipt
-                          </button>
+                      <button
+                        onClick={() => handleDownloadReceipt(order)}
+                        className="px-4 py-2 text-sm bg-gray-50 hover:bg-gray-100 text-gray-900 rounded-lg transition"
+                      >
+                        Download Invoice
+                      </button>
 
-                        </div>
-                      )}
                     </div>
+
                   </div>
                 );
               })}
-            </section>
-          )}
-        </div>
 
-        {totalPages > 1 && (
-          <div className="mt-8 flex justify-center items-center gap-2">
-            <button
-              disabled={page === 1}
-              onClick={() => setPage(p => Math.max(p - 1, 1))}
-              className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
-            >
-              Prev
-            </button>
-            {Array.from({ length: totalPages }).map((_, i) => (
+            </div>
+          )}
+
+          {/* PAGINATION */}
+          {totalPages > 1 && (
+            <div className="mt-10 flex justify-center items-center gap-2">
+
               <button
-                key={i}
-                onClick={() => setPage(i + 1)}
-                className={`px-3 py-1 rounded ${page === i + 1 ? "bg-orange-600 text-white" : "bg-gray-100 dark:bg-gray-800 hover:bg-orange-100"}`}
+                disabled={page === 1}
+                onClick={() => setPage(p => Math.max(p - 1, 1))}
+                className="px-4 py-2 bg-white dark:bg-neutral-800 border rounded-lg text-sm disabled:opacity-40"
               >
-                {i + 1}
+                Previous
               </button>
-            ))}
-            <button
-              disabled={page === totalPages}
-              onClick={() => setPage(p => Math.min(p + 1, totalPages))}
-              className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
-        )}
-      </main>
+
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setPage(i + 1)}
+                  className={`px-4 py-2 text-sm rounded-lg ${
+                    page === i + 1
+                      ? "bg-orange-600 text-white"
+                      : "bg-white dark:bg-neutral-800 border hover:bg-gray-100 dark:hover:bg-neutral-700"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              <button
+                disabled={page === totalPages}
+                onClick={() => setPage(p => Math.min(p + 1, totalPages))}
+                className="px-4 py-2 bg-white dark:bg-neutral-800 border rounded-lg text-sm disabled:opacity-40"
+              >
+                Next
+              </button>
+
+            </div>
+          )}
+
+        </main>
       <Footer />
     </div>
   );

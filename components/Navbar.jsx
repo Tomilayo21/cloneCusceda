@@ -29,6 +29,8 @@ const Navbar = () => {
   const [signupMode, setSignupMode] = useState("signup");
   const [lightLogoUrl, setLightLogoUrl] = useState(null);
   const [darkLogoUrl, setDarkLogoUrl] = useState(null);
+  const [logoWidth, setLogoWidth] = useState("120px");
+  const [logoHeight, setLogoHeight] = useState("auto");
 
   // Prevent SSR flash
   useEffect(() => setMounted(true), []);
@@ -57,6 +59,8 @@ const Navbar = () => {
         console.log("Fetched settings:", data);
         setLightLogoUrl(data.settings?.lightLogoUrl || data.lightLogoUrl || null);
         setDarkLogoUrl(data.settings?.darkLogoUrl || data.darkLogoUrl || null);
+        setLogoWidth(data.logoWidth || "120px");
+        setLogoHeight(data.logoHeight || "auto");
       } catch (err) {
         console.error("Failed to fetch logos", err);
       }
@@ -83,6 +87,25 @@ const Navbar = () => {
     return () => window.removeEventListener("keydown", handleEsc);
   }, [showSignup, handleEsc]);
 
+  useEffect(() => {
+    const navbar = document.getElementById("main-navbar");
+
+    if (!navbar) return;
+
+    const updateHeight = () => {
+      const height = navbar.offsetHeight;
+      document.documentElement.style.setProperty("--navbar-height", height + "px");
+    };
+
+    // Run immediately
+    updateHeight();
+
+    // Update when resizing
+    window.addEventListener("resize", updateHeight);
+
+    return () => window.removeEventListener("resize", updateHeight);
+  }, [ lightLogoUrl, darkLogoUrl]);
+
   const cartCount = getCartCount();
 
   if (!logoSrc) return null;
@@ -90,6 +113,7 @@ const Navbar = () => {
   return (
     <>
       <nav
+        id="main-navbar"
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 backdrop-blur-md ${
           isScrolled
             ? themeMode === "dark"
@@ -107,6 +131,7 @@ const Navbar = () => {
             width={100}
             height={100}
             onClick={() => router.push("/")}
+            style={{ width: logoWidth, height: logoHeight }}
             className="cursor-pointer w-24 md:w-32 hidden md:block hover:scale-105 transition-transform duration-200"
           />
 

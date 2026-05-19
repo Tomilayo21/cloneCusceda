@@ -214,7 +214,7 @@ export default function AdminDashboard({
         const { data } = await axios.get("/api/admin/order/top-products?limit=50");
         if (data.success) {
           setTopProducts(data.topProducts.slice(0, 5));
-          setAllProducts(data.topProducts); // ✅ store the full list
+          setAllProducts(data.topProducts); 
         } else {
           toast.error(data.message || "No products found");
         }
@@ -471,7 +471,12 @@ export default function AdminDashboard({
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {topProducts.length > 0 ? (
                     topProducts.map((p, idx) => (
-                      <ProductCard key={idx} p={p} currency={currency} idx={idx} />
+                      <ProductCard
+                        key={p.productId}
+                        p={p}
+                        currency={currency}
+                        idx={idx}
+                      />
                     ))
                   ) : (
                     <p className="text-gray-500 col-span-full text-center py-10">
@@ -506,7 +511,7 @@ export default function AdminDashboard({
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {allProducts && allProducts.length > 0 ? (
                     allProducts.map((p, idx) => (
-                      <ProductCard key={idx} p={p} currency={currency} idx={idx} />
+                      <ProductCard key={p.productId} p={p} currency={currency} idx={idx} />
                     ))
                   ) : (
                     <p className="text-gray-500 col-span-full text-center py-10">
@@ -704,7 +709,7 @@ function ProductCard({ p, currency, idx }) {
           <h2 className="text-lg font-normal text-gray-900 dark:text-gray-100 truncate">
             {p.product}
           </h2>
-          <p className="text-xs text-gray-500 mt-0.5">Product ID: #{p.id || idx + 1}</p>
+          <p className="text-xs text-gray-500 mt-0.5">Product ID: #{p.productId.slice(-10)}</p>
         </div>
         <span
           className={`text-xs font-light px-2.5 py-1 rounded-md ${
@@ -784,29 +789,44 @@ function OrderRow({ order, currency }) {
       {/* Order Status */}
       <div className="min-w-[120px]">
         <p className="text-sm text-gray-500 dark:text-white">Order</p>
+
         <span
-          className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full dark:text-white dark:bg-black border dark:border-gray-700
-            ${
-              order.orderStatus === "Delivered"
-                ? "bg-green-100 text-green-700"
-                : order.orderStatus === "Pending"
-                ? "bg-orange-100 text-orange-700"
-                : order.orderStatus === "Cancelled"
-                ? "bg-red-100 text-red-700"
-                : "bg-gray-100 text-gray-700"
-            }`}
+          className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full border dark:border-gray-700
+          ${
+            order.orderStatus === "Pending"
+              ? "bg-orange-100 text-orange-700"
+              : order.orderStatus === "Order Placed"
+              ? "bg-blue-100 text-blue-700"
+              : order.orderStatus === "Processing"
+              ? "bg-purple-100 text-purple-700"
+              : order.orderStatus === "Shipped"
+              ? "bg-indigo-100 text-indigo-700"
+              : order.orderStatus === "Delivered"
+              ? "bg-green-100 text-green-700"
+              : order.orderStatus === "Cancelled"
+              ? "bg-red-100 text-red-700"
+              : "bg-gray-100 text-gray-700"
+          }`}
         >
           <span
-            className={`w-1.5 h-1.5 rounded-full ${
-              order.orderStatus === "Delivered"
-                ? "bg-green-500"
-                : order.orderStatus === "Pending"
+            className={`w-1.5 h-1.5 rounded-full
+            ${
+              order.orderStatus === "Pending"
                 ? "bg-orange-500"
+                : order.orderStatus === "Order Placed"
+                ? "bg-blue-500"
+                : order.orderStatus === "Processing"
+                ? "bg-purple-500"
+                : order.orderStatus === "Shipped"
+                ? "bg-indigo-500"
+                : order.orderStatus === "Delivered"
+                ? "bg-green-500"
                 : order.orderStatus === "Cancelled"
                 ? "bg-red-500"
                 : "bg-gray-400"
             }`}
           ></span>
+
           {order.orderStatus || "N/A"}
         </span>
       </div>
@@ -814,29 +834,36 @@ function OrderRow({ order, currency }) {
       {/* Payment Status */}
       <div className="min-w-[130px]">
         <p className="text-sm text-gray-500 dark:text-white">Payment</p>
+
         <span
-          className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full dark:text-white dark:bg-black border dark:border-gray-700
-            ${
-              order.paymentStatus === "Paid"
-                ? "bg-green-100 text-green-700"
-                : order.paymentStatus === "Pending"
-                ? "bg-orange-100 text-orange-700"
-                : order.paymentStatus === "Failed"
-                ? "bg-red-100 text-red-700"
-                : "bg-gray-100 text-gray-700"
-            }`}
+          className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full border dark:border-gray-700
+          ${
+            order.paymentStatus === "Pending"
+              ? "bg-orange-100 text-orange-700"
+              : order.paymentStatus === "Successful"
+              ? "bg-green-100 text-green-700"
+              : order.paymentStatus === "Failed"
+              ? "bg-red-100 text-red-700"
+              : order.paymentStatus === "Refunded"
+              ? "bg-purple-100 text-purple-700"
+              : "bg-gray-100 text-gray-700"
+          }`}
         >
           <span
-            className={`w-1.5 h-1.5 rounded-full ${
-              order.paymentStatus === "Paid"
-                ? "bg-green-500"
-                : order.paymentStatus === "Pending"
+            className={`w-1.5 h-1.5 rounded-full
+            ${
+              order.paymentStatus === "Pending"
                 ? "bg-orange-500"
+                : order.paymentStatus === "Successful"
+                ? "bg-green-500"
                 : order.paymentStatus === "Failed"
                 ? "bg-red-500"
+                : order.paymentStatus === "Refunded"
+                ? "bg-purple-500"
                 : "bg-gray-400"
             }`}
           ></span>
+
           {order.paymentStatus || "N/A"}
         </span>
       </div>

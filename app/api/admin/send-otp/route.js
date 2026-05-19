@@ -27,7 +27,7 @@ export async function POST(req) {
 
   // Generate OTP
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
   await Otp.deleteMany({ email });
   await Otp.create({ email, otp, expiresAt });
@@ -53,7 +53,7 @@ export async function POST(req) {
           <h2 style="color:#4b0082;">Admin Access OTP</h2>
           <p style="font-size:16px;">Your One-Time Password (OTP) is:</p>
           <div style="font-size:28px;font-weight:bold;margin:20px 0;">${otp}</div>
-          <p>This code will expire in 5 minutes.</p>
+          <p>This code will expire in 60 minutes.</p>
           <p>If you did not request this, please ignore this message.</p>
         </div>
       `,

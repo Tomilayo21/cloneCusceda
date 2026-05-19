@@ -34,160 +34,193 @@ const Cart = () => {
   return (
     <>
       <Navbar />
-      <div className="px-6 md:px-16 lg:px-32 pt-10 mt-8 mb-20">
+
+      <div className="px-4 sm:px-6 md:px-16 lg:px-32 pt-10 mt-8 mb-20">
+
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 border-b border-gray-200 pb-6">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-10 border-b border-gray-200 dark:border-gray-800 pb-6">
+          
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
-             Shopping <span className="text-orange-600">Bag</span>
+            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">
+              Shopping <span className="text-orange-600">Bag</span>
             </h2>
-            <p className="text-sm md:text-base text-gray-500 mt-2">
-              Review the items you’ve added before checking out.
+
+            <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 mt-2">
+              Review your items before completing checkout
             </p>
           </div>
 
           {!loading && cartCount > 0 && (
-            <p className="text-lg md:text-xl font-medium text-gray-700 mt-4 md:mt-0">
+            <span className="mt-4 md:mt-0 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm font-medium">
               {cartCount} {cartCount === 1 ? "Item" : "Items"}
-            </p>
+            </span>
           )}
         </div>
 
-        {/* Loading State */}
+        {/* Loading */}
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <p className="text-lg text-gray-600 animate-pulse">
-              Bag is loading...
+          <div className="flex flex-col items-center justify-center py-24">
+            <div className="w-10 h-10 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mb-4" />
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
+              Loading your shopping bag...
             </p>
           </div>
         ) : cartCount === 0 ? (
-          /* Empty Cart */
-          <div className="flex flex-col items-center justify-center py-12">
-            <img src="/Essential_illustrations_-removebg-preview.png" width={200} height={200} alt="Empty Cart" />
-            <p className="mt-6 text-lg text-gray-600">
-              Looks like your bag is empty. Let’s fill it up!
+          
+          /* Empty State */
+          <div className="flex flex-col items-center justify-center text-center py-20">
+            
+            <img
+              src="/Essential_illustrations_-removebg-preview.png"
+              width={220}
+              height={220}
+              alt="Empty Cart"
+              className="opacity-90"
+            />
+
+            <h3 className="mt-6 text-xl font-semibold text-gray-800 dark:text-white">
+              Your bag is empty
+            </h3>
+
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-md">
+              Discover amazing products and start building your cart.
             </p>
+
             <button
               onClick={() => router.push("/all-products")}
-              className="mt-6 bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg shadow-md transition"
+              className="mt-6 px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl shadow-sm transition"
             >
-              Browse Products
+              Start Shopping
             </button>
           </div>
+
         ) : (
-          /* Cart Items + Order Summary */
-          <div className="flex flex-col md:flex-row gap-10">
-            {/* Cart Items */}
-            <div className="flex-1 space-y-6">
+
+          /* Cart Layout */
+          <div className="flex flex-col lg:flex-row gap-10">
+
+            {/* LEFT: Cart Items */}
+            <div className="flex-1 space-y-5">
+
               {Object.keys(cartItems).map((itemId) => {
                 const product = products.find((p) => p._id === itemId);
                 if (!product || cartItems[itemId] <= 0) return null;
 
-                const maxQuantity = product.stock;
-                const currentQuantity = cartItems[itemId];
+                const quantity = cartItems[itemId];
+                const max = product.stock;
 
                 return (
                   <div
                     key={itemId}
-                    className="flex flex-col md:flex-row items-center gap-6 bg-white p-4 rounded-2xl shadow-sm border border-gray-200"
+                    className="group flex flex-col sm:flex-row gap-5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 hover:shadow-md transition"
                   >
-                    {/* Product Image */}
-                    <div className="flex-shrink-0">
+
+                    {/* Image */}
+                    <div className="w-full sm:w-28 flex-shrink-0">
                       <img
                         src={product.image[0]}
                         alt={product.name}
-                        className="w-28 h-28 object-contain rounded-xl bg-gray-50 p-2"
+                        className="w-full h-28 object-contain rounded-xl bg-gray-50 dark:bg-gray-800 p-2"
                       />
                     </div>
 
-                    {/* Product Details */}
-                    <div className="flex flex-1 flex-col md:flex-row justify-between items-start md:items-center w-full">
+                    {/* Details */}
+                    <div className="flex flex-1 flex-col justify-between">
+
                       <div>
-                        <h3 className="text-lg font-medium text-gray-800">
+                        <h3 className="text-base font-medium text-gray-900 dark:text-white">
                           {product.name}
                         </h3>
-                        <p className="text-gray-500 mt-1">
-                          {currency}
-                          {Number(product.offerPrice).toLocaleString()}
+
+                        <p className="text-sm text-gray-500 mt-1">
+                          ₦{Number(product.offerPrice).toLocaleString()}
                         </p>
+
                         <button
-                          className="text-sm text-red-500 mt-2 hover:underline"
                           onClick={() => updateCartQuantity(product._id, 0)}
+                          className="text-xs text-red-500 hover:underline mt-2"
                         >
                           Remove
                         </button>
                       </div>
 
-                      {/* Quantity + Subtotal */}
+                      {/* Actions */}
+                      <div className="flex items-center justify-between mt-4">
 
-                      <div className="flex flex-col gap-2 mt-4 md:mt-0">
-                        {maxQuantity === 0 ? (
-                          <p className="text-red-500 font-semibold">Sold Out</p>
+                        {max === 0 ? (
+                          <span className="text-sm font-medium text-red-500">
+                            Sold Out
+                          </span>
                         ) : (
                           <div className="flex items-center gap-2">
+                            
                             <button
                               onClick={() =>
-                                updateCartQuantity(product._id, currentQuantity - 1)
+                                updateCartQuantity(product._id, quantity - 1)
                               }
-                              disabled={currentQuantity <= 1}
-                              className="px-3 py-1 border rounded-lg hover:bg-gray-100 disabled:opacity-50"
+                              disabled={quantity <= 1}
+                              className="w-8 h-8 rounded-lg border dark:border-gray-700 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40"
                             >
                               −
                             </button>
 
                             <input
                               type="number"
-                              value={currentQuantity}
+                              value={quantity}
                               onChange={(e) => {
-                                const value = Number(e.target.value);
-                                if (value > 0 && value <= maxQuantity) {
-                                  updateCartQuantity(product._id, value);
+                                const val = Number(e.target.value);
+                                if (val > 0 && val <= max) {
+                                  updateCartQuantity(product._id, val);
                                 }
                               }}
-                              className="w-12 border text-center rounded-lg"
+                              className="w-12 text-center border dark:border-gray-700 rounded-lg bg-transparent"
                             />
 
                             <button
                               onClick={() => {
-                                if (currentQuantity < maxQuantity) {
-                                  updateCartQuantity(product._id, currentQuantity + 1);
+                                if (quantity < max) {
+                                  updateCartQuantity(product._id, quantity + 1);
                                 }
                               }}
-                              disabled={currentQuantity >= maxQuantity}
-                              className="px-3 py-1 border rounded-lg hover:bg-gray-100 disabled:opacity-50"
+                              disabled={quantity >= max}
+                              className="w-8 h-8 rounded-lg border dark:border-gray-700 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40"
                             >
                               +
                             </button>
+
                           </div>
                         )}
 
-                        {/* Price below quantity selector */}
-                        <p className="text-lg font-semibold text-gray-800">
-                          {currency}{Number(product.offerPrice * currentQuantity)
-                          .toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-
+                        <p className="font-semibold text-gray-900 dark:text-white">
+                          ₦{(product.offerPrice * quantity).toLocaleString()}
                         </p>
-                      </div>
 
+                      </div>
                     </div>
+
                   </div>
                 );
               })}
 
+              {/* Continue Shopping */}
               <button
-                 onClick={() => router.push("/all-products")}
-                className="flex items-center gap-2 text-orange-600 hover:underline mt-4"
+                onClick={() => router.push("/all-products")}
+                className="flex items-center gap-2 text-orange-600 hover:text-orange-700 text-sm mt-6"
               >
                 <ShoppingCart className="w-4 h-4" />
                 Continue Shopping
               </button>
             </div>
 
-            {/* Order Summary */}
-            <OrderSummary />
+            {/* RIGHT: Summary */}
+            <div className="w-full lg:w-[380px]">
+              <OrderSummary />
+            </div>
+
           </div>
         )}
       </div>
+
       <Footer />
     </>
   );

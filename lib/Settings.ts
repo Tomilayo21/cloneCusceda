@@ -2,6 +2,8 @@
 export interface ISettings {
   lightLogoUrl?: string | null;
   darkLogoUrl?: string | null;
+  logoWidth: string | null;
+  logoHeight: string | null;
   siteTitle?: string;
   siteDescription?: string;
   supportEmail?: string;

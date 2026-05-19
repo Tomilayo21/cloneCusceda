@@ -93,6 +93,8 @@ export default function AdminSettings() {
   const [colorOpen, setColorOpen] = useState(false);
   const [localLayout, setLocalLayout] = useState(layoutStyle);
   const [localFontSize, setLocalFontSize] = useState(fontSize);
+  const [logoWidth, setLogoWidth] = useState("120px");
+  const [logoHeight, setLogoHeight] = useState("auto");
   
     
   useEffect(() => {
@@ -109,6 +111,10 @@ export default function AdminSettings() {
         setFooterName(data.footerName || "");
         setSupportEmail(data.supportEmail || "");
         setSocialLinks(data.socialLinks || []);
+        setLightLogoPreview(data.lightLogoUrl || null);
+        setDarkLogoPreview(data.darkLogoUrl || null);
+        setLogoHeight(data.logoHeight || "auto");
+        setLogoWidth(data.logoWidth || "120px");
       } catch (error) {
         toast.error("Failed to load site settings");
       } finally {
@@ -200,6 +206,8 @@ export default function AdminSettings() {
         const data = await res.json();
         setLightLogoPreview(data.lightLogoUrl || null);
         setDarkLogoPreview(data.darkLogoUrl || null);
+        setLogoWidth(data.logoWidth || "120px");
+        setLogoHeight(data.logoHeight || "auto");
       } catch (err) {
         console.error("Failed to fetch settings", err);
       }
@@ -220,7 +228,9 @@ export default function AdminSettings() {
       footerEmail,
       footerName,
       supportEmail,
-      socialLinks, // <-- added
+      socialLinks, 
+      logoWidth,
+      logoHeight,
     };
 
     try {
@@ -441,6 +451,29 @@ export default function AdminSettings() {
                             className="w-full p-2 border rounded bg-white text-gray-700"
                           />
                         )}
+                      </div>
+
+                       {/* Logo Size Controls */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-sm font-medium">Logo Width (e.g. 120px)</label>
+                          <input
+                            type="text"
+                            value={logoWidth}
+                            onChange={(e) => setLogoWidth(e.target.value)}
+                            className="w-full p-2 border rounded"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="text-sm font-medium">Logo Height (e.g. auto or 50px)</label>
+                          <input
+                            type="text"
+                            value={logoHeight}
+                            onChange={(e) => setLogoHeight(e.target.value)}
+                            className="w-full p-2 border rounded"
+                          />
+                        </div>
                       </div>
 
 

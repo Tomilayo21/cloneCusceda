@@ -12,7 +12,9 @@ export async function GET() {
 
     return Response.json({
       lightLogoUrl: settings.lightLogoUrl || null, 
-      darkLogoUrl: settings.darkLogoUrl || null,   
+      darkLogoUrl: settings.darkLogoUrl || null,
+      logoWidth: settings.logoWidth || "120px",
+      logoHeight: settings.logoHeight || "auto",
     });
   } catch (err) {
     console.error("GET /api/settings error:", err);

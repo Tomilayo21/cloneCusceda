@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { ImagePlus, Pencil, Trash2 } from "lucide-react";
+import { ImagePlus, Pencil, Trash2, Eye, EyeOff} from "lucide-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import TiptapEditor from "@/components/TiptapEditor";
@@ -193,17 +193,14 @@ const ProductListPanel = () => {
 
   const toggleVisibility = async (id) => {
     try {
-      const token = await getToken();
       const { data } = await axios.patch(
         `/api/product/${id}`,
-        { toggleVisibility: true },
-        {
-          headers: { Authorization: `Bearer ${token}`, userid: user.id },
-        }
+        { toggleVisibility: true }
       );
 
       if (data.success) {
         toast.success("Visibility updated");
+
         setProducts((prev) =>
           prev.map((p) =>
             p._id === id ? { ...p, visible: data.visible } : p
@@ -216,7 +213,7 @@ const ProductListPanel = () => {
       toast.error(err.response?.data?.message || err.message);
     }
   };
-
+  
   const handleStockUpdate = async (productId, newStock) => {
     try {
       const token = await getToken();
@@ -495,34 +492,54 @@ const ProductListPanel = () => {
                   <td className="px-4 py-3">
                     <button
                       onClick={() => toggleVisibility(product._id)}
-                      className={`px-3 py-1.5 rounded-md text-white text-xs font-medium transition ${
-                        product.visible ? "bg-orange-500 hover:bg-orange-600" : "bg-gray-400 hover:bg-gray-500"
+                      title={product.visible ? "Visible" : "Hidden"}
+                      className={`p-2 rounded-md text-white transition ${
+                        product.visible
+                          ? "bg-orange-500 hover:bg-orange-600"
+                          : "bg-gray-400 hover:bg-gray-500"
                       }`}
                     >
-                      {product.visible ? "Visible" : "Hidden"}
+                      {product.visible ? (
+                        <Eye className="w-4 h-4" />
+                      ) : (
+                        <EyeOff className="w-4 h-4" />
+                      )}
                     </button>
                   </td>
 
                   {/* Actions */}
-                  <td className="px-4 py-3 flex flex-col gap-2">
-                    <button
-                      onClick={() => setOpenProduct(product)}
-                      className="px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-xs flex items-center gap-1 justify-center transition"
-                    >
-                      <Pencil className="w-4 h-4" /> Edit
-                    </button>
-                    <button
-                      onClick={() => setViewProduct(product)}
-                      className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs flex items-center gap-1 justify-center transition"
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => handleDelete(product._id)}
-                      className="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs flex items-center gap-1 justify-center transition"
-                    >
-                      <Trash2 className="w-4 h-4" /> Delete
-                    </button>
+                  
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+
+                      {/* Edit */}
+                      <button
+                        onClick={() => setOpenProduct(product)}
+                        title="Edit"
+                        className="p-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </button>
+
+                      {/* View */}
+                      <button
+                        onClick={() => setViewProduct(product)}
+                        title="View"
+                        className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-md transition"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+
+                      {/* Delete */}
+                      <button
+                        onClick={() => handleDelete(product._id)}
+                        title="Delete"
+                        className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-md transition"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -565,32 +582,51 @@ const ProductListPanel = () => {
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
+
+                  {/* Edit */}
                   <button
                     onClick={() => setOpenProduct(product)}
-                    className="px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-xs flex items-center gap-1 transition"
+                    title="Edit"
+                    className="p-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition"
                   >
-                    <Pencil className="w-4 h-4" /> Edit
+                    <Pencil className="w-4 h-4" />
                   </button>
+
+                  {/* Delete */}
                   <button
                     onClick={() => handleDelete(product._id)}
-                    className="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs flex items-center gap-1 transition"
+                    title="Delete"
+                    className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-md transition"
                   >
-                    <Trash2 className="w-4 h-4" /> Delete
+                    <Trash2 className="w-4 h-4" />
                   </button>
+
+                  {/* View */}
                   <button
                     onClick={() => setViewProduct(product)}
-                    className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs flex items-center gap-1 transition"
+                    title="View"
+                    className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-md transition"
                   >
-                    View
+                    <Eye className="w-4 h-4" />
                   </button>
+
+                  {/* Visibility */}
                   <button
                     onClick={() => toggleVisibility(product._id)}
-                    className={`px-3 py-1.5 text-xs rounded-md text-white transition ${
-                      product.visible ? "bg-orange-500 hover:bg-orange-600" : "bg-gray-400 hover:bg-gray-500"
+                    title={product.visible ? "Hide Product" : "Show Product"}
+                    className={`p-2 text-white rounded-md transition ${
+                      product.visible
+                        ? "bg-orange-500 hover:bg-orange-600"
+                        : "bg-gray-400 hover:bg-gray-500"
                     }`}
                   >
-                    {product.visible ? "Visible" : "Hidden"}
+                    {product.visible ? (
+                      <Eye className="w-4 h-4" />
+                    ) : (
+                      <EyeOff className="w-4 h-4" />
+                    )}
                   </button>
+
                 </div>
               </div>
             </div>
