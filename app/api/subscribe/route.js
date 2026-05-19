@@ -87,9 +87,13 @@ export async function POST(req) {
 
           <!-- Footer -->
           <div style="margin-top: 40px; font-size: 13px; color: #777; text-align: center; line-height: 1.6;">
+<<<<<<< HEAD
             <p>If you didn’t sign up for this, you can
              <a href="https://tomi-cusceda.vercel.app/unsubscribe?email=${encodeURIComponent(email)}"
               style="color: #007BFF; text-decoration: none;">unsubscribe here</a>.</p>
+=======
+            <p>If you didn’t sign up for this, you can <a href="https://tomi-cusceda.vercel.app/unsubscribe?email=${encodeURIComponent(email)}" style="color: #007BFF; text-decoration: none;">unsubscribe here</a>.</p>
+>>>>>>> 23a0e14294faea8de94f25ac5ce61e77808ed254
             <p>&copy; ${new Date().getFullYear()} <strong>Cusceda NG</strong>. All rights reserved.</p>
           </div>
         </div>

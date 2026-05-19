@@ -330,8 +330,13 @@ countries.registerLocale(enLocale);
 
 const AddAddress = () => {
   const router = useRouter();
+<<<<<<< HEAD
   const { data: session } = useSession(); // get session data
 
+=======
+  const { data: session, status } = useSession();
+  
+>>>>>>> 23a0e14294faea8de94f25ac5ce61e77808ed254
   const [address, setAddress] = useState({
     fullName: "",
     phoneNumber: "",
@@ -373,12 +378,21 @@ const AddAddress = () => {
     e.preventDefault();
 
     // ✅ Get token from context or fallback to localStorage
+<<<<<<< HEAD
     if (status === "loading") return;
 
     if (!session) {
       toast.error("Please login first");
       return;
     }
+=======
+   if (status === "loading") return;
+
+  if (!session) {
+    toast.error("Please login first");
+    return;
+  }
+>>>>>>> 23a0e14294faea8de94f25ac5ce61e77808ed254
 
     if (
       !address.fullName ||
